@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Book a Safari | Tanzania Safari & Tours</title>
+<meta name="description" content="Book your Tanzania safari package online. Secure booking with expert guidance.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="/css/variables.css">
+<link rel="stylesheet" href="/css/main.css">
+<style>
+.booking-layout{display:grid;grid-template-columns:1fr 380px;gap:2.5rem;align-items:start}
+@media(max-width:1024px){.booking-layout{grid-template-columns:1fr}}
+.steps{display:flex;align-items:center;margin-bottom:2.5rem;gap:0}
+.step{display:flex;align-items:center;gap:.625rem;flex:1}
+.step-num{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.875rem;flex-shrink:0;border:2px solid var(--border);color:var(--text-muted);background:#fff;transition:var(--transition)}
+.step.active .step-num{background:var(--primary);border-color:var(--primary);color:#fff}
+.step.done .step-num{background:var(--success);border-color:var(--success);color:#fff}
+.step-label{font-size:.8125rem;font-weight:600;color:var(--text-muted)}
+.step.active .step-label{color:var(--primary)}
+.step.done .step-label{color:var(--success)}
+.step-line{flex:1;height:2px;background:var(--border);margin:0 .5rem}
+.step.done .step-line{background:var(--success)}
+.form-card{background:#fff;border-radius:var(--radius-lg);padding:2rem;box-shadow:var(--shadow-sm);border:1px solid var(--border)}
+.form-step{display:none}.form-step.active{display:block}
+.booking-summary{background:#fff;border-radius:var(--radius-lg);padding:1.75rem;box-shadow:var(--shadow-md);border:1px solid var(--border);position:sticky;top:100px}
+.summary-row{display:flex;justify-content:space-between;padding:.625rem 0;border-bottom:1px solid var(--border-light);font-size:.9rem}
+.summary-row:last-child{border:none;font-weight:700;font-size:1rem}
+.summary-label{color:var(--text-muted)}
+.summary-value{font-weight:600;color:var(--earth-dark)}
+.step-nav{display:flex;justify-content:space-between;margin-top:1.75rem;gap:1rem}
+.success-box{text-align:center;padding:3rem 2rem;display:none}
+.success-box .icon{width:80px;height:80px;background:var(--success-bg);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:2.5rem;color:var(--success)}
+</style>
+</head>
+<body>
+<!-- Header -->
+<div id="header"></div>
+
+<section class="page-hero">
+  <div class="hero-bg"><img src="/images/hero.jpg" alt="Booking"></div>
+  <div class="hero-overlay"></div>
+  <div class="page-hero-content">
+    <div class="container">
+      <h1 class="page-hero-title">Book Your Safari</h1>
+      <div class="page-hero-breadcrumb"><a href="/">Home</a><span>/</span><span>Booking</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section bg-sand">
+  <div class="container">
+    <div class="booking-layout">
+      <div>
+        <!-- Steps -->
+        <div class="steps" id="stepsBar">
+          <div class="step active" data-step="1"><div class="step-num">1</div><div class="step-label">Your Info</div></div>
+          <div class="step-line"></div>
+          <div class="step" data-step="2"><div class="step-num">2</div><div class="step-label">Trip Details</div></div>
+          <div class="step-line"></div>
+          <div class="step" data-step="3"><div class="step-num">3</div><div class="step-label">Confirm</div></div>
+        </div>
+
+        <!-- Success -->
+        <div class="success-box" id="successBox">
+          <div class="icon"><i class="fas fa-check"></i></div>
+          <h2 style="color:var(--success);margin-bottom:.75rem">Booking Submitted!</h2>
+          <p style="color:var(--text-muted);max-width:480px;margin:0 auto 2rem">Your booking request has been received. Check your email for confirmation. Our team will contact you within 24 hours.</p>
+          <div id="bookingRef" style="background:var(--bg-secondary);border-radius:var(--radius-md);padding:1.5rem;margin-bottom:2rem;text-align:left"></div>
+          <a href="/safaris" class="btn btn-primary btn-lg"><i class="fas fa-binoculars"></i> Browse More Safaris</a>
+        </div>
+
+        <form id="bookingForm">
+          <!-- Step 1 -->
+          <div class="form-card form-step active" id="step1">
+            <h3 style="margin-bottom:1.5rem"><i class="fas fa-user" style="color:var(--primary);margin-right:.5rem"></i>Personal Information</h3>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Full Name <span>*</span></label><input class="form-control" name="full_name" required placeholder="John Smith" id="fullName"></div>
+              <div class="form-group"><label class="form-label">Email Address <span>*</span></label><input class="form-control" type="email" name="email" required placeholder="john@email.com" id="emailInput"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Phone Number</label><input class="form-control" name="phone" placeholder="+1 234 567 890"></div>
+              <div class="form-group"><label class="form-label">Country</label><input class="form-control" name="country" placeholder="United States"></div>
+            </div>
+            <div class="step-nav"><div></div><button type="button" class="btn btn-primary" onclick="nextStep()">Next Step <i class="fas fa-arrow-right"></i></button></div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="form-card form-step" id="step2">
+            <h3 style="margin-bottom:1.5rem"><i class="fas fa-compass" style="color:var(--primary);margin-right:.5rem"></i>Trip Details</h3>
+            <div class="form-group"><label class="form-label">Safari Package <span>*</span></label>
+              <select class="form-control" name="package_id" required id="packageSelect" onchange="updateSummary()">
+                <option value="">— Select a Safari Package —</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Start Date <span>*</span></label><input class="form-control" type="date" name="start_date" required id="startDate" onchange="updateEndDate()"></div>
+              <div class="form-group"><label class="form-label">End Date</label><input class="form-control" type="date" name="end_date" id="endDate" readonly style="background:var(--bg-secondary)"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Adults <span>*</span></label>
+                <select class="form-control" name="number_of_adults" required onchange="updateSummary()">
+                  <option value="1">1 Adult</option>
+                  <option value="2" selected>2 Adults</option>
+                  <option value="3">3 Adults</option>
+                  <option value="4">4 Adults</option>
+                  <option value="5">5 Adults</option>
+                  <option value="6">6+ Adults</option>
+                </select>
+              </div>
+              <div class="form-group"><label class="form-label">Children (under 12)</label>
+                <select class="form-control" name="number_of_children" onchange="updateSummary()">
+                  <option value="0">No Children</option>
+                  <option value="1">1 Child</option>
+                  <option value="2">2 Children</option>
+                  <option value="3">3 Children</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group"><label class="form-label">Dietary Requirements</label><input class="form-control" name="dietary_restrictions" placeholder="Vegetarian, vegan, allergies..."></div>
+            <div class="form-group"><label class="form-label">Medical Conditions</label><input class="form-control" name="medical_conditions" placeholder="Any relevant medical information"></div>
+            <div class="step-nav">
+              <button type="button" class="btn btn-outline" onclick="prevStep()"><i class="fas fa-arrow-left"></i> Back</button>
+              <button type="button" class="btn btn-primary" onclick="nextStep()">Review Booking <i class="fas fa-arrow-right"></i></button>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="form-card form-step" id="step3">
+            <h3 style="margin-bottom:1.5rem"><i class="fas fa-check-circle" style="color:var(--primary);margin-right:.5rem"></i>Confirm Your Booking</h3>
+            <div id="confirmSummary" style="margin-bottom:1.5rem"></div>
+            <div class="form-group"><label class="form-label">Special Requests</label><textarea class="form-control" name="special_requests" rows="3" placeholder="Any special requests or additional information..."></textarea></div>
+            <div style="background:var(--bg-secondary);border-radius:var(--radius-md);padding:1rem;font-size:.875rem;color:var(--text-muted);margin-bottom:1.5rem">
+              <i class="fas fa-info-circle" style="color:var(--primary)"></i> By submitting this booking you agree to our terms and conditions. A 20% deposit is required to confirm your safari.
+            </div>
+            <div class="step-nav">
+              <button type="button" class="btn btn-outline" onclick="prevStep()"><i class="fas fa-arrow-left"></i> Back</button>
+              <button type="submit" class="btn btn-primary btn-lg" id="submitBtn"><i class="fas fa-calendar-check"></i> Confirm Booking</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Summary -->
+      <div class="booking-summary">
+        <h3 style="margin-bottom:1.25rem;font-size:1rem"><i class="fas fa-receipt" style="color:var(--primary);margin-right:.5rem"></i>Booking Summary</h3>
+        <div id="summaryContent">
+          <p style="color:var(--text-muted);font-size:.875rem;text-align:center;padding:1rem 0">Select a package to see pricing</p>
+        </div>
+        <div style="margin-top:1.5rem;padding:1rem;background:var(--bg-secondary);border-radius:var(--radius-md);font-size:.8125rem;color:var(--text-muted)">
+          <div style="display:flex;gap:.5rem;margin-bottom:.5rem"><i class="fas fa-shield-alt" style="color:var(--success)"></i><span>Secure SSL booking</span></div>
+          <div style="display:flex;gap:.5rem;margin-bottom:.5rem"><i class="fas fa-undo" style="color:var(--success)"></i><span>Free cancellation (48h)</span></div>
+          <div style="display:flex;gap:.5rem"><i class="fas fa-headset" style="color:var(--success)"></i><span>24/7 expert support</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<div id="footer"></div>
+
+<script src="/js/layout-loader.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/booking.js"></script>
+</body>
+</html>

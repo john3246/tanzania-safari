@@ -1,0 +1,482 @@
+/* Safari Detail Page Styles */
+
+/* Hero Section */
+.safari-detail-hero {
+    background: #1f2937;
+    color: white;
+    padding: 4rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.safari-detail-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='rgba(255,255,255,0.05)' d='M10,50 L20,40 L30,50 L40,40 L50,50 L60,40 L70,50 L80,40 L90,50 L80,60 L70,50 L60,60 L50,50 L40,60 L30,50 L20,60 L10,50Z'/%3E%3C/svg%3E") repeat;
+    opacity: 0.1;
+    pointer-events: none;
+}
+
+.safari-detail-hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+.safari-detail-hero .breadcrumb {
+    margin-bottom: 2rem;
+}
+
+.safari-detail-hero .breadcrumb a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.safari-detail-hero .breadcrumb a:hover {
+    color: white;
+}
+
+.safari-detail-hero .breadcrumb i {
+    margin: 0 0.5rem;
+    font-size: 0.75rem;
+}
+
+.safari-detail-hero .breadcrumb span {
+    color: white;
+}
+
+.safari-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    font-family: 'Playfair Display', serif;
+}
+
+.safari-meta-info {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255,255,255,0.2);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    backdrop-filter: blur(10px);
+}
+
+.meta-item i {
+    font-size: 1.1rem;
+}
+
+/* Main Content */
+.safari-detail-main {
+    padding: 4rem 0;
+    background: #f9fafb;
+}
+
+.safari-detail-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 3rem;
+}
+
+/* Description Section */
+.safari-description {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.safari-description h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #1f2937;
+}
+
+.safari-description p {
+    color: #6b7280;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+/* Itinerary Section */
+.safari-itinerary {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.safari-itinerary h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #1f2937;
+}
+
+.itinerary-timeline {
+    position: relative;
+    padding-left: 2rem;
+}
+
+.itinerary-timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e67e22;
+}
+
+.itinerary-day {
+    position: relative;
+    margin-bottom: 2rem;
+    padding-left: 1.5rem;
+}
+
+.itinerary-day::before {
+    content: '';
+    position: absolute;
+    left: -2rem;
+    top: 0;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #e67e22;
+    border: 2px solid white;
+    box-shadow: 0 0 0 2px #e67e22;
+}
+
+.day-number {
+    font-weight: 700;
+    color: #e67e22;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.day-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #1f2937;
+}
+
+.day-description {
+    color: #6b7280;
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+}
+
+.day-accommodation {
+    color: #e67e22;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.day-accommodation i {
+    margin-right: 0.5rem;
+}
+
+/* Inclusions & Exclusions */
+.safari-inclusions {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.inclusions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.inclusions-list,
+.exclusions-list {
+    list-style: none;
+    padding: 0;
+}
+
+.inclusions-list li,
+.exclusions-list li {
+    padding: 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #6b7280;
+}
+
+.inclusions-list li i {
+    color: #10b981;
+    width: 20px;
+}
+
+.exclusions-list li i {
+    color: #ef4444;
+    width: 20px;
+}
+
+/* Sidebar */
+.safari-sidebar {
+    position: sticky;
+    top: 100px;
+}
+
+.price-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+.price-card .price {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #e67e22;
+    margin: 1rem 0;
+}
+
+.price-card .price small {
+    font-size: 1rem;
+    font-weight: normal;
+    color: #6b7280;
+}
+
+.price-card .price-note {
+    color: #6b7280;
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+}
+
+.btn-book-now {
+    width: 100%;
+    padding: 1rem;
+    background: #e67e22;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-book-now:hover {
+    background: #d35400;
+    transform: translateY(-2px);
+}
+
+.info-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.info-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: #1f2937;
+}
+
+.info-card ul {
+    list-style: none;
+    padding: 0;
+}
+
+.info-card ul li {
+    padding: 0.5rem 0;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.info-card ul li i {
+    color: #e67e22;
+    width: 20px;
+}
+
+/* Reviews Section */
+.safari-reviews {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-top: 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.safari-reviews h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #1f2937;
+}
+
+.review-card {
+    border-bottom: 1px solid #e5e7eb;
+    padding: 1.5rem 0;
+}
+
+.review-card:last-child {
+    border-bottom: none;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.reviewer-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.reviewer-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #667eea;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+}
+
+.reviewer-name {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.review-date {
+    font-size: 0.85rem;
+    color: #9ca3af;
+}
+
+.review-rating {
+    color: #ffc107;
+}
+
+.review-comment {
+    color: #6b7280;
+    line-height: 1.6;
+    margin-top: 0.5rem;
+}
+
+/* Related Safaris */
+.related-safaris {
+    padding: 4rem 0;
+    background: white;
+}
+
+.related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.related-card {
+    background: #f9fafb;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s;
+    cursor: pointer;
+}
+
+.related-card:hover {
+    transform: translateY(-4px);
+}
+
+.related-card-image {
+    background: #667eea;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.related-card-image i {
+    font-size: 48px;
+}
+
+.related-card-content {
+    padding: 1.5rem;
+}
+
+.related-card-content h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: #1f2937;
+}
+
+.related-card-content p {
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.related-card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.related-price {
+    font-weight: 700;
+    color: #e67e22;
+}
+
+.related-duration {
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .safari-detail-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .safari-title {
+        font-size: 2rem;
+    }
+    
+    .safari-meta-info {
+        gap: 1rem;
+    }
+    
+    .inclusions-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .itinerary-timeline {
+        padding-left: 1rem;
+    }
+    
+    .itinerary-day::before {
+        left: -1rem;
+    }
+}

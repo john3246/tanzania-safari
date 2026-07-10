@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Blog | Tanzania Safari & Tours</title>
+<meta name="description" content="Tanzania safari guides, wildlife updates, and travel tips from local experts.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="/css/variables.css">
+<link rel="stylesheet" href="/css/main.css">
+<style>
+.blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
+@media(max-width:1024px){.blog-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.blog-grid{grid-template-columns:1fr}}
+.blog-card{background:#fff;border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border);transition:var(--transition);height:100%;display:flex;flex-direction:column}
+.blog-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-md);border-color:var(--primary)}
+.blog-card-img{aspect-ratio:16/9;overflow:hidden;position:relative}
+.blog-card-img img{width:100%;height:100%;object-fit:cover;transition:var(--transition)}
+.blog-card:hover .blog-card-img img{transform:scale(1.05)}
+.blog-card-body{padding:1.5rem;flex-grow:1;display:flex;flex-direction:column}
+.blog-card-meta{font-size:.8125rem;color:var(--text-muted);margin-bottom:.75rem;display:flex;gap:1rem}
+.blog-card-title{font-size:1.25rem;margin-bottom:.875rem;line-height:1.4}
+.blog-card-excerpt{font-size:.9rem;color:var(--text-secondary);margin-bottom:1.5rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;flex-grow:1}
+.blog-card-link{font-weight:600;color:var(--primary);display:flex;align-items:center;gap:.5rem;font-size:.875rem}
+.featured-post{grid-column:1 / -1;display:grid;grid-template-columns:1.2fr 1fr;background:#fff;border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border);margin-bottom:3rem}
+@media(max-width:768px){.featured-post{grid-template-columns:1fr}}
+.featured-post-img{aspect-ratio:16/9;overflow:hidden}
+.featured-post-img img{width:100%;height:100%;object-fit:cover}
+.featured-post-body{padding:3rem;display:flex;flex-direction:column;justify-content:center}
+@media(max-width:768px){.featured-post-body{padding:1.5rem}}
+.featured-badge{background:var(--primary-pale);color:var(--primary);padding:.25rem .75rem;border-radius:var(--radius-full);font-size:.75rem;font-weight:700;display:inline-block;margin-bottom:1rem;text-transform:uppercase;letter-spacing:1px}
+</style>
+</head>
+<body>
+<div id="header"></div>
+
+<section class="page-hero">
+  <div class="hero-bg"><img src="/images/hero.jpg" alt="Blog"></div>
+  <div class="hero-overlay"></div>
+  <div class="page-hero-content">
+    <div class="container">
+      <h1 class="page-hero-title">Safari Stories</h1>
+      <div class="page-hero-breadcrumb">
+        <a href="/">Home</a><span>/</span><span>Blog</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section bg-sand">
+  <div class="container">
+    <div id="blogContainer">
+      <div class="skeleton-card" style="height:400px;margin-bottom:3rem"></div>
+      <div class="blog-grid">
+        <div class="skeleton-card" style="height:350px"></div>
+        <div class="skeleton-card" style="height:350px"></div>
+        <div class="skeleton-card" style="height:350px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="footer"></div>
+<script src="/js/layout-loader.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/blog.js"></script>
+</body>
+</html>

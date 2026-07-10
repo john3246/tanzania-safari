@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tanzania Safari & Tours | Authentic African Adventures</title>
+<meta name="description" content="Experience authentic Tanzania safari tours. Witness the Great Migration, climb Kilimanjaro, and explore pristine national parks with expert local guides.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="/css/variables.css">
+<link rel="stylesheet" href="/css/main.css">
+<style>
+.hero{min-height:100vh}
+.hero-bg{background:#2A1A0E}
+.hero-bg img{opacity:.85}
+.categories-section{padding:5rem 0;background:var(--bg-secondary)}
+.cat-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:1rem}
+@media(max-width:1024px){.cat-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:640px){.cat-grid{grid-template-columns:repeat(2,1fr)}}
+.cat-card{background:#fff;border-radius:var(--radius-lg);padding:1.5rem 1rem;text-align:center;border:1.5px solid var(--border);transition:var(--transition);cursor:pointer;text-decoration:none;display:block}
+.cat-card:hover{border-color:var(--primary);transform:translateY(-4px);box-shadow:var(--shadow-md)}
+.cat-icon{width:52px;height:52px;background:var(--primary-pale);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;margin:0 auto .875rem;color:var(--primary);font-size:1.375rem;transition:var(--transition)}
+.cat-card:hover .cat-icon{background:var(--primary);color:#fff}
+.cat-name{font-size:.875rem;font-weight:600;color:var(--earth-dark);margin-bottom:.25rem}
+.cat-count{font-size:.75rem;color:var(--text-muted)}
+.why-section{padding:5rem 0}
+.cta-band{padding:5rem 0;background:var(--gradient-primary)}
+.cta-band h2{color:#fff;margin-bottom:.75rem}
+.cta-band p{color:rgba(255,255,255,.85);margin-bottom:2rem}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div id="header"></div>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-bg">
+    <video autoplay muted loop playsinline poster="/images/hero.jpg" class="hero-video">
+      <source src="https://player.vimeo.com/external/370331493.sd.mp4?s=7b0e271d4400e39c4a45053f3e1b736b7b0e271d&profile_id=139&oauth2_token_id=57447761" type="video/mp4">
+    </video>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="container">
+        <h1 class="hero-title">Experience the Untamed<br>Beauty of Tanzania</h1>
+        <p class="hero-subtitle">Bespoke safari adventures and luxury encounters with nature. We craft journeys that stay with you forever.</p>
+        <div class="hero-actions">
+          <a href="/safaris" class="btn btn-primary btn-lg">Explore Tours</a>
+          <a href="/contact" class="btn btn-white btn-lg">Plan Your Trip</a>
+        </div>
+    </div>
+  </div>
+  <div class="hero-scroll-indicator">
+    <div class="scroll-mouse"><div class="scroll-wheel"></div></div>
+  </div>
+</section>
+
+<!-- Destinations -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow"><i class="fas fa-map-marker-alt"></i> Popular Parks</span>
+      <h2 class="section-title">Explore Our <span>Destinations</span></h2>
+      <p class="section-desc">From the endless Serengeti plains to the snow-capped Kilimanjaro — every corner of Tanzania tells a story.</p>
+    </div>
+    <div class="dest-grid" id="destinationsGrid">
+      <div class="skeleton-card"><div class="skeleton skeleton-img" style="aspect-ratio:4/5"></div></div>
+      <div class="skeleton-card"><div class="skeleton skeleton-img" style="aspect-ratio:4/5"></div></div>
+      <div class="skeleton-card"><div class="skeleton skeleton-img" style="aspect-ratio:4/5"></div></div>
+      <div class="skeleton-card"><div class="skeleton skeleton-img" style="aspect-ratio:4/5"></div></div>
+    </div>
+    <div class="text-center" style="margin-top:2rem">
+      <a href="/destinations" class="btn btn-outline"><i class="fas fa-globe-africa"></i> View All Destinations</a>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Safaris -->
+<section class="section bg-sand">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow"><i class="fas fa-star"></i> Top Rated</span>
+      <h2 class="section-title">Popular <span>Safari Packages</span></h2>
+      <p class="section-desc">Handpicked experiences designed for every type of traveler — from thrilling game drives to serene cultural encounters.</p>
+    </div>
+    <div class="filter-bar" id="categoryFilters">
+      <button class="filter-btn active" data-filter="all">All Safaris</button>
+    </div>
+    <div class="safari-grid" id="safarisGrid">
+      <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line medium"></div><div class="skeleton skeleton-line short"></div></div></div>
+      <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line medium"></div><div class="skeleton skeleton-line short"></div></div></div>
+      <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line medium"></div><div class="skeleton skeleton-line short"></div></div></div>
+    </div>
+    <div class="text-center" style="margin-top:2.5rem">
+      <a href="/safaris" class="btn btn-outline"><i class="fas fa-binoculars"></i> View All Safaris</a>
+    </div>
+  </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="section why-section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow"><i class="fas fa-award"></i> Why Choose Us</span>
+      <h2 class="section-title">Your Trusted <span>Safari Partner</span></h2>
+      <p class="section-desc">Over a decade of crafting extraordinary safari experiences with unmatched expertise, safety, and passion.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-users"></i></div>
+        <h3>Expert Local Guides</h3>
+        <p>Certified professionals with deep knowledge of Tanzanian wildlife and habitats.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+        <h3>Safety First</h3>
+        <p>Well-maintained 4x4 vehicles and comprehensive emergency protocols for your peace of mind.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-leaf"></i></div>
+        <h3>Eco-Responsible</h3>
+        <p>We support conservation efforts and local communities through responsible travel practices.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-headset"></i></div>
+        <h3>24/7 Support</h3>
+        <p>Round-the-clock assistance from booking through your entire safari journey.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Safari Categories -->
+<section class="categories-section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow"><i class="fas fa-th-large"></i> Browse by Type</span>
+      <h2 class="section-title">Safari <span>Categories</span></h2>
+    </div>
+    <div class="cat-grid" id="categoriesGrid">
+      <div class="cat-card skeleton-card" style="height:130px"></div>
+      <div class="cat-card skeleton-card" style="height:130px"></div>
+      <div class="cat-card skeleton-card" style="height:130px"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow"><i class="fas fa-quote-left"></i> Traveler Stories</span>
+      <h2 class="section-title">What Our <span>Guests Say</span></h2>
+      <p class="section-desc">Real experiences from adventurers who explored Tanzania with us.</p>
+    </div>
+    <div class="testimonials-grid" id="testimonialsGrid">
+      <div class="testimonial-card skeleton-card" style="height:200px"></div>
+      <div class="testimonial-card skeleton-card" style="height:200px"></div>
+      <div class="testimonial-card skeleton-card" style="height:200px"></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Band -->
+<section class="cta-band">
+  <div class="container text-center">
+    <h2>Ready for Your African Adventure?</h2>
+    <p>Let our experts craft the perfect safari experience for you and your family.</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+      <a href="/booking" class="btn btn-white btn-lg"><i class="fas fa-calendar-alt"></i> Book Your Safari</a>
+      <a href="/contact" class="btn btn-ghost btn-lg"><i class="fas fa-comments"></i> Get Free Consultation</a>
+    </div>
+  </div>
+</section>
+
+<!-- Map Section -->
+<section class="section no-padding">
+  <div class="map-container">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15945.347575345714!2d36.6829!3d-3.3731!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x18371c88f2447b77%3A0x1927e7706d87e076!2sArusha%2C%20Tanzania!5e0!3m2!1sen!2sus!4v1714810000000!5m2!1sen!2sus" width="100%" height="500" style="border:0; filter: grayscale(1) invert(0.9) contrast(0.9);" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <div class="map-overlay">
+      <div class="map-card">
+        <h3>Our Presence</h3>
+        <p>Expert local guides stationed in Arusha, Serengeti, and Zanzibar.</p>
+        <div class="map-stats">
+          <div><strong>12</strong><span>Parks</span></div>
+          <div><strong>24/7</strong><span>Support</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<div id="footer"></div>
+
+<script src="/js/layout-loader.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/main.js"></script>
+</body>
+</html>

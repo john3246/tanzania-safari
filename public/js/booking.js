@@ -1,0 +1,143 @@
+const header = document.getElementById('header');
+window.addEventListener('scroll', () => { header?.classList.toggle('scrolled', window.scrollY > 50); }, { passive: true });
+document.getElementById('mobileToggle')?.addEventListener('click', () => { document.getElementById('mainNav')?.classList.toggle('active'); document.getElementById('menuOverlay')?.classList.toggle('active'); });
+document.getElementById('menuOverlay')?.addEventListener('click', () => { document.getElementById('mainNav')?.classList.remove('active'); document.getElementById('menuOverlay')?.classList.remove('active'); });
+const yr = document.getElementById('year'); if (yr) yr.textContent = new Date().getFullYear();
+
+let currentStep = 1;
+let packages = [];
+let selectedPkg = null;
+
+function updateStepUI() {
+    document.querySelectorAll('.form-step').forEach((s, i) => s.classList.toggle('active', i + 1 === currentStep));
+    document.querySelectorAll('.step[data-step]').forEach(s => {
+        const n = parseInt(s.dataset.step);
+        s.classList.toggle('active', n === currentStep);
+        s.classList.toggle('done', n < currentStep);
+    });
+}
+
+function nextStep() {
+    if (currentStep === 1) {
+        const name = document.getElementById('fullName').value.trim();
+        const email = document.getElementById('emailInput').value.trim();
+        if (!name || !email) { toast('Please fill in your name and email.', 'warning'); return; }
+    }
+    if (currentStep === 2) {
+        const pkg = document.getElementById('packageSelect').value;
+        const date = document.getElementById('startDate').value;
+        if (!pkg) { toast('Please select a safari package.', 'warning'); return; }
+        if (!date) { toast('Please select a travel date.', 'warning'); return; }
+        buildConfirmSummary();
+    }
+    if (currentStep < 3) { currentStep++; updateStepUI(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+}
+
+function prevStep() {
+    if (currentStep > 1) { currentStep--; updateStepUI(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+}
+window.nextStep = nextStep;
+window.prevStep = prevStep;
+
+function updateEndDate() {
+    const pkgId = document.getElementById('packageSelect').value;
+    const start = document.getElementById('startDate').value;
+    if (!start) return;
+    const pkg = packages.find(p => String(p.package_id) === String(pkgId));
+    if (pkg && start) {
+        const end = new Date(start);
+        end.setDate(end.getDate() + parseInt(pkg.duration_days || 1));
+        document.getElementById('endDate').value = end.toISOString().split('T')[0];
+    }
+    updateSummary();
+}
+window.updateEndDate = updateEndDate;
+
+function updateSummary() {
+    const pkgId = document.getElementById('packageSelect').value;
+    selectedPkg = packages.find(p => String(p.package_id) === String(pkgId));
+    const adults = parseInt(document.querySelector('[name="number_of_adults"]')?.value || 1);
+    const children = parseInt(document.querySelector('[name="number_of_children"]')?.value || 0);
+    const sc = document.getElementById('summaryContent');
+    if (!selectedPkg) { sc.innerHTML = '<p style="color:var(--text-muted);font-size:.875rem;text-align:center;padding:1rem 0">Select a package to see pricing</p>'; return; }
+    const basePrice = parseFloat(selectedPkg.base_price_usd || 0);
+    const childPrice = basePrice * 0.7;
+    const total = (basePrice * adults) + (childPrice * children);
+    const deposit = total * 0.2;
+    updateEndDate();
+    sc.innerHTML = `
+    <div class="summary-row"><span class="summary-label">Package</span><span class="summary-value" style="max-width:160px;text-align:right;font-size:.875rem">${selectedPkg.package_name}</span></div>
+    <div class="summary-row"><span class="summary-label">Duration</span><span class="summary-value">${selectedPkg.duration_days} Days</span></div>
+    <div class="summary-row"><span class="summary-label">${adults} Adult${adults>1?'s':''}</span><span class="summary-value">$${(basePrice*adults).toLocaleString()}</span></div>
+    ${children>0?`<div class="summary-row"><span class="summary-label">${children} Child${children>1?'ren':''} (70%)</span><span class="summary-value">$${(childPrice*children).toLocaleString()}</span></div>`:''}
+    <div class="summary-row" style="border-top:2px solid var(--border);margin-top:.5rem;padding-top:.75rem"><span class="summary-label">Total</span><span class="summary-value" style="color:var(--primary);font-size:1.25rem">$${total.toLocaleString()}</span></div>
+    <div class="summary-row"><span class="summary-label">Deposit (20%)</span><span class="summary-value" style="color:var(--success)">$${deposit.toLocaleString()}</span></div>`;
+}
+window.updateSummary = updateSummary;
+
+function buildConfirmSummary() {
+    const data = Object.fromEntries(new FormData(document.getElementById('bookingForm')));
+    const el = document.getElementById('confirmSummary');
+    el.innerHTML = `
+    <div style="background:var(--bg-secondary);border-radius:var(--radius-md);padding:1.25rem">
+      <div class="summary-row"><span class="summary-label">Name</span><span class="summary-value">${data.full_name}</span></div>
+      <div class="summary-row"><span class="summary-label">Email</span><span class="summary-value">${data.email}</span></div>
+      <div class="summary-row"><span class="summary-label">Package</span><span class="summary-value">${selectedPkg?.package_name||''}</span></div>
+      <div class="summary-row"><span class="summary-label">Date</span><span class="summary-value">${new Date(data.start_date).toLocaleDateString('en-US',{dateStyle:'long'})}</span></div>
+      <div class="summary-row"><span class="summary-label">Travelers</span><span class="summary-value">${data.number_of_adults} Adults, ${data.number_of_children||0} Children</span></div>
+    </div>`;
+}
+
+document.getElementById('bookingForm')?.addEventListener('submit', async e => {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+    btn.disabled = true;
+    const data = Object.fromEntries(new FormData(e.target));
+    const adults = parseInt(data.number_of_adults || 1);
+    const children = parseInt(data.number_of_children || 0);
+    const basePrice = parseFloat(selectedPkg?.base_price_usd || 0);
+    const total = (basePrice * adults) + (basePrice * 0.7 * children);
+    try {
+        const res = await API.post('/bookings', { ...data, total_price_usd: total, booking_source: 'Website' });
+        document.getElementById('stepsBar').style.display = 'none';
+        document.getElementById('bookingForm').style.display = 'none';
+        const sb = document.getElementById('successBox');
+        sb.style.display = 'block';
+        document.getElementById('bookingRef').innerHTML = `
+        <div class="summary-row"><span class="summary-label">Booking Ref</span><span class="summary-value">#${res.data?.booking_id || 'TZ-' + Date.now()}</span></div>
+        <div class="summary-row"><span class="summary-label">Package</span><span class="summary-value">${selectedPkg?.package_name}</span></div>
+        <div class="summary-row"><span class="summary-label">Date</span><span class="summary-value">${new Date(data.start_date).toLocaleDateString('en-US',{dateStyle:'long'})}</span></div>
+        <div class="summary-row"><span class="summary-label">Total</span><span class="summary-value">$${total.toLocaleString()}</span></div>`;
+    } catch (err) {
+        toast(err.message || 'Booking failed. Please try again.', 'error');
+        btn.innerHTML = '<i class="fas fa-calendar-check"></i> Confirm Booking';
+        btn.disabled = false;
+    }
+});
+
+// Load packages
+async function loadPackages() {
+    try {
+        const { data } = await API.get('/packages?limit=100');
+        packages = data || [];
+        const sel = document.getElementById('packageSelect');
+        packages.forEach(p => {
+            const opt = document.createElement('option');
+            opt.value = p.package_id;
+            opt.textContent = `${p.package_name} — $${Number(p.base_price_usd).toLocaleString()} (${p.duration_days} days)`;
+            sel.appendChild(opt);
+        });
+        // Pre-select from URL
+        const urlPkg = new URLSearchParams(window.location.search).get('package');
+        if (urlPkg) {
+            const match = packages.find(p => p.package_slug === urlPkg);
+            if (match) { sel.value = match.package_id; updateSummary(); }
+        }
+        // Min date = tomorrow
+        const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+        document.getElementById('startDate').min = tomorrow.toISOString().split('T')[0];
+    } catch {}
+}
+
+loadPackages();
