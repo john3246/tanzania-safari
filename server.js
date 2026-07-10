@@ -63,7 +63,7 @@ app.use((req, res) =>
 
 // ── Error handler ─────────────────────────────────────────────
 app.use((err, req, res, next) => {
-    console.error('❌ Server Error:', err.stack);
+    console.error('Server Error:', err.stack);
     res.status(500).json({
         success: false,
         message: 'Something went wrong!',
@@ -72,7 +72,7 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`\n🚀 Server running at http://localhost:${PORT}`);
-    console.log(`🔧 Admin Panel: http://localhost:${PORT}/admin/login`);
-    console.log(`📡 API:         http://localhost:${PORT}/api\n`);
+    console.log(`\nServer running in ${process.env.NODE_ENV || 'development'} mode at http://localhost:${PORT}`);
+    console.log(`Admin Panel: http://localhost:${PORT}/admin/login`);
+    console.log(`API:         http://localhost:${PORT}/api\n`);
 });
