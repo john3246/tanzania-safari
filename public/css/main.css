@@ -95,6 +95,11 @@ ul{list-style:none}
 .mobile-toggle{display:none;align-items:center;justify-content:center;background:none;border:none;cursor:pointer;padding:8px;z-index:var(--z-fixed);color:#fff;transition:var(--transition)}
 .header.scrolled .mobile-toggle{color:var(--text-primary)}
 
+@media(min-width: 1024px) {
+  .drawer-header { display: none !important; }
+  .mobile-toggle { display: none !important; }
+}
+
 @media(max-width:1024px){
     .header-right{gap:1rem}
     .nav{display:none}
@@ -109,7 +114,16 @@ ul{list-style:none}
 }
 
 /* ── Page Hero (inner pages) ── */
-.page-hero{position:relative;height:45vh;min-height:350px;max-height:500px;display:flex;align-items:center;justify-content:center;color:#fff;overflow:hidden;background:var(--bg-dark)}
+.page-hero {
+    min-height: 350px;
+    height: 45vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-dark);
+}
 @media(max-width:768px){.page-hero{height:50vh;min-height:300px}}
 .page-hero-content{position:relative;z-index:2;text-align:center;width:100%;padding-top:80px}
 .page-hero-title{font-size:clamp(2rem,5vw,3.5rem);color:#fff;margin-bottom:.75rem}

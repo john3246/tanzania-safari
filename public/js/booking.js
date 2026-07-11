@@ -17,25 +17,45 @@ function updateStepUI() {
     });
 }
 
-function nextStep() {
-    if (currentStep === 1) {
-        const name = document.getElementById('fullName').value.trim();
-        const email = document.getElementById('emailInput').value.trim();
-        if (!name || !email) { toast('Please fill in your name and email.', 'warning'); return; }
+function navigateBookingStep(direction, event) {
+    if (event) event.preventDefault();
+
+    // Use .form-step array index to get the current visible step container
+    const currentStepEl = document.querySelectorAll('.form-step')[currentStep - 1];
+
+    if (direction === 'next') {
+        if (currentStepEl) {
+            const inputs = currentStepEl.querySelectorAll('input, select, textarea');
+            let isStepValid = true;
+            inputs.forEach(input => {
+                if (input.hasAttribute('required') && !input.checkValidity()) {
+                    input.reportValidity();
+                    isStepValid = false;
+                }
+            });
+            if (!isStepValid) return;
+        }
+
+        if (currentStep === 2) {
+            buildConfirmSummary();
+        }
+
+        if (currentStep < 3) {
+            currentStep++;
+            updateStepUI();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    } else if (direction === 'prev') {
+        if (currentStep > 1) {
+            currentStep--;
+            updateStepUI();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     }
-    if (currentStep === 2) {
-        const pkg = document.getElementById('packageSelect').value;
-        const date = document.getElementById('startDate').value;
-        if (!pkg) { toast('Please select a safari package.', 'warning'); return; }
-        if (!date) { toast('Please select a travel date.', 'warning'); return; }
-        buildConfirmSummary();
-    }
-    if (currentStep < 3) { currentStep++; updateStepUI(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
 }
 
-function prevStep() {
-    if (currentStep > 1) { currentStep--; updateStepUI(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-}
+function nextStep(e) { navigateBookingStep('next', e); }
+function prevStep(e) { navigateBookingStep('prev', e); }
 window.nextStep = nextStep;
 window.prevStep = prevStep;
 
