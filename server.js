@@ -41,7 +41,9 @@ app.use(helmet({
 }));
 
 // Stricter CORS configuration
-const allowedOrigins = process.env.ALLOWED_ORIGIN ? process.env.ALLOWED_ORIGIN.split(',') : ['http://localhost:3000'];
+const allowedOrigins = process.env.ALLOWED_ORIGIN ? process.env.ALLOWED_ORIGIN.split(',') : ['http://localhost:3000','http://localhost:5173',
+  'https://tanzaniasafarimagic.com',
+  'https://www.tanzaniasafarimagic.com',];
 app.use(cors({
     origin: function(origin, callback) {
         if (!origin || allowedOrigins.indexOf(origin) !== -1) {
