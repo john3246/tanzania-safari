@@ -4,55 +4,9 @@ document.getElementById('mobileToggle')?.addEventListener('click', () => { docum
 document.getElementById('menuOverlay')?.addEventListener('click', () => { document.getElementById('mainNav')?.classList.remove('active'); document.getElementById('menuOverlay')?.classList.remove('active'); });
 const yr = document.getElementById('year'); if (yr) yr.textContent = new Date().getFullYear();
 
-let currentStep = 1;
+/* Multi-step wizard logic removed – single-stage form now handles all fields */
 let packages = [];
 let selectedPkg = null;
-
-function updateStepUI() {
-    document.querySelectorAll('.form-step').forEach((s, i) => s.classList.toggle('active', i + 1 === currentStep));
-    document.querySelectorAll('.step[data-step]').forEach(s => {
-        const n = parseInt(s.dataset.step);
-        s.classList.toggle('active', n === currentStep);
-        s.classList.toggle('done', n < currentStep);
-function nextStep(event) {
-    if (event) event.preventDefault();
-    if (currentStep === 1) {
-        const name = document.getElementById('fullName').value.trim();
-        const email = document.getElementById('emailInput').value.trim();
-        if (!name || !email) { toast('Please fill in your name and email.', 'warning'); return; }
-    }
-    if (currentStep === 2) {
-        const pkg = document.getElementById('packageSelect').value;
-        const date = document.getElementById('startDate').value;
-        if (!pkg) { toast('Please select a safari package.', 'warning'); return; }
-        if (!date) { toast('Please select a travel date.', 'warning'); return; }
-        buildConfirmSummary();
-    }
-    if (currentStep < 3) { 
-        currentStep++; 
-        updateStepUI(); 
-        const formTop = document.getElementById('stepsBar') || document.getElementById('bookingForm');
-        if (formTop) {
-            const y = formTop.getBoundingClientRect().top + window.scrollY - 100;
-            window.scrollTo({ top: y, behavior: 'smooth' });
-        }
-    }
-}
-
-function prevStep(event) {
-    if (event) event.preventDefault();
-    if (currentStep > 1) { 
-        currentStep--; 
-        updateStepUI(); 
-        const formTop = document.getElementById('stepsBar') || document.getElementById('bookingForm');
-        if (formTop) {
-            const y = formTop.getBoundingClientRect().top + window.scrollY - 100;
-            window.scrollTo({ top: y, behavior: 'smooth' });
-        }
-    }
-}
-window.nextStep = nextStep;
-window.prevStep = prevStep;
 
 function updateEndDate() {
     const pkgId = document.getElementById('packageSelect').value;
@@ -64,7 +18,7 @@ function updateEndDate() {
         end.setDate(end.getDate() + parseInt(pkg.duration_days || 1));
         document.getElementById('endDate').value = end.toISOString().split('T')[0];
     }
-    updateSummary();
+    // End date updated; summary will be refreshed by updateSummary when needed
 }
 window.updateEndDate = updateEndDate;
 
@@ -115,7 +69,10 @@ document.getElementById('bookingForm')?.addEventListener('submit', async e => {
     const total = (basePrice * adults) + (basePrice * 0.7 * children);
     try {
         const res = await API.post('/bookings', { ...data, total_price_usd: total, booking_source: 'Website' });
-        document.getElementById('stepsBar').style.display = 'none';
+        // Hide optional steps bar if present
+        if (document.getElementById('stepsBar')) {
+          document.getElementById('stepsBar').style.display = 'none';
+        }
         document.getElementById('bookingForm').style.display = 'none';
         const sb = document.getElementById('successBox');
         sb.style.display = 'block';
@@ -156,3 +113,13 @@ async function loadPackages() {
 }
 
 loadPackages();
+// Initialize UI interactions after DOM is ready
+window.addEventListener('DOMContentLoaded', () => {
+  // Focus first input for better UX
+  document.getElementById('fullName')?.focus();
+  // Update summary when package selection or traveler counts change
+  document.getElementById('packageSelect')?.addEventListener('change', updateSummary);
+  document.querySelectorAll('[name="number_of_adults"], [name="number_of_children"]').forEach(el => {
+    el.addEventListener('input', updateSummary);
+  });
+});

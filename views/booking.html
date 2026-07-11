@@ -53,15 +53,6 @@
   <div class="container">
     <div class="booking-layout">
       <div>
-        <!-- Steps -->
-        <div class="steps" id="stepsBar">
-          <div class="step active" data-step="1"><div class="step-num">1</div><div class="step-label">Your Info</div></div>
-          <div class="step-line"></div>
-          <div class="step" data-step="2"><div class="step-num">2</div><div class="step-label">Trip Details</div></div>
-          <div class="step-line"></div>
-          <div class="step" data-step="3"><div class="step-num">3</div><div class="step-label">Confirm</div></div>
-        </div>
-
         <!-- Success -->
         <div class="success-box" id="successBox">
           <div class="icon"><i class="fas fa-check"></i></div>
@@ -72,8 +63,7 @@
         </div>
 
         <form id="bookingForm">
-          <!-- Step 1 -->
-          <div class="form-card form-step active" id="step1">
+          <div class="form-card">
             <h3 style="margin-bottom:1.5rem"><i class="fas fa-user" style="color:var(--primary);margin-right:.5rem"></i>Personal Information</h3>
             <div class="form-row">
               <div class="form-group"><label class="form-label">Full Name <span>*</span></label><input class="form-control" name="full_name" required placeholder="John Smith" id="fullName"></div>
@@ -83,11 +73,9 @@
               <div class="form-group"><label class="form-label">Phone Number</label><input class="form-control" name="phone" placeholder="+1 234 567 890"></div>
               <div class="form-group"><label class="form-label">Country</label><input class="form-control" name="country" placeholder="United States"></div>
             </div>
-            <div class="step-nav"><div></div><button type="button" class="btn btn-primary" onclick="nextStep()">Next Step <i class="fas fa-arrow-right"></i></button></div>
-          </div>
 
-          <!-- Step 2 -->
-          <div class="form-card form-step" id="step2">
+            <hr style="margin:2rem 0;border:0;border-top:1px solid var(--border)">
+
             <h3 style="margin-bottom:1.5rem"><i class="fas fa-compass" style="color:var(--primary);margin-right:.5rem"></i>Trip Details</h3>
             <div class="form-group"><label class="form-label">Safari Package <span>*</span></label>
               <select class="form-control" name="package_id" required id="packageSelect" onchange="updateSummary()">
@@ -120,24 +108,15 @@
             </div>
             <div class="form-group"><label class="form-label">Dietary Requirements</label><input class="form-control" name="dietary_restrictions" placeholder="Vegetarian, vegan, allergies..."></div>
             <div class="form-group"><label class="form-label">Medical Conditions</label><input class="form-control" name="medical_conditions" placeholder="Any relevant medical information"></div>
-            <div class="step-nav">
-              <button type="button" class="btn btn-outline" onclick="prevStep()"><i class="fas fa-arrow-left"></i> Back</button>
-              <button type="button" class="btn btn-primary" onclick="nextStep()">Review Booking <i class="fas fa-arrow-right"></i></button>
-            </div>
-          </div>
 
-          <!-- Step 3 -->
-          <div class="form-card form-step" id="step3">
-            <h3 style="margin-bottom:1.5rem"><i class="fas fa-check-circle" style="color:var(--primary);margin-right:.5rem"></i>Confirm Your Booking</h3>
-            <div id="confirmSummary" style="margin-bottom:1.5rem"></div>
+            <hr style="margin:2rem 0;border:0;border-top:1px solid var(--border)">
+
+            <h3 style="margin-bottom:1.5rem"><i class="fas fa-check-circle" style="color:var(--primary);margin-right:.5rem"></i>Additional Details</h3>
             <div class="form-group"><label class="form-label">Special Requests</label><textarea class="form-control" name="special_requests" rows="3" placeholder="Any special requests or additional information..."></textarea></div>
             <div style="background:var(--bg-secondary);border-radius:var(--radius-md);padding:1rem;font-size:.875rem;color:var(--text-muted);margin-bottom:1.5rem">
               <i class="fas fa-info-circle" style="color:var(--primary)"></i> By submitting this booking you agree to our terms and conditions. A 20% deposit is required to confirm your safari.
             </div>
-            <div class="step-nav">
-              <button type="button" class="btn btn-outline" onclick="prevStep()"><i class="fas fa-arrow-left"></i> Back</button>
-              <button type="submit" class="btn btn-primary btn-lg" id="submitBtn"><i class="fas fa-calendar-check"></i> Confirm Booking</button>
-            </div>
+            <button type="submit" class="btn btn-primary btn-lg" id="submitBtn"><i class="fas fa-calendar-check"></i> Confirm Booking</button>
           </div>
         </form>
       </div>
