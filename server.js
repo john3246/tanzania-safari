@@ -86,6 +86,11 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// ── Crawler Fallbacks (Prevent 404 Pollution) ───────────────────
+app.get(['/favicon.ico', '/ads.txt', '/app-ads.txt', '/sellers.json'], (req, res) => {
+    res.status(204).end();
+});
+
 // ── API Routes ────────────────────────────────────────────────
 app.use('/api/auth',   require('./routes/auth'));
 app.use('/api',        apiRoutes);
