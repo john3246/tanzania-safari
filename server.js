@@ -22,28 +22,41 @@ if (!fs.existsSync(uploadsDir)) {
 }
 
 // ── Security ──────────────────────────────────────────────────
-// Robust Helmet configuration with basic Content Security Policy
+// Robust Helmet configuration with expanded Content Security Policy
 app.use(helmet({
     contentSecurityPolicy: {
         directives: {
             defaultSrc: ["'self'"],
-            scriptSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"], // Adjust CDN sources as needed
+            scriptSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"],
             styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
-            imgSrc: ["'self'", "data:", "https://images.unsplash.com"], // Add trusted image domains
-            connectSrc: ["'self'"],
+            imgSrc: ["'self'", "data:", "https://images.unsplash.com"], 
+            connectSrc: [
+                "'self'", 
+                "https://tanzaniasafarimagic.com", 
+                "https://www.tanzaniasafarimagic.com",
+                "https://tanzania-safari.onrender.com",
+                "http://localhost:3000",
+                "http://localhost:5173"
+            ],
             fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
             objectSrc: ["'none'"],
             mediaSrc: ["'self'"],
             frameSrc: ["'none'"],
         },
     },
-    crossOriginEmbedderPolicy: false, // Prevents loading issues with external images if not fully setup
+    crossOriginEmbedderPolicy: false,
 }));
 
-// Stricter CORS configuration
-const allowedOrigins = process.env.ALLOWED_ORIGIN ? process.env.ALLOWED_ORIGIN.split(',') : ['http://localhost:3000','http://localhost:5173',
-  'https://tanzaniasafarimagic.com',
-  'https://www.tanzaniasafarimagic.com',];
+// Dynamic CORS configuration supporting multiple environments
+const allowedOrigins = process.env.ALLOWED_ORIGIN 
+    ? process.env.ALLOWED_ORIGIN.split(',') 
+    : [
+        'http://localhost:3000',
+        'http://localhost:5173',
+        'https://tanzaniasafarimagic.com',
+        'https://www.tanzaniasafarimagic.com'
+      ];
+
 app.use(cors({
     origin: function(origin, callback) {
         if (!origin || allowedOrigins.indexOf(origin) !== -1) {
@@ -52,7 +65,7 @@ app.use(cors({
             callback(new Error('Not allowed by CORS'));
         }
     },
-    credentials: true, // Allow cookies if needed
+    credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
