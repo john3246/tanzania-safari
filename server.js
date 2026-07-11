@@ -22,8 +22,38 @@ if (!fs.existsSync(uploadsDir)) {
 }
 
 // ── Security ──────────────────────────────────────────────────
-app.use(helmet({ contentSecurityPolicy: false }));
-app.use(cors({ origin: process.env.ALLOWED_ORIGIN || '*' }));
+// Robust Helmet configuration with basic Content Security Policy
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"], // Adjust CDN sources as needed
+            styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
+            imgSrc: ["'self'", "data:", "https://images.unsplash.com"], // Add trusted image domains
+            connectSrc: ["'self'"],
+            fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
+            objectSrc: ["'none'"],
+            mediaSrc: ["'self'"],
+            frameSrc: ["'none'"],
+        },
+    },
+    crossOriginEmbedderPolicy: false, // Prevents loading issues with external images if not fully setup
+}));
+
+// Stricter CORS configuration
+const allowedOrigins = process.env.ALLOWED_ORIGIN ? process.env.ALLOWED_ORIGIN.split(',') : ['http://localhost:3000'];
+app.use(cors({
+    origin: function(origin, callback) {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true, // Allow cookies if needed
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 // ── Rate limiting ─────────────────────────────────────────────
 app.use('/api/', rateLimit({ windowMs: 15 * 60 * 1000, max: 200, message: { success: false, message: 'Too many requests' } }));
@@ -61,13 +91,21 @@ app.use('/', indexRoutes);
 app.use((req, res) =>
     res.status(404).sendFile(path.join(__dirname, 'views/404.html')));
 
-// ── Error handler ─────────────────────────────────────────────
+// ── Centralized Error handler ─────────────────────────────────────────────
 app.use((err, req, res, next) => {
-    console.error('Server Error:', err.stack);
-    res.status(500).json({
+    // Log the full error internally
+    console.error(`[${new Date().toISOString()}] Server Error on ${req.method} ${req.url}:`, err.stack);
+    
+    // Determine status code
+    const statusCode = err.statusCode || 500;
+    
+    // In production, NEVER leak the stack trace or internal error messages to the client
+    const isProd = process.env.NODE_ENV === 'production';
+    
+    res.status(statusCode).json({
         success: false,
-        message: 'Something went wrong!',
-        error: process.env.NODE_ENV === 'development' ? err.message : undefined
+        message: isProd && statusCode === 500 ? 'Internal Server Error' : (err.message || 'Something went wrong!'),
+        error: isProd ? undefined : err.stack
     });
 });
 

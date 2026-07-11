@@ -2,9 +2,11 @@ const express = require('express');
 const router = express.Router();
 const adminController = require('../controllers/admin.controller');
 const { verifyAdmin } = require('../middleware/auth.middleware');
+const { validate } = require('../middleware/validate.middleware');
+const { adminLoginSchema } = require('../validators/api.validators');
 
 // ── Authentication ────────────────────────────────────────────
-router.post('/login', adminController.login);
+router.post('/login', validate(adminLoginSchema), adminController.login);
 router.get('/verify', verifyAdmin, adminController.verify);
 
 // ── Sub-Routes ────────────────────────────────────────────────

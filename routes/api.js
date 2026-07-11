@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const safariController = require('../controllers/safariController');
 const { verifyUser } = require('../middleware/auth.middleware');
+const { validate } = require('../middleware/validate.middleware');
+const { contactSchema, newsletterSchema } = require('../validators/api.validators');
 
 // ── Sub-Routes ────────────────────────────────────────────────
 router.use('/packages',     require('./api/package.routes'));
@@ -66,7 +68,7 @@ router.get('/testimonials', async (req, res) => {
 });
 
 // ── Enquiry/Contact ───────────────────────────────────────────
-router.post(['/enquiry', '/contact'], async (req, res) => {
+router.post(['/enquiry', '/contact'], validate(contactSchema), async (req, res) => {
     try {
         const db = require('../config/db');
         const emailService = require('../services/email.service');
@@ -98,7 +100,7 @@ router.post(['/enquiry', '/contact'], async (req, res) => {
 });
 
 // ── Newsletter ────────────────────────────────────────────────
-router.post('/newsletter', async (req, res) => {
+router.post('/newsletter', validate(newsletterSchema), async (req, res) => {
     try {
         const db = require('../config/db');
         const { email } = req.body;
