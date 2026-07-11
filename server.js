@@ -72,6 +72,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ── API Routes ────────────────────────────────────────────────
+app.use('/api/auth',   require('./routes/auth'));
 app.use('/api',        apiRoutes);
 app.use('/api/admin',  adminRoutes);
 app.use('/api/images', imageRoutes);
@@ -79,6 +80,10 @@ app.use('/api/images', imageRoutes);
 // ── Admin HTML Routes ─────────────────────────────────────────
 app.get('/admin/login', (req, res) =>
     res.sendFile(path.join(__dirname, 'views/admin/login.html')));
+app.get('/admin/register', (req, res) =>
+    res.sendFile(path.join(__dirname, 'views/admin/register.html')));
+app.get('/admin/reset-password', (req, res) =>
+    res.sendFile(path.join(__dirname, 'views/admin/reset-password.html')));
 app.get('/admin', (req, res) =>
     res.sendFile(path.join(__dirname, 'views/admin/index.html')));
 app.get('/admin/:page', (req, res) =>

@@ -50,24 +50,18 @@ function initHeader() {
     });
 
     // Mobile menu toggle
-    if (mobileToggle && mainNav && menuOverlay) {
-        mobileToggle.addEventListener('click', () => {
-            mainNav.classList.toggle('active');
-            menuOverlay.classList.toggle('active');
-            const icon = mobileToggle.querySelector('i');
-            icon.classList.toggle('fa-bars');
-            icon.classList.toggle('fa-times');
-            document.body.style.overflow = mainNav.classList.contains('active') ? 'hidden' : '';
-        });
+    const drawerClose = document.getElementById('drawerClose');
+    
+    function toggleDrawer() {
+        mainNav.classList.toggle('active');
+        menuOverlay.classList.toggle('active');
+        document.body.style.overflow = mainNav.classList.contains('active') ? 'hidden' : '';
+    }
 
-        menuOverlay.addEventListener('click', () => {
-            mainNav.classList.remove('active');
-            menuOverlay.classList.remove('active');
-            const icon = mobileToggle.querySelector('i');
-            icon.classList.add('fa-bars');
-            icon.classList.remove('fa-times');
-            document.body.style.overflow = '';
-        });
+    if (mobileToggle && mainNav && menuOverlay) {
+        mobileToggle.addEventListener('click', toggleDrawer);
+        menuOverlay.addEventListener('click', toggleDrawer);
+        if (drawerClose) drawerClose.addEventListener('click', toggleDrawer);
     }
 
     // Scroll effect - Navbar color change

@@ -1,12 +1,12 @@
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
-    host: process.env.MAIL_HOST || 'smtp.gmail.com',
-    port: parseInt(process.env.MAIL_PORT) || 587,
-    secure: false,
+    host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+    port: parseInt(process.env.EMAIL_PORT) || 587,
+    secure: false, // true for 465, false for other ports
     auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
     }
 });
 
@@ -55,7 +55,7 @@ async function sendBookingConfirmation(booking) {
     </div>`);
     
     return transporter.sendMail({
-        from: `"Tanzania Safari" <${process.env.MAIL_USER}>`,
+        from: `"Tanzania Safari" <${process.env.EMAIL_USER}>`,
         to: booking.email,
         subject: `Booking Confirmed — ${booking.package_name || 'Safari Package'}`,
         html
@@ -79,7 +79,7 @@ async function sendContactAcknowledgment(enquiry) {
     </div>`);
 
     return transporter.sendMail({
-        from: `"Tanzania Safari" <${process.env.MAIL_USER}>`,
+        from: `"Tanzania Safari" <${process.env.EMAIL_USER}>`,
         to: enquiry.email,
         subject: 'We received your inquiry — Tanzania Safari',
         html
@@ -125,7 +125,7 @@ async function sendBookingStatusUpdate(booking, newStatus) {
     <div class="footer"><p>Tanzania Safari & Tours · info@tanzaniasafari.com</p></div>`);
 
     return transporter.sendMail({
-        from: `"Tanzania Safari" <${process.env.MAIL_USER}>`,
+        from: `"Tanzania Safari" <${process.env.EMAIL_USER}>`,
         to: booking.email,
         subject: `Booking Status Update — ${newStatus.toUpperCase()}`,
         html
@@ -147,7 +147,7 @@ async function sendEnquiryResponse(enquiry, responseNotes) {
     <div class="footer"><p>Tanzania Safari & Tours · Arusha, Tanzania · info@tanzaniasafari.com</p></div>`);
 
     return transporter.sendMail({
-        from: `"Tanzania Safari" <${process.env.MAIL_USER}>`,
+        from: `"Tanzania Safari" <${process.env.EMAIL_USER}>`,
         to: enquiry.email,
         subject: `Response to your Safari Inquiry — Tanzania Safari`,
         html
@@ -165,11 +165,42 @@ async function sendNewsletterUpdate(subscriberEmail, blog) {
     <div class="footer"><p>You received this because you subscribed to our newsletter.</p></div>`);
 
     return transporter.sendMail({
-        from: `"Tanzania Safari" <${process.env.MAIL_USER}>`,
+        from: `"Tanzania Safari" <${process.env.EMAIL_USER}>`,
         to: subscriberEmail,
         subject: `New on our Blog: ${blog.post_title}`,
         html
     });
+}
+
+async function sendPasswordResetEmail(email, resetUrl) {
+    const html = baseTemplate(`
+    <div class="header">
+      <h1>🔐 Password Reset Request</h1>
+      <p>Tanzania Safari & Tours</p>
+    </div>
+    <div class="body">
+      <p>Hello,</p>
+      <p>We received a request to reset your password. If you didn't make this request, you can safely ignore this email.</p>
+      <div style="text-align: center;">
+        <a href="${resetUrl}" class="btn">Reset Password</a>
+      </div>
+      <p style="margin-top: 20px; font-size: 13px; color: #888;">This link will expire in 1 hour.</p>
+    </div>
+    <div class="footer">
+      <p>Tanzania Safari System</p>
+    </div>`);
+
+    try {
+        await transporter.sendMail({
+            from: `"Tanzania Safari Security" <${process.env.EMAIL_USER}>`,
+            to: email,
+            subject: 'Password Reset - Tanzania Safari',
+            html
+        });
+    } catch (error) {
+        console.error('Email sending failed in sendPasswordResetEmail:', error);
+        throw new Error('Failed to send reset email');
+    }
 }
 
 module.exports = { 
@@ -178,5 +209,6 @@ module.exports = {
     sendAdminNotification, 
     sendBookingStatusUpdate,
     sendEnquiryResponse,
-    sendNewsletterUpdate
+    sendNewsletterUpdate,
+    sendPasswordResetEmail
 };

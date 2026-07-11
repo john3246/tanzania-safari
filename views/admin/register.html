@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Admin Login | Tanzania Safari</title>
+<title>Admin Setup | Tanzania Safari</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -10,13 +10,15 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 body{font-family:var(--font-body), 'Inter',sans-serif;background:var(--bg-secondary);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1rem}
-.login-card{background:var(--bg-card);border-radius:var(--radius-lg);width:100%;max-width:420px;overflow:hidden;box-shadow:var(--shadow-xl);border:1px solid var(--border-light)}
+.login-card{background:var(--bg-card);border-radius:var(--radius-lg);width:100%;max-width:480px;overflow:hidden;box-shadow:var(--shadow-xl);border:1px solid var(--border-light)}
 .login-header{background:var(--primary-dark);padding:2.5rem 2rem;text-align:center;color:#fff}
 .login-logo{font-family:var(--font-heading), 'Playfair Display',serif;font-size:1.75rem;font-weight:700;margin-bottom:.375rem}
 .login-logo span{opacity:.8}
 .login-subtitle{font-size:.875rem;opacity:.85}
 .login-body{padding:2.5rem 2rem}
 .form-group{margin-bottom:1.5rem}
+.form-row { display: flex; gap: 1rem; }
+.form-row .form-group { flex: 1; }
 .form-label{display:block;font-size:.85rem;font-weight:600;color:var(--text-secondary);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.5px}
 .input-wrap{position:relative}
 .input-wrap i{position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:.875rem}
@@ -32,38 +34,70 @@ body{font-family:var(--font-body), 'Inter',sans-serif;background:var(--bg-second
 .login-footer{text-align:center;padding:0 2rem 2.5rem;font-size:.85rem;color:var(--text-muted)}
 .login-footer a{color:var(--primary);font-weight:600;text-decoration:none;transition:var(--transition)}
 .login-footer a:hover{color:var(--primary-dark)}
+
+/* Loading Overlay */
+#loadingOverlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: var(--bg-secondary); z-index: 9999;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.spinner { border: 4px solid rgba(0,0,0,0.1); border-left-color: var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 1rem; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
-<div class="login-card">
+
+<div id="loadingOverlay">
+    <div class="spinner"></div>
+    <p style="color: var(--text-muted); font-weight: 500;">Checking system status...</p>
+</div>
+
+<div class="login-card" id="registerCard" style="display: none;">
   <div class="login-header">
     <div class="login-logo">Tanzania<span>Safari</span></div>
-    <div class="login-subtitle">Admin Control Panel</div>
+    <div class="login-subtitle">System Initialization: Setup Admin</div>
   </div>
   <div class="login-body">
-    <div class="error-msg" id="errorMsg"><i class="fas fa-exclamation-circle"></i><span id="errorText">Invalid credentials</span></div>
-    <form id="loginForm">
+    <div class="error-msg" id="errorMsg"><i class="fas fa-exclamation-circle"></i><span id="errorText">Error</span></div>
+    <form id="registerForm">
+      <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">First Name</label>
+            <div class="input-wrap">
+              <i class="fas fa-user"></i>
+              <input class="form-control" type="text" name="firstName" required placeholder="John">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name</label>
+            <div class="input-wrap">
+              <i class="fas fa-user"></i>
+              <input class="form-control" type="text" name="lastName" required placeholder="Doe">
+            </div>
+          </div>
+      </div>
       <div class="form-group">
-        <label class="form-label">Email Address</label>
+        <label class="form-label">Admin Email Address</label>
         <div class="input-wrap">
           <i class="fas fa-envelope"></i>
-          <input class="form-control" type="email" name="email" required placeholder="admin@tanzaniasafari.com" autocomplete="email" id="emailInput">
+          <input class="form-control" type="email" name="email" required placeholder="admin@tanzaniasafari.com">
         </div>
       </div>
       <div class="form-group">
-        <label class="form-label">Password</label>
+        <label class="form-label">Secure Password</label>
         <div class="input-wrap">
           <i class="fas fa-lock"></i>
-          <input class="form-control" type="password" name="password" required placeholder="Enter your password" autocomplete="current-password" id="passwordInput">
+          <input class="form-control" type="password" name="password" required placeholder="Min. 6 characters" id="passwordInput" minlength="6">
           <button type="button" class="toggle-pw" id="togglePw"><i class="fas fa-eye"></i></button>
         </div>
       </div>
-      <button type="submit" class="btn-login" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Sign In to Dashboard</button>
+      <button type="submit" class="btn-login" id="registerBtn"><i class="fas fa-user-shield"></i> Initialize Admin Account</button>
     </form>
   </div>
-  <div class="login-footer"><a href="/"><i class="fas fa-arrow-left"></i> Back to Website</a></div>
+  <div class="login-footer"><a href="/admin/login"><i class="fas fa-arrow-left"></i> Back to Login</a></div>
 </div>
 <script>
+// Toggle Password Visibility
 document.getElementById('togglePw').addEventListener('click', function(){
   const inp = document.getElementById('passwordInput');
   const icon = this.querySelector('i');
@@ -71,57 +105,54 @@ document.getElementById('togglePw').addEventListener('click', function(){
   else { inp.type = 'password'; icon.className = 'fas fa-eye'; }
 });
 
-document.getElementById('loginForm').addEventListener('submit', async e => {
+// Initial Setup Check
+async function checkRegistrationStatus() {
+    try {
+        const response = await fetch('/api/auth/can-register-admin');
+        if (response.status === 403) {
+            // Registration is closed. Redirect to login with a URL parameter for the banner.
+            window.location.replace('/admin/login?msg=registration_closed');
+            return;
+        }
+        // Show the form
+        document.getElementById('loadingOverlay').style.display = 'none';
+        document.getElementById('registerCard').style.display = 'block';
+    } catch (error) {
+        document.getElementById('loadingOverlay').innerHTML = `<p style="color: var(--error);">Failed to connect to server.</p>`;
+    }
+}
+checkRegistrationStatus();
+
+// Handle Registration Submission
+document.getElementById('registerForm').addEventListener('submit', async e => {
   e.preventDefault();
-  const btn = document.getElementById('loginBtn');
+  const btn = document.getElementById('registerBtn');
   const err = document.getElementById('errorMsg');
   err.classList.remove('show');
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing In...';
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Initializing...';
   btn.disabled = true;
-  const { email, password } = Object.fromEntries(new FormData(e.target));
+
+  const formData = Object.fromEntries(new FormData(e.target));
+  
   try {
-    const r = await fetch('/api/admin/login', {
+    const r = await fetch('/api/auth/register-admin', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify(formData)
     });
+    
     const data = await r.json();
-    if (!r.ok || !data.success) throw new Error(data.message || 'Login failed');
-    localStorage.setItem('adminToken', data.token);
-    localStorage.setItem('adminUser', JSON.stringify(data.user));
-    window.location.href = '/admin';
+    if (!r.ok || !data.success) throw new Error(data.message || data.errors?.[0]?.message || 'Registration failed');
+    
+    // Success! Redirect to login with success message
+    window.location.href = '/admin/login?msg=setup_complete';
   } catch (ex) {
     document.getElementById('errorText').textContent = ex.message;
     err.classList.add('show');
-    btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In to Dashboard';
+    btn.innerHTML = '<i class="fas fa-user-shield"></i> Initialize Admin Account';
     btn.disabled = false;
   }
 });
-
-// Redirect if already logged in
-if (localStorage.getItem('adminToken')) window.location.href = '/admin';
-
-// Handle URL messages (from redirect)
-const urlParams = new URLSearchParams(window.location.search);
-const msgCode = urlParams.get('msg');
-const errorMsg = document.getElementById('errorMsg');
-const errorText = document.getElementById('errorText');
-
-if (msgCode === 'registration_closed') {
-    errorText.innerHTML = '<strong>Access Denied:</strong> Admin registration is closed. The system is already initialized.';
-    errorMsg.classList.add('show');
-    errorMsg.style.backgroundColor = '#e3f2fd';
-    errorMsg.style.color = '#1565c0';
-    errorMsg.style.borderColor = '#90caf9';
-    errorMsg.querySelector('i').className = 'fas fa-info-circle';
-} else if (msgCode === 'setup_complete') {
-    errorText.innerHTML = '<strong>Success:</strong> Admin account created! You can now log in.';
-    errorMsg.classList.add('show');
-    errorMsg.style.backgroundColor = '#e8f5e9';
-    errorMsg.style.color = '#2e7d32';
-    errorMsg.style.borderColor = '#a5d6a7';
-    errorMsg.querySelector('i').className = 'fas fa-check-circle';
-}
 </script>
 </body>
 </html>
