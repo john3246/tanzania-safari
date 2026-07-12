@@ -584,7 +584,7 @@ async function sendNewsletterUpdate(subscriberEmail, content) {
 }
 
 // Admin alerts
-async function sendAdminAlert(type, data) {
+async function sendAdminAlert(type, queueData) {
   if (!process.env.ADMIN_EMAIL) {
     logger.warn({ event: 'admin_email_missing' }, 'ADMIN_EMAIL not set, skipping admin alert');
     return { success: false, error: 'ADMIN_EMAIL not set' };
@@ -596,7 +596,7 @@ async function sendAdminAlert(type, data) {
     critical_error: 'Critical Email Error'
   };
 
-  const data = {
+  const queueData = {
     to: process.env.ADMIN_EMAIL,
     subject: subjects[type] || 'Admin Alert',
     templateName: 'admin-alert',
@@ -610,7 +610,7 @@ async function sendAdminAlert(type, data) {
     },
     priority: 'high'
   };
-  return sendEmailQueued('admin-alert', data);
+  return sendEmailQueued('admin-alert', queueData);
 }
 
 module.exports = {
