@@ -5,7 +5,7 @@ const logger = require('../../utils/logger');
 // Redis connection
 const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
 const redis = new Redis(redisUrl, {
-  maxRetriesPerRequest: 3,
+  maxRetriesPerRequest: null,
   retryDelayOnFailover: 100,
   enableReadyCheck: true,
   enableOfflineQueue: false
