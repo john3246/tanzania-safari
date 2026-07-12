@@ -14,7 +14,6 @@ This guide explains how to configure and set up the email system for Tanzania Sa
 Add the following environment variables to your `.env` file:
 
 ```bash
-# Email Configuration (Namecheap Private Email)
 EMAIL_HOST=mail.privateemail.com
 EMAIL_PORT=587
 EMAIL_SECURE=false
@@ -24,20 +23,12 @@ EMAIL_FROM="Tanzania Safari Magic <info@tanzaniasafarimagic.com>"
 ADMIN_EMAIL=info@tanzaniasafarimagic.com
 ADMIN_URL=http://localhost:3000/admin
 SITE_URL=http://localhost:3000
-
-# Redis Configuration (for email queue)
 REDIS_URL=redis://localhost:6379
-
-# Email Queue Configuration
 QUEUE_CONCURRENCY=5
 QUEUE_RETRY_ATTEMPTS=5
 QUEUE_BACKOFF_MS=5000
-
-# Email Rate Limiting
 EMAIL_MAX_PER_MINUTE=20
 EMAIL_MAX_PER_HOUR=200
-
-# Logging
 LOG_LEVEL=info
 ```
 

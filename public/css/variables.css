@@ -1,29 +1,23 @@
-/* ============================================================
-   TANZANIA SAFARI — DESIGN SYSTEM TOKENS
-   Color palette: Earth tones, Safari brown, Savanna sand,
-   Baobab green, Lake blue, Sunset orange/gold
-   ============================================================ */
-
 :root {
-  /* ── Primary: Deep Blue ───────────────────────── */
+  /* ── Primary: Deep Blue*/
   --primary:       #0D47A1;
   --primary-dark:  #082D66;
   --primary-light: #1565C0;
   --primary-pale:  rgba(13, 71, 161, 0.10);
 
-  /* ── Secondary: Baobab Green ──────────────────────────── */
+  /* ── Secondary: Baobab Green*/
   --secondary:       #3A7D44;
   --secondary-dark:  #2C5F35;
   --secondary-light: #4E9E5A;
   --secondary-pale:  rgba(58, 125, 68, 0.10);
 
-  /* ── Accent: Warm Orange ───────────────────────── */
+  /*Accent: Warm Orange*/
   --accent:       #FF6F00;
   --accent-dark:  #C45500;
   --accent-light: #FF8F00;
   --accent-pale:  rgba(255, 111, 0, 0.10);
 
-  /* ── Neutral: Safari Brown / Earth ───────────────────── */
+  /* ── Neutral: Safari Brown / Earth*/
   --earth-dark:   #3D2B1F;
   --earth-mid:    #6B4423;
   --earth-light:  #A07048;
@@ -32,13 +26,13 @@
   --sand-light:   #F5ECD9;
   --sand-pale:    #FBF6EE;
 
-  /* ── Lake Blue ────────────────────────────────────────── */
+  /* ── Lake Blue */
   --lake:         #1E6FA8;
   --lake-dark:    #145580;
   --lake-light:   #2E8FCC;
   --lake-pale:    rgba(30, 111, 168, 0.10);
 
-  /* ── Text ─────────────────────────────────────────────── */
+  /* ── Text */
   --text-primary:   #2A1A0E;
   --text-secondary: #5C3D20;
   --text-muted:     #8A6E54;
@@ -46,7 +40,7 @@
   --text-white:     #FFFFFF;
   --text-on-dark:   rgba(255, 255, 255, 0.90);
 
-  /* ── Backgrounds ──────────────────────────────────────── */
+  /* ── Backgrounds*/
   --bg-primary:   #FAFAFA;
   --bg-secondary: #F0F0F0;
   --bg-muted:     #E0E0E0;
@@ -54,12 +48,12 @@
   --bg-darker:    #1A0E06;
   --bg-card:      #FFFFFF;
 
-  /* ── Borders ──────────────────────────────────────────── */
+  /* ── Border*/
   --border:       #E8D8C0;
   --border-light: #F0E4CC;
   --border-focus: var(--primary);
 
-  /* ── Status Colors ────────────────────────────────────── */
+  /* ── Status Colors*/
   --success:      #2E7D32;
   --success-bg:   #E8F5E9;
   --warning:      #E65100;
@@ -69,11 +63,11 @@
   --info:         #1565C0;
   --info-bg:      #E3F2FD;
 
-  /* ── Typography ───────────────────────────────────────── */
+  /* ── Typography */
   --font-heading: 'Poppins', sans-serif;
   --font-body:    'Roboto', sans-serif;
 
-  /* ── Spacing Scale ────────────────────────────────────── */
+  /* ── Spacing Scale */
   --space-1:  0.25rem;   /*  4px */
   --space-2:  0.5rem;    /*  8px */
   --space-3:  0.75rem;   /* 12px */
@@ -95,7 +89,7 @@
   --spacing-xl:  var(--space-12);
   --spacing-xxl: var(--space-20);
 
-  /* ── Border Radii ─────────────────────────────────────── */
+  /* ── Border Radii */
   --radius-xs:   4px;
   --radius-sm:   8px;
   --radius-md:   12px;
@@ -104,7 +98,7 @@
   --radius-2xl:  32px;
   --radius-full: 9999px;
 
-  /* ── Shadows ──────────────────────────────────────────── */
+  /* ── Shadows */
   --shadow-xs:  0 1px 3px rgba(42, 26, 14, 0.08);
   --shadow-sm:  0 2px 8px  rgba(42, 26, 14, 0.10);
   --shadow-md:  0 8px 24px rgba(42, 26, 14, 0.12);
@@ -113,7 +107,7 @@
   --shadow-card: 0 4px 20px rgba(42, 26, 14, 0.10);
   --shadow-glow: 0 0 30px rgba(200, 134, 10, 0.25);
 
-  /* ── Gradients (Now Solid Colors) ────────────────────────── */
+  /* ── Gradients (Now Solid Colors) */
   --gradient-primary:  var(--primary);
   --gradient-hero:     rgba(42,26,14,0.60);
   --gradient-card:     rgba(42,26,14,0.85);
@@ -121,12 +115,12 @@
   --gradient-gold:     #C8860A;
   --gradient-green:    var(--secondary);
 
-  /* ── Transitions ──────────────────────────────────────── */
+  /* ── Transitions */
   --transition:      all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* ── Z-index ──────────────────────────────────────────── */
+  /* ── Z-index */
   --z-behind:   -1;
   --z-base:      1;
   --z-raised:   10;
