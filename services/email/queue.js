@@ -45,11 +45,10 @@ const emailQueue = new Queue(QUEUE_NAME, {
   }
 });
 
-// Dead letter queue for failed emails
-const deadLetterQueue = new Queue(`${QUEUE_NAME}:dlq`, {
+//  FIXED: Replace the colon with a hyphen
+const deadLetterQueue = new Queue(`${QUEUE_NAME}-dlq`, {
   connection: redis
 });
-
 /**
  * Add email to queue
  */
