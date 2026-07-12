@@ -584,7 +584,7 @@ async function sendNewsletterUpdate(subscriberEmail, content) {
 }
 
 // Admin alerts
-async function sendAdminAlert(type, queueData) {
+async function sendAdminAlert(type, data) {
   if (!process.env.ADMIN_EMAIL) {
     logger.warn({ event: 'admin_email_missing' }, 'ADMIN_EMAIL not set, skipping admin alert');
     return { success: false, error: 'ADMIN_EMAIL not set' };
