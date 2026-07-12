@@ -18,6 +18,11 @@ const logger = require('./utils/logger');
 const app  = express();
 const PORT = process.env.PORT || 3000;
 
+// ── Environment Configuration ─────────────────────────────────────
+// Instruct Express to trust headers set by Render's reverse proxy (e.g., X-Forwarded-For).
+// This is crucial for rate limiting and logging accurate client IPs.
+app.enable('trust proxy');
+
 // Ensure uploads directory exists
 const fs = require('fs');
 const uploadsDir = path.join(__dirname, 'uploads');
@@ -38,7 +43,7 @@ app.use(helmet({
                 "'self'", 
                 "https://tanzaniasafarimagic.com", 
                 "https://www.tanzaniasafarimagic.com",
-                "https://tanzania-safari.onrender.com",
+                "https://tanzania-safari.onrender.com", // Added deployment URL for CSP compatibility
                 "http://localhost:3000",
                 "http://localhost:5173"
             ],
@@ -75,6 +80,7 @@ app.use(cors({
 }));
 
 // ── Rate limiting ─────────────────────────────────────────────
+// The 'trust proxy' setting above ensures these limits are applied per client IP.
 app.use('/api/', rateLimit({ windowMs: 15 * 60 * 1000, max: 200, message: { success: false, message: 'Too many requests' } }));
 app.use('/api/bookings', rateLimit({ windowMs: 60 * 60 * 1000, max: 30 }));
 app.use('/api/contact', rateLimit({ windowMs: 60 * 60 * 1000, max: 20 }));
