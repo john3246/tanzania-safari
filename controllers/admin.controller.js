@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const userRepository = require('../repositories/user.repository');
 const statRepository = require('../repositories/stat.repository');
 const { JWT_SECRET } = require('../middleware/auth.middleware');
+const emailService = require('../services/email');
 
 class AdminController {
     async login(req, res) {
@@ -78,8 +79,25 @@ class AdminController {
         try {
             const db = require('../config/db');
             const { response } = req.body;
+            
+            // Get enquiry details before updating
+            const enquiryResult = await db.query('SELECT * FROM contact_enquiries WHERE enquiry_id = $1', [req.params.id]);
+            
+            if (enquiryResult.rows.length === 0) {
+                return res.status(404).json({ success: false, message: 'Enquiry not found' });
+            }
+            
+            const enquiry = enquiryResult.rows[0];
+            
             await db.query('UPDATE contact_enquiries SET enquiry_status = $1, updated_at = NOW() WHERE enquiry_id = $2', ['Responded', req.params.id]);
-            // In a real application, we would also send an email to the user here.
+            
+            // Send response email to user
+            try {
+                await emailService.sendEnquiryResponse(enquiry, response);
+            } catch (emailError) {
+                console.error('Failed to send enquiry response email:', emailError.message);
+            }
+            
             res.json({ success: true });
         } catch (error) {
             res.status(500).json({ success: false, message: 'Error responding to enquiry' });

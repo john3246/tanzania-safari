@@ -1,0 +1,26 @@
+{{#with booking}}
+<p>Dear <strong>{{full_name}}</strong>,</p>
+
+<p>Thank you for choosing Tanzania Safari Magic! Your safari adventure has been completed.</p>
+
+<div class="divider"></div>
+
+<div class="row">
+  <span class="label">Booking Reference</span>
+  <span class="value">#{{booking_reference}}</span>
+</div>
+<div class="row">
+  <span class="label">Package</span>
+  <span class="value">{{package_name}}</span>
+</div>
+<div class="row">
+  <span class="label">Travel Date</span>
+  <span class="value">{{formatDate start_date}}</span>
+</div>
+
+<div class="divider"></div>
+
+<p>We hope you had an amazing experience! Please consider leaving a review on our website to share your adventure with others.</p>
+
+<p>Safe travels, and we hope to see you again soon!</p>
+{{/with}}

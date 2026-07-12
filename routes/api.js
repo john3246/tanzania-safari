@@ -71,7 +71,7 @@ router.get('/testimonials', async (req, res) => {
 router.post(['/enquiry', '/contact'], validate(contactSchema), async (req, res) => {
     try {
         const db = require('../config/db');
-        const emailService = require('../services/email.service');
+        const emailService = require('../services/email');
         const { full_name, email, phone, country, enquiry_type, message, enquiry_message, travel_date, travelers, package_id } = req.body;
         
         if (!full_name || !email) return res.status(400).json({ success: false, message: 'Name and email are required' });

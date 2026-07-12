@@ -1,0 +1,28 @@
+{{#with booking}}
+<p>Dear <strong>{{full_name}}</strong>,</p>
+
+<p>Great news! Your safari booking has been <strong>approved</strong> and confirmed.</p>
+
+<div class="divider"></div>
+
+<div class="row">
+  <span class="label">Booking Reference</span>
+  <span class="value">#{{booking_reference}}</span>
+</div>
+<div class="row">
+  <span class="label">Package</span>
+  <span class="value">{{package_name}}</span>
+</div>
+<div class="row">
+  <span class="label">Travel Date</span>
+  <span class="value">{{formatDate start_date}}</span>
+</div>
+<div class="row">
+  <span class="label">Status</span>
+  <span class="value"><span class="badge badge-success">Confirmed</span></span>
+</div>
+
+<div class="divider"></div>
+
+<p>Get ready for an incredible safari experience in Tanzania!</p>
+{{/with}}

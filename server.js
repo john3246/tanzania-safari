@@ -11,6 +11,10 @@ const apiRoutes   = require('./routes/api');
 const adminRoutes = require('./routes/admin');
 const imageRoutes = require('./routes/images');
 
+// Email system initialization
+const emailService = require('./services/email');
+const logger = require('./utils/logger');
+
 const app  = express();
 const PORT = process.env.PORT || 3000;
 
@@ -97,6 +101,89 @@ app.use('/api',        apiRoutes);
 app.use('/api/admin',  adminRoutes);
 app.use('/api/images', imageRoutes);
 
+// ── Health Check Endpoint ───────────────────────────────────────
+app.get('/health', async (req, res) => {
+  const health = {
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV || 'development',
+    services: {}
+  };
+
+  // SMTP status
+  try {
+    const smtpConnected = await emailService.verifyConnection();
+    health.services.smtp = {
+      status: smtpConnected ? 'connected' : 'disconnected',
+      host: process.env.EMAIL_HOST,
+      port: process.env.EMAIL_PORT
+    };
+  } catch (error) {
+    health.services.smtp = {
+      status: 'error',
+      error: error.message
+    };
+  }
+
+  // Queue status
+  try {
+    const queueStats = await emailService.getQueueStats();
+    health.services.queue = {
+      status: 'connected',
+      stats: queueStats
+    };
+  } catch (error) {
+    health.services.queue = {
+      status: 'error',
+      error: error.message
+    };
+  }
+
+  // Environment validation
+  const envValidation = emailService.validateEnvironment();
+  health.services.environment = {
+    status: envValidation.valid ? 'valid' : 'invalid',
+    missing: envValidation.missing || []
+  };
+
+  const overallStatus = Object.values(health.services).every(s => s.status !== 'error');
+  health.status = overallStatus ? 'healthy' : 'degraded';
+
+  const statusCode = overallStatus ? 200 : 503;
+  res.status(statusCode).json(health);
+});
+
+// ── Test Email Endpoint (Development Only) ───────────────────
+if (process.env.NODE_ENV !== 'production') {
+  app.post('/api/test-email', async (req, res) => {
+    try {
+      const { to } = req.body;
+      if (!to) {
+        return res.status(400).json({ success: false, message: 'Email address required' });
+      }
+
+      await emailService.sendEmailDirect({
+        to,
+        subject: 'Test Email — Tanzania Safari Magic',
+        html: `
+          <div style="padding: 40px; font-family: Arial, sans-serif;">
+            <h1 style="color: #C25B2A;">Test Email</h1>
+            <p>This is a test email from Tanzania Safari Magic.</p>
+            <p>If you received this, the email system is working correctly!</p>
+            <p>Timestamp: ${new Date().toISOString()}</p>
+          </div>
+        `
+      });
+
+      res.json({ success: true, message: 'Test email sent successfully' });
+    } catch (error) {
+      logger.error({ event: 'test_email_failed', error: error.message }, 'Test email failed');
+      res.status(500).json({ success: false, message: error.message });
+    }
+  });
+}
+
 // ── Admin HTML Routes ─────────────────────────────────────────
 app.get('/admin/login', (req, res) =>
     res.sendFile(path.join(__dirname, 'views/admin/login.html')));
@@ -134,8 +221,62 @@ app.use((err, req, res, next) => {
     });
 });
 
-app.listen(PORT, () => {
-    console.log(`\nServer running in ${process.env.NODE_ENV || 'development'} mode at http://localhost:${PORT}`);
-    console.log(`Admin Panel: http://localhost:${PORT}/admin/login`);
-    console.log(`API:         http://localhost:${PORT}/api\n`);
+// ── Server Startup with SMTP Verification ───────────────────────
+async function startServer() {
+  try {
+    // Verify SMTP connection on startup
+    logger.info({ event: 'server_starting' }, 'Starting server...');
+    
+    const smtpConnected = await emailService.verifyConnection();
+    if (smtpConnected) {
+      logger.info({ event: 'smtp_startup_ok' }, 'SMTP connection verified on startup');
+    } else {
+      logger.warn({ event: 'smtp_startup_failed' }, 'SMTP connection failed on startup, but server will continue');
+    }
+
+    // Validate environment
+    const envValidation = emailService.validateEnvironment();
+    if (!envValidation.valid) {
+      logger.warn({ event: 'env_validation_warning', missing: envValidation.missing }, 'Environment validation failed');
+    }
+
+    // Start email worker
+    logger.info({ event: 'worker_starting' }, 'Starting email worker...');
+    // Worker is already started by requiring the module
+
+    app.listen(PORT, () => {
+      logger.info({
+        event: 'server_started',
+        port: PORT,
+        environment: process.env.NODE_ENV || 'development',
+        smtp: smtpConnected ? 'connected' : 'disconnected'
+      }, `Server running in ${process.env.NODE_ENV || 'development'} mode at http://localhost:${PORT}`);
+      
+      console.log(`\nServer running in ${process.env.NODE_ENV || 'development'} mode at http://localhost:${PORT}`);
+      console.log(`Admin Panel: http://localhost:${PORT}/admin/login`);
+      console.log(`API:         http://localhost:${PORT}/api`);
+      console.log(`Health:      http://localhost:${PORT}/health\n`);
+    });
+  } catch (error) {
+    logger.error({ event: 'server_startup_failed', error: error.message }, 'Failed to start server');
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
+}
+
+// Graceful shutdown
+process.on('SIGTERM', async () => {
+  logger.info({ event: 'sigterm_received' }, 'SIGTERM received, shutting down gracefully...');
+  await emailService.closeQueue();
+  await emailService.closeWorker();
+  process.exit(0);
 });
+
+process.on('SIGINT', async () => {
+  logger.info({ event: 'sigint_received' }, 'SIGINT received, shutting down gracefully...');
+  await emailService.closeQueue();
+  await emailService.closeWorker();
+  process.exit(0);
+});
+
+startServer();

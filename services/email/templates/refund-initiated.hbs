@@ -1,0 +1,28 @@
+{{#with refund}}
+<p>Dear <strong>{{customer_name}}</strong>,</p>
+
+<p>Your refund request has been initiated and is being processed.</p>
+
+<div class="divider"></div>
+
+<div class="row">
+  <span class="label">Refund ID</span>
+  <span class="value">{{refund_id}}</span>
+</div>
+<div class="row">
+  <span class="label">Booking Reference</span>
+  <span class="value">#{{booking_reference}}</span>
+</div>
+<div class="row">
+  <span class="label">Refund Amount</span>
+  <span class="value">${{formatPrice amount}} USD</span>
+</div>
+<div class="row">
+  <span class="label">Status</span>
+  <span class="value"><span class="badge badge-warning">Processing</span></span>
+</div>
+
+<div class="divider"></div>
+
+<p>Refunds typically take 5-10 business days to appear in your account. You will receive another email when the refund is complete.</p>
+{{/with}}

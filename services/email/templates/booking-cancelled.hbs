@@ -1,0 +1,24 @@
+{{#with booking}}
+<p>Dear <strong>{{full_name}}</strong>,</p>
+
+<p>Your booking has been <strong>cancelled</strong> as requested.</p>
+
+<div class="divider"></div>
+
+<div class="row">
+  <span class="label">Booking Reference</span>
+  <span class="value">#{{booking_reference}}</span>
+</div>
+<div class="row">
+  <span class="label">Package</span>
+  <span class="value">{{package_name}}</span>
+</div>
+<div class="row">
+  <span class="label">Status</span>
+  <span class="value"><span class="badge badge-warning">Cancelled</span></span>
+</div>
+
+<div class="divider"></div>
+
+<p>If you did not request this cancellation, please contact us immediately.</p>
+{{/with}}

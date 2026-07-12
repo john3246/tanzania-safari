@@ -1,6 +1,7 @@
 const bookingRepository = require('../repositories/booking.repository');
 const userRepository = require('../repositories/user.repository');
-const emailService = require('./email.service');
+const emailService = require('./email');
+const db = require('../config/db');
 
 class BookingService {
     async createBooking(data) {
@@ -22,6 +23,20 @@ class BookingService {
         
         try {
             await emailService.sendBookingConfirmation(fullBooking);
+            
+            // Send admin notification for new booking
+            const bookingWithPackage = await db.query(`
+                SELECT b.*, sp.package_name, u.first_name, u.last_name, u.email,
+                       COALESCE(u.first_name || ' ' || COALESCE(u.last_name, ''), b.full_name) as full_name
+                FROM bookings b
+                LEFT JOIN safari_packages sp ON b.package_id = sp.package_id
+                LEFT JOIN users u ON b.user_id = u.user_id
+                WHERE b.booking_id = $1
+            `, [booking.booking_id]);
+            
+            if (bookingWithPackage.rows.length > 0) {
+                await emailService.sendAdminBookingNotification(bookingWithPackage.rows[0]);
+            }
         } catch (err) {
             console.error('Failed to send booking confirmation email:', err.message);
         }
@@ -37,7 +52,18 @@ class BookingService {
 
         const booking = await bookingRepository.getBookingWithUserDetails(id);
         if (booking) {
-            await emailService.sendBookingStatusUpdate(booking, statusCode);
+            // Send appropriate email based on status
+            try {
+                if (statusCode === 'confirmed') {
+                    await emailService.sendBookingApproved(booking);
+                } else if (statusCode === 'rejected') {
+                    await emailService.sendBookingRejected(booking);
+                } else if (statusCode === 'cancelled') {
+                    await emailService.sendBookingCancelled(booking);
+                }
+            } catch (err) {
+                console.error('Failed to send booking status email:', err.message);
+            }
         }
 
         return booking;

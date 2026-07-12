@@ -1,0 +1,22 @@
+{{#with alert}}
+<p><strong>System Alert: {{alert_type}}</strong></p>
+
+<div class="divider"></div>
+
+<p><strong>Timestamp:</strong> {{timestamp}}</p>
+<p><strong>Severity:</strong> {{severity}}</p>
+
+{{#if error_message}}
+<p><strong>Error Message:</strong></p>
+<p style="background: #FFEBEE; padding: 16px; border-radius: 8px; font-size: 14px; color: #C62828;">{{error_message}}</p>
+{{/if}}
+
+{{#if details}}
+<p><strong>Details:</strong></p>
+<pre style="background: #FBF6EE; padding: 16px; border-radius: 8px; font-size: 13px; overflow: auto;">{{details}}</pre>
+{{/if}}
+
+<div class="divider"></div>
+
+<p>Please investigate this issue as soon as possible.</p>
+{{/with}}

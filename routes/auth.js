@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const db = require('../config/db');
-const emailService = require('../services/email.service');
+const emailService = require('../services/email');
 const { z } = require('zod');
 const { validate } = require('../middleware/validate.middleware');
 
@@ -58,7 +58,7 @@ router.post('/reset-password/:token', validate(resetSchema), async (req, res, ne
         const { password } = req.body;
 
         const result = await db.query(
-            'SELECT user_id FROM users WHERE reset_token = $1 AND reset_token_expires > NOW() AND is_active = true',
+            'SELECT user_id, email FROM users WHERE reset_token = $1 AND reset_token_expires > NOW() AND is_active = true',
             [token]
         );
 
@@ -67,6 +67,7 @@ router.post('/reset-password/:token', validate(resetSchema), async (req, res, ne
         }
 
         const userId = result.rows[0].user_id;
+        const userEmail = result.rows[0].email;
         const saltRounds = 12;
         const passwordHash = await bcrypt.hash(password, saltRounds);
 
@@ -75,6 +76,13 @@ router.post('/reset-password/:token', validate(resetSchema), async (req, res, ne
             'UPDATE users SET password_hash = $1, reset_token = NULL, reset_token_expires = NULL, updated_at = NOW() WHERE user_id = $2',
             [passwordHash, userId]
         );
+
+        // Send password changed notification
+        try {
+            await emailService.sendPasswordChanged(userEmail);
+        } catch (emailError) {
+            console.error('Failed to send password changed email:', emailError.message);
+        }
 
         res.json({ success: true, message: 'Password has been reset successfully. You can now log in.' });
     } catch (error) {

@@ -1,0 +1,36 @@
+{{#with booking}}
+<p><strong>Booking Cancelled</strong></p>
+
+<div class="divider"></div>
+
+<div class="row">
+  <span class="label">Booking ID</span>
+  <span class="value">#{{booking_id}}</span>
+</div>
+<div class="row">
+  <span class="label">Reference</span>
+  <span class="value">{{booking_reference}}</span>
+</div>
+<div class="row">
+  <span class="label">Customer</span>
+  <span class="value">{{full_name}}</span>
+</div>
+<div class="row">
+  <span class="label">Email</span>
+  <span class="value">{{email}}</span>
+</div>
+<div class="row">
+  <span class="label">Package</span>
+  <span class="value">{{package_name}}</span>
+</div>
+<div class="row">
+  <span class="label">Status</span>
+  <span class="value"><span class="badge badge-warning">Cancelled</span></span>
+</div>
+
+<div class="divider"></div>
+
+<div style="text-align: center; margin-top: 24px;">
+  <a href="{{admin_url}}/bookings" class="btn">View in Dashboard</a>
+</div>
+{{/with}}
