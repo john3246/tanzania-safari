@@ -1,557 +1,608 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-slate-50">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tanzania Safari | Admin Dashboard</title>
+    <title>Tanzania Safari | Admin CMS</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#fcf8f2',
+                            100: '#f7ecd9',
+                            500: '#c25b2a',
+                            600: '#a84c20',
+                            700: '#8b3d17',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- FontAwesome (required for legacy templates) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CMS custom css for basic mechanics -->
     <link rel="stylesheet" href="/css/admin.css">
 </head>
-<body>
+<body class="h-full flex overflow-hidden font-sans text-slate-900 bg-slate-50">
 
     <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-logo">
-            <div class="logo-wrapper">
-                <div class="logo-text">
-                    <span class="brand">TANZANIA</span>
-                    <span class="sub">SAFARI ADMIN</span>
-                </div>
-            </div>
-            <button class="sidebar-toggle-close" id="sidebarClose"><i class="fas fa-times"></i></button>
+    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col flex-shrink-0" id="sidebar">
+        <div class="h-16 flex items-center justify-between px-6 border-b border-slate-100">
+            <span class="text-lg font-bold tracking-tight text-slate-800">Safari<span class="text-primary-500 font-semibold">CMS</span></span>
+            <button class="lg:hidden text-slate-500" id="sidebarClose"><i class="ph ph-x text-xl"></i></button>
         </div>
-
-        <nav class="sidebar-nav">
-            <div class="nav-section">
-                <div class="nav-group-label">Overview</div>
-                <a href="#" class="nav-item active" data-page="dashboard"><i class="fas fa-chart-pie"></i><span>Dashboard</span></a>
-                <a href="#" class="nav-item" data-page="bookings"><i class="fas fa-calendar-check"></i><span>Bookings</span></a>
-                <a href="#" class="nav-item" data-page="enquiries"><i class="fas fa-envelope-open-text"></i><span>Inquiries</span></a>
+        
+        <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+            <div class="space-y-0.5">
+                <span class="px-3 text-2xs font-semibold text-slate-400 uppercase tracking-wider block mb-2">Overview</span>
+                <a href="#" class="nav-item active flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50 hover:text-slate-900 [&.active]:bg-primary-50 [&.active]:text-primary-700 transition-colors" data-page="dashboard">
+                    <i class="ph ph-squares-four text-lg mr-3"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50 hover:text-slate-900 [&.active]:bg-primary-50 [&.active]:text-primary-700 transition-colors" data-page="bookings">
+                    <i class="ph ph-calendar-check text-lg mr-3"></i>
+                    <span>Bookings</span>
+                </a>
+                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50 hover:text-slate-900 [&.active]:bg-primary-50 [&.active]:text-primary-700 transition-colors" data-page="enquiries">
+                    <i class="ph ph-envelope-open-text text-lg mr-3"></i>
+                    <span>Inquiries</span>
+                </a>
             </div>
             
-            <div class="nav-section">
-                <div class="nav-group-label">Inventory</div>
-                <a href="#" class="nav-item" data-page="packages"><i class="fas fa-map-location-dot"></i><span>Safari Packages</span></a>
-                <a href="#" class="nav-item" data-page="categories"><i class="fas fa-tags"></i><span>Categories</span></a>
-                <a href="#" class="nav-item" data-page="destinations"><i class="fas fa-mountain-city"></i><span>Destinations</span></a>
+            <div class="pt-4 space-y-0.5">
+                <span class="px-3 text-2xs font-semibold text-slate-400 uppercase tracking-wider block mb-2">Inventory</span>
+                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50 hover:text-slate-900 [&.active]:bg-primary-50 [&.active]:text-primary-700 transition-colors" data-page="packages">
+                    <i class="ph ph-map-trifold text-lg mr-3"></i>
+                    <span>Safari Packages</span>
+                </a>
+                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50 hover:text-slate-900 [&.active]:bg-primary-50 [&.active]:text-primary-700 transition-colors" data-page="categories">
+                    <i class="ph ph-tag text-lg mr-3"></i>
+                    <span>Categories</span>
+                </a>
+                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50 hover:text-slate-900 [&.active]:bg-primary-50 [&.active]:text-primary-700 transition-colors" data-page="destinations">
+                    <i class="ph ph-mountains text-lg mr-3"></i>
+                    <span>Destinations</span>
+                </a>
             </div>
             
-            <div class="nav-section">
-                <div class="nav-group-label">Content</div>
-                <a href="#" class="nav-item" data-page="blog"><i class="fas fa-newspaper"></i><span>Blog Posts</span></a>
-                <a href="#" class="nav-item" data-page="reviews"><i class="fas fa-star-half-stroke"></i><span>Reviews</span></a>
-                <a href="#" class="nav-item" data-page="images"><i class="fas fa-images"></i><span>Media Library</span></a>
+            <div class="pt-4 space-y-0.5">
+                <span class="px-3 text-2xs font-semibold text-slate-400 uppercase tracking-wider block mb-2">Content</span>
+                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50 hover:text-slate-900 [&.active]:bg-primary-50 [&.active]:text-primary-700 transition-colors" data-page="blog">
+                    <i class="ph ph-newspaper text-lg mr-3"></i>
+                    <span>Blog Posts</span>
+                </a>
+                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50 hover:text-slate-900 [&.active]:bg-primary-50 [&.active]:text-primary-700 transition-colors" data-page="reviews">
+                    <i class="ph ph-star text-lg mr-3"></i>
+                    <span>Reviews</span>
+                </a>
+                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50 hover:text-slate-900 [&.active]:bg-primary-50 [&.active]:text-primary-700 transition-colors" data-page="images">
+                    <i class="ph ph-image text-lg mr-3"></i>
+                    <span>Media Library</span>
+                </a>
             </div>
             
-            <div class="nav-section">
-                <div class="nav-group-label">System</div>
-                <a href="#" class="nav-item" data-page="users"><i class="fas fa-users-gear"></i><span>Team Accounts</span></a>
-                <a href="#" class="nav-item" data-page="settings"><i class="fas fa-sliders"></i><span>Settings</span></a>
+            <div class="pt-4 space-y-0.5">
+                <span class="px-3 text-2xs font-semibold text-slate-400 uppercase tracking-wider block mb-2">System</span>
+                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50 hover:text-slate-900 [&.active]:bg-primary-50 [&.active]:text-primary-700 transition-colors" data-page="users">
+                    <i class="ph ph-users text-lg mr-3"></i>
+                    <span>Team Accounts</span>
+                </a>
+                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50 hover:text-slate-900 [&.active]:bg-primary-50 [&.active]:text-primary-700 transition-colors" data-page="settings">
+                    <i class="ph ph-sliders-horizontal text-lg mr-3"></i>
+                    <span>Settings</span>
+                </a>
             </div>
         </nav>
-
-        <div class="sidebar-user">
-            <div class="user-info">
-                <div class="user-avatar-wrapper">
-                    <img id="sidebarAvatarImg" class="user-avatar-img" src="/images/avatar-placeholder.png" alt="Profile">
-                    <div class="user-status-dot"></div>
+        
+        <div class="border-t border-slate-100 p-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-9 h-9 rounded-full bg-slate-100 overflow-hidden">
+                        <img id="sidebarAvatarImg" class="w-full h-full object-cover" src="/images/avatar-placeholder.png" alt="Profile">
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-sm font-medium text-slate-700 truncate max-w-[120px]" id="userName">Administrator</span>
+                    </div>
                 </div>
-                <div class="user-details">
-                    <span class="name" id="userName">Administrator</span>
-                    <span class="role">Global Manager</span>
+                <div class="flex items-center space-x-1">
+                    <a href="/" target="_blank" title="View Live Site" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-md hover:bg-slate-50"><i class="ph ph-arrow-square-out text-lg"></i></a>
+                    <a href="#" id="logoutBtn" title="Logout" class="p-1.5 text-slate-400 hover:text-red-600 rounded-md hover:bg-red-50"><i class="ph ph-sign-out text-lg"></i></a>
                 </div>
-            </div>
-            <div class="user-actions">
-                <a href="/" target="_blank" title="View Live Site"><i class="fas fa-external-link-alt"></i></a>
-                <a href="#" id="logoutBtn" title="Logout" class="logout-link"><i class="fas fa-sign-out-alt"></i></a>
             </div>
         </div>
     </aside>
 
-    <!-- Main Content -->
-    <div class="main" id="adminMain">
-        <header class="header">
-            <div class="header-left">
-                <button class="menu-toggle" id="menuToggle" style="background:none; border:none; font-size:1.25rem; cursor:pointer"><i class="fas fa-bars-staggered"></i></button>
-                <h1 class="page-title" id="pageTitle">Dashboard</h1>
+    <!-- Main Content Area -->
+    <div class="flex-1 flex flex-col overflow-hidden" id="adminMain">
+        <header class="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <button class="lg:hidden text-slate-500" id="menuToggle"><i class="ph ph-list text-xl"></i></button>
+                <h1 class="text-lg font-semibold text-slate-800" id="pageTitle">Dashboard</h1>
             </div>
-            <div class="header-right">
-                <div class="header-date" id="headerDate"></div>
-                <div style="cursor:pointer" onclick="navigate('settings')">
-                    <img id="headerAvatarImg" style="display:none; width:40px; height:40px; border-radius:12px; object-fit:cover; border:2px solid #fff; box-shadow: var(--shadow-sm);">
-                </div>
-            </div>
+            <div class="text-sm text-slate-500" id="headerDate"></div>
         </header>
 
-        <div class="content">
+        <main class="flex-1 overflow-y-auto p-6 bg-slate-50">
             
             <!-- Dashboard -->
-            <div class="page active" id="page-dashboard">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon" style="background:var(--info-bg); color:var(--info)"><i class="fas fa-compass"></i></div>
-                        <div class="stat-info"><h4>Active Safaris</h4><div class="value" id="s-packages">0</div></div>
+            <div class="page active space-y-6" id="page-dashboard">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs flex items-center space-x-4">
+                        <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center"><i class="ph ph-compass text-xl"></i></div>
+                        <div>
+                            <span class="text-xs text-slate-400 font-medium">Active Safaris</span>
+                            <div class="text-xl font-bold text-slate-800" id="s-packages">0</div>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon" style="background:var(--success-bg); color:var(--success)"><i class="fas fa-earth-africa"></i></div>
-                        <div class="stat-info"><h4>Destinations</h4><div class="value" id="s-destinations">0</div></div>
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs flex items-center space-x-4">
+                        <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center"><i class="ph ph-mountains text-xl"></i></div>
+                        <div>
+                            <span class="text-xs text-slate-400 font-medium">Destinations</span>
+                            <div class="text-xl font-bold text-slate-800" id="s-destinations">0</div>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon" style="background:var(--warning-bg); color:var(--warning)"><i class="fas fa-ticket"></i></div>
-                        <div class="stat-info"><h4>Total Bookings</h4><div class="value" id="s-bookings">0</div></div>
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs flex items-center space-x-4">
+                        <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center"><i class="ph ph-ticket text-xl"></i></div>
+                        <div>
+                            <span class="text-xs text-slate-400 font-medium">Total Bookings</span>
+                            <div class="text-xl font-bold text-slate-800" id="s-bookings">0</div>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon" style="background:var(--primary-pale); color:var(--primary)"><i class="fas fa-comments"></i></div>
-                        <div class="stat-info"><h4>Enquiries</h4><div class="value" id="s-enquiries">0</div></div>
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs flex items-center space-x-4">
+                        <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center"><i class="ph ph-envelope-open-text text-xl"></i></div>
+                        <div>
+                            <span class="text-xs text-slate-400 font-medium">Enquiries</span>
+                            <div class="text-xl font-bold text-slate-800" id="s-enquiries">0</div>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Dashboard Activity -->
-                <div class="stats-grid two-cols">
-                    <div class="card">
-                        <div class="card-header"><h3>Recent Bookings</h3></div>
-                        <div class="table-responsive">
-                            <table class="admin-table minimal">
-                                <thead><tr><th>Guest</th><th>Status</th><th>Total</th></tr></thead>
-                                <tbody id="dashBookings"></tbody>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
+                        <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between"><h3 class="font-semibold text-slate-800 text-sm">Recent Bookings</h3></div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm">
+                                <thead class="bg-slate-50 text-slate-400 text-xs font-semibold uppercase border-b border-slate-100"><tr class="h-10"><th class="px-5">Guest</th><th class="px-5">Status</th><th class="px-5">Total</th></tr></thead>
+                                <tbody id="dashBookings" class="divide-y divide-slate-100 text-slate-600"></tbody>
                             </table>
                         </div>
                     </div>
-                    <div class="card">
-                        <div class="card-header"><h3>Recent Enquiries</h3></div>
-                        <div class="table-responsive">
-                            <table class="admin-table minimal">
-                                <thead><tr><th>Sender</th><th>Type</th><th>Date</th></tr></thead>
-                                <tbody id="dashEnquiries"></tbody>
+                    <div class="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
+                        <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between"><h3 class="font-semibold text-slate-800 text-sm">Recent Enquiries</h3></div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm">
+                                <thead class="bg-slate-50 text-slate-400 text-xs font-semibold uppercase border-b border-slate-100"><tr class="h-10"><th class="px-5">Sender</th><th class="px-5">Type</th><th class="px-5">Date</th></tr></thead>
+                                <tbody id="dashEnquiries" class="divide-y divide-slate-100 text-slate-600"></tbody>
                             </table>
                         </div>
                     </div>
                 </div>
 
-                <div class="stats-grid two-cols">
-                    <div class="card">
-                        <div class="card-header"><h3>Latest Reviews</h3></div>
-                        <div class="table-responsive">
-                            <table class="admin-table minimal">
-                                <thead><tr><th>Guest</th><th>Rating</th><th>Status</th></tr></thead>
-                                <tbody id="dashReviews"></tbody>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
+                        <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between"><h3 class="font-semibold text-slate-800 text-sm">Latest Reviews</h3></div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm">
+                                <thead class="bg-slate-50 text-slate-400 text-xs font-semibold uppercase border-b border-slate-100"><tr class="h-10"><th class="px-5">Guest</th><th class="px-5">Rating</th><th class="px-5">Status</th></tr></thead>
+                                <tbody id="dashReviews" class="divide-y divide-slate-100 text-slate-600"></tbody>
                             </table>
                         </div>
                     </div>
-                    <div class="card">
-                        <div class="card-header"><h3>Recent Media</h3></div>
-                        <div id="dashMedia" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 0.5rem; padding: 1.5rem;"></div>
+                    <div class="bg-white rounded-xl border border-slate-200 shadow-2xs">
+                        <div class="px-5 py-4 border-b border-slate-100"><h3 class="font-semibold text-slate-800 text-sm">Recent Media</h3></div>
+                        <div id="dashMedia" class="grid grid-cols-4 gap-3 p-5"></div>
                     </div>
                 </div>
             </div>
 
             <!-- Packages -->
-            <div class="page" id="page-packages">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Safari Inventory</h3>
-                        <button class="btn btn-primary" onclick="openPackageModal()"><i class="fas fa-plus"></i> Add Package</button>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="admin-table">
-                            <thead><tr><th>Package</th><th>Category</th><th>Price</th><th>Duration</th><th>Status</th><th>Actions</th></tr></thead>
-                            <tbody id="pkgBody"></tbody>
-                        </table>
-                    </div>
+            <div class="page bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden" id="page-packages">
+                <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                    <h3 class="font-semibold text-slate-800">Safari Inventory</h3>
+                    <button class="bg-primary-500 hover:bg-primary-600 text-white px-3.5 py-1.5 rounded-md text-sm font-medium transition-colors inline-flex items-center space-x-2" onclick="openPackageModal()"><i class="ph ph-plus"></i> <span>Add Package</span></button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-600">
+                        <thead class="bg-slate-50 text-slate-400 text-xs font-semibold uppercase border-b border-slate-100"><tr class="h-11"><th class="px-6">Package</th><th class="px-6">Category</th><th class="px-6">Price</th><th class="px-6">Duration</th><th class="px-6">Status</th><th class="px-6">Actions</th></tr></thead>
+                        <tbody id="pkgBody" class="divide-y divide-slate-100"></tbody>
+                    </table>
                 </div>
             </div>
 
             <!-- Categories -->
-            <div class="page" id="page-categories">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Package Categories</h3>
-                        <button class="btn btn-primary" onclick="openCatModal()"><i class="fas fa-plus"></i> Add Category</button>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="admin-table">
-                            <thead><tr><th>Category</th><th>Slug</th><th>Count</th><th>Order</th><th>Actions</th></tr></thead>
-                            <tbody id="catBody"></tbody>
-                        </table>
-                    </div>
+            <div class="page bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden" id="page-categories">
+                <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                    <h3 class="font-semibold text-slate-800">Package Categories</h3>
+                    <button class="bg-primary-500 hover:bg-primary-600 text-white px-3.5 py-1.5 rounded-md text-sm font-medium transition-colors inline-flex items-center space-x-2" onclick="openCatModal()"><i class="ph ph-plus"></i> <span>Add Category</span></button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-600">
+                        <thead class="bg-slate-50 text-slate-400 text-xs font-semibold uppercase border-b border-slate-100"><tr class="h-11"><th class="px-6">Category</th><th class="px-6">Slug</th><th class="px-6">Count</th><th class="px-6">Order</th><th class="px-6">Actions</th></tr></thead>
+                        <tbody id="catBody" class="divide-y divide-slate-100"></tbody>
+                    </table>
                 </div>
             </div>
 
             <!-- Bookings -->
-            <div class="page" id="page-bookings">
-                <div class="card">
-                    <div class="card-header"><h3>Recent Bookings</h3></div>
-                    <div class="table-responsive">
-                        <table class="admin-table">
-                            <thead><tr><th>Customer</th><th>Package</th><th>Date</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead>
-                            <tbody id="bookBody"></tbody>
-                        </table>
-                    </div>
+            <div class="page bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden" id="page-bookings">
+                <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between"><h3 class="font-semibold text-slate-800">Bookings List</h3></div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-600">
+                        <thead class="bg-slate-50 text-slate-400 text-xs font-semibold uppercase border-b border-slate-100"><tr class="h-11"><th class="px-6">Customer</th><th class="px-6">Package</th><th class="px-6">Date</th><th class="px-6">Total</th><th class="px-6">Status</th><th class="px-6">Actions</th></tr></thead>
+                        <tbody id="bookBody" class="divide-y divide-slate-100"></tbody>
+                    </table>
                 </div>
             </div>
 
             <!-- Enquiries -->
-            <div class="page" id="page-enquiries">
-                <div class="card">
-                    <div class="card-header"><h3>Customer Inquiries</h3></div>
-                    <div class="table-responsive">
-                        <table class="admin-table">
-                            <thead><tr><th>Sender</th><th>Subject</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
-                            <tbody id="enqBody"></tbody>
-                        </table>
-                    </div>
+            <div class="page bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden" id="page-enquiries">
+                <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between"><h3 class="font-semibold text-slate-800">Customer Inquiries</h3></div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-600">
+                        <thead class="bg-slate-50 text-slate-400 text-xs font-semibold uppercase border-b border-slate-100"><tr class="h-11"><th class="px-6">Sender</th><th class="px-6">Subject</th><th class="px-6">Date</th><th class="px-6">Status</th><th class="px-6">Actions</th></tr></thead>
+                        <tbody id="enqBody" class="divide-y divide-slate-100"></tbody>
+                    </table>
                 </div>
             </div>
 
             <!-- Settings & Profile -->
-            <div class="page" id="page-settings">
-                <div class="card" style="max-width: 850px; margin-bottom: 2rem;">
-                    <div class="card-header"><h3>Personal Account</h3></div>
-                    <div class="modal-body">
-                        <div style="display:flex; align-items:center; gap:2.5rem; margin-bottom:2.5rem; padding-bottom:2.5rem; border-bottom:1px solid var(--border)">
-                            <div id="profileImagePreview" style="width:120px; height:120px; border-radius:20px; background:var(--bg-body); border:2px dashed var(--border); overflow:hidden; display:flex; align-items:center; justify-content:center; font-size:2.5rem; color:var(--primary)">
-                                <i class="fas fa-user-tie"></i>
-                            </div>
-                            <div>
-                                <h4 style="margin-bottom:0.5rem">Profile Photo</h4>
-                                <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1.25rem">Update your avatar. Recommended size: 400x400px.</p>
-                                <button class="btn btn-primary" onclick="document.getElementById('profileImgInput').click()"><i class="fas fa-cloud-arrow-up"></i> Upload New</button>
-                                <input type="file" id="profileImgInput" style="display:none" accept="image/*" onchange="uploadProfilePhoto(this.files[0])">
-                            </div>
+            <div class="page space-y-6" id="page-settings">
+                <div class="bg-white rounded-xl border border-slate-200 shadow-2xs p-6 max-w-3xl">
+                    <h3 class="font-semibold text-slate-850 text-base mb-6 pb-2 border-b border-slate-100">Personal Account</h3>
+                    
+                    <div class="flex flex-col sm:flex-row items-center gap-6 mb-8 pb-8 border-b border-slate-100">
+                        <div id="profileImagePreview" class="w-24 h-24 rounded-xl bg-slate-50 border-2 border-dashed border-slate-200 overflow-hidden flex items-center justify-center text-3xl text-primary-500">
+                            <i class="ph ph-user-circle"></i>
                         </div>
-                        <form id="profileForm">
-                            <div class="form-grid">
-                                <div class="form-group"><label>First Name</label><input class="form-control" name="first_name" id="profFirst" required></div>
-                                <div class="form-group"><label>Last Name</label><input class="form-control" name="last_name" id="profLast"></div>
-                            </div>
-                            <div class="form-group"><label>Email Address</label><input class="form-control" name="email" id="profEmail" readonly style="background:var(--bg-secondary)"></div>
-                            <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Update Details</button>
-                        </form>
+                        <div>
+                            <h4 class="font-medium text-slate-800 mb-1">Profile Photo</h4>
+                            <p class="text-xs text-slate-400 mb-3">Update your avatar. Recommended size: 400x400px.</p>
+                            <button class="bg-primary-500 hover:bg-primary-600 text-white px-3 py-1.5 rounded-md text-xs font-medium transition-colors" onclick="document.getElementById('profileImgInput').click()"><i class="ph ph-upload-simple mr-1"></i> Upload New</button>
+                            <input type="file" id="profileImgInput" class="hidden" accept="image/*" onchange="uploadProfilePhoto(this.files[0])">
+                        </div>
                     </div>
+
+                    <form id="profileForm" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">First Name</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="first_name" id="profFirst" required></div>
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Last Name</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="last_name" id="profLast"></div>
+                        </div>
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Email Address</label><input class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-400 cursor-not-allowed outline-none" name="email" id="profEmail" readonly></div>
+                        <button type="submit" class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors inline-flex items-center space-x-2"><i class="ph ph-check"></i> <span>Update Details</span></button>
+                    </form>
                 </div>
 
-                <div class="stats-grid two-cols">
-                    <div class="card">
-                        <div class="card-header"><h3>System Configuration</h3></div>
-                        <form id="settingsForm" style="padding: 1.5rem;"></form>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-xl border border-slate-200 shadow-2xs p-6">
+                        <h3 class="font-semibold text-slate-800 text-base mb-4">System Configuration</h3>
+                        <form id="settingsForm" class="space-y-4"></form>
                     </div>
-                    <div class="card">
-                        <div class="card-header"><h3>Security & Account</h3></div>
-                        <div class="card-body" style="padding: 1.5rem;">
-                            <form id="passwordForm">
-                                <div class="form-group">
-                                    <label>New Password</label>
-                                    <input type="password" name="new_password" class="form-control" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Confirm Password</label>
-                                    <input type="password" name="confirm_password" class="form-control" required>
-                                </div>
-                                <button type="submit" class="btn btn-primary" style="margin-top: 1rem; width: 100%;">Update Password</button>
-                            </form>
-                        </div>
+                    
+                    <div class="bg-white rounded-xl border border-slate-200 shadow-2xs p-6">
+                        <h3 class="font-semibold text-slate-800 text-base mb-4">Security & Account</h3>
+                        <form id="passwordForm" class="space-y-4">
+                            <div class="space-y-1">
+                                <label class="text-xs font-medium text-slate-500">New Password</label>
+                                <input type="password" name="new_password" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" required>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-xs font-medium text-slate-500">Confirm Password</label>
+                                <input type="password" name="confirm_password" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" required>
+                            </div>
+                            <button type="submit" class="w-full bg-primary-500 hover:bg-primary-600 text-white py-2 rounded-lg text-sm font-medium transition-colors">Update Password</button>
+                        </form>
                     </div>
                 </div>
             </div>
 
             <!-- Destinations -->
-            <div class="page" id="page-destinations">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Destination Management</h3>
-                        <button class="btn btn-primary" onclick="openDestModal()"><i class="fas fa-plus"></i> Add Destination</button>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="admin-table">
-                            <thead><tr><th>Destination</th><th>Location</th><th>Packages</th><th>Status</th><th>Actions</th></tr></thead>
-                            <tbody id="destBody"></tbody>
-                        </table>
-                    </div>
+            <div class="page bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden" id="page-destinations">
+                <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                    <h3 class="font-semibold text-slate-800">Destination Management</h3>
+                    <button class="bg-primary-500 hover:bg-primary-600 text-white px-3.5 py-1.5 rounded-md text-sm font-medium transition-colors inline-flex items-center space-x-2" onclick="openDestModal()"><i class="ph ph-plus"></i> <span>Add Destination</span></button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-600">
+                        <thead class="bg-slate-50 text-slate-400 text-xs font-semibold uppercase border-b border-slate-100"><tr class="h-11"><th class="px-6">Destination</th><th class="px-6">Location</th><th class="px-6">Packages</th><th>Status</th><th class="px-6">Actions</th></tr></thead>
+                        <tbody id="destBody" class="divide-y divide-slate-100"></tbody>
+                    </table>
                 </div>
             </div>
 
             <!-- Blog -->
-            <div class="page" id="page-blog">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Content Strategy</h3>
-                        <button class="btn btn-primary" onclick="openBlogModal()"><i class="fas fa-plus"></i> New Post</button>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="admin-table">
-                            <thead><tr><th>Title</th><th>Author</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
-                            <tbody id="blogBody"></tbody>
-                        </table>
-                    </div>
+            <div class="page bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden" id="page-blog">
+                <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                    <h3 class="font-semibold text-slate-800">Content Strategy</h3>
+                    <button class="bg-primary-500 hover:bg-primary-600 text-white px-3.5 py-1.5 rounded-md text-sm font-medium transition-colors inline-flex items-center space-x-2" onclick="openBlogModal()"><i class="ph ph-plus"></i> <span>New Post</span></button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-600">
+                        <thead class="bg-slate-50 text-slate-400 text-xs font-semibold uppercase border-b border-slate-100"><tr class="h-11"><th class="px-6">Title</th><th class="px-6">Author</th><th class="px-6">Date</th><th class="px-6">Status</th><th class="px-6">Actions</th></tr></thead>
+                        <tbody id="blogBody" class="divide-y divide-slate-100"></tbody>
+                    </table>
                 </div>
             </div>
 
             <!-- Reviews -->
-            <div class="page" id="page-reviews">
-                <div class="card">
-                    <div class="card-header"><h3>Guest Feedback</h3></div>
-                    <div class="table-responsive">
-                        <table class="admin-table">
-                            <thead><tr><th>Guest</th><th>Rating</th><th>Package</th><th>Status</th><th>Actions</th></tr></thead>
-                            <tbody id="reviewBody"></tbody>
-                        </table>
-                    </div>
+            <div class="page bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden" id="page-reviews">
+                <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between"><h3 class="font-semibold text-slate-800">Guest Feedback</h3></div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-600">
+                        <thead class="bg-slate-50 text-slate-400 text-xs font-semibold uppercase border-b border-slate-100"><tr class="h-11"><th class="px-6">Guest</th><th class="px-6">Rating</th><th class="px-6">Package</th><th class="px-6">Status</th><th class="px-6">Actions</th></tr></thead>
+                        <tbody id="reviewBody" class="divide-y divide-slate-100"></tbody>
+                    </table>
                 </div>
             </div>
 
-            <!-- Users -->
-            <div class="page" id="page-users">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Team Accounts</h3>
-                        <button class="btn btn-primary" onclick="openUserModal()"><i class="fas fa-user-plus"></i> New User</button>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="admin-table">
-                            <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead>
-                            <tbody id="userBody"></tbody>
-                        </table>
-                    </div>
+            <!-- Team accounts -->
+            <div class="page bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden" id="page-users">
+                <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                    <h3 class="font-semibold text-slate-800">Team Accounts</h3>
+                    <button class="bg-primary-500 hover:bg-primary-600 text-white px-3.5 py-1.5 rounded-md text-sm font-medium transition-colors inline-flex items-center space-x-2" onclick="openUserModal()"><i class="ph ph-user-plus"></i> <span>New User</span></button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-600">
+                        <thead class="bg-slate-50 text-slate-400 text-xs font-semibold uppercase border-b border-slate-100"><tr class="h-11"><th class="px-6">Name</th><th class="px-6">Email</th><th class="px-6">Role</th><th class="px-6">Status</th><th class="px-6">Actions</th></tr></thead>
+                        <tbody id="userBody" class="divide-y divide-slate-100"></tbody>
+                    </table>
                 </div>
             </div>
 
             <!-- Media -->
-            <div class="page" id="page-images">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Asset Library</h3>
-                        <button class="btn btn-primary" onclick="document.getElementById('mediaUpload').click()"><i class="fas fa-upload"></i> Upload Files</button>
-                        <input type="file" id="mediaUpload" multiple style="display:none" onchange="handleMediaUpload(this.files)">
-                    </div>
-                    <div id="mediaGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); gap:1.5rem; padding:2rem"></div>
+            <div class="page bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden" id="page-images">
+                <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                    <h3 class="font-semibold text-slate-800">Asset Library</h3>
+                    <button class="bg-primary-500 hover:bg-primary-600 text-white px-3.5 py-1.5 rounded-md text-sm font-medium transition-colors inline-flex items-center space-x-2" onclick="document.getElementById('mediaUpload').click()"><i class="ph ph-upload-simple"></i> <span>Upload Files</span></button>
+                    <input type="file" id="mediaUpload" multiple class="hidden" onchange="handleMediaUpload(this.files)">
                 </div>
+                <div id="mediaGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 p-6"></div>
             </div>
 
-        </div>
+        </main>
     </div>
 
     <!-- Modals -->
     
     <!-- Package Modal -->
     <div class="modal-overlay" id="pkgModal">
-        <div class="modal-content" style="max-width: 900px;">
-            <div class="modal-header">
-                <h3 id="pkgModalTitle">Package Details</h3>
-                <button class="btn-icon" onclick="closeModal('pkgModal')"><i class="fas fa-times"></i></button>
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col border border-slate-100">
+            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                <h3 class="font-semibold text-slate-800 text-base" id="pkgModalTitle">Package Details</h3>
+                <button class="text-slate-400 hover:text-slate-600" onclick="closeModal('pkgModal')"><i class="ph ph-x text-xl"></i></button>
             </div>
-            <div class="modal-body">
-                <div class="modal-tabs">
-                    <button class="tab-btn active" onclick="switchPkgTab('general')">General Info</button>
-                    <button class="tab-btn" onclick="switchPkgTab('itinerary')">Itinerary</button>
-                    <button class="tab-btn" onclick="switchPkgTab('locations')">Locations</button>
+            
+            <div class="flex-1 overflow-y-auto p-6 space-y-6">
+                <div class="flex border-b border-slate-200">
+                    <button class="tab-btn px-4 py-2 border-b-2 border-transparent font-medium text-sm text-slate-500 [&.active]:border-primary-500 [&.active]:text-primary-600 active" onclick="switchPkgTab('general')">General Info</button>
+                    <button class="tab-btn px-4 py-2 border-b-2 border-transparent font-medium text-sm text-slate-500 [&.active]:border-primary-500 [&.active]:text-primary-600" onclick="switchPkgTab('itinerary')">Itinerary</button>
+                    <button class="tab-btn px-4 py-2 border-b-2 border-transparent font-medium text-sm text-slate-500 [&.active]:border-primary-500 [&.active]:text-primary-600" onclick="switchPkgTab('locations')">Locations</button>
                 </div>
 
-                <div class="tab-content" id="pkg-tab-general">
-                    <form id="pkgForm">
+                <div class="tab-content block" id="pkg-tab-general">
+                    <form id="pkgForm" class="space-y-4">
                         <input type="hidden" name="package_id" id="pkgId">
-                        <div class="form-grid">
-                            <div class="form-group"><label>Name</label><input class="form-control" name="package_name" required></div>
-                            <div class="form-group"><label>Slug</label><input class="form-control" name="package_slug" required></div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Name</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="package_name" required></div>
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Slug</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="package_slug" required></div>
                         </div>
-                        <div class="form-grid">
-                            <div class="form-group"><label>Category</label><select class="form-control" name="category_id" id="pkgCategorySelect"></select></div>
-                            <div class="form-group"><label>Price (USD)</label><input class="form-control" type="number" name="base_price_usd" required></div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Category</label><select class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="category_id" id="pkgCategorySelect"></select></div>
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Price (USD)</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" type="number" name="base_price_usd" required></div>
                         </div>
-                        <div class="form-grid">
-                            <div class="form-group"><label>Duration (Days)</label><input class="form-control" type="number" name="duration_days" required></div>
-                            <div class="form-group"><label>Duration (Nights)</label><input class="form-control" type="number" name="duration_nights"></div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Duration (Days)</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" type="number" name="duration_days" required></div>
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Duration (Nights)</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" type="number" name="duration_nights"></div>
                         </div>
-                        <div class="form-grid">
-                            <div class="form-group"><label>Difficulty</label><select class="form-control" name="difficulty_level"><option>Easy</option><option>Moderate</option><option>Challenging</option></select></div>
-                            <div class="form-group"><label>Min/Max Pax</label><div style="display:flex;gap:10px"><input class="form-control" type="number" name="minimum_pax" placeholder="Min" style="width:50%"><input class="form-control" type="number" name="maximum_pax" placeholder="Max" style="width:50%"></div></div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Difficulty</label><select class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="difficulty_level"><option>Easy</option><option>Moderate</option><option>Challenging</option></select></div>
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Min/Max Pax</label><div class="flex space-x-2"><input class="w-1/2 bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" type="number" name="minimum_pax" placeholder="Min"><input class="w-1/2 bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" type="number" name="maximum_pax" placeholder="Max"></div></div>
                         </div>
-                        <div class="form-group"><label>Short Description</label><textarea class="form-control" name="short_description" required rows="2"></textarea></div>
-                        <div class="form-group"><label>Detailed Description</label><textarea class="form-control" name="detailed_description" rows="5"></textarea></div>
-                        <div class="form-grid">
-                            <div class="form-group"><label>Featured Image Slug</label><input class="form-control" name="featured_image_url" placeholder="e.g. serengeti-hero"></div>
-                            <div class="form-group"><label>Other Image Slugs (CSV)</label><input class="form-control" name="image_urls_csv" placeholder="img1, img2..."></div>
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Short Description</label><textarea class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="short_description" required rows="2"></textarea></div>
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Detailed Description</label><textarea class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="detailed_description" rows="5"></textarea></div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Featured Image Slug</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="featured_image_url" placeholder="e.g. serengeti-hero"></div>
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Other Image Slugs (CSV)</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="image_urls_csv" placeholder="img1, img2..."></div>
                         </div>
-                        <div class="form-grid">
-                            <div class="form-group"><label>Included (one per line)</label><textarea class="form-control" name="included_features_text" rows="4"></textarea></div>
-                            <div class="form-group"><label>Excluded (one per line)</label><textarea class="form-control" name="excluded_features_text" rows="4"></textarea></div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Included (one per line)</label><textarea class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="included_features_text" rows="4"></textarea></div>
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Excluded (one per line)</label><textarea class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="excluded_features_text" rows="4"></textarea></div>
                         </div>
-                        <div style="display:flex; gap:2rem; padding: 1.25rem; background: var(--bg-primary); border-radius: var(--radius-sm); border: 1px solid var(--border-light); flex-wrap: wrap;">
-                            <label class="checkbox-label"><input type="checkbox" name="is_featured"> Featured</label>
-                            <label class="checkbox-label"><input type="checkbox" name="is_private" checked> Private</label>
-                            <label class="checkbox-label"><input type="checkbox" name="is_customizable" checked> Customizable</label>
-                            <label class="checkbox-label"><input type="checkbox" name="is_active" checked> Active</label>
+                        <div class="flex items-center gap-6 p-4 bg-slate-50 rounded-lg border border-slate-100 flex-wrap">
+                            <label class="inline-flex items-center text-sm font-medium text-slate-600"><input type="checkbox" name="is_featured" class="rounded border-slate-300 text-primary-500 focus:ring-primary-500 mr-2"> Featured</label>
+                            <label class="inline-flex items-center text-sm font-medium text-slate-600"><input type="checkbox" name="is_private" class="rounded border-slate-300 text-primary-500 focus:ring-primary-500 mr-2" checked> Private</label>
+                            <label class="inline-flex items-center text-sm font-medium text-slate-600"><input type="checkbox" name="is_customizable" class="rounded border-slate-300 text-primary-500 focus:ring-primary-500 mr-2" checked> Customizable</label>
+                            <label class="inline-flex items-center text-sm font-medium text-slate-600"><input type="checkbox" name="is_active" class="rounded border-slate-300 text-primary-500 focus:ring-primary-500 mr-2" checked> Active</label>
                         </div>
                     </form>
                 </div>
 
-                <div class="tab-content" id="pkg-tab-itinerary" style="display:none">
-                    <div id="itineraryContainer"></div>
-                    <button class="btn btn-primary" onclick="addItineraryDay()" style="margin-top:1rem"><i class="fas fa-plus"></i> Add Day</button>
+                <div class="tab-content hidden space-y-4" id="pkg-tab-itinerary">
+                    <div id="itineraryContainer" class="space-y-4"></div>
+                    <button class="bg-primary-500 hover:bg-primary-600 text-white px-3 py-1.5 rounded-md text-xs font-medium transition-colors" onclick="addItineraryDay()"><i class="ph ph-plus mr-1"></i> Add Day</button>
                 </div>
 
-                <div class="tab-content" id="pkg-tab-locations" style="display:none">
-                    <div id="locationsContainer"></div>
-                    <button class="btn btn-primary" onclick="addPkgLocation()" style="margin-top:1rem"><i class="fas fa-plus"></i> Add Park</button>
+                <div class="tab-content hidden space-y-4" id="pkg-tab-locations">
+                    <div id="locationsContainer" class="space-y-3"></div>
+                    <button class="bg-primary-500 hover:bg-primary-600 text-white px-3 py-1.5 rounded-md text-xs font-medium transition-colors" onclick="addPkgLocation()"><i class="ph ph-plus mr-1"></i> Add Park</button>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn" style="background:none" onclick="closeModal('pkgModal')">Discard</button>
-                <button class="btn btn-primary" onclick="savePackage()">Save Package</button>
+            
+            <div class="px-6 py-4 border-t border-slate-100 flex justify-end space-x-2 bg-slate-50">
+                <button class="px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium hover:bg-white transition-colors" onclick="closeModal('pkgModal')">Discard</button>
+                <button class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors" onclick="savePackage()">Save Package</button>
             </div>
         </div>
     </div>
 
     <!-- Category Modal -->
     <div class="modal-overlay" id="catModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="catModalTitle">Category Details</h3>
-                <button class="btn-icon" onclick="closeModal('catModal')"><i class="fas fa-times"></i></button>
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-md border border-slate-100 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                <h3 class="font-semibold text-slate-800 text-base" id="catModalTitle">Category Details</h3>
+                <button class="text-slate-400 hover:text-slate-600" onclick="closeModal('catModal')"><i class="ph ph-x text-xl"></i></button>
             </div>
-            <div class="modal-body">
-                <form id="catForm">
+            <div class="p-6 space-y-4">
+                <form id="catForm" class="space-y-4">
                     <input type="hidden" name="category_id" id="catId">
-                    <div class="form-group"><label>Category Name</label><input class="form-control" name="category_name" required></div>
-                    <div class="form-group"><label>Slug</label><input class="form-control" name="category_slug" required></div>
-                    <div class="form-group"><label>Description</label><textarea class="form-control" name="category_description" rows="3"></textarea></div>
-                    <div class="form-grid">
-                        <div class="form-group"><label>Icon Class (FontAwesome)</label><input class="form-control" name="icon_class" placeholder="fas fa-tree"></div>
-                        <div class="form-group"><label>Display Order</label><input class="form-control" type="number" name="display_order" value="0"></div>
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Category Name</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="category_name" required></div>
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Slug</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="category_slug" required></div>
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Description</label><textarea class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="category_description" rows="3"></textarea></div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Icon (FontAwesome)</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="icon_class" placeholder="fas fa-tree"></div>
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Display Order</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" type="number" name="display_order" value="0"></div>
                     </div>
-                    <label class="checkbox-label" style="margin-top: 1rem;"><input type="checkbox" name="is_active" checked> Active</label>
+                    <label class="inline-flex items-center text-sm font-medium text-slate-600 mt-2"><input type="checkbox" name="is_active" class="rounded border-slate-300 text-primary-500 focus:ring-primary-500 mr-2" checked> Active</label>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button class="btn" style="background:none" onclick="closeModal('catModal')">Cancel</button>
-                <button class="btn btn-primary" onclick="saveCategory()">Save Category</button>
+            <div class="px-6 py-4 border-t border-slate-100 flex justify-end space-x-2 bg-slate-50">
+                <button class="px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium hover:bg-white transition-colors" onclick="closeModal('catModal')">Cancel</button>
+                <button class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors" onclick="saveCategory()">Save Category</button>
             </div>
         </div>
     </div>
 
     <!-- Enquiry Modal -->
     <div class="modal-overlay" id="enqModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Respond to Inquiry</h3>
-                <button class="btn-icon" onclick="closeModal('enqModal')"><i class="fas fa-times"></i></button>
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-lg border border-slate-100 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                <h3 class="font-semibold text-slate-800 text-base">Respond to Inquiry</h3>
+                <button class="text-slate-400 hover:text-slate-600" onclick="closeModal('enqModal')"><i class="ph ph-x text-xl"></i></button>
             </div>
-            <div class="modal-body">
-                <div id="enqDetails" style="background: var(--bg-primary); padding: 1.5rem; border-radius: var(--radius-md); margin-bottom: 2rem; border: 1px solid var(--border-light)"></div>
+            <div class="p-6 space-y-4">
+                <div id="enqDetails" class="bg-slate-50 p-4 rounded-lg border border-slate-100 text-sm space-y-2"></div>
                 <input type="hidden" id="enqRespondId">
-                <div class="form-group">
-                    <label>Your Message</label>
-                    <textarea class="form-control" id="enqResponse" rows="6" placeholder="Write your professional response here..."></textarea>
+                <div class="space-y-1">
+                    <label class="text-xs font-medium text-slate-500">Your Message</label>
+                    <textarea class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" id="enqResponse" rows="6" placeholder="Write your professional response here..."></textarea>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn" style="background:none" onclick="closeModal('enqModal')">Cancel</button>
-                <button class="btn btn-primary" onclick="sendEnquiryResponse()"><i class="fas fa-paper-plane"></i> Send Reply</button>
+            <div class="px-6 py-4 border-t border-slate-100 flex justify-end space-x-2 bg-slate-50">
+                <button class="px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium hover:bg-white transition-colors" onclick="closeModal('enqModal')">Cancel</button>
+                <button class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors inline-flex items-center space-x-2" onclick="sendEnquiryResponse()"><i class="ph ph-paper-plane"></i> <span>Send Reply</span></button>
             </div>
         </div>
     </div>
 
     <!-- Destination Modal -->
     <div class="modal-overlay" id="destModal">
-        <div class="modal-content" style="max-width: 800px;">
-            <div class="modal-header">
-                <h3 id="destModalTitle">Destination Details</h3>
-                <button class="btn-icon" onclick="closeModal('destModal')"><i class="fas fa-times"></i></button>
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-2xl border border-slate-100 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                <h3 class="font-semibold text-slate-800 text-base" id="destModalTitle">Destination Details</h3>
+                <button class="text-slate-400 hover:text-slate-600" onclick="closeModal('destModal')"><i class="ph ph-x text-xl"></i></button>
             </div>
-            <div class="modal-body">
-                <form id="destForm">
+            <div class="p-6 space-y-4">
+                <form id="destForm" class="space-y-4">
                     <input type="hidden" id="destId">
-                    <div class="form-grid">
-                        <div class="form-group"><label>Park Name</label><input type="text" name="park_name" class="form-control" required></div>
-                        <div class="form-group"><label>Slug</label><input type="text" name="park_slug" class="form-control" required></div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Park Name</label><input type="text" name="park_name" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" required></div>
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Slug</label><input type="text" name="park_slug" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" required></div>
                     </div>
-                    <div class="form-group"><label>Location</label><input type="text" name="park_location" class="form-control"></div>
-                    <div class="form-group"><label>Description</label><textarea name="park_description" class="form-control" rows="4"></textarea></div>
-                    <div class="form-grid">
-                        <div class="form-group"><label>Size (sq km)</label><input type="number" name="size_sq_km" class="form-control"></div>
-                        <div class="form-group"><label>Established Year</label><input type="number" name="established_year" class="form-control"></div>
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Location</label><input type="text" name="park_location" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500"></div>
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Description</label><textarea name="park_description" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" rows="4"></textarea></div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Size (sq km)</label><input type="number" name="size_sq_km" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500"></div>
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Established Year</label><input type="number" name="established_year" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500"></div>
                     </div>
-                    <div class="form-group"><label>Best Season</label><input type="text" name="best_season" class="form-control" placeholder="e.g. June to October"></div>
-                    <div class="form-group"><label>Wildlife Highlights</label><textarea name="wildlife_highlights" class="form-control" placeholder="e.g. Lions, Elephants..."></textarea></div>
-                    <div class="form-group"><label>Featured Image Slug</label><input type="text" name="image_url" class="form-control"></div>
-                    <div style="display:flex; gap:2rem; margin-top: 1.5rem; flex-wrap: wrap;">
-                        <label class="checkbox-label"><input type="checkbox" name="is_unesco_heritage"> UNESCO Heritage</label>
-                        <label class="checkbox-label"><input type="checkbox" name="is_active" checked> Active</label>
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Best Season</label><input type="text" name="best_season" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" placeholder="e.g. June to October"></div>
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Wildlife Highlights</label><textarea name="wildlife_highlights" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" placeholder="e.g. Lions, Elephants..."></textarea></div>
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Featured Image Slug</label><input type="text" name="image_url" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500"></div>
+                    <div class="flex items-center gap-6 p-4 bg-slate-50 rounded-lg border border-slate-100">
+                        <label class="inline-flex items-center text-sm font-medium text-slate-600"><input type="checkbox" name="is_unesco_heritage" class="rounded border-slate-300 text-primary-500 focus:ring-primary-500 mr-2"> UNESCO Heritage</label>
+                        <label class="inline-flex items-center text-sm font-medium text-slate-600"><input type="checkbox" name="is_active" class="rounded border-slate-300 text-primary-500 focus:ring-primary-500 mr-2" checked> Active</label>
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button class="btn" style="background:none" onclick="closeModal('destModal')">Cancel</button>
-                <button class="btn btn-primary" onclick="saveDestination()">Save Destination</button>
+            <div class="px-6 py-4 border-t border-slate-100 flex justify-end space-x-2 bg-slate-50">
+                <button class="px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium hover:bg-white transition-colors" onclick="closeModal('destModal')">Cancel</button>
+                <button class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors" onclick="saveDestination()">Save Destination</button>
             </div>
         </div>
     </div>
 
     <!-- User Modal -->
     <div class="modal-overlay" id="userModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="userModalTitle">Edit User</h3>
-                <button class="btn-icon" onclick="closeModal('userModal')"><i class="fas fa-times"></i></button>
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-md border border-slate-100 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                <h3 class="font-semibold text-slate-800 text-base" id="userModalTitle">Edit User</h3>
+                <button class="text-slate-400 hover:text-slate-600" onclick="closeModal('userModal')"><i class="ph ph-x text-xl"></i></button>
             </div>
-            <div class="modal-body">
-                <form id="userForm">
+            <div class="p-6 space-y-4">
+                <form id="userForm" class="space-y-4">
                     <input type="hidden" id="userId">
-                    <div class="form-grid">
-                        <div class="form-group"><label>First Name</label><input type="text" name="first_name" class="form-control" required></div>
-                        <div class="form-group"><label>Last Name</label><input type="text" name="last_name" class="form-control"></div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">First Name</label><input type="text" name="first_name" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" required></div>
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Last Name</label><input type="text" name="last_name" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500"></div>
                     </div>
-                    <div class="form-group"><label>Email</label><input type="email" name="email" class="form-control" required></div>
-                    <div class="form-group"><label>Phone</label><input type="text" name="phone" class="form-control"></div>
-                    <div class="form-group"><label>Password (New)</label><input type="password" name="password" class="form-control" placeholder="Leave blank to keep current"></div>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Role</label>
-                            <select name="role_id" class="form-control"><option value="1">Staff</option><option value="2">Admin</option></select>
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Email</label><input type="email" name="email" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" required></div>
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Phone</label><input type="text" name="phone" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500"></div>
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Password (New)</label><input type="password" name="password" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" placeholder="Leave blank to keep current"></div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1">
+                            <label class="text-xs font-medium text-slate-500">Role</label>
+                            <select name="role_id" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500"><option value="1">Staff</option><option value="2">Admin</option></select>
                         </div>
-                        <div class="form-group">
-                            <label>Status</label>
-                            <select name="is_active" class="form-control"><option value="true">Active</option><option value="false">Inactive</option></select>
+                        <div class="space-y-1">
+                            <label class="text-xs font-medium text-slate-500">Status</label>
+                            <select name="is_active" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500"><option value="true">Active</option><option value="false">Inactive</option></select>
                         </div>
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button class="btn" style="background:none" onclick="closeModal('userModal')">Cancel</button>
-                <button class="btn btn-primary" onclick="saveUser()">Save User</button>
+            <div class="px-6 py-4 border-t border-slate-100 flex justify-end space-x-2 bg-slate-50">
+                <button class="px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium hover:bg-white transition-colors" onclick="closeModal('userModal')">Cancel</button>
+                <button class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors" onclick="saveUser()">Save User</button>
             </div>
         </div>
     </div>
 
     <!-- Blog Modal -->
     <div class="modal-overlay" id="blogModal">
-        <div class="modal-content" style="max-width: 900px;">
-            <div class="modal-header">
-                <h3 id="blogModalTitle">Blog Post Details</h3>
-                <button class="btn-icon" onclick="closeModal('blogModal')"><i class="fas fa-times"></i></button>
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-4xl border border-slate-100 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                <h3 class="font-semibold text-slate-800 text-base" id="blogModalTitle">Blog Post Details</h3>
+                <button class="text-slate-400 hover:text-slate-600" onclick="closeModal('blogModal')"><i class="ph ph-x text-xl"></i></button>
             </div>
-            <div class="modal-body">
-                <form id="blogForm">
+            <div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+                <form id="blogForm" class="space-y-4">
                     <input type="hidden" id="blogId">
-                    <div class="form-grid">
-                        <div class="form-group"><label>Title</label><input type="text" name="post_title" class="form-control" required></div>
-                        <div class="form-group"><label>Slug</label><input type="text" name="post_slug" class="form-control" required></div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Title</label><input type="text" name="post_title" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" required></div>
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Slug</label><input type="text" name="post_slug" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" required></div>
                     </div>
-                    <div class="form-group"><label>Excerpt</label><textarea name="post_excerpt" class="form-control" rows="2"></textarea></div>
-                    <div class="form-group"><label>Content (HTML Supported)</label><textarea name="post_content" class="form-control" rows="12"></textarea></div>
-                    <div class="form-grid">
-                        <div class="form-group"><label>Featured Image Slug</label><input type="text" name="featured_image_url" class="form-control"></div>
-                        <div class="form-group"><label>Tags (CSV)</label><input type="text" name="post_tags_csv" class="form-control"></div>
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Excerpt</label><textarea name="post_excerpt" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" rows="2"></textarea></div>
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Content (HTML Supported)</label><textarea name="post_content" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" rows="12"></textarea></div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Featured Image Slug</label><input type="text" name="featured_image_url" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500"></div>
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Tags (CSV)</label><input type="text" name="post_tags_csv" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500"></div>
                     </div>
-                    <div class="form-grid">
-                        <div class="form-group"><label>Meta Title</label><input type="text" name="meta_title" class="form-control"></div>
-                        <div class="form-group"><label>Meta Description</label><input type="text" name="meta_description" class="form-control"></div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Meta Title</label><input type="text" name="meta_title" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500"></div>
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Meta Description</label><input type="text" name="meta_description" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500"></div>
                     </div>
-                    <label class="checkbox-label" style="margin-top: 1.5rem;"><input type="checkbox" name="is_published"> Published</label>
+                    <label class="inline-flex items-center text-sm font-medium text-slate-600 mt-2"><input type="checkbox" name="is_published" class="rounded border-slate-300 text-primary-500 focus:ring-primary-500 mr-2"> Published</label>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button class="btn" style="background:none" onclick="closeModal('blogModal')">Cancel</button>
-                <button class="btn btn-primary" onclick="saveBlog()">Save Post</button>
+            <div class="px-6 py-4 border-t border-slate-100 flex justify-end space-x-2 bg-slate-50">
+                <button class="px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium hover:bg-white transition-colors" onclick="closeModal('blogModal')">Cancel</button>
+                <button class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors" onclick="saveBlog()">Save Post</button>
             </div>
         </div>
     </div>

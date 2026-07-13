@@ -2,18 +2,27 @@ const express = require('express');
 const router = express.Router();
 const adminController = require('../controllers/admin.controller');
 const { verifyAdmin } = require('../middleware/auth.middleware');
-const { validate } = require('../middleware/validate.middleware');
-const { adminLoginSchema } = require('../validators/api.validators');
+const authController = require('../controllers/admin/AuthController');
+const { requireAuth } = require('../middleware/authMiddleware');
 
 // ── Authentication ────────────────────────────────────────────
-router.post('/login', validate(adminLoginSchema), adminController.login);
-router.get('/verify', verifyAdmin, adminController.verify);
+router.post('/login', authController.login);
+router.post('/logout', authController.logout);
+router.get('/verify', requireAuth, authController.verify);
 
-// ── Sub-Routes ────────────────────────────────────────────────
+// ── CMS Sub-Routes ───────────────────────────────────────────
+router.use('/users',           require('./admin/users.routes'));
+router.use('/roles',           require('./admin/roles.routes'));
+router.use('/permissions',     require('./admin/permissions.routes'));
+router.use('/tour-categories', require('./admin/tour-categories.routes'));
+router.use('/destinations',    require('./admin/destinations.routes'));
+router.use('/tours',           require('./admin/tours.routes'));
+router.use('/media',           require('./admin/media.routes'));
+
+// ── Legacy Sub-Routes ─────────────────────────────────────────
 router.use('/packages',     require('./admin/package.admin.routes'));
 router.use('/destinations', require('./admin/destination.admin.routes'));
 router.use('/bookings',     require('./admin/booking.admin.routes'));
-router.use('/users',        require('./admin/user.admin.routes'));
 router.use('/categories',   require('./admin/category.admin.routes'));
 router.use('/blog',         require('./admin/blog.admin.routes'));
 router.use('/settings',     require('./admin/settings.admin.routes'));

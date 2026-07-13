@@ -1,0 +1,195 @@
+<div class="space-y-6">
+    <!-- Stats Overview -->
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        
+        <!-- Stat Card 1 -->
+        <div class="bg-white overflow-hidden shadow-sm rounded-xl border border-gray-100 transition-all hover:shadow-md">
+            <div class="p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-primary-50 rounded-md p-3">
+                        <i class="ph ph-calendar-check text-primary-600 text-xl"></i>
+                    </div>
+                    <div class="ml-4 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">Pending Bookings</dt>
+                            <dd class="flex items-baseline">
+                                <div class="text-2xl font-semibold text-gray-900">{{stats.pendingBookings}}</div>
+                                <div class="ml-2 flex items-baseline text-sm font-semibold text-green-600">
+                                    <i class="ph ph-arrow-up-right mr-0.5"></i>
+                                    <span class="sr-only">Increased by</span>
+                                    12%
+                                </div>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stat Card 2 -->
+        <div class="bg-white overflow-hidden shadow-sm rounded-xl border border-gray-100 transition-all hover:shadow-md">
+            <div class="p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-blue-50 rounded-md p-3">
+                        <i class="ph ph-users text-blue-600 text-xl"></i>
+                    </div>
+                    <div class="ml-4 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">Total Customers</dt>
+                            <dd class="flex items-baseline">
+                                <div class="text-2xl font-semibold text-gray-900">{{stats.totalCustomers}}</div>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stat Card 3 -->
+        <div class="bg-white overflow-hidden shadow-sm rounded-xl border border-gray-100 transition-all hover:shadow-md">
+            <div class="p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-orange-50 rounded-md p-3">
+                        <i class="ph ph-map-trifold text-orange-600 text-xl"></i>
+                    </div>
+                    <div class="ml-4 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">Active Tours</dt>
+                            <dd class="flex items-baseline">
+                                <div class="text-2xl font-semibold text-gray-900">{{stats.activeTours}}</div>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stat Card 4 -->
+        <div class="bg-white overflow-hidden shadow-sm rounded-xl border border-gray-100 transition-all hover:shadow-md">
+            <div class="p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-purple-50 rounded-md p-3">
+                        <i class="ph ph-money text-purple-600 text-xl"></i>
+                    </div>
+                    <div class="ml-4 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">Monthly Revenue</dt>
+                            <dd class="flex items-baseline">
+                                <div class="text-2xl font-semibold text-gray-900">${{stats.monthlyRevenue}}</div>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area: Charts & Activity -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Chart placeholder -->
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-base font-semibold text-gray-900">Booking Trends</h2>
+                <button class="text-sm text-gray-500 hover:text-gray-900 flex items-center">
+                    Last 30 Days <i class="ph ph-caret-down ml-1"></i>
+                </button>
+            </div>
+            <!-- Mock Chart Area -->
+            <div class="h-64 bg-gray-50 rounded-lg flex items-end px-4 pb-4 space-x-2">
+                <div class="w-full bg-blue-100 rounded-t h-1/3 hover:bg-blue-200 transition-colors"></div>
+                <div class="w-full bg-blue-100 rounded-t h-2/3 hover:bg-blue-200 transition-colors"></div>
+                <div class="w-full bg-blue-100 rounded-t h-1/2 hover:bg-blue-200 transition-colors"></div>
+                <div class="w-full bg-blue-100 rounded-t h-3/4 hover:bg-blue-200 transition-colors"></div>
+                <div class="w-full bg-blue-100 rounded-t h-full hover:bg-blue-200 transition-colors"></div>
+                <div class="w-full bg-blue-100 rounded-t h-4/5 hover:bg-blue-200 transition-colors"></div>
+                <div class="w-full bg-blue-500 rounded-t h-full hover:bg-blue-600 transition-colors relative">
+                    <!-- Tooltip mock -->
+                    <div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs py-1 px-2 rounded">24 Bookings</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity Feed -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col">
+            <h2 class="text-base font-semibold text-gray-900 mb-4">Recent Activity</h2>
+            
+            <div class="flex-1 overflow-y-auto">
+                <ul class="-mb-8">
+                    {{#each recentActivity}}
+                    <li>
+                        <div class="relative pb-8">
+                            {{#unless @last}}
+                            <span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                            {{/unless}}
+                            <div class="relative flex space-x-3">
+                                <div>
+                                    <span class="h-8 w-8 rounded-full flex items-center justify-center ring-8 ring-white bg-gray-100">
+                                        <i class="ph ph-clock text-gray-500"></i>
+                                    </span>
+                                </div>
+                                <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+                                    <div>
+                                        <p class="text-sm text-gray-500">{{this.action}} <a href="#" class="font-medium text-gray-900">{{this.target}}</a></p>
+                                    </div>
+                                    <div class="text-right text-sm whitespace-nowrap text-gray-500">
+                                        <time datetime="{{this.time}}">{{this.timeAgo}}</time>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    {{/each}}
+                    <!-- Mock Data if none provided -->
+                    {{#unless recentActivity}}
+                    <li>
+                        <div class="relative pb-8">
+                            <span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                            <div class="relative flex space-x-3">
+                                <div>
+                                    <span class="h-8 w-8 rounded-full flex items-center justify-center ring-8 ring-white bg-green-100">
+                                        <i class="ph ph-check text-green-600"></i>
+                                    </span>
+                                </div>
+                                <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+                                    <div>
+                                        <p class="text-sm text-gray-500">Booking Confirmed <a href="#" class="font-medium text-gray-900">#BK-1024</a></p>
+                                    </div>
+                                    <div class="text-right text-sm whitespace-nowrap text-gray-500">
+                                        <time datetime="2026-07-13">2h ago</time>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="relative pb-8">
+                            <div class="relative flex space-x-3">
+                                <div>
+                                    <span class="h-8 w-8 rounded-full flex items-center justify-center ring-8 ring-white bg-blue-100">
+                                        <i class="ph ph-user-plus text-blue-600"></i>
+                                    </span>
+                                </div>
+                                <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+                                    <div>
+                                        <p class="text-sm text-gray-500">New User Registered <a href="#" class="font-medium text-gray-900">Sarah Jenkins</a></p>
+                                    </div>
+                                    <div class="text-right text-sm whitespace-nowrap text-gray-500">
+                                        <time datetime="2026-07-13">4h ago</time>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    {{/unless}}
+                </ul>
+            </div>
+            
+            <div class="mt-4 border-t border-gray-100 pt-4">
+                <a href="/admin/activity" class="text-sm font-medium text-primary-600 hover:text-primary-500 flex items-center justify-center">
+                    View all activity <i class="ph ph-arrow-right ml-1"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,18 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const packageAdminController = require('../../controllers/admin/package.admin.controller');
-const { verifyAdmin } = require('../../middleware/auth.middleware');
+const tourController = require('../../controllers/admin/TourController');
+const { requireAuth } = require('../../middleware/authMiddleware');
+const { requirePermission } = require('../../middleware/rbacMiddleware');
 
-router.use(verifyAdmin);
+router.use(requireAuth);
 
-router.get('/',      packageAdminController.getAll);
-router.post('/',     packageAdminController.create);
-router.put('/:id',   packageAdminController.update);
-router.delete('/:id', packageAdminController.delete);
+router.get('/',      tourController.getAll);
+router.post('/',     requirePermission('tour.create'), tourController.create);
+router.put('/:id',   requirePermission('tour.publish'), tourController.update);
+router.delete('/:id', requirePermission('tour.publish'), tourController.delete);
 
-router.get('/:id/itinerary', packageAdminController.getItinerary);
-router.post('/:id/itinerary', packageAdminController.saveItinerary);
-router.get('/:id/destinations', packageAdminController.getDestinations);
-router.post('/:id/destinations', packageAdminController.saveDestinations);
+router.get('/:id/itinerary', tourController.getItinerary);
+router.post('/:id/itinerary', requirePermission('tour.publish'), tourController.saveItinerary);
+router.get('/:id/destinations', tourController.getDestinations);
+router.post('/:id/destinations', requirePermission('tour.publish'), tourController.saveDestinations);
 
 module.exports = router;
