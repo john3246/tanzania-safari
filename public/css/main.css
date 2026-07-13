@@ -54,7 +54,7 @@ ul{list-style:none}
 /* ── HEADER ── */
 .header{position:fixed;top:0;left:0;width:100%;z-index:var(--z-sticky);transition:all 0.4s cubic-bezier(0.4, 0, 0.2, 1);padding:0;background:rgba(0,0,0,0.2)}
 .header-inner{display:flex;align-items:center;justify-content:space-between;height:100px;transition:var(--transition)}
-.header.scrolled{background:rgba(26,14,6,0.98);backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);box-shadow:0 4px 20px rgba(0,0,0,0.2);padding:0}
+.header.scrolled{background:rgba(36, 17, 5, 0.98);backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);box-shadow:0 4px 20px rgba(0,0,0,0.2);padding:0}
 .header.scrolled .header-inner{height:80px}
 
 /* ── LOGO ── */
