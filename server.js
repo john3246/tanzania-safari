@@ -106,6 +106,7 @@ app.use('/api/auth',   require('./routes/auth'));
 app.use('/api',        apiRoutes);
 app.use('/api/admin',  adminRoutes);
 app.use('/api/images', imageRoutes);
+app.use('/api/public', require('./routes/public.routes'));
 
 // ── Health Check Endpoint ───────────────────────────────────────
 app.get('/health', async (req, res) => {

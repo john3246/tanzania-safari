@@ -18,6 +18,13 @@ router.use('/tour-categories', require('./admin/tour-categories.routes'));
 router.use('/destinations',    require('./admin/destinations.routes'));
 router.use('/tours',           require('./admin/tours.routes'));
 router.use('/media',           require('./admin/media.routes'));
+router.use('/pages',           require('./admin/pages.routes'));
+router.use('/menus',           require('./admin/menus.routes'));
+router.use('/site-settings',   require('./admin/site-settings.routes'));
+router.use('/audit-logs',      require('./admin/audit-logs.routes'));
+router.use('/email-templates', require('./admin/email-templates.routes'));
+router.use('/bookings-cms',    require('./admin/bookings-cms.routes'));
+router.use('/reports',         require('./admin/reports.routes'));
 
 // ── Legacy Sub-Routes ─────────────────────────────────────────
 router.use('/packages',     require('./admin/package.admin.routes'));
