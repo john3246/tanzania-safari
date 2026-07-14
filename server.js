@@ -36,18 +36,20 @@ app.use(helmet({
     contentSecurityPolicy: {
         directives: {
             defaultSrc: ["'self'"],
-            scriptSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"],
-            styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
-            imgSrc: ["'self'", "data:", "https://images.unsplash.com"], 
+            scriptSrc: ["'self'", "'unsafe-eval'", "'unsafe-inline'", "https://cdnjs.cloudflare.com", "https://cdn.tailwindcss.com", "https://unpkg.com"],
+            styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com", "https://unpkg.com", "https://cdn.tailwindcss.com"],
+            imgSrc: ["'self'", "data:", "https://images.unsplash.com", "https://ui-avatars.com"], 
             connectSrc: [
                 "'self'", 
                 "https://tanzaniasafarimagic.com", 
                 "https://www.tanzaniasafarimagic.com",
-                "https://tanzania-safari.onrender.com", // Added deployment URL for CSP compatibility
+                "https://tanzania-safari.onrender.com",
                 "http://localhost:3000",
-                "http://localhost:5173"
+                "http://localhost:5173",
+                "ws://localhost:3000",
+                "wss://tanzania-safari.onrender.com"
             ],
-            fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
+            fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com", "https://unpkg.com"],
             objectSrc: ["'none'"],
             mediaSrc: ["'self'"],
             frameSrc: ["'none'"],

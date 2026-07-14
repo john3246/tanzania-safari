@@ -22,7 +22,7 @@ class AuthService {
 
         const token = jwt.sign(
             { userId: user.user_id, email: user.email, role: user.role_name, permissions },
-            process.env.JWT_SECRET,
+            process.env.JWT_SECRET || 'tanzania-safari-admin-secret-key-2024',
             { expiresIn: '12h' }
         );
 
