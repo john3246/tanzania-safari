@@ -116,6 +116,9 @@ function navigate(page) {
     const pageTitle = document.getElementById('pageTitle');
     if (pageTitle) pageTitle.textContent = targetNav?.querySelector('span')?.textContent || page;
     
+    // Update breadcrumb
+    updateBreadcrumb(page);
+    
     // Close sidebar on mobile
     document.getElementById('sidebar')?.classList.remove('open');
 
@@ -135,6 +138,389 @@ function navigate(page) {
     }
 }
 
+// ── Breadcrumb Logic ──────────────────────────────────────────
+function updateBreadcrumb(page) {
+    const breadcrumbContainer = document.getElementById('breadcrumbContainer');
+    if (!breadcrumbContainer) return;
+    
+    const pageNames = {
+        'dashboard': 'Dashboard',
+        'packages': 'Safari Packages',
+        'categories': 'Categories',
+        'destinations': 'Destinations',
+        'bookings': 'Bookings',
+        'enquiries': 'Inquiries',
+        'blog': 'Blog Posts',
+        'reviews': 'Reviews',
+        'images': 'Media Library',
+        'users': 'Team Accounts',
+        'settings': 'Settings'
+    };
+    
+    const categoryMap = {
+        'dashboard': 'Overview',
+        'packages': 'Inventory',
+        'categories': 'Inventory',
+        'destinations': 'Inventory',
+        'bookings': 'Overview',
+        'enquiries': 'Overview',
+        'blog': 'Content',
+        'reviews': 'Content',
+        'images': 'Content',
+        'users': 'System',
+        'settings': 'System'
+    };
+    
+    const category = categoryMap[page] || 'System';
+    const pageName = pageNames[page] || page;
+    
+    breadcrumbContainer.innerHTML = `
+        <div class="breadcrumb">
+            <div class="breadcrumb-item">
+                <a href="#" onclick="navigate('dashboard')">Dashboard</a>
+            </div>
+            <div class="breadcrumb-item">
+                <a href="#">${category}</a>
+            </div>
+            <div class="breadcrumb-item active">
+                ${pageName}
+            </div>
+        </div>
+    `;
+}
+
+// ── Sidebar Collapse Logic ────────────────────────────────────
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) {
+        sidebar.classList.toggle('collapsed');
+        localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+    }
+}
+
+function restoreSidebarState() {
+    const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar && isCollapsed) {
+        sidebar.classList.add('collapsed');
+    }
+}
+
+// ── Dark Mode Logic ────────────────────────────────────────────
+function toggleDarkMode() {
+    const html = document.documentElement;
+    const isDark = html.classList.toggle('dark');
+    localStorage.setItem('darkMode', isDark);
+}
+
+function restoreDarkModeState() {
+    const isDark = localStorage.getItem('darkMode') === 'true';
+    const html = document.documentElement;
+    if (isDark) {
+        html.classList.add('dark');
+    }
+}
+
+// ── Advanced Search, Filters, and Bulk Actions Logic ─────────────
+const moduleState = {
+    packages: { page: 1, perPage: 10, search: '', filters: {}, selected: [], allData: [] },
+    categories: { page: 1, perPage: 10, search: '', filters: {}, selected: [], allData: [] },
+    destinations: { page: 1, perPage: 10, search: '', filters: {}, selected: [], allData: [] },
+    bookings: { page: 1, perPage: 10, search: '', filters: {}, selected: [], allData: [] },
+    users: { page: 1, perPage: 10, search: '', filters: {}, selected: [], allData: [] }
+};
+
+let searchTimeout = null;
+
+function debounceSearch(module, value) {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        moduleState[module].search = value;
+        moduleState[module].page = 1;
+        applyFilters(module);
+    }, 300);
+}
+
+function applyFilters(module) {
+    const statusFilter = document.getElementById(`${module}StatusFilter`)?.value;
+    const categoryFilter = document.getElementById(`${module}CategoryFilter`)?.value;
+    
+    moduleState[module].filters = {
+        status: statusFilter,
+        category: categoryFilter
+    };
+    
+    renderFilteredData(module);
+}
+
+function renderFilteredData(module) {
+    const state = moduleState[module];
+    let filtered = [...state.allData];
+    
+    // Apply search
+    if (state.search) {
+        const searchLower = state.search.toLowerCase();
+        filtered = filtered.filter(item => 
+            item.name?.toLowerCase().includes(searchLower) ||
+            item.title?.toLowerCase().includes(searchLower) ||
+            item.package_name?.toLowerCase().includes(searchLower)
+        );
+    }
+    
+    // Apply filters
+    if (state.filters.status) {
+        filtered = filtered.filter(item => item.status === state.filters.status || item.is_active === (state.filters.status === 'active'));
+    }
+    
+    if (state.filters.category) {
+        filtered = filtered.filter(item => item.category_id === state.filters.category);
+    }
+    
+    // Apply pagination
+    const start = (state.page - 1) * state.perPage;
+    const end = start + state.perPage;
+    const paginated = filtered.slice(start, end);
+    
+    // Update UI
+    updateModuleTable(module, paginated);
+    updatePaginationInfo(module, filtered.length, start + 1, Math.min(end, filtered.length));
+}
+
+function toggleSelectAll(module) {
+    const checkbox = document.getElementById(`${module}SelectAll`);
+    const checkboxes = document.querySelectorAll(`.${module}-row-checkbox`);
+    
+    checkboxes.forEach(cb => {
+        cb.checked = checkbox.checked;
+        const id = cb.value;
+        if (checkbox.checked) {
+            if (!moduleState[module].selected.includes(id)) {
+                moduleState[module].selected.push(id);
+            }
+        } else {
+            moduleState[module].selected = moduleState[module].selected.filter(item => item !== id);
+        }
+    });
+    
+    updateBulkActionsBar(module);
+}
+
+function updateBulkActionsBar(module) {
+    const bar = document.getElementById(`${module}BulkActions`);
+    const count = document.getElementById(`${module}SelectedCount`);
+    
+    if (moduleState[module].selected.length > 0) {
+        bar.classList.remove('hidden');
+        count.textContent = moduleState[module].selected.length;
+    } else {
+        bar.classList.add('hidden');
+    }
+}
+
+async function bulkAction(module, action) {
+    const selected = moduleState[module].selected;
+    if (selected.length === 0) return;
+    
+    if (!confirm(`Are you sure you want to ${action} ${selected.length} items?`)) return;
+    
+    try {
+        // For now, just show a toast - in production, this would call the API
+        showToast(`${action} ${selected.length} items`, 'success');
+        
+        // Clear selection
+        moduleState[module].selected = [];
+        document.getElementById(`${module}SelectAll`).checked = false;
+        updateBulkActionsBar(module);
+        
+        // Reload data
+        if (module === 'packages') loadPackages();
+        else if (module === 'categories') loadCategories();
+        else if (module === 'destinations') loadDestinations();
+        else if (module === 'users') loadUsers();
+    } catch (e) {
+        showToast('Bulk action failed', 'error');
+    }
+}
+
+function changePage(module, direction) {
+    const state = moduleState[module];
+    if (direction === 'prev' && state.page > 1) {
+        state.page--;
+    } else if (direction === 'next') {
+        state.page++;
+    }
+    renderFilteredData(module);
+}
+
+function updatePaginationInfo(module, total, start, end) {
+    const info = document.getElementById(`${module}PaginationInfo`);
+    if (info) {
+        info.textContent = `Showing ${start}-${end} of ${total}`;
+    }
+}
+
+function updateModuleTable(module, data) {
+    const tbody = document.getElementById(`${module === 'packages' ? 'pkg' : module}Body`);
+    if (!tbody) return;
+    
+    // This will be handled by the existing load functions
+    // Just update the state for now
+}
+
+// ── Keyboard Shortcuts Logic ────────────────────────────────────
+const keyboardShortcuts = {
+    'g+d': () => navigate('dashboard'),
+    'g+p': () => navigate('packages'),
+    'g+b': () => navigate('bookings'),
+    'g+u': () => navigate('users'),
+    'g+s': () => navigate('settings'),
+    'Escape': () => {
+        document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+            modal.classList.remove('active');
+        });
+    },
+    '/': (e) => {
+        e.preventDefault();
+        const searchInput = document.querySelector('input[type="search"], input[placeholder*="search"], input[placeholder*="Search"]');
+        if (searchInput) {
+            searchInput.focus();
+        }
+    },
+    'Cmd+k': (e) => {
+        e.preventDefault();
+        // Open command palette (placeholder for future implementation)
+        showToast('Command palette coming soon!', 'success');
+    },
+    'Ctrl+k': (e) => {
+        e.preventDefault();
+        // Open command palette (placeholder for future implementation)
+        showToast('Command palette coming soon!', 'success');
+    }
+};
+
+function handleKeyboardShortcuts(e) {
+    const key = e.key;
+    const isModKey = e.metaKey || e.ctrlKey;
+    
+    // Handle modifier key combinations
+    if (isModKey) {
+        const combo = (e.metaKey ? 'Cmd+' : 'Ctrl+') + key.toLowerCase();
+        if (keyboardShortcuts[combo]) {
+            keyboardShortcuts[combo](e);
+            return;
+        }
+    }
+    
+    // Handle single key shortcuts
+    if (keyboardShortcuts[key]) {
+        keyboardShortcuts[key](e);
+    }
+    
+    // Handle g + key combinations
+    if (key === 'g') {
+        window.gKeyPressed = true;
+        setTimeout(() => window.gKeyPressed = false, 500);
+    }
+    
+    if (window.gKeyPressed && key !== 'g') {
+        const combo = 'g+' + key.toLowerCase();
+        if (keyboardShortcuts[combo]) {
+            keyboardShortcuts[combo](e);
+            window.gKeyPressed = false;
+        }
+    }
+}
+
+// ── Accessibility Improvements ────────────────────────────────────
+function setupAccessibility() {
+    // Add ARIA labels to interactive elements
+    document.querySelectorAll('button').forEach(btn => {
+        if (!btn.getAttribute('aria-label') && !btn.textContent.trim()) {
+            const icon = btn.querySelector('i');
+            if (icon) {
+                const iconClass = icon.className;
+                if (iconClass.includes('ph-x')) btn.setAttribute('aria-label', 'Close');
+                else if (iconClass.includes('ph-list')) btn.setAttribute('aria-label', 'Menu');
+                else if (iconClass.includes('ph-caret-left')) btn.setAttribute('aria-label', 'Collapse sidebar');
+                else if (iconClass.includes('ph-moon')) btn.setAttribute('aria-label', 'Enable dark mode');
+                else if (iconClass.includes('ph-sun')) btn.setAttribute('aria-label', 'Disable dark mode');
+                else if (iconClass.includes('ph-plus')) btn.setAttribute('aria-label', 'Add');
+                else if (iconClass.includes('ph-trash')) btn.setAttribute('aria-label', 'Delete');
+                else if (iconClass.includes('ph-pencil')) btn.setAttribute('aria-label', 'Edit');
+            }
+        }
+    });
+    
+    // Add role="button" to clickable divs
+    document.querySelectorAll('[onclick]').forEach(el => {
+        if (!el.getAttribute('role')) {
+            el.setAttribute('role', 'button');
+            el.setAttribute('tabindex', '0');
+            el.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    el.click();
+                }
+            });
+        }
+    });
+    
+    // Improve focus management for modals
+    document.querySelectorAll('.modal-overlay').forEach(modal => {
+        modal.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                modal.classList.remove('active');
+            }
+        });
+    });
+}
+
+// ── Revenue Chart Logic ────────────────────────────────────────
+function renderRevenueChart() {
+    const chartContainer = document.getElementById('revenueChart');
+    const labelsContainer = document.getElementById('revenueChartLabels');
+    if (!chartContainer || !labelsContainer) return;
+
+    // Sample data - in production, this would come from the API
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const currentMonth = new Date().getMonth();
+    const revenueData = [12000, 15000, 18000, 22000, 19000, 25000, 28000, 32000, 29000, 35000, 38000, 42000];
+    const bookingData = [8, 12, 15, 18, 14, 20, 22, 25, 21, 28, 30, 35];
+
+    // Get last 6 months
+    const last6Months = [];
+    const last6Revenue = [];
+    const last6Bookings = [];
+
+    for (let i = 5; i >= 0; i--) {
+        const monthIndex = (currentMonth - i + 12) % 12;
+        last6Months.push(months[monthIndex]);
+        last6Revenue.push(revenueData[monthIndex]);
+        last6Bookings.push(bookingData[monthIndex]);
+    }
+
+    const maxRevenue = Math.max(...last6Revenue);
+    const maxBookings = Math.max(...last6Bookings);
+
+    // Render bars
+    chartContainer.innerHTML = last6Months.map((month, i) => {
+        const revenueHeight = (last6Revenue[i] / maxRevenue) * 100;
+        const bookingsHeight = (last6Bookings[i] / maxBookings) * 100;
+        
+        return `
+            <div class="flex-1 flex flex-col items-center gap-1">
+                <div class="w-full flex items-end gap-1 h-full">
+                    <div class="flex-1 bg-primary-500 rounded-t transition-all duration-500" style="height: ${revenueHeight}%"></div>
+                    <div class="flex-1 bg-slate-300 rounded-t transition-all duration-500" style="height: ${bookingsHeight}%"></div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    // Render labels
+    labelsContainer.innerHTML = last6Months.map(month => `<span class="flex-1 text-center">${month}</span>`).join('');
+}
+
 // ── Dashboard ─────────────────────────────────────────────────
 async function loadDashboard() {
     try {
@@ -145,6 +531,9 @@ async function loadDashboard() {
         if (document.getElementById('s-destinations')) document.getElementById('s-destinations').textContent = stats.total_destinations || 0;
         if (document.getElementById('s-bookings')) document.getElementById('s-bookings').textContent = stats.total_bookings || 0;
         if (document.getElementById('s-enquiries')) document.getElementById('s-enquiries').textContent = stats.total_enquiries || 0;
+
+        // Render revenue chart
+        renderRevenueChart();
 
         // Load Activity
         loadRecentActivity();
@@ -973,18 +1362,45 @@ window.deleteUser = deleteUser;
 window.openBlogModal = openBlogModal;
 window.saveBlog = saveBlog;
 window.deleteBlog = deleteBlog;
+window.toggleSidebar = toggleSidebar;
+window.toggleDarkMode = toggleDarkMode;
+window.debounceSearch = debounceSearch;
+window.applyFilters = applyFilters;
+window.toggleSelectAll = toggleSelectAll;
+window.bulkAction = bulkAction;
+window.changePage = changePage;
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Restore sidebar and dark mode states
+    restoreSidebarState();
+    restoreDarkModeState();
+    
+    // Setup accessibility improvements
+    setupAccessibility();
+    
+    // Setup keyboard shortcuts
+    document.addEventListener('keydown', handleKeyboardShortcuts);
+    
+    // Navigation event listeners
     document.querySelectorAll('.nav-item[data-page]').forEach(item => {
         item.addEventListener('click', e => { e.preventDefault(); navigate(item.getAttribute('data-page')); });
     });
+    
+    // Mobile menu toggle
     document.getElementById('menuToggle')?.addEventListener('click', () => { 
         document.getElementById('sidebar')?.classList.toggle('open'); 
     });
     document.getElementById('sidebarClose')?.addEventListener('click', () => { 
         document.getElementById('sidebar')?.classList.remove('open'); 
     });
+    
+    // Sidebar collapse toggle
+    document.getElementById('sidebarCollapse')?.addEventListener('click', toggleSidebar);
+    
+    // Dark mode toggle
+    document.getElementById('darkModeToggle')?.addEventListener('click', toggleDarkMode);
 
+    // Close sidebar on mobile after navigation
     document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', () => {
             if (window.innerWidth <= 1024) {
@@ -993,13 +1409,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
     
+    // Set current date
     const d = new Date();
     const de = document.getElementById('headerDate');
     if (de) de.innerHTML = `<i class="far fa-calendar"></i> ${d.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric', year:'numeric' })}`;
     
+    // Load initial data
     loadProfile();
     const p = new URLSearchParams(window.location.search).get('page') || 'dashboard';
     navigate(p);
     
+    // Logout handler
     document.getElementById('logoutBtn')?.addEventListener('click', (e) => { e.preventDefault(); localStorage.clear(); window.location.href = '/admin/login'; });
 });

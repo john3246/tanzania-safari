@@ -5,6 +5,12 @@
 :root {
     --bg-main: #fcfcfc;
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --sidebar-width: 16rem;
+    --sidebar-collapsed-width: 4rem;
+}
+
+.dark {
+    --bg-main: #0f172a;
 }
 
 body {
@@ -13,6 +19,7 @@ body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    transition: background-color 0.3s ease;
 }
 
 /* Page Toggling (Crucial for JS Navigation) */
@@ -113,4 +120,133 @@ body {
     font-size: 0.875rem;
     color: #64748b;
     margin-top: 0.125rem;
+}
+
+/* Collapsible Sidebar Styles */
+#sidebar.collapsed {
+    width: var(--sidebar-collapsed-width);
+}
+
+#sidebar.collapsed .sidebar-logo,
+#sidebar.collapsed .nav-text,
+#sidebar.collapsed .nav-label,
+#sidebar.collapsed #userName,
+#sidebar.collapsed #sidebarAvatarImg {
+    display: none;
+}
+
+#sidebar.collapsed .nav-icon {
+    margin-right: 0;
+}
+
+#sidebar.collapsed .nav-item {
+    justify-content: center;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+}
+
+#sidebar.collapsed #sidebarCollapse i {
+    transform: rotate(180deg);
+}
+
+#sidebar.collapsed .sidebar-logo::after {
+    content: 'S';
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #c25b2a;
+}
+
+#sidebar.collapsed .sidebar-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Dark Mode Sidebar Styles */
+.dark #sidebar {
+    background-color: #1e293b;
+    border-color: #334155;
+}
+
+.dark .nav-item {
+    color: #94a3b8;
+}
+
+.dark .nav-item:hover {
+    background-color: #334155;
+    color: #e2e8f0;
+}
+
+.dark .nav-item.active {
+    background-color: rgba(194, 91, 42, 0.1);
+    color: #c25b2a;
+}
+
+.dark .nav-label {
+    color: #64748b;
+}
+
+.dark #userName {
+    color: #e2e8f0;
+}
+
+.dark .text-slate-400 {
+    color: #64748b;
+}
+
+/* Breadcrumb Styles */
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+.breadcrumb-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.breadcrumb-item:not(:last-child)::after {
+    content: '/';
+    color: #cbd5e1;
+}
+
+.breadcrumb-item a {
+    color: #64748b;
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.breadcrumb-item a:hover {
+    color: #c25b2a;
+}
+
+.breadcrumb-item.active {
+    color: #1e293b;
+    font-weight: 500;
+}
+
+/* Tab Content Styles */
+.tab-content {
+    display: none;
+}
+.tab-content.block {
+    display: block;
+}
+
+.tab-btn {
+    color: #64748b;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+}
+.tab-btn:hover {
+    color: #475569;
+}
+.tab-btn.active {
+    color: #c25b2a;
+    border-bottom-color: #c25b2a;
 }
