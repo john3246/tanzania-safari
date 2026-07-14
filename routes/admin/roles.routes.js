@@ -1,7 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const roleController = require('../../controllers/admin/RoleController');
-const { authenticate, requirePermission } = require('../../middleware/auth.middleware');
+
+// FIX: Import the default export from verifyAdmin.js (Source 7)
+const authenticate = require('../../middleware/verifyAdmin'); 
+
+// FIX: Import the named export from rbacMiddleware.js (Source 4)
+const { requirePermission } = require('../../middleware/rbacMiddleware'); 
+
 const { validate } = require('../../middleware/validate.middleware');
 const { z } = require('zod');
 
