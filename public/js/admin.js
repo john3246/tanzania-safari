@@ -125,7 +125,7 @@ function showToast(message, type = 'success', title = null) {
         toast.style.opacity = '0';
         toast.style.transform = 'translateX(24px)';
         setTimeout(() => toast.remove(), 400);
-    }, 2000);
+    }, 4000);
 }
 
 function setLoading(btn, isLoading, originalHtml) {
