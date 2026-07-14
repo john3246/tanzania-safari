@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const menuController = require('../../controllers/admin/MenuController');
-const { authenticate, requirePermission } = require('../../middleware/auth.middleware');
+const authenticate = require('../../middleware/verifyAdmin');
+const { requirePermission } = require('../../middleware/rbacMiddleware');
 const { validate } = require('../../middleware/validate.middleware');
 const { z } = require('zod');
 

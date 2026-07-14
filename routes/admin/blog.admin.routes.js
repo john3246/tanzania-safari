@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../../config/db');
-const { verifyAdmin } = require('../../middleware/auth.middleware');
+const verifyAdmin = require('../../middleware/verifyAdmin');
 
 router.use(verifyAdmin);
 

@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const reportsController = require('../../controllers/admin/ReportsController');
-const { authenticate, requirePermission } = require('../../middleware/auth.middleware');
+const authenticate = require('../../middleware/verifyAdmin');
+const { requirePermission } = require('../../middleware/rbacMiddleware');
 
 // All routes require authentication
 router.use(authenticate);

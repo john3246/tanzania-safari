@@ -18,21 +18,21 @@ class AuthService {
             throw new Error('Account is inactive');
         }
 
-        const permissions = await userService.getUserPermissions(user.id);
+        const permissions = await userService.getUserPermissions(user.user_id);
 
         const token = jwt.sign(
-            { id: user.id, email: user.email, role: user.role_name, permissions },
+            { userId: user.user_id, email: user.email, role: user.role_name, permissions },
             process.env.JWT_SECRET,
             { expiresIn: '12h' }
         );
 
         // Update last login
-        await userService.update(user.id, { last_login: new Date() });
+        await userService.update(user.user_id, { last_login: new Date() });
 
         return {
             token,
             user: {
-                id: user.id,
+                userId: user.user_id,
                 email: user.email,
                 first_name: user.first_name,
                 last_name: user.last_name,

@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const tourController = require('../../controllers/admin/TourController');
-const { requireAuth } = require('../../middleware/authMiddleware');
+const authenticate = require('../../middleware/verifyAdmin');
 const { requirePermission } = require('../../middleware/rbacMiddleware');
 
-router.use(requireAuth);
+router.use(authenticate);
 
 router.get('/',      tourController.getAll);
 router.post('/',     requirePermission('tour.create'), tourController.create);

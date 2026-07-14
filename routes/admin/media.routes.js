@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const mediaController = require('../../controllers/admin/MediaController');
-const { authenticate, requirePermission } = require('../../middleware/auth.middleware');
+const authenticate = require('../../middleware/verifyAdmin');
+const { requirePermission } = require('../../middleware/rbacMiddleware');
 const upload = require('../../middleware/upload');
 
 // All routes require authentication

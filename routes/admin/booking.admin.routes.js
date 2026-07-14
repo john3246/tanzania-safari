@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const bookingController = require('../../controllers/admin/BookingController');
-const { requireAuth } = require('../../middleware/authMiddleware');
+const authenticate = require('../../middleware/verifyAdmin');
 const { requirePermission } = require('../../middleware/rbacMiddleware');
 
-router.use(requireAuth);
+router.use(authenticate);
 
 router.get('/', bookingController.list);
 router.put('/:id/status', requirePermission('booking.confirm'), bookingController.updateStatus);
