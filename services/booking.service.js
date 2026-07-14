@@ -17,30 +17,6 @@ class BookingService {
         }
 
         const booking = await bookingRepository.create(data);
-        
-        // Fetch full details for the confirmation email
-        const fullBooking = await bookingRepository.getBookingWithUserDetails(booking.booking_id);
-        
-        try {
-            await emailService.sendBookingConfirmation(fullBooking);
-            
-            // Send admin notification for new booking
-            const bookingWithPackage = await db.query(`
-                SELECT b.*, sp.package_name, u.first_name, u.last_name, u.email,
-                       COALESCE(u.first_name || ' ' || COALESCE(u.last_name, ''), b.full_name) as full_name
-                FROM bookings b
-                LEFT JOIN safari_packages sp ON b.package_id = sp.package_id
-                LEFT JOIN users u ON b.user_id = u.user_id
-                WHERE b.booking_id = $1
-            `, [booking.booking_id]);
-            
-            if (bookingWithPackage.rows.length > 0) {
-                await emailService.sendAdminBookingNotification(bookingWithPackage.rows[0]);
-            }
-        } catch (err) {
-            console.error('Failed to send booking confirmation email:', err.message);
-        }
-
         return booking;
     }
 
