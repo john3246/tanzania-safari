@@ -93,7 +93,21 @@ router.post('/reset-password/:token', validate(resetSchema), async (req, res, ne
 // 3. One-Time Admin Registration (Pre-check)
 router.get('/can-register-admin', async (req, res, next) => {
     try {
-        // Bypassed check to allow registering new super admin
+        if (process.env.ALLOW_NEW_ADMIN === 'true') {
+            return res.json({ success: true, isOpen: true });
+        }
+        
+        const checkQuery = `
+            SELECT 1 FROM users u 
+            JOIN user_roles ur ON u.role_id = ur.role_id 
+            WHERE ur.role_name = 'Admin' 
+            LIMIT 1
+        `;
+        const existingAdmin = await db.query(checkQuery);
+        
+        if (existingAdmin.rows.length > 0) {
+            return res.status(403).json({ success: false, isOpen: false, message: 'Admin registration is closed.' });
+        }
         res.json({ success: true, isOpen: true });
     } catch (error) {
         next(error);
@@ -103,7 +117,20 @@ router.get('/can-register-admin', async (req, res, next) => {
 // 4. One-Time Admin Registration (Submit)
 router.post('/register-admin', validate(registerSchema), async (req, res, next) => {
     try {
-        // Bypassed check to allow registering new super admin
+        if (process.env.ALLOW_NEW_ADMIN !== 'true') {
+            const checkQuery = `
+                SELECT 1 FROM users u 
+                JOIN user_roles ur ON u.role_id = ur.role_id 
+                WHERE ur.role_name = 'Admin' 
+                LIMIT 1
+            `;
+            const existingAdmin = await db.query(checkQuery);
+
+            if (existingAdmin.rows.length > 0) {
+                return res.status(403).json({ success: false, message: 'Admin registration is closed.' });
+            }
+        }
+        
         const { email, password, firstName, lastName } = req.body;
         
         // Ensure email isn't somehow already taken by a non-admin

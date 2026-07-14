@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 3000;
 // ── Environment Configuration ─────────────────────────────────────
 // Instruct Express to trust headers set by Render's reverse proxy (e.g., X-Forwarded-For).
 // This is crucial for rate limiting and logging accurate client IPs.
-app.enable('trust proxy');
+app.set('trust proxy', 1);
 
 // Ensure uploads directory exists
 const fs = require('fs');
@@ -231,6 +231,15 @@ app.use((err, req, res, next) => {
 // ── Server Startup with SMTP Verification ───────────────────────
 async function startServer() {
   try {
+    // Run automatic migrations for missing columns
+    try {
+      const db = require('./config/db');
+      await db.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_token VARCHAR(255), ADD COLUMN IF NOT EXISTS reset_token_expires TIMESTAMP;');
+      console.log('Checked/Added reset_token columns on users table.');
+    } catch (dbErr) {
+      console.warn('Could not run DB column migration:', dbErr.message);
+    }
+
     // Verify SMTP connection on startup
     logger.info({ event: 'server_starting' }, 'Starting server...');
     
