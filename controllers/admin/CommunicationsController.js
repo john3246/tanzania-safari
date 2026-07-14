@@ -1,5 +1,5 @@
 const emailService = require('../../src/utils/emailService');
-const db = require('../../config/database');
+const db = require('../../config/db');
 
 class CommunicationsController {
     async sendBroadcast(req, res) {
