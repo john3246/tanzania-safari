@@ -8,7 +8,7 @@ let redisAvailable = false;
 let emailQueue = null;
 let deadLetterQueue = null;
 
-const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
+const redisUrl = process.env.REDIS_URL; // If undefined, queue will be disabled
 
 // Try to connect to Redis, but don't fail if unavailable
 try {

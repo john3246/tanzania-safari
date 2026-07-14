@@ -14,7 +14,7 @@ const createLogSchema = z.object({
     entity_id: z.number().optional(),
     description: z.string().optional(),
     severity: z.enum(['low', 'medium', 'high']).optional(),
-    ip_address: z.string().ip().optional(),
+    ip_address: z.string().optional(),
     user_agent: z.string().optional(),
     metadata: z.any().optional()
 });
