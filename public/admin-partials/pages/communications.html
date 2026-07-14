@@ -1,0 +1,50 @@
+<div class="page hidden" id="page-communications">
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight text-slate-800">Communications</h1>
+            <p class="text-sm text-slate-500 mt-1">Send emails and broadcasts directly from the CMS.</p>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 max-w-4xl">
+        <form id="communicationsForm" onsubmit="event.preventDefault(); sendBroadcastEmail();">
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">To:</label>
+                    <div class="flex space-x-4">
+                        <label class="inline-flex items-center">
+                            <input type="radio" class="form-radio text-primary-500" name="recipientType" value="all_users" checked onchange="toggleCustomEmailInput()">
+                            <span class="ml-2 text-sm text-slate-600">All Registered Users</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" class="form-radio text-primary-500" name="recipientType" value="custom" onchange="toggleCustomEmailInput()">
+                            <span class="ml-2 text-sm text-slate-600">Custom Email</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="customEmailInputContainer" class="hidden">
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Recipient Email address:</label>
+                    <input type="email" id="customEmailAddress" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all" placeholder="name@example.com">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Subject:</label>
+                    <input type="text" id="emailSubject" required class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all" placeholder="Enter email subject">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Message Body (HTML Supported):</label>
+                    <textarea id="emailBody" required rows="10" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all font-mono" placeholder="<h1>Hello</h1><p>Write your message here...</p>"></textarea>
+                </div>
+                
+                <div class="flex justify-end pt-4 border-t border-slate-100">
+                    <button type="submit" id="sendEmailBtn" class="bg-primary-500 hover:bg-primary-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-colors shadow-sm inline-flex items-center space-x-2">
+                        <i class="ph ph-paper-plane-right text-lg"></i>
+                        <span>Send Email</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

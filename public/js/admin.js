@@ -9,6 +9,50 @@ const API_BASE = '/api/admin';
 
 if (!token) { window.location.href = '/admin/login'; }
 
+// ── Application Initialization ───────────────────────────────
+async function initAdminApp() {
+    try {
+        // Load layout partials
+        const [sidebarRes, headerRes, modalsRes] = await Promise.all([
+            fetch('/admin-partials/sidebar.html'),
+            fetch('/admin-partials/header.html'),
+            fetch('/admin-partials/modals.html')
+        ]);
+        
+        const sidebarHtml = await sidebarRes.text();
+        const headerHtml = await headerRes.text();
+        const modalsHtml = await modalsRes.text();
+
+        // Inject sidebar before adminMain
+        const adminMain = document.getElementById('adminMain');
+        adminMain.insertAdjacentHTML('beforebegin', sidebarHtml);
+        
+        // Inject header inside adminMain
+        adminMain.insertAdjacentHTML('afterbegin', headerHtml);
+        
+        // Inject modals at the end of body
+        document.body.insertAdjacentHTML('beforeend', modalsHtml);
+
+        // Setup routing (load dashboard by default)
+        const initialPage = window.location.pathname.split('/').pop();
+        const validPages = ['dashboard', 'packages', 'categories', 'bookings', 'enquiries', 'settings', 'destinations', 'blog', 'reviews', 'users', 'images', 'communications'];
+        const pageToLoad = validPages.includes(initialPage) ? initialPage : 'dashboard';
+        
+        await navigate(pageToLoad);
+        
+        // Setup global event listeners
+        document.addEventListener('keydown', handleKeyboardShortcuts);
+        setupAccessibility();
+        restoreSidebarState();
+        restoreDarkModeState();
+
+    } catch (error) {
+        console.error('Failed to initialize admin app:', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', initAdminApp);
+
 // ── API Helpers ──────────────────────────────────────────────
 async function apiRequest(method, path, body = null) {
     const options = {
@@ -102,15 +146,37 @@ function closeModal(id) {
 }
 
 // ── Navigation Logic ──────────────────────────────────────────
-function navigate(page) {
+async function navigate(page) {
+    // Check if partial is already loaded
+    let targetPage = document.getElementById(`page-${page}`);
+    
+    if (!targetPage) {
+        try {
+            const res = await fetch(`/admin-partials/pages/${page}.html`);
+            if (res.ok) {
+                const html = await res.text();
+                // Find where to inject it. We should inject it into the main container
+                const container = document.querySelector('main');
+                container.insertAdjacentHTML('beforeend', html);
+                targetPage = document.getElementById(`page-${page}`);
+            } else {
+                console.error(`Failed to load page: ${page}`);
+                showToast(`Failed to load ${page}`, 'error');
+                return;
+            }
+        } catch (e) {
+            console.error(e);
+            return;
+        }
+    }
+
     // UI Updates
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     
-    const targetPage = document.getElementById(`page-${page}`);
-    const targetNav = document.querySelector(`.nav-item[data-page="${page}"]`);
-    
     if (targetPage) targetPage.classList.add('active');
+    
+    const targetNav = document.querySelector(`.nav-item[data-page="${page}"]`);
     if (targetNav) targetNav.classList.add('active');
     
     const pageTitle = document.getElementById('pageTitle');
@@ -1414,11 +1480,53 @@ document.addEventListener('DOMContentLoaded', () => {
     const de = document.getElementById('headerDate');
     if (de) de.innerHTML = `<i class="far fa-calendar"></i> ${d.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric', year:'numeric' })}`;
     
-    // Load initial data
-    loadProfile();
-    const p = new URLSearchParams(window.location.search).get('page') || 'dashboard';
-    navigate(p);
-    
     // Logout handler
     document.getElementById('logoutBtn')?.addEventListener('click', (e) => { e.preventDefault(); localStorage.clear(); window.location.href = '/admin/login'; });
 });
+
+// ── Communications Module ────────────────────────────────────
+function toggleCustomEmailInput() {
+    const type = document.querySelector('input[name="recipientType"]:checked').value;
+    const customContainer = document.getElementById('customEmailInputContainer');
+    const customEmail = document.getElementById('customEmailAddress');
+    
+    if (type === 'custom') {
+        customContainer.classList.remove('hidden');
+        customEmail.required = true;
+    } else {
+        customContainer.classList.add('hidden');
+        customEmail.required = false;
+    }
+}
+
+async function sendBroadcastEmail() {
+    const btn = document.getElementById('sendEmailBtn');
+    setLoading(btn, true);
+    
+    try {
+        const type = document.querySelector('input[name="recipientType"]:checked').value;
+        const customEmail = document.getElementById('customEmailAddress').value;
+        const subject = document.getElementById('emailSubject').value;
+        const bodyHtml = document.getElementById('emailBody').value;
+        
+        const payload = {
+            recipientType: type,
+            subject,
+            bodyHtml
+        };
+        
+        if (type === 'custom') {
+            payload.email = customEmail;
+        }
+        
+        const res = await apiRequest('POST', '/communications/send', payload);
+        
+        showToast('Email sent successfully!', 'success');
+        document.getElementById('communicationsForm').reset();
+        toggleCustomEmailInput(); // Reset UI
+    } catch (e) {
+        showToast('Failed to send email', 'error');
+    } finally {
+        setLoading(btn, false);
+    }
+}

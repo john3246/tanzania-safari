@@ -1,0 +1,12 @@
+<div class="page bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden" id="page-users">
+                <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                    <h3 class="font-semibold text-slate-800">Team Accounts</h3>
+                    <button class="bg-primary-500 hover:bg-primary-600 text-white px-3.5 py-1.5 rounded-md text-sm font-medium transition-colors inline-flex items-center space-x-2" onclick="openUserModal()"><i class="ph ph-user-plus"></i> <span>New User</span></button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-600">
+                        <thead class="bg-slate-50 text-slate-400 text-xs font-semibold uppercase border-b border-slate-100"><tr class="h-11"><th class="px-6">Name</th><th class="px-6">Email</th><th class="px-6">Role</th><th class="px-6">Status</th><th class="px-6">Actions</th></tr></thead>
+                        <tbody id="userBody" class="divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+            </div>

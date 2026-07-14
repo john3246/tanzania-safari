@@ -1,0 +1,92 @@
+<aside class="w-64 bg-white border-r border-slate-200 flex flex-col flex-shrink-0 transition-all duration-300" id="sidebar">
+        <div class="h-16 flex items-center justify-between px-6 border-b border-slate-100">
+            <span class="text-lg font-bold tracking-tight text-slate-800 sidebar-logo">Safari<span class="text-primary-500 font-semibold">CMS</span></span>
+            <div class="flex items-center space-x-2">
+                <button class="hidden lg:block text-slate-400 hover:text-slate-600 transition-colors" id="sidebarCollapse" title="Collapse sidebar"><i class="ph ph-caret-left text-xl"></i></button>
+                <button class="lg:hidden text-slate-500" id="sidebarClose"><i class="ph ph-x text-xl"></i></button>
+            </div>
+        </div>
+        
+        <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1 sidebar-nav">
+            <div class="space-y-0.5">
+                <span class="px-3 text-2xs font-semibold text-slate-400 uppercase tracking-wider block mb-2 nav-label">Overview</span>
+                <a href="#" class="nav-item active flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50 hover:text-slate-900 [&.active]:bg-primary-50 [&.active]:text-primary-700 transition-colors" data-page="dashboard">
+                    <i class="ph ph-squares-four text-lg mr-3 nav-icon"></i>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50 hover:text-slate-900 [&.active]:bg-primary-50 [&.active]:text-primary-700 transition-colors" data-page="bookings">
+                    <i class="ph ph-calendar-check text-lg mr-3 nav-icon"></i>
+                    <span class="nav-text">Bookings</span>
+                </a>
+                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50 hover:text-slate-900 [&.active]:bg-primary-50 [&.active]:text-primary-700 transition-colors" data-page="enquiries">
+                    <i class="ph ph-envelope-open-text text-lg mr-3 nav-icon"></i>
+                    <span class="nav-text">Inquiries</span>
+                </a>
+            </div>
+            
+            <div class="pt-4 space-y-0.5">
+                <span class="px-3 text-2xs font-semibold text-slate-400 uppercase tracking-wider block mb-2 nav-label">Inventory</span>
+                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50 hover:text-slate-900 [&.active]:bg-primary-50 [&.active]:text-primary-700 transition-colors" data-page="packages">
+                    <i class="ph ph-map-trifold text-lg mr-3 nav-icon"></i>
+                    <span class="nav-text">Safari Packages</span>
+                </a>
+                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50 hover:text-slate-900 [&.active]:bg-primary-50 [&.active]:text-primary-700 transition-colors" data-page="categories">
+                    <i class="ph ph-tag text-lg mr-3 nav-icon"></i>
+                    <span class="nav-text">Categories</span>
+                </a>
+                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50 hover:text-slate-900 [&.active]:bg-primary-50 [&.active]:text-primary-700 transition-colors" data-page="destinations">
+                    <i class="ph ph-mountains text-lg mr-3 nav-icon"></i>
+                    <span class="nav-text">Destinations</span>
+                </a>
+            </div>
+            
+            <div class="pt-4 space-y-0.5">
+                <span class="px-3 text-2xs font-semibold text-slate-400 uppercase tracking-wider block mb-2 nav-label">Content</span>
+                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50 hover:text-slate-900 [&.active]:bg-primary-50 [&.active]:text-primary-700 transition-colors" data-page="blog">
+                    <i class="ph ph-newspaper text-lg mr-3 nav-icon"></i>
+                    <span class="nav-text">Blog Posts</span>
+                </a>
+                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50 hover:text-slate-900 [&.active]:bg-primary-50 [&.active]:text-primary-700 transition-colors" data-page="reviews">
+                    <i class="ph ph-star text-lg mr-3 nav-icon"></i>
+                    <span class="nav-text">Reviews</span>
+                </a>
+                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50 hover:text-slate-900 [&.active]:bg-primary-50 [&.active]:text-primary-700 transition-colors" data-page="images">
+                    <i class="ph ph-image text-lg mr-3 nav-icon"></i>
+                    <span class="nav-text">Media Library</span>
+                </a>
+            </div>
+            
+            <div class="pt-4 space-y-0.5">
+                <span class="px-3 text-2xs font-semibold text-slate-400 uppercase tracking-wider block mb-2 nav-label">System</span>
+                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50 hover:text-slate-900 [&.active]:bg-primary-50 [&.active]:text-primary-700 transition-colors" data-page="users">
+                    <i class="ph ph-users text-lg mr-3 nav-icon"></i>
+                    <span class="nav-text">Team Accounts</span>
+                </a>
+                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50 hover:text-slate-900 [&.active]:bg-primary-50 [&.active]:text-primary-700 transition-colors" data-page="communications">
+                    <i class="ph ph-paper-plane-right text-lg mr-3 nav-icon"></i>
+                    <span class="nav-text">Communications</span>
+                </a>
+                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-slate-50 hover:text-slate-900 [&.active]:bg-primary-50 [&.active]:text-primary-700 transition-colors" data-page="settings">
+                    <i class="ph ph-sliders-horizontal text-lg mr-3 nav-icon"></i>
+                    <span class="nav-text">Settings</span>
+                </a>
+            </div>
+        </nav>
+        
+        <div class="border-t border-slate-100 p-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-9 h-9 rounded-full bg-slate-100 overflow-hidden">
+                        <img id="sidebarAvatarImg" class="w-full h-full object-cover" src="/images/avatar-placeholder.png" alt="Profile">
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-sm font-medium text-slate-700 truncate max-w-[120px]" id="userName">Administrator</span>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-1">
+                    <a href="/" target="_blank" title="View Live Site" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-md hover:bg-slate-50"><i class="ph ph-arrow-square-out text-lg"></i></a>
+                    <a href="#" id="logoutBtn" title="Logout" class="p-1.5 text-slate-400 hover:text-red-600 rounded-md hover:bg-red-50"><i class="ph ph-sign-out text-lg"></i></a>
+                </div>
+            </div>
+        </div>
+    </aside>
