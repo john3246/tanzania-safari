@@ -114,11 +114,25 @@ router.post('/register-admin', validate(registerSchema), async (req, res, next) 
         }
 
         // Get Admin role ID
-        const roleResult = await db.query("SELECT role_id FROM user_roles WHERE role_name = 'Admin'");
+        let roleResult = await db.query("SELECT role_id FROM user_roles WHERE role_name IN ('Admin', 'Super Admin') ORDER BY role_name DESC LIMIT 1");
+        
+        let adminRoleId;
         if (roleResult.rows.length === 0) {
-            return res.status(500).json({ success: false, message: 'Database misconfiguration: Admin role not found.' });
+            // Try the 'roles' table if user_roles is empty or missing roles
+            try {
+                const legacyRoleResult = await db.query("SELECT id as role_id FROM roles WHERE name IN ('Admin', 'Super Admin') ORDER BY name DESC LIMIT 1");
+                if (legacyRoleResult.rows.length > 0) {
+                    adminRoleId = legacyRoleResult.rows[0].role_id;
+                } else {
+                    return res.status(500).json({ success: false, message: 'Database misconfiguration: Admin role not found.' });
+                }
+            } catch (err) {
+                // If neither table works or the role is missing, we must fail cleanly
+                return res.status(500).json({ success: false, message: 'Database misconfiguration: Admin role not found and could not be created.' });
+            }
+        } else {
+            adminRoleId = roleResult.rows[0].role_id;
         }
-        const adminRoleId = roleResult.rows[0].role_id;
 
         const passwordHash = await bcrypt.hash(password, 12);
 

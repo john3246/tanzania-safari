@@ -19,7 +19,7 @@ const verifyAdmin = async (req, res, next) => {
             [decoded.userId]
         );
         
-        if (userQuery.rows.length === 0 || userQuery.rows[0].role_name !== 'Admin') {
+        if (userQuery.rows.length === 0 || !['Admin', 'Super Admin'].includes(userQuery.rows[0].role_name)) {
             return res.status(403).json({ success: false, message: 'Forbidden' });
         }
         
