@@ -1,11 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../../config/db');
-const { verifyAdmin } = require('../../middleware/auth.middleware');
+// FIX: Import the default export from verifyAdmin.js (Source 7)
+const authenticate = require('../../middleware/verifyAdmin'); 
 
-router.use(verifyAdmin);
+// FIX: Import the named export from rbacMiddleware.js (Source 4)
+const { requirePermission } = require('../../middleware/rbacMiddleware'); 
 
-router.get('/', async (req, res) => {
+router.use(authenticate);
+
+router.get('/', requirePermission('categories.view'), async (req, res) => {
     try {
         const query = await db.query(`
             SELECT pc.*, COUNT(sp.package_id) as package_count
