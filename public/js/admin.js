@@ -174,7 +174,12 @@ async function navigate(page) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     
-    if (targetPage) targetPage.classList.add('active');
+    // Show target page
+    if (targetPage) {
+        targetPage.classList.add('active', 'animate-fade-in');
+        // Remove animation class after it plays so it can play again
+        setTimeout(() => targetPage.classList.remove('animate-fade-in'), 300);
+    }
     
     const targetNav = document.querySelector(`.nav-item[data-page="${page}"]`);
     if (targetNav) targetNav.classList.add('active');
@@ -187,6 +192,7 @@ async function navigate(page) {
     
     // Close sidebar on mobile
     document.getElementById('sidebar')?.classList.remove('open');
+    document.getElementById('sidebarBackdrop')?.classList.remove('active');
 
     // Data Loading
     switch(page) {
@@ -1454,11 +1460,17 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Mobile menu toggle
     document.getElementById('menuToggle')?.addEventListener('click', () => { 
-        document.getElementById('sidebar')?.classList.toggle('open'); 
+        document.getElementById('sidebar')?.classList.add('open'); 
+        document.getElementById('sidebarBackdrop')?.classList.add('active');
     });
-    document.getElementById('sidebarClose')?.addEventListener('click', () => { 
+    
+    const closeMobileMenu = () => {
         document.getElementById('sidebar')?.classList.remove('open'); 
-    });
+        document.getElementById('sidebarBackdrop')?.classList.remove('active');
+    };
+    
+    document.getElementById('sidebarClose')?.addEventListener('click', closeMobileMenu);
+    document.getElementById('sidebarBackdrop')?.addEventListener('click', closeMobileMenu);
     
     // Sidebar collapse toggle
     document.getElementById('sidebarCollapse')?.addEventListener('click', toggleSidebar);
@@ -1471,6 +1483,7 @@ document.addEventListener('DOMContentLoaded', () => {
         item.addEventListener('click', () => {
             if (window.innerWidth <= 1024) {
                 document.getElementById('sidebar')?.classList.remove('open');
+                document.getElementById('sidebarBackdrop')?.classList.remove('active');
             }
         });
     });

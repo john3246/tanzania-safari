@@ -250,3 +250,49 @@ body {
     color: #c25b2a;
     border-bottom-color: #c25b2a;
 }
+
+/* Mobile Sidebar Responsiveness */
+#sidebar.open {
+    transform: translateX(0) !important;
+}
+
+#sidebarBackdrop.active {
+    display: block !important;
+    opacity: 1 !important;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+#sidebarBackdrop.active {
+    display: block !important;
+    opacity: 1 !important;
+}
+
+/* Custom Scrollbar for a premium feel */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+.dark ::-webkit-scrollbar-thumb {
+    background: #475569;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+}

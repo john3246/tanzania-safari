@@ -68,7 +68,11 @@ document.getElementById('bookingForm')?.addEventListener('submit', async e => {
     const basePrice = parseFloat(selectedPkg?.base_price_usd || 0);
     const total = (basePrice * adults) + (basePrice * 0.7 * children);
     try {
-        const res = await API.post('/bookings', { ...data, total_price_usd: total, booking_source: 'Website' });
+        const payload = { ...data, total_price_usd: total, booking_source: 'Website' };
+        if (selectedPkg && selectedPkg.package_name) {
+            payload.package_name = selectedPkg.package_name;
+        }
+        const res = await API.post('/bookings', payload);
         // Hide optional steps bar if present
         if (document.getElementById('stepsBar')) {
           document.getElementById('stepsBar').style.display = 'none';
