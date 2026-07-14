@@ -1,4 +1,6 @@
 const bookingService = require('../services/booking.service');
+const emailService = require('../src/utils/emailService');
+const { getClientBookingEmailHTML, getAdminBookingEmailHTML } = require('../src/utils/bookingTemplates');
 
 class BookingController {
     async createBooking(req, res) {
@@ -12,6 +14,23 @@ class BookingController {
             };
             
             const result = await bookingService.createBooking(bookingData);
+            
+            // Background email tasks (do not block the response)
+            Promise.all([
+                // 1. Send confirmation to the client/booker
+                emailService.sendEmail({
+                    to: bookingData.email,
+                    subject: 'Your Tanzania Safari Magic Booking is Confirmed!',
+                    html: getClientBookingEmailHTML(bookingData)
+                }).catch(e => console.error('Failed to send client booking email:', e)),
+                
+                // 2. Send notification to Admin
+                emailService.sendEmail({
+                    to: process.env.ADMIN_EMAIL || 'info@tanzaniasafarimagic.com',
+                    subject: `New Safari Booking: ${bookingData.customer_name}`,
+                    html: getAdminBookingEmailHTML(bookingData)
+                }).catch(e => console.error('Failed to send admin booking email:', e))
+            ]);
             
             res.status(201).json({
                 success: true,

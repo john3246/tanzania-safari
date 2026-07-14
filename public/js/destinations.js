@@ -12,7 +12,7 @@ async function loadDestinations() {
         if (!data?.length) { grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--text-muted)">No destinations found.</p>'; return; }
         grid.innerHTML = data.map(d => `
         <a href="/destinations/${d.park_slug}" class="dest-card">
-          <img src="${imgSrc(d.image_url)}" alt="${d.park_name}" loading="lazy" onerror="this.src='/images/placeholder.jpeg'">
+          <img src="/images/destinations/${d.park_slug}/main.jpg" alt="${d.park_name}" loading="lazy" onerror="this.src='/images/placeholder.jpeg'">
           <div class="dest-card-overlay"></div>
           <div class="dest-card-body">
             <div class="dest-card-name">${d.park_name}</div>

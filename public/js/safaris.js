@@ -14,7 +14,7 @@ let currentPage = 1;
 const LIMIT = 9;
 
 function buildSafariCard(p) {
-    const img = imgSrc(p.image_url || p.featured_image_url || p.image_urls?.[0]);
+    const img = `/images/safaris/${p.package_slug}/main.jpg`;
     const rating = parseFloat(p.avg_rating || 0).toFixed(1);
     const dest = Array.isArray(p.destinations) ? p.destinations.map(d => d.park_name || d).join(', ') : '';
     return `
