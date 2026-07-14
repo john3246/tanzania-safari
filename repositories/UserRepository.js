@@ -3,15 +3,15 @@ const db = require('../config/db');
 
 class UserRepository extends BaseRepository {
     constructor() {
-        super('users');
+        super('users', 'user_id');
     }
 
     async findByEmail(email) {
         const query = `
-            SELECT u.*, r.name as role_name 
+            SELECT u.*, r.role_name as role_name 
             FROM users u
-            LEFT JOIN roles r ON u.role_id = r.id
-            WHERE u.email = $1 AND u.deleted_at IS NULL
+            LEFT JOIN user_roles r ON u.role_id = r.role_id
+            WHERE u.email = $1 AND u.is_active = true
         `;
         const result = await db.query(query, [email]);
         return result.rows[0];
@@ -19,10 +19,10 @@ class UserRepository extends BaseRepository {
 
     async findByUsername(username) {
         const query = `
-            SELECT u.*, r.name as role_name 
+            SELECT u.*, r.role_name as role_name 
             FROM users u
-            LEFT JOIN roles r ON u.role_id = r.id
-            WHERE u.username = $1 AND u.deleted_at IS NULL
+            LEFT JOIN user_roles r ON u.role_id = r.role_id
+            WHERE u.username = $1 AND u.is_active = true
         `;
         const result = await db.query(query, [username]);
         return result.rows[0];
@@ -30,10 +30,10 @@ class UserRepository extends BaseRepository {
 
     async findByIdWithRole(id) {
         const query = `
-            SELECT u.*, r.name as role_name 
+            SELECT u.*, r.role_name as role_name 
             FROM users u
-            LEFT JOIN roles r ON u.role_id = r.id
-            WHERE u.id = $1 AND u.deleted_at IS NULL
+            LEFT JOIN user_roles r ON u.role_id = r.role_id
+            WHERE u.user_id = $1 AND u.is_active = true
         `;
         const result = await db.query(query, [id]);
         return result.rows[0];
@@ -41,10 +41,10 @@ class UserRepository extends BaseRepository {
 
     async findAllWithRole(conditions = {}, options = {}) {
         let query = `
-            SELECT u.*, r.name as role_name 
+            SELECT u.*, r.role_name as role_name 
             FROM users u
-            LEFT JOIN roles r ON u.role_id = r.id
-            WHERE u.deleted_at IS NULL
+            LEFT JOIN user_roles r ON u.role_id = r.role_id
+            WHERE u.is_active = true
         `;
         let values = [];
         let index = 1;
@@ -94,7 +94,7 @@ class UserRepository extends BaseRepository {
     }
 
     async count(conditions = {}) {
-        let query = `SELECT COUNT(*) as count FROM users WHERE deleted_at IS NULL`;
+        let query = `SELECT COUNT(*) as count FROM users WHERE is_active = true`;
         let values = [];
         let index = 1;
 
@@ -113,14 +113,22 @@ class UserRepository extends BaseRepository {
 
     async getUserPermissions(userId) {
         const query = `
-            SELECT p.name 
+            SELECT r.permissions 
             FROM users u
-            JOIN role_permissions rp ON u.role_id = rp.role_id
-            JOIN permissions p ON rp.permission_id = p.id
-            WHERE u.id = $1
+            JOIN user_roles r ON u.role_id = r.role_id
+            WHERE u.user_id = $1
         `;
         const result = await db.query(query, [userId]);
-        return result.rows.map(row => row.name);
+        if (result.rows.length === 0 || !result.rows[0].permissions) {
+            return [];
+        }
+        
+        // If it's a JSON string or JSONB array, return it parsed or directly
+        const perms = result.rows[0].permissions;
+        if (typeof perms === 'string') {
+            try { return JSON.parse(perms); } catch (e) { return []; }
+        }
+        return Array.isArray(perms) ? perms : [];
     }
 
     async updateLastLogin(userId) {
@@ -129,11 +137,11 @@ class UserRepository extends BaseRepository {
     }
 
     async softDelete(id) {
-        return this.update(id, { deleted_at: new Date() });
+        return this.update(id, { is_active: false });
     }
 
     async restore(id) {
-        return this.update(id, { deleted_at: null });
+        return this.update(id, { is_active: true });
     }
 }
 
