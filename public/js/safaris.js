@@ -2,11 +2,11 @@
 
 // Mobile filter toggle
 document.getElementById('mobileFilterBtn')?.addEventListener('click', () => {
-    document.getElementById('filterSidebar')?.classList.add('open');
+    document.getElementById('filterSidebar')?.classList.add('open'); document.getElementById('filterOverlay')?.classList.add('open');
 });
 
 function closeFilterSidebar() {
-    document.getElementById('filterSidebar')?.classList.remove('open');
+    document.getElementById('filterSidebar')?.classList.remove('open'); document.getElementById('filterOverlay')?.classList.remove('open');
 }
 window.closeFilterSidebar = closeFilterSidebar;
 

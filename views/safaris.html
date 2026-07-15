@@ -39,12 +39,13 @@
 .sidebar-main-title{font-size:1rem;margin:0}
 @media(max-width:1024px){
   .mobile-filter-btn{display:flex}
-  .sidebar{display:none;position:fixed;inset:0;z-index:var(--z-overlay);overflow-y:auto;border-radius:0;top:0;padding:2rem}
-  .sidebar.open{display:block;animation:slideIn .3s ease}
+  .sidebar{display:block;position:fixed;top:0;left:-100%;width:320px;max-width:85vw;height:100vh;background:#fff;z-index:calc(var(--z-modal) + 1);transition:left 0.4s ease;border-radius:0;padding:1.5rem;overflow-y:auto;box-shadow:var(--shadow-xl)}
+  .sidebar.open{left:0}
   .sidebar-mobile-header{display:flex}
   .sidebar-main-title{display:none}
+  .filter-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:var(--z-modal);backdrop-filter:blur(4px)}
+  .filter-overlay.open{display:block}
 }
-@keyframes slideIn{from{transform:translateX(-100%)}to{transform:translateX(0)}}
 </style>
 </head>
 <body>
@@ -71,6 +72,8 @@
         <button class="btn btn-outline mobile-filter-btn" id="mobileFilterBtn" style="margin:0"><i class="fas fa-sliders-h"></i> Filters</button>
     </div>
     <div class="safaris-layout">
+      <!-- Sidebar overlay -->
+      <div class="filter-overlay" id="filterOverlay" onclick="closeFilterSidebar()"></div>
       <!-- Sidebar -->
       <aside class="sidebar" id="filterSidebar">
         <div class="sidebar-mobile-header">
