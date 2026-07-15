@@ -9,7 +9,7 @@ class BookingRepository extends BaseRepository {
     async getBookingsWithDetails() {
         const query = `
             SELECT b.*, sp.package_name, u.first_name, u.last_name, u.email,
-                   COALESCE(u.first_name || ' ' || COALESCE(u.last_name, ''), b.full_name, 'Guest') as full_name,
+                   COALESCE(u.first_name || ' ' || COALESCE(u.last_name, ''), 'Guest') as full_name,
                    bs.status_name
             FROM bookings b
             LEFT JOIN safari_packages sp ON b.package_id = sp.package_id
@@ -24,7 +24,7 @@ class BookingRepository extends BaseRepository {
     async getBookingDetails(bookingId) {
         const query = `
             SELECT b.*, sp.package_name, u.first_name, u.last_name, u.email,
-                   COALESCE(u.first_name || ' ' || COALESCE(u.last_name, ''), b.full_name) as full_name,
+                   COALESCE(u.first_name || ' ' || COALESCE(u.last_name, ''), 'Guest') as full_name,
                    bs.status_name as current_status
             FROM bookings b
             LEFT JOIN safari_packages sp ON b.package_id = sp.package_id

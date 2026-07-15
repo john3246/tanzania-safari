@@ -667,7 +667,7 @@ async function loadRecentActivity() {
         if (tBody) {
             tBody.innerHTML = (pRes.data || []).map(p => `
             <div class="flex items-center gap-3">
-                <img src="${p.main_image_url || '/images/placeholder.jpg'}" class="w-12 h-12 rounded-lg object-cover" onerror="this.src='/images/placeholder.jpg'">
+                <img src="${p.main_image_url || '/images/placeholder.jpeg'}" class="w-12 h-12 rounded-lg object-cover" onerror="this.src='/images/placeholder.jpeg'">
                 <div class="flex-1 overflow-hidden">
                     <div class="font-medium text-sm text-slate-800 truncate">${p.name}</div>
                     <div class="text-xs text-slate-500">${p.days} Days • From $${p.price_per_person}</div>
@@ -1025,7 +1025,7 @@ async function loadProfile() {
         if (document.getElementById('profLast')) document.getElementById('profLast').value = u.last_name || '';
         if (document.getElementById('profEmail')) document.getElementById('profEmail').value = u.email || '';
         
-        const avatarUrl = u.profile_image_url || '/images/avatar-placeholder.png';
+        const avatarUrl = u.profile_image_url || 'https://ui-avatars.com/api/?name=Admin&background=0b3b2d&color=D4AF37';
         
         const sImg = document.getElementById('sidebarAvatarImg');
         if (sImg) { sImg.src = avatarUrl; sImg.style.display = 'block'; }
