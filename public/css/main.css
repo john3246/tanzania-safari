@@ -344,3 +344,5 @@ textarea.form-control{resize:vertical;min-height:120px}
 .features-grid .reveal-item:nth-child(2) { transition-delay: 0.1s; }
 .features-grid .reveal-item:nth-child(3) { transition-delay: 0.2s; }
 .features-grid .reveal-item:nth-child(4) { transition-delay: 0.3s; }
+
+@media (max-width: 640px) { .top-bar-location { display: none; } .top-bar { font-size: 0.75rem; text-align: center; } .top-bar .container { justify-content: center !important; } }
