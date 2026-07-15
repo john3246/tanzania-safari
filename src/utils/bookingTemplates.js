@@ -1,6 +1,7 @@
 const getHeader = () => `
   <div style="background-color: #0D47A1; padding: 20px; text-align: center;">
-    <h1 style="color: #ffffff; margin: 0; font-family: sans-serif; font-size: 24px;">Tanzania Safari Magic</h1>
+    <img src="https://tanzaniasafarimagic.com/images/logo.png" alt="Tanzania Safari Magic" style="height: 64px; width: 64px; object-fit: cover; border-radius: 50%; border: 2px solid #ffffff;">
+    <h1 style="color: #ffffff; margin: 10px 0 0 0; font-family: sans-serif; font-size: 24px;">Tanzania Safari Magic</h1>
   </div>
 `;
 

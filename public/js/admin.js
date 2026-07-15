@@ -34,11 +34,36 @@ async function initAdminApp() {
         document.body.insertAdjacentHTML('beforeend', modalsHtml);
 
         // Setup routing (load dashboard by default)
-        const initialPage = window.location.pathname.split('/').pop();
+        const initialPage = window.location.hash.replace('#', '') || window.location.pathname.split('/').pop();
         const validPages = ['dashboard', 'packages', 'categories', 'bookings', 'enquiries', 'settings', 'destinations', 'blog', 'reviews', 'users', 'images', 'communications'];
         const pageToLoad = validPages.includes(initialPage) ? initialPage : 'dashboard';
         
-        await navigate(pageToLoad);
+        await navigate(pageToLoad, false); // pass false so we don't push state on initial load
+        
+        // Setup browser history
+        window.addEventListener('popstate', (e) => {
+            if (e.state && e.state.page) {
+                navigate(e.state.page, false);
+            } else {
+                navigate('dashboard', false);
+            }
+        });
+
+        // Setup session timeout (5 minutes = 300000ms)
+        let sessionTimeout;
+        const resetSessionTimeout = () => {
+            clearTimeout(sessionTimeout);
+            sessionTimeout = setTimeout(() => {
+                showToast('Session expired due to inactivity', 'warning');
+                localStorage.clear();
+                window.location.href = '/admin/login';
+            }, 300000);
+        };
+        // Listen to activity to reset timeout
+        ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll'].forEach(evt => {
+            document.addEventListener(evt, resetSessionTimeout, { passive: true });
+        });
+        resetSessionTimeout(); // initial start
         
         // Setup global event listeners
         document.addEventListener('keydown', handleKeyboardShortcuts);
@@ -146,7 +171,7 @@ function closeModal(id) {
 }
 
 // ── Navigation Logic ──────────────────────────────────────────
-async function navigate(page) {
+async function navigate(page, pushState = true) {
     // Check if partial is already loaded
     let targetPage = document.getElementById(`page-${page}`);
     
@@ -168,6 +193,10 @@ async function navigate(page) {
             console.error(e);
             return;
         }
+    }
+    
+    if (pushState) {
+        window.history.pushState({ page }, '', '/admin#' + page);
     }
 
     // UI Updates
@@ -1251,18 +1280,22 @@ async function loadUsers() {
         const res = await apiRequest('GET', '/users');
         usersList = res.data || [];
         body.innerHTML = usersList.map(u => `
-            <tr>
-                <td><strong>${u.first_name} ${u.last_name || ''}</strong></td>
-                <td>${u.email}</td>
-                <td>${u.role_name || 'Staff'}</td>
-                <td><span class="status-badge status-${u.is_active ? 'active' : 'inactive'}">${u.is_active ? 'Active' : 'Inactive'}</span></td>
-                <td>
-                    <div style="display:flex; gap:6px">
-                        <button class="btn btn-icon" onclick="openUserModal('${u.user_id}')"><i class="fas fa-user-gear"></i></button>
-                        <button class="btn btn-icon" onclick="deleteUser('${u.user_id}')"><i class="fas fa-trash"></i></button>
+            <tr class="hover:bg-slate-50 transition-colors">
+                <td class="px-6 py-4 font-medium text-slate-800">${escapeHtml(u.first_name)} ${escapeHtml(u.last_name || '')}</td>
+                <td class="px-6 py-4 text-slate-500">${escapeHtml(u.email)}</td>
+                <td class="px-6 py-4 text-slate-500">${escapeHtml(u.role_name || 'Staff')}</td>
+                <td class="px-6 py-4">
+                    <span class="px-2.5 py-1 text-xs font-medium rounded-full ${u.is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'}">
+                        ${u.is_active ? 'Active' : 'Inactive'}
+                    </span>
+                </td>
+                <td class="px-6 py-4">
+                    <div class="flex items-center space-x-3">
+                        <button class="text-slate-400 hover:text-primary-600 transition-colors" onclick="openUserModal('${u.user_id}')" title="Edit"><i class="ph ph-pencil-simple text-lg"></i></button>
+                        <button class="text-slate-400 hover:text-red-600 transition-colors" onclick="deleteUser('${u.user_id}')" title="Delete"><i class="ph ph-trash text-lg"></i></button>
                     </div>
                 </td>
-            </tr>`).join('') || '<tr><td colspan="5">No users</td></tr>';
+            </tr>`).join('') || '<tr><td colspan="5" class="px-6 py-8 text-center text-slate-500">No users found.</td></tr>';
     } catch (e) {}
 }
 

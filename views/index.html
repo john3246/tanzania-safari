@@ -63,6 +63,37 @@
       </div>
     </section>
 
+<!-- Search Filter -->
+<section class="search-filter-section" style="background: var(--bg-card); padding: 1.5rem 0; box-shadow: var(--shadow-sm); position: relative; z-index: 10; margin-top: -3rem;">
+  <div class="container">
+    <form class="search-filter-form" style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: center;" action="/safaris" method="GET">
+      <div style="flex: 1; min-width: 200px;">
+        <select name="destination" class="form-control" style="width: 100%; border: 1px solid var(--border); padding: 0.75rem; border-radius: var(--radius-sm);">
+          <option value="">Any Destination</option>
+          <option value="serengeti">Serengeti</option>
+          <option value="ngorongoro">Ngorongoro</option>
+          <option value="tarangire">Tarangire</option>
+          <option value="kilimanjaro">Mount Kilimanjaro</option>
+        </select>
+      </div>
+      <div style="flex: 1; min-width: 200px;">
+        <select name="type" class="form-control" style="width: 100%; border: 1px solid var(--border); padding: 0.75rem; border-radius: var(--radius-sm);">
+          <option value="">Any Package Type</option>
+          <option value="Wildlife Safari">Wildlife Safari</option>
+          <option value="Trekking">Trekking</option>
+          <option value="Honeymoon">Honeymoon</option>
+          <option value="Cultural">Cultural</option>
+        </select>
+      </div>
+      <div style="flex: 1; min-width: 150px;">
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem;">
+          <i class="fas fa-search"></i> Search Tours
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
+
 <!-- Destinations -->
 <section class="section">
   <div class="container">

@@ -166,7 +166,11 @@ function renderSafariDetails(safari) {
     const packageDest = document.getElementById('packageDestinations');
     if(packageDest && safari.destinations && safari.destinations.length > 0) {
         packageDest.innerHTML = '<h3 style="font-family:var(--font-heading);margin-bottom:1rem;margin-top:2rem;">Destinations Visited</h3>' + 
-            safari.destinations.map(d => '<span class="badge" style="background:var(--bg-secondary);color:var(--primary);padding:0.5rem 1rem;border-radius:20px;margin-right:0.5rem;font-size:0.9rem;display:inline-block;margin-bottom:0.5rem"><i class="fas fa-map-marker-alt" style="margin-right:0.5rem"></i>' + escapeHtml(d.park_name || d) + '</span>').join('');
+            safari.destinations.map(d => {
+                let name = d.park_name || d;
+                let slug = d.slug || (typeof name === "string" ? name.toLowerCase().replace(/\s+/g, '-') : "");
+                return '<a href="/destinations/' + escapeHtml(slug) + '" class="badge" style="background:var(--bg-secondary);color:var(--primary);padding:0.5rem 1rem;border-radius:20px;margin-right:0.5rem;font-size:0.9rem;display:inline-block;margin-bottom:0.5rem;text-decoration:none;transition:var(--transition)"><i class="fas fa-map-marker-alt" style="margin-right:0.5rem"></i>' + escapeHtml(name) + '</a>';
+            }).join('');
     }
     
     const galleryEl = document.getElementById('gallery');
