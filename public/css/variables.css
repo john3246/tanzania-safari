@@ -1,15 +1,15 @@
 :root {
-  /* ── Primary: Deep Blue*/
-  --primary:       #0D47A1;
-  --primary-dark:  #082D66;
-  --primary-light: #1565C0;
-  --primary-pale:  rgba(13, 71, 161, 0.10);
+  /* ✨ Primary: Logo Green*/
+  --primary:       #263E22;
+  --primary-dark:  #1E311B;
+  --primary-light: #365730;
+  --primary-pale:  rgba(38, 62, 34, 0.10);
 
-  /* ── Secondary: Baobab Green*/
-  --secondary:       #3A7D44;
-  --secondary-dark:  #2C5F35;
-  --secondary-light: #4E9E5A;
-  --secondary-pale:  rgba(58, 125, 68, 0.10);
+  /* ✨ Secondary: Logo Green*/
+  --secondary:       #263E22;
+  --secondary-dark:  #1E311B;
+  --secondary-light: #365730;
+  --secondary-pale:  rgba(38, 62, 34, 0.10);
 
   /*Accent: Warm Orange*/
   --accent:       #FF6F00;

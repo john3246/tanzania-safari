@@ -565,7 +565,7 @@ async function renderRevenueChart() {
             datasets: [{
                 label: 'Visitors',
                 data: [12000, 15000, 18000, 22000, 19000, 25000, 28000, 32000, 29000, 35000, 38000, 42000],
-                borderColor: '#0b3b2d',
+                borderColor: '#263E22',
                 backgroundColor: 'rgba(11, 59, 45, 0.1)',
                 borderWidth: 2,
                 fill: true,
@@ -1025,7 +1025,7 @@ async function loadProfile() {
         if (document.getElementById('profLast')) document.getElementById('profLast').value = u.last_name || '';
         if (document.getElementById('profEmail')) document.getElementById('profEmail').value = u.email || '';
         
-        const avatarUrl = u.profile_image_url || 'https://ui-avatars.com/api/?name=Admin&background=0b3b2d&color=D4AF37';
+        const avatarUrl = u.profile_image_url || 'https://ui-avatars.com/api/?name=Admin&background=263E22&color=D4AF37';
         
         const sImg = document.getElementById('sidebarAvatarImg');
         if (sImg) { sImg.src = avatarUrl; sImg.style.display = 'block'; }
