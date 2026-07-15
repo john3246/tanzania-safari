@@ -548,49 +548,64 @@ function setupAccessibility() {
 }
 
 // ── Revenue Chart Logic ────────────────────────────────────────
-function renderRevenueChart() {
-    const chartContainer = document.getElementById('revenueChart');
-    const labelsContainer = document.getElementById('revenueChartLabels');
-    if (!chartContainer || !labelsContainer) return;
+async function renderRevenueChart() {
+    const canvas = document.getElementById('visitorsChartCanvas');
+    const donutCanvas = document.getElementById('bookingsStatusChart');
+    if (!canvas || !donutCanvas) return;
 
-    // Sample data - in production, this would come from the API
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const currentMonth = new Date().getMonth();
-    const revenueData = [12000, 15000, 18000, 22000, 19000, 25000, 28000, 32000, 29000, 35000, 38000, 42000];
-    const bookingData = [8, 12, 15, 18, 14, 20, 22, 25, 21, 28, 30, 35];
+    if (window.visitorsChart) window.visitorsChart.destroy();
+    if (window.bookingsDonut) window.bookingsDonut.destroy();
 
-    // Get last 6 months
-    const last6Months = [];
-    const last6Revenue = [];
-    const last6Bookings = [];
+    // Line Chart (Visitors/Revenue Overview)
+    const ctx = canvas.getContext('2d');
+    window.visitorsChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+                label: 'Visitors',
+                data: [12000, 15000, 18000, 22000, 19000, 25000, 28000, 32000, 29000, 35000, 38000, 42000],
+                borderColor: '#0b3b2d',
+                backgroundColor: 'rgba(11, 59, 45, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+                x: { grid: { display: false } }
+            }
+        }
+    });
 
-    for (let i = 5; i >= 0; i--) {
-        const monthIndex = (currentMonth - i + 12) % 12;
-        last6Months.push(months[monthIndex]);
-        last6Revenue.push(revenueData[monthIndex]);
-        last6Bookings.push(bookingData[monthIndex]);
-    }
-
-    const maxRevenue = Math.max(...last6Revenue);
-    const maxBookings = Math.max(...last6Bookings);
-
-    // Render bars
-    chartContainer.innerHTML = last6Months.map((month, i) => {
-        const revenueHeight = (last6Revenue[i] / maxRevenue) * 100;
-        const bookingsHeight = (last6Bookings[i] / maxBookings) * 100;
-        
-        return `
-            <div class="flex-1 flex flex-col items-center gap-1">
-                <div class="w-full flex items-end gap-1 h-full">
-                    <div class="flex-1 bg-primary-500 rounded-t transition-all duration-500" style="height: ${revenueHeight}%"></div>
-                    <div class="flex-1 bg-slate-300 rounded-t transition-all duration-500" style="height: ${bookingsHeight}%"></div>
-                </div>
-            </div>
-        `;
-    }).join('');
-
-    // Render labels
-    labelsContainer.innerHTML = last6Months.map(month => `<span class="flex-1 text-center">${month}</span>`).join('');
+    // Donut Chart (Bookings Status)
+    const dCtx = donutCanvas.getContext('2d');
+    window.bookingsDonut = new Chart(dCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Confirmed', 'Pending', 'Cancelled'],
+            datasets: [{
+                data: [65, 45, 14],
+                backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+                borderWidth: 0,
+                cutout: '75%'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
 }
 
 // ── Dashboard ─────────────────────────────────────────────────
@@ -614,44 +629,54 @@ async function loadDashboard() {
 
 async function loadRecentActivity() {
     try {
-        // Bookings
+        // Bookings Table
         const bRes = await apiRequest('GET', '/bookings');
-        const bBody = document.getElementById('dashBookings');
-        if (bBody) bBody.innerHTML = (bRes.data || []).slice(0, 5).map(b => `
-            <tr>
-                <td>${b.full_name}</td>
-                <td><span class="status-badge status-${(b.status_name || 'pending').toLowerCase()}">${b.status_name || 'Pending'}</span></td>
-                <td>$${Number(b.total_price_usd).toLocaleString()}</td>
-            </tr>`).join('') || '<tr><td colspan="3">No bookings</td></tr>';
+        const bBody = document.getElementById('dashBookingsBody');
+        if (bBody) {
+            bBody.innerHTML = (bRes.data || []).slice(0, 5).map(b => `
+            <tr class="hover:bg-slate-50 transition-colors">
+                <td class="p-4 font-medium text-slate-800">#BK-${b.id}</td>
+                <td class="p-4">${b.full_name}</td>
+                <td class="p-4">${b.package_name || 'Safari Package'}</td>
+                <td class="p-4 text-slate-500">${new Date(b.created_at).toLocaleDateString()}</td>
+                <td class="p-4">${b.number_of_people}</td>
+                <td class="p-4 font-semibold">$${Number(b.total_price_usd).toLocaleString()}</td>
+                <td class="p-4 text-center">
+                    <span class="inline-flex items-center px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${b.status_name === 'Confirmed' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}">${b.status_name || 'Pending'}</span>
+                </td>
+            </tr>`).join('') || '<tr><td colspan="7" class="p-4 text-center">No recent bookings</td></tr>';
+        }
 
-        // Enquiries
+        // Recent Activities (Using Enquiries and Reviews as activity)
         const eRes = await apiRequest('GET', '/enquiries');
-        const eBody = document.getElementById('dashEnquiries');
-        if (eBody) eBody.innerHTML = (eRes.data || []).slice(0, 5).map(e => `
-            <tr>
-                <td>${e.full_name}</td>
-                <td>${e.enquiry_type || 'General'}</td>
-                <td>${new Date(e.created_at).toLocaleDateString()}</td>
-            </tr>`).join('') || '<tr><td colspan="3">No enquiries</td></tr>';
+        const aBody = document.getElementById('dashActivityBody');
+        if (aBody) {
+            aBody.innerHTML = (eRes.data || []).slice(0, 4).map(e => `
+            <div class="flex items-start gap-4">
+                <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center shrink-0 mt-0.5"><i class="ph ph-envelope-simple"></i></div>
+                <div>
+                    <p class="text-sm text-slate-800"><span class="font-semibold">${e.full_name}</span> sent a new inquiry.</p>
+                    <p class="text-xs text-slate-400 mt-1">${new Date(e.created_at).toLocaleString()}</p>
+                </div>
+            </div>`).join('') || '<div class="text-center text-slate-400 text-sm py-4">No recent activities</div>';
+        }
 
-        // Reviews
-        const rRes = await apiRequest('GET', '/reviews');
-        const rBody = document.getElementById('dashReviews');
-        if (rBody) rBody.innerHTML = (rRes.data || []).slice(0, 5).map(r => `
-            <tr>
-                <td>${r.full_name}</td>
-                <td>${r.rating} / 5</td>
-                <td><span class="status-badge status-${r.is_approved ? 'active' : 'pending'}">${r.is_approved ? 'Appr.' : 'Pend.'}</span></td>
-            </tr>`).join('') || '<tr><td colspan="3">No reviews</td></tr>';
+        // Top Performing Tours (Using Packages)
+        const pRes = await apiRequest('GET', '/packages?limit=3');
+        const tBody = document.getElementById('dashTopToursBody');
+        if (tBody) {
+            tBody.innerHTML = (pRes.data || []).map(p => `
+            <div class="flex items-center gap-3">
+                <img src="${p.main_image_url || '/images/placeholder.jpg'}" class="w-12 h-12 rounded-lg object-cover" onerror="this.src='/images/placeholder.jpg'">
+                <div class="flex-1 overflow-hidden">
+                    <div class="font-medium text-sm text-slate-800 truncate">${p.name}</div>
+                    <div class="text-xs text-slate-500">${p.days} Days • From $${p.price_per_person}</div>
+                </div>
+                <div class="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded">Active</div>
+            </div>`).join('') || '<div class="text-center text-slate-400 text-sm py-4">No tours available</div>';
+        }
 
-        // Media
-        const mRes = await fetch('/api/images', { headers: { 'Authorization': `Bearer ${token}` } });
-        const mData = await mRes.json();
-        const mGrid = document.getElementById('dashMedia');
-        if (mGrid) mGrid.innerHTML = (mData.data || []).slice(0, 4).map(img => `
-            <img src="${img.path}" style="width:100%; aspect-ratio:1; object-fit:cover; border-radius:4px">`).join('') || 'No media';
-
-    } catch (e) {}
+    } catch (e) { console.error('Error loading recent activity:', e); }
 }
 
 // ── Packages ──────────────────────────────────────────────────

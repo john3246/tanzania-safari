@@ -1,16 +1,31 @@
-<header class="h-16 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-6 flex items-center justify-between">
-            <div class="flex items-center space-x-4">
-                <button class="lg:hidden text-slate-500 dark:text-slate-400" id="menuToggle"><i class="ph ph-list text-xl"></i></button>
-                <div class="flex flex-col">
-                    <h1 class="text-lg font-semibold text-slate-800 dark:text-slate-100" id="pageTitle">Dashboard</h1>
-                    <div id="breadcrumbContainer" class="text-xs text-slate-500 dark:text-slate-400"></div>
-                </div>
-            </div>
-            <div class="flex items-center space-x-4">
-                <button id="darkModeToggle" class="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" title="Toggle dark mode">
-                    <i class="ph ph-moon text-xl dark:hidden"></i>
-                    <i class="ph ph-sun text-xl hidden dark:block"></i>
-                </button>
-                <div class="text-sm text-slate-500 dark:text-slate-400" id="headerDate"></div>
-            </div>
-        </header>
+<header class="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between sticky top-0 z-30">
+    <div class="flex items-center gap-4 flex-1">
+        <button class="text-slate-500 hover:text-slate-700 transition-colors" id="menuToggle"><i class="ph ph-list text-2xl"></i></button>
+        <div class="relative hidden sm:block w-96">
+            <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="text" placeholder="Search anything..." class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#0b3b2d] focus:border-transparent transition-all">
+        </div>
+    </div>
+    
+    <div class="flex items-center gap-6">
+        <button class="text-slate-500 hover:text-slate-800 transition-colors" title="Website"><i class="ph ph-globe-hemisphere-west text-xl"></i></button>
+        
+        <button class="text-slate-500 hover:text-slate-800 transition-colors relative" title="Notifications">
+            <i class="ph ph-bell text-xl"></i>
+            <span class="absolute -top-1.5 -right-1.5 bg-green-600 text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center border-2 border-white">5</span>
+        </button>
+
+        <button class="text-slate-500 hover:text-slate-800 transition-colors relative" title="Messages">
+            <i class="ph ph-envelope-simple text-xl"></i>
+            <span class="absolute -top-1.5 -right-1.5 bg-yellow-500 text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center border-2 border-white">3</span>
+        </button>
+
+        <div class="h-8 w-px bg-slate-200 mx-2"></div>
+        
+        <button class="flex items-center gap-2 hover:bg-slate-50 p-1 rounded-lg transition-colors" id="headerProfileDropdown">
+            <img src="/images/avatar-placeholder.png" alt="Admin" class="w-8 h-8 rounded-full object-cover">
+            <span class="text-sm font-medium text-slate-700 hidden md:block">Admin User</span>
+            <i class="ph ph-caret-down text-slate-400 text-xs hidden md:block"></i>
+        </button>
+    </div>
+</header>
