@@ -40,10 +40,10 @@ function buildSafariCard(p) {
 function getFilters() {
     return {
         search: document.getElementById('searchInput')?.value.trim() || '',
-        category: document.getElementById('categorySelect')?.value || '',
-        destination: document.getElementById('destinationSelect')?.value || '',
-        duration: document.getElementById('durationSelect')?.value || 'all',
-        difficulty: document.getElementById('difficultySelect')?.value || 'all',
+        category: document.getElementById(')?.value || '',
+        destination: document.getElementById(')?.value || '',
+        duration: document.querySelector('input[name="duration"]:checked')?.value || 'all',
+        difficulty: document.querySelector('input[name="difficulty"]:checked')?.value || 'all',
         min_price: document.getElementById('minPrice')?.value || '',
         max_price: document.getElementById('maxPrice')?.value || '',
         sort: document.getElementById('sortSelect')?.value || 'featured',
@@ -97,14 +97,14 @@ function renderPagination({ total, page, limit }) {
 }
 
 function clearFilters() {
-    if(document.getElementById('searchInput')) document.getElementById('searchInput').value = '';
-    if(document.getElementById('categorySelect')) document.getElementById('categorySelect').value = 'all';
-    if(document.getElementById('destinationSelect')) document.getElementById('destinationSelect').value = 'all';
-    if(document.getElementById('durationSelect')) document.getElementById('durationSelect').value = 'all';
-    if(document.getElementById('difficultySelect')) document.getElementById('difficultySelect').value = 'all';
-    if(document.getElementById('minPrice')) document.getElementById('minPrice').value = '';
-    if(document.getElementById('maxPrice')) document.getElementById('maxPrice').value = '';
-    if(document.getElementById('sortSelect')) document.getElementById('sortSelect').value = 'featured';
+    document.getElementById('searchInput').value = '';
+    document.querySelectorAll('#categoryFilters input[type=radio]').forEach(r => { if (r.value === 'all') r.checked = true; });
+    document.querySelectorAll('#destinationFilters input[type=radio]').forEach(r => { if (r.value === 'all') r.checked = true; });
+    document.querySelector('input[name="duration"][value="all"]').checked = true;
+    document.querySelector('input[name="difficulty"][value="all"]').checked = true;
+    document.getElementById('minPrice').value = '';
+    document.getElementById('maxPrice').value = '';
+    document.getElementById('sortSelect').value = 'featured';
     applyFilters();
 }
 window.clearFilters = clearFilters;
@@ -114,25 +114,25 @@ window.applyFilters = applyFilters;
 async function loadFilters() {
     try {
         const { data: cats } = await API.get('/categories');
-        const catEl = document.getElementById('categorySelect');
+        const catEl = document.getElementById('categoryFilters');
         if (catEl && cats?.length) {
-            catEl.innerHTML = `<option value="all">All Categories</option>` +
-                cats.map(c => `<option value="${c.category_slug}">${c.category_name} (${c.safari_count||0})</option>`).join('');
+            catEl.innerHTML = `<label><input type="radio" name="category" value="all" checked> All Categories</label>` +
+                cats.map(c => `<label><input type="radio" name="category" value="${c.category_slug}" onchange="applyFilters()"> ${c.category_name} (${c.safari_count||0})</label>`).join('');
         }
     } catch {}
     try {
         const { data: dests } = await API.get('/destinations');
-        const destEl = document.getElementById('destinationSelect');
+        const destEl = document.getElementById('destinationFilters');
         if (destEl && dests?.length) {
-            destEl.innerHTML = `<option value="all">All Destinations</option>` +
-                dests.map(d => `<option value="${d.park_slug}">${d.park_name}</option>`).join('');
+            destEl.innerHTML = `<label><input type="radio" name="destination" value="all" checked> All Destinations</label>` +
+                dests.map(d => `<label><input type="radio" name="destination" value="${d.park_slug}" onchange="applyFilters()"> ${d.park_name}</label>`).join('');
         }
     } catch {}
     // Read URL params
     const params = new URLSearchParams(window.location.search);
     if (params.get('category')) {
-        const r = document.getElementById('categorySelect');
-        if (r) r.value = params.get('category');
+        const r = document.querySelector(`input[name="category"][value="${params.get('category')}"]`);
+        if (r) r.checked = true;
     }
     applyFilters();
 }

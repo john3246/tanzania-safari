@@ -11,41 +11,7 @@
 <link rel="stylesheet" href="/css/variables.css">
 <link rel="stylesheet" href="/css/main.css">
 <style>
-.safaris-layout{display:grid;grid-template-columns:280px 1fr;gap:2rem;align-items:start}
-@media(max-width:1024px){.safaris-layout{grid-template-columns:1fr}}
-.sidebar{background:#fff;border-radius:var(--radius-lg);padding:1.75rem;box-shadow:var(--shadow-sm);border:1px solid var(--border);position:sticky;top:100px}
-.sidebar-section{margin-bottom:1.75rem;padding-bottom:1.75rem;border-bottom:1px solid var(--border)}
-.sidebar-section:last-child{margin:0;padding:0;border:none}
-.sidebar-title{font-size:.8125rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);margin-bottom:1rem}
-.filter-group label{display:flex;align-items:center;gap:.625rem;font-size:.9rem;cursor:pointer;padding:.375rem 0;color:var(--text-secondary)}
-.filter-group label:hover{color:var(--primary)}
-.filter-group input[type=checkbox]{accent-color:var(--primary);width:16px;height:16px}
-.price-inputs{display:flex;gap:.625rem;align-items:center}
-.price-inputs input{flex:1;padding:.625rem .75rem;border:1.5px solid var(--border);border-radius:var(--radius-md);font-size:.875rem;outline:none}
-.price-inputs input:focus{border-color:var(--primary)}
-.price-inputs span{color:var(--text-muted);font-size:.875rem}
-.results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
-.results-count{font-size:.9rem;color:var(--text-muted)}
-.results-count strong{color:var(--text-primary)}
-.sort-select{padding:.5rem .875rem;border:1.5px solid var(--border);border-radius:var(--radius-full);font-size:.875rem;outline:none;cursor:pointer;background:#fff}
-.sort-select:focus{border-color:var(--primary)}
-.search-box{display:flex;gap:.5rem;margin-bottom:1rem}
-.search-box input{flex:1;padding:.75rem 1rem;border:1.5px solid var(--border);border-radius:var(--radius-md);font-size:.875rem;outline:none}
-.search-box input:focus{border-color:var(--primary)}
-.search-box button{padding:.75rem 1rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius-md);cursor:pointer}
-.mobile-filter-btn{display:none;margin-bottom:1rem;align-items:center;gap:.5rem}
-.sidebar-mobile-header{display:none;justify-content:space-between;align-items:center;padding-bottom:1.5rem;margin-bottom:1.5rem;border-bottom:1px solid var(--border)}
-.sidebar-close{background:none;border:none;font-size:1.5rem;color:var(--text-primary);cursor:pointer}
-.sidebar-main-title{font-size:1rem;margin:0}
-@media(max-width:1024px){
-  .mobile-filter-btn{display:flex}
-  .sidebar{display:block;position:fixed;top:0;left:-100%;width:320px;max-width:85vw;height:100vh;background:#fff;z-index: 1001;transition:left 0.4s ease;border-radius:0;padding:1.5rem;overflow-y:auto;box-shadow:var(--shadow-xl)}
-  .sidebar.open{left:0}
-  .sidebar-mobile-header{display:flex}
-  .sidebar-main-title{display:none}
-  .filter-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index: 1000;backdrop-filter:blur(4px)}
-  .filter-overlay.open{display:block}
-}
+
 </style>
 </head>
 <body>
@@ -69,75 +35,66 @@
   <div class="container">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
         <h2 style="margin:0;font-size:1.5rem">Explore <span style="color:var(--primary)">Safaris</span></h2>
-        <button class="btn btn-outline mobile-filter-btn" id="mobileFilterBtn" style="margin:0"><i class="fas fa-sliders-h"></i> Filters</button>
     </div>
-    <div class="safaris-layout">
-      <!-- Sidebar overlay -->
-      <div class="filter-overlay" id="filterOverlay" onclick="closeFilterSidebar()"></div>
-      <!-- Sidebar -->
-      <aside class="sidebar" id="filterSidebar">
-        <div class="sidebar-mobile-header">
-            <h3 style="font-size:1.1rem;margin:0">Filters</h3>
-            <button onclick="closeFilterSidebar()" class="sidebar-close"><i class="fas fa-times"></i></button>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem">
-          <h3 class="sidebar-main-title">Filter Packages</h3>
+    <div class="search-filter-section" style="background: var(--bg-card); padding: 1.5rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); border: 1px solid var(--border); margin-bottom: 2rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h3 style="margin:0; font-size: 1.1rem;"><i class="fas fa-filter" style="color:var(--primary); margin-right:0.5rem;"></i> Filter Packages</h3>
           <button onclick="clearFilters()" style="font-size:.8125rem;color:var(--primary);background:none;border:none;cursor:pointer;font-weight:600">Clear All</button>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
+        <div style="flex: 1; min-width: 200px;">
+          <input type="text" id="searchInput" placeholder="Search safaris..." style="width: 100%; border: 1.5px solid var(--border); padding: 0.75rem; border-radius: var(--radius-md); font-size: 0.875rem;">
         </div>
-        <div class="search-box">
-          <input type="text" id="searchInput" placeholder="Search safaris...">
-          <button onclick="applyFilters()"><i class="fas fa-search"></i></button>
-        </div>
-        <div class="sidebar-section">
-          <div class="sidebar-title">Category</div>
-          <div class="filter-group" id="categoryFilters"></div>
-        </div>
-        <div class="sidebar-section">
-          <div class="sidebar-title">Destination</div>
-          <div class="filter-group" id="destinationFilters"></div>
-        </div>
-        <div class="sidebar-section">
-          <div class="sidebar-title">Duration</div>
-          <div class="filter-group">
-            <label><input type="radio" name="duration" value="all" checked> All Durations</label>
-            <label><input type="radio" name="duration" value="1-3"> 1–3 Days</label>
-            <label><input type="radio" name="duration" value="4-6"> 4–6 Days</label>
-            <label><input type="radio" name="duration" value="7-9"> 7–9 Days</label>
-            <label><input type="radio" name="duration" value="10+"> 10+ Days</label>
-          </div>
-        </div>
-        <div class="sidebar-section">
-          <div class="sidebar-title">Difficulty</div>
-          <div class="filter-group">
-            <label><input type="radio" name="difficulty" value="all" checked> All Levels</label>
-            <label><input type="radio" name="difficulty" value="easy"> Easy</label>
-            <label><input type="radio" name="difficulty" value="moderate"> Moderate</label>
-            <label><input type="radio" name="difficulty" value="challenging"> Challenging</label>
-          </div>
-        </div>
-        <div class="sidebar-section">
-          <div class="sidebar-title">Price Range (USD)</div>
-          <div class="price-inputs">
-            <input type="number" id="minPrice" placeholder="Min" min="0">
-            <span>to</span>
-            <input type="number" id="maxPrice" placeholder="Max" min="0">
-          </div>
-        </div>
-        <button class="btn btn-primary btn-block" onclick="applyFilters()" style="margin-top:1rem"><i class="fas fa-search"></i> Apply Filters</button>
-      </aside>
-
-      <!-- Results -->
-      <div>
-        <div class="results-header">
-          <div class="results-count">Showing <strong id="resultCount">0</strong> safaris</div>
-          <select class="sort-select" id="sortSelect" onchange="applyFilters()">
-            <option value="featured">Featured</option>
-            <option value="price-asc">Price: Low to High</option>
-            <option value="price-desc">Price: High to Low</option>
-            <option value="duration-asc">Shortest First</option>
-            <option value="rating">Highest Rated</option>
+        <div style="flex: 1; min-width: 150px;">
+          <select id="categorySelect" onchange="applyFilters()" style="width: 100%; border: 1.5px solid var(--border); padding: 0.75rem; border-radius: var(--radius-md); font-size: 0.875rem; background: #fff;">
+            <option value="all">All Categories</option>
           </select>
         </div>
+        <div style="flex: 1; min-width: 150px;">
+          <select id="destinationSelect" onchange="applyFilters()" style="width: 100%; border: 1.5px solid var(--border); padding: 0.75rem; border-radius: var(--radius-md); font-size: 0.875rem; background: #fff;">
+            <option value="all">All Destinations</option>
+          </select>
+        </div>
+        <div style="flex: 1; min-width: 150px;">
+          <select id="durationSelect" onchange="applyFilters()" style="width: 100%; border: 1.5px solid var(--border); padding: 0.75rem; border-radius: var(--radius-md); font-size: 0.875rem; background: #fff;">
+            <option value="all">All Durations</option>
+            <option value="1-3">1–3 Days</option>
+            <option value="4-6">4–6 Days</option>
+            <option value="7-9">7–9 Days</option>
+            <option value="10+">10+ Days</option>
+          </select>
+        </div>
+        <div style="flex: 1; min-width: 150px;">
+          <select id="difficultySelect" onchange="applyFilters()" style="width: 100%; border: 1.5px solid var(--border); padding: 0.75rem; border-radius: var(--radius-md); font-size: 0.875rem; background: #fff;">
+            <option value="all">All Levels</option>
+            <option value="easy">Easy</option>
+            <option value="moderate">Moderate</option>
+            <option value="challenging">Challenging</option>
+          </select>
+        </div>
+        <div style="flex: 1; min-width: 250px; display: flex; gap: 0.5rem; align-items: center;">
+          <input type="number" id="minPrice" placeholder="Min $" min="0" style="width: 50%; border: 1.5px solid var(--border); padding: 0.75rem; border-radius: var(--radius-md); font-size: 0.875rem;">
+          <span style="color:var(--text-muted)">-</span>
+          <input type="number" id="maxPrice" placeholder="Max $" min="0" style="width: 50%; border: 1.5px solid var(--border); padding: 0.75rem; border-radius: var(--radius-md); font-size: 0.875rem;">
+        </div>
+        <div style="flex: 0 0 auto;">
+          <button class="btn btn-primary" onclick="applyFilters()" style="padding: 0.75rem 1.5rem;"><i class="fas fa-search"></i> Apply</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div>
+      <div class="results-header">
+        <div class="results-count">Showing <strong id="resultCount">0</strong> safaris</div>
+        <select class="sort-select" id="sortSelect" onchange="applyFilters()">
+          <option value="featured">Featured</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="duration-asc">Shortest First</option>
+          <option value="rating">Highest Rated</option>
+        </select>
+      </div>
         <div class="safari-grid" id="safarisGrid">
           <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line medium"></div><div class="skeleton skeleton-line short"></div></div></div>
           <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line medium"></div><div class="skeleton skeleton-line short"></div></div></div>
