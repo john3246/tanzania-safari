@@ -39,11 +39,11 @@
 .sidebar-main-title{font-size:1rem;margin:0}
 @media(max-width:1024px){
   .mobile-filter-btn{display:flex}
-  .sidebar{display:block;position:fixed;top:0;left:-100%;width:320px;max-width:85vw;height:100vh;background:#fff;z-index:calc(var(--z-modal) + 1);transition:left 0.4s ease;border-radius:0;padding:1.5rem;overflow-y:auto;box-shadow:var(--shadow-xl)}
+  .sidebar{display:block;position:fixed;top:0;left:-100%;width:320px;max-width:85vw;height:100vh;background:#fff;z-index: 1001;transition:left 0.4s ease;border-radius:0;padding:1.5rem;overflow-y:auto;box-shadow:var(--shadow-xl)}
   .sidebar.open{left:0}
   .sidebar-mobile-header{display:flex}
   .sidebar-main-title{display:none}
-  .filter-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:var(--z-modal);backdrop-filter:blur(4px)}
+  .filter-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index: 1000;backdrop-filter:blur(4px)}
   .filter-overlay.open{display:block}
 }
 </style>
