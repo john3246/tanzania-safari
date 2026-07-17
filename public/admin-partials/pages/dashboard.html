@@ -1,220 +1,277 @@
-<div class="page active space-y-6" id="page-dashboard">
-    <!-- Header Area (Title & Date Picker) -->
-    <div class="flex justify-between items-center mb-2">
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex justify-between items-center">
         <div>
-            <h2 class="text-2xl font-bold text-slate-800" id="dashboardGreeting">Dashboard</h2>
-            <p class="text-sm text-slate-500">Welcome back, Admin! 👋</p>
+            <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
+            <p class="text-gray-500">Welcome back, Admin! 👋</p>
         </div>
-        <div class="flex items-center bg-white border border-slate-200 px-4 py-2 rounded-lg shadow-sm text-sm text-slate-600 font-medium">
-            <i class="ph ph-calendar-blank mr-2"></i>
-            May 12, 2024 - Jun 12, 2024
-            <i class="ph ph-caret-down ml-3 text-slate-400"></i>
+        <div class="bg-white border border-gray-200 px-4 py-2 rounded-lg text-sm text-gray-600 shadow-sm flex items-center gap-2">
+            <i class="fa-regular fa-calendar"></i>
+            <span id="dateRangeDisplay">May 12, 2024 - Jun 12, 2024</span>
         </div>
     </div>
 
-    <!-- 5 KPI Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+    <!-- KPI Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         <!-- Visitors -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
-            <div class="w-12 h-12 rounded-xl bg-[#0b3b2d] text-white flex items-center justify-center shrink-0">
-                <i class="ph ph-users-three text-2xl"></i>
+        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-center gap-4 hover:-translate-y-1 transition-transform duration-200 hover:shadow-md cursor-default">
+            <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-emerald-100 text-emerald-700">
+                <i class="fa-solid fa-users text-xl"></i>
             </div>
             <div>
-                <div class="text-xs text-slate-500 font-medium mb-1">Total Visitors</div>
+                <p class="text-sm font-medium text-gray-500">Total Visitors</p>
                 <div class="flex items-end gap-2">
-                    <span class="text-xl font-bold text-slate-800" id="s-visitors">15,842</span>
-                    <span class="text-xs font-semibold text-green-500 flex items-center"><i class="ph ph-arrow-up mr-0.5"></i> 12.5%</span>
+                    <h3 class="text-xl font-bold text-gray-900">15,842</h3>
+                    <span class="text-xs font-semibold mb-1 text-emerald-500"><i class="fa-solid fa-arrow-up"></i> 12.5%</span>
                 </div>
             </div>
         </div>
+
         <!-- Inquiries -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
-            <div class="w-12 h-12 rounded-xl bg-[#f59e0b] text-white flex items-center justify-center shrink-0">
-                <i class="ph ph-envelope-simple text-2xl"></i>
+        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-center gap-4 hover:-translate-y-1 transition-transform duration-200 hover:shadow-md cursor-default">
+            <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-yellow-100 text-yellow-700">
+                <i class="fa-solid fa-envelope text-xl"></i>
             </div>
             <div>
-                <div class="text-xs text-slate-500 font-medium mb-1">New Inquiries</div>
+                <p class="text-sm font-medium text-gray-500">New Inquiries</p>
                 <div class="flex items-end gap-2">
-                    <span class="text-xl font-bold text-slate-800" id="s-enquiries">0</span>
-                    <span class="text-xs font-semibold text-green-500 flex items-center"><i class="ph ph-arrow-up mr-0.5"></i> 8.3%</span>
+                    <h3 class="text-xl font-bold text-gray-900">236</h3>
+                    <span class="text-xs font-semibold mb-1 text-emerald-500"><i class="fa-solid fa-arrow-up"></i> 8.3%</span>
                 </div>
             </div>
         </div>
+
         <!-- Bookings -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
-            <div class="w-12 h-12 rounded-xl bg-[#10b981] text-white flex items-center justify-center shrink-0">
-                <i class="ph ph-calendar-check text-2xl"></i>
+        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-center gap-4 hover:-translate-y-1 transition-transform duration-200 hover:shadow-md cursor-default">
+            <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-forest-100 text-forest-700">
+                <i class="fa-regular fa-calendar-check text-xl"></i>
             </div>
             <div>
-                <div class="text-xs text-slate-500 font-medium mb-1">Total Bookings</div>
+                <p class="text-sm font-medium text-gray-500">Total Bookings</p>
                 <div class="flex items-end gap-2">
-                    <span class="text-xl font-bold text-slate-800" id="s-bookings">0</span>
-                    <span class="text-xs font-semibold text-green-500 flex items-center"><i class="ph ph-arrow-up mr-0.5"></i> 5.7%</span>
+                    <h3 class="text-xl font-bold text-gray-900">124</h3>
+                    <span class="text-xs font-semibold mb-1 text-emerald-500"><i class="fa-solid fa-arrow-up"></i> 5.7%</span>
                 </div>
             </div>
         </div>
+
         <!-- Revenue -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
-            <div class="w-12 h-12 rounded-xl bg-[#D4AF37] text-white flex items-center justify-center shrink-0">
-                <i class="ph ph-currency-dollar text-2xl"></i>
+        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-center gap-4 hover:-translate-y-1 transition-transform duration-200 hover:shadow-md cursor-default">
+            <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-orange-100 text-orange-700">
+                <i class="fa-solid fa-dollar-sign text-xl"></i>
             </div>
             <div>
-                <div class="text-xs text-slate-500 font-medium mb-1">Total Revenue</div>
+                <p class="text-sm font-medium text-gray-500">Total Revenue</p>
                 <div class="flex items-end gap-2">
-                    <span class="text-xl font-bold text-slate-800" id="s-revenue">$45,231</span>
-                    <span class="text-xs font-semibold text-green-500 flex items-center"><i class="ph ph-arrow-up mr-0.5"></i> 18.6%</span>
+                    <h3 class="text-xl font-bold text-gray-900">$45,231</h3>
+                    <span class="text-xs font-semibold mb-1 text-emerald-500"><i class="fa-solid fa-arrow-up"></i> 18.6%</span>
                 </div>
             </div>
         </div>
-        <!-- Tours -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
-            <div class="w-12 h-12 rounded-xl bg-[#047857] text-white flex items-center justify-center shrink-0">
-                <i class="ph ph-cube text-2xl"></i>
+
+        <!-- Active Tours -->
+        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-center gap-4 hover:-translate-y-1 transition-transform duration-200 hover:shadow-md cursor-default">
+            <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-teal-100 text-teal-700">
+                <i class="fa-solid fa-box-open text-xl"></i>
             </div>
             <div>
-                <div class="text-xs text-slate-500 font-medium mb-1">Active Tours</div>
+                <p class="text-sm font-medium text-gray-500">Active Tours</p>
                 <div class="flex items-end gap-2">
-                    <span class="text-xl font-bold text-slate-800" id="s-packages">0</span>
-                    <span class="text-xs font-semibold text-slate-400">---</span>
+                    <h3 class="text-xl font-bold text-gray-900">32</h3>
+                    <span class="text-xs font-semibold mb-1 text-gray-400">---</span>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Charts Row -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <!-- Visitors Overview Chart -->
-        <div class="lg:col-span-8 bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="font-bold text-slate-800 text-sm">Visitors Overview</h3>
-                <div class="flex items-center gap-1 bg-slate-50 px-3 py-1 rounded-md text-xs font-medium border border-slate-200 cursor-pointer">
-                    Last 30 Days <i class="ph ph-caret-down text-slate-400 ml-1"></i>
-                </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Visitors Chart -->
+        <div class="lg:col-span-2 bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-semibold text-gray-900">Visitors Overview</h3>
+                <select class="text-sm border border-gray-200 rounded-md px-2 py-1 outline-none focus:ring-2 focus:ring-forest-500">
+                    <option>Last 30 Days</option>
+                </select>
             </div>
-            <!-- Dynamic Revenue Chart will go here (Reusing existing logic) -->
-            <div class="w-full h-64 bg-slate-50 rounded-lg flex items-center justify-center border border-slate-100 overflow-hidden p-4 relative" id="revenueChartContainer">
-                <canvas id="visitorsChartCanvas" class="w-full h-full"></canvas>
+            <div class="relative h-72 w-full">
+                <canvas id="visitorsChart"></canvas>
             </div>
         </div>
-        
-        <!-- Bookings Donut Chart -->
-        <div class="lg:col-span-4 bg-white rounded-2xl border border-slate-100 shadow-sm p-6 flex flex-col">
-            <h3 class="font-bold text-slate-800 text-sm mb-4">Bookings by Status</h3>
-            <div class="flex-1 flex items-center justify-center relative min-h-[200px]">
-                <canvas id="bookingsStatusChart" class="w-full h-full max-h-48"></canvas>
-                <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none mt-2">
-                    <span class="text-2xl font-bold text-slate-800" id="donutTotal">124</span>
-                    <span class="text-xs text-slate-500">Total</span>
+
+        <!-- Bookings Donut -->
+        <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
+            <h3 class="font-semibold text-gray-900 mb-6">Bookings by Status</h3>
+            <div class="relative h-48 w-full flex justify-center">
+                <canvas id="bookingsChart"></canvas>
+                <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                    <span class="text-2xl font-bold text-gray-900">124</span>
+                    <span class="text-xs text-gray-500">Total</span>
+                </div>
+            </div>
+            <div class="mt-6 space-y-3">
+                <div class="flex justify-between items-center text-sm">
+                    <div class="flex items-center gap-2"><div class="w-2.5 h-2.5 rounded-full bg-[#10B981]"></div><span class="text-gray-600">Confirmed</span></div>
+                    <div class="font-semibold text-gray-900">45 <span class="text-gray-400 font-normal ml-1">(36%)</span></div>
+                </div>
+                <div class="flex justify-between items-center text-sm">
+                    <div class="flex items-center gap-2"><div class="w-2.5 h-2.5 rounded-full bg-[#F59E0B]"></div><span class="text-gray-600">Pending</span></div>
+                    <div class="font-semibold text-gray-900">32 <span class="text-gray-400 font-normal ml-1">(26%)</span></div>
+                </div>
+                <div class="flex justify-between items-center text-sm">
+                    <div class="flex items-center gap-2"><div class="w-2.5 h-2.5 rounded-full bg-[#EF4444]"></div><span class="text-gray-600">Cancelled</span></div>
+                    <div class="font-semibold text-gray-900">12 <span class="text-gray-400 font-normal ml-1">(10%)</span></div>
+                </div>
+                <div class="flex justify-between items-center text-sm">
+                    <div class="flex items-center gap-2"><div class="w-2.5 h-2.5 rounded-full bg-[#3B82F6]"></div><span class="text-gray-600">Completed</span></div>
+                    <div class="font-semibold text-gray-900">35 <span class="text-gray-400 font-normal ml-1">(28%)</span></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Tables Row -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <!-- Recent Bookings Table -->
-        <div class="lg:col-span-8 bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col">
-            <div class="p-6 border-b border-slate-100 flex justify-between items-center">
-                <h3 class="font-bold text-slate-800 text-sm">Recent Bookings</h3>
-                <a href="#" class="text-xs font-semibold text-green-600 hover:text-green-700" onclick="navigate('bookings'); return false;">View All</a>
-            </div>
-            <div class="overflow-x-auto flex-1">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-slate-50 text-[10px] uppercase tracking-wider text-slate-400 border-b border-slate-100">
-                            <th class="p-4 font-semibold">Booking ID</th>
-                            <th class="p-4 font-semibold">Customer</th>
-                            <th class="p-4 font-semibold">Tour</th>
-                            <th class="p-4 font-semibold">Date</th>
-                            <th class="p-4 font-semibold">Guests</th>
-                            <th class="p-4 font-semibold">Amount</th>
-                            <th class="p-4 font-semibold text-center">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="dashBookingsBody" class="text-sm divide-y divide-slate-100">
-                        <tr><td colspan="7" class="p-8 text-center text-slate-400">Loading bookings...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Recent Activities / Top Tours Column -->
-        <div class="lg:col-span-4 space-y-6">
-            <!-- Recent Activities -->
-            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-bold text-slate-800 text-sm">Recent Activities</h3>
-                    <a href="#" class="text-xs font-semibold text-green-600 hover:text-green-700">View All</a>
-                </div>
-                <div class="space-y-5" id="dashActivityBody">
-                    <div class="text-center text-slate-400 text-sm py-4"><i class="fas fa-spinner fa-spin mr-2"></i> Loading activities...</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Quick Actions & System Overview -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <!-- Quick Actions & System -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Quick Actions -->
-        <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-            <h3 class="font-bold text-slate-800 text-sm mb-6">Quick Actions</h3>
-            <div class="grid grid-cols-5 gap-2 text-center">
-                <div class="flex flex-col items-center gap-2 cursor-pointer group" onclick="navigate('packages')">
-                    <div class="w-12 h-12 rounded-xl border border-slate-200 flex items-center justify-center text-[#0b3b2d] group-hover:bg-[#0b3b2d] group-hover:text-white transition-colors"><i class="ph ph-plus text-xl"></i></div>
-                    <span class="text-[10px] text-slate-500 font-medium leading-tight">Add New Tour</span>
-                </div>
-                <div class="flex flex-col items-center gap-2 cursor-pointer group" onclick="navigate('destinations')">
-                    <div class="w-12 h-12 rounded-xl border border-slate-200 flex items-center justify-center text-[#f59e0b] group-hover:bg-[#f59e0b] group-hover:text-white transition-colors"><i class="ph ph-map-pin text-xl"></i></div>
-                    <span class="text-[10px] text-slate-500 font-medium leading-tight">New Destination</span>
-                </div>
-                <div class="flex flex-col items-center gap-2 cursor-pointer group" onclick="navigate('blog')">
-                    <div class="w-12 h-12 rounded-xl border border-slate-200 flex items-center justify-center text-[#10b981] group-hover:bg-[#10b981] group-hover:text-white transition-colors"><i class="ph ph-pencil-simple text-xl"></i></div>
-                    <span class="text-[10px] text-slate-500 font-medium leading-tight">New Blog Post</span>
-                </div>
-                <div class="flex flex-col items-center gap-2 cursor-pointer group" onclick="navigate('images')">
-                    <div class="w-12 h-12 rounded-xl border border-slate-200 flex items-center justify-center text-[#D4AF37] group-hover:bg-[#D4AF37] group-hover:text-white transition-colors"><i class="ph ph-upload-simple text-xl"></i></div>
-                    <span class="text-[10px] text-slate-500 font-medium leading-tight">Upload Media</span>
-                </div>
-                <div class="flex flex-col items-center gap-2 cursor-pointer group" onclick="navigate('settings')">
-                    <div class="w-12 h-12 rounded-xl border border-slate-200 flex items-center justify-center text-[#047857] group-hover:bg-[#047857] group-hover:text-white transition-colors"><i class="ph ph-gear text-xl"></i></div>
-                    <span class="text-[10px] text-slate-500 font-medium leading-tight">Site Settings</span>
-                </div>
+        <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
+            <h3 class="font-semibold text-gray-900 mb-4">Quick Actions</h3>
+            <div class="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+                <button class="flex flex-col items-center text-center gap-2 group nav-link" data-page="packages">
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center bg-emerald-50 text-emerald-600 border border-transparent group-hover:border-emerald-200 transition-all group-hover:scale-105">
+                        <i class="fa-solid fa-plus text-xl"></i>
+                    </div>
+                    <span class="text-xs font-medium text-gray-600 leading-tight">Add Tour</span>
+                </button>
+                <button class="flex flex-col items-center text-center gap-2 group nav-link" data-page="destinations">
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center bg-yellow-50 text-yellow-600 border border-transparent group-hover:border-yellow-200 transition-all group-hover:scale-105">
+                        <i class="fa-solid fa-location-dot text-xl"></i>
+                    </div>
+                    <span class="text-xs font-medium text-gray-600 leading-tight">New Dest.</span>
+                </button>
+                <button class="flex flex-col items-center text-center gap-2 group nav-link" data-page="blog">
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center bg-blue-50 text-blue-600 border border-transparent group-hover:border-blue-200 transition-all group-hover:scale-105">
+                        <i class="fa-solid fa-file-lines text-xl"></i>
+                    </div>
+                    <span class="text-xs font-medium text-gray-600 leading-tight">New Blog</span>
+                </button>
+                <button class="flex flex-col items-center text-center gap-2 group nav-link" data-page="images">
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center bg-orange-50 text-orange-600 border border-transparent group-hover:border-orange-200 transition-all group-hover:scale-105">
+                        <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
+                    </div>
+                    <span class="text-xs font-medium text-gray-600 leading-tight">Upload</span>
+                </button>
+                <button class="flex flex-col items-center text-center gap-2 group nav-link" data-page="bookings">
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center bg-forest-50 text-forest-600 border border-transparent group-hover:border-forest-200 transition-all group-hover:scale-105">
+                        <i class="fa-regular fa-calendar-plus text-xl"></i>
+                    </div>
+                    <span class="text-xs font-medium text-gray-600 leading-tight">New Booking</span>
+                </button>
+                <button class="flex flex-col items-center text-center gap-2 group nav-link" data-page="settings">
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center bg-gray-50 text-gray-600 border border-transparent group-hover:border-gray-200 transition-all group-hover:scale-105">
+                        <i class="fa-solid fa-gear text-xl"></i>
+                    </div>
+                    <span class="text-xs font-medium text-gray-600 leading-tight">Settings</span>
+                </button>
             </div>
         </div>
 
         <!-- System Overview -->
-        <div class="lg:col-span-3 bg-white rounded-2xl border border-slate-100 shadow-sm p-6 flex flex-col justify-between">
-            <h3 class="font-bold text-slate-800 text-sm mb-4">System Overview</h3>
-            <div class="space-y-4 text-xs font-medium text-slate-600">
+        <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
+            <h3 class="font-semibold text-gray-900 mb-4">System Overview</h3>
+            <div class="space-y-4 text-sm">
                 <div>
-                    <div class="flex justify-between mb-1">
-                        <span>Storage Usage</span>
-                        <span class="text-slate-400">22.5 GB / 50 GB</span>
+                    <div class="flex justify-between text-gray-600 mb-1">
+                        <span>Storage Usage <span class="text-gray-900 font-semibold ml-1">45%</span></span>
+                        <span>22.5 GB / 50 GB</span>
                     </div>
-                    <div class="w-full bg-slate-100 rounded-full h-1.5"><div class="bg-[#0b3b2d] h-1.5 rounded-full" style="width: 45%"></div></div>
+                    <div class="w-full bg-gray-100 rounded-full h-2">
+                        <div class="bg-forest-600 h-2 rounded-full" style="width: 45%;"></div>
+                    </div>
                 </div>
-                <div class="flex justify-between pt-2">
-                    <span>Database</span>
-                    <span class="text-[#10b981] flex items-center gap-1">Optimized <i class="ph ph-check"></i></span>
+                <div class="flex justify-between py-2 border-b border-gray-50">
+                    <span class="text-gray-500">Database</span>
+                    <span class="text-forest-600 font-medium flex items-center gap-1">Optimized <i class="fa-solid fa-check"></i></span>
                 </div>
-                <div class="flex justify-between pt-1">
-                    <span>Node Version</span>
-                    <span class="text-slate-800 font-semibold">v20.x</span>
+                <div class="flex justify-between py-2 border-b border-gray-50">
+                    <span class="text-gray-500">Node Version</span>
+                    <span class="font-medium text-gray-900">v18.x</span>
                 </div>
-                <div class="flex justify-between pt-1">
-                    <span>System Status</span>
-                    <span class="text-[#10b981] flex items-center gap-1">Healthy <i class="ph-fill ph-check-circle text-sm"></i></span>
+                <div class="flex justify-between py-2">
+                    <span class="text-gray-500">System Status</span>
+                    <span class="text-forest-600 font-medium flex items-center gap-1">Healthy <div class="w-2 h-2 rounded-full bg-forest-500 ml-1"></div></span>
                 </div>
-            </div>
-        </div>
-
-        <!-- Banner Image -->
-        <div class="lg:col-span-4 rounded-2xl overflow-hidden relative shadow-sm min-h-[160px]">
-            <img src="/images/hero.jpg" onerror="this.src='/images/placeholder.jpg'" alt="Tanzania" class="absolute inset-0 w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
-            <div class="absolute inset-0 p-6 flex flex-col justify-end text-white text-right">
-                <p class="text-sm font-semibold leading-snug drop-shadow-md">"Tanzania is not just a place,<br>it's an unforgettable experience."</p>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+// Initialize Charts after a small delay to ensure DOM is ready
+setTimeout(() => {
+    // Destroy existing charts if they exist (handling SPA re-renders)
+    if(window.visitorsChartInstance) window.visitorsChartInstance.destroy();
+    if(window.bookingsChartInstance) window.bookingsChartInstance.destroy();
+
+    const ctxVisitors = document.getElementById('visitorsChart').getContext('2d');
+    window.visitorsChartInstance = new Chart(ctxVisitors, {
+        type: 'line',
+        data: {
+            labels: ['May 12', 'May 19', 'May 26', 'Jun 02', 'Jun 09', 'Jun 12'],
+            datasets: [{
+                label: 'Visitors',
+                data: [1000, 1700, 1200, 2000, 1500, 2800],
+                borderColor: '#4c8c6a',
+                backgroundColor: 'rgba(76, 140, 106, 0.1)',
+                borderWidth: 3,
+                tension: 0.4,
+                fill: true,
+                pointBackgroundColor: '#4c8c6a',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                pointHoverRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: '#f3f4f6', drawBorder: false },
+                    ticks: { color: '#9ca3af', font: {size: 12} }
+                },
+                x: {
+                    grid: { display: false, drawBorder: false },
+                    ticks: { color: '#9ca3af', font: {size: 12} }
+                }
+            }
+        }
+    });
+
+    const ctxBookings = document.getElementById('bookingsChart').getContext('2d');
+    window.bookingsChartInstance = new Chart(ctxBookings, {
+        type: 'doughnut',
+        data: {
+            labels: ['Confirmed', 'Pending', 'Cancelled', 'Completed'],
+            datasets: [{
+                data: [45, 32, 12, 35],
+                backgroundColor: ['#10B981', '#F59E0B', '#EF4444', '#3B82F6'],
+                borderWidth: 0,
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '75%',
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+}, 100);
+</script>

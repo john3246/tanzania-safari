@@ -1,31 +1,86 @@
-<header class="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between sticky top-0 z-30">
-    <div class="flex items-center gap-4 flex-1">
-        <button class="text-slate-500 hover:text-slate-700 transition-colors" id="menuToggle"><i class="ph ph-list text-2xl"></i></button>
-        <div class="relative hidden sm:block w-96">
-            <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-            <input type="text" placeholder="Search anything..." class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#0b3b2d] focus:border-transparent transition-all">
+<header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 sm:px-6 z-10 flex-shrink-0 w-full" id="adminHeader">
+    <div class="flex items-center flex-1 gap-4">
+        <!-- Mobile menu toggle -->
+        <button id="mobileMenuBtn" class="md:hidden text-gray-500 hover:text-gray-700 focus:outline-none">
+            <i class="fa-solid fa-bars text-xl"></i>
+        </button>
+        
+        <div class="max-w-md w-full relative hidden sm:block">
+            <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            <input 
+                type="text" 
+                placeholder="Search anything..." 
+                class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-forest-500 transition-shadow"
+            />
         </div>
     </div>
-    
-    <div class="flex items-center gap-6">
-        <button class="text-slate-500 hover:text-slate-800 transition-colors" title="Website"><i class="ph ph-globe-hemisphere-west text-xl"></i></button>
-        
-        <button class="text-slate-500 hover:text-slate-800 transition-colors relative" title="Notifications">
-            <i class="ph ph-bell text-xl"></i>
-            <span class="absolute -top-1.5 -right-1.5 bg-green-600 text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center border-2 border-white">5</span>
-        </button>
 
-        <button class="text-slate-500 hover:text-slate-800 transition-colors relative" title="Messages">
-            <i class="ph ph-envelope-simple text-xl"></i>
-            <span class="absolute -top-1.5 -right-1.5 bg-yellow-500 text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center border-2 border-white">3</span>
+    <div class="flex items-center gap-4 sm:gap-6">
+        <a href="/" target="_blank" class="text-gray-500 hover:text-gray-700 hidden sm:block" title="View Site">
+            <i class="fa-solid fa-globe text-lg"></i>
+        </a>
+        <button class="text-gray-500 hover:text-gray-700 relative" title="Notifications">
+            <i class="fa-regular fa-bell text-lg"></i>
+            <span class="absolute -top-1 -right-1 bg-forest-500 text-white text-[9px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center">
+                5
+            </span>
         </button>
-
-        <div class="h-8 w-px bg-slate-200 mx-2"></div>
+        <button class="text-gray-500 hover:text-gray-700 relative" title="Messages">
+            <i class="fa-regular fa-envelope text-lg"></i>
+            <span class="absolute -top-1 -right-1 bg-safari-500 text-white text-[9px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center">
+                3
+            </span>
+        </button>
         
-        <button class="flex items-center gap-2 hover:bg-slate-50 p-1 rounded-lg transition-colors" id="headerProfileDropdown">
-            <img src="https://ui-avatars.com/api/?name=Admin&background=0b3b2d&color=D4AF37" alt="Admin" class="w-8 h-8 rounded-full object-cover">
-            <span class="text-sm font-medium text-slate-700 hidden md:block">Admin User</span>
-            <i class="ph ph-caret-down text-slate-400 text-xs hidden md:block"></i>
-        </button>
+        <div class="relative pl-2 sm:pl-6 sm:border-l border-gray-200">
+            <button id="profileDropdownBtn" class="flex items-center gap-3 focus:outline-none">
+                <img src="https://ui-avatars.com/api/?name=Admin+User&background=0D8ABC&color=fff" alt="Admin" class="w-8 h-8 rounded-full object-cover">
+                <div class="hidden sm:block text-sm text-left">
+                    <span class="font-medium text-gray-700 block leading-none">Admin User</span>
+                </div>
+                <i class="fa-solid fa-chevron-down text-xs text-gray-400 hidden sm:block"></i>
+            </button>
+            
+            <!-- Dropdown -->
+            <div id="profileDropdown" class="hidden absolute right-0 mt-3 w-48 bg-white rounded-md shadow-lg border border-gray-100 py-1 z-50">
+                <a href="/admin/settings" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 nav-link" data-page="settings">
+                    <i class="fa-solid fa-user mr-2 text-gray-400"></i> Profile
+                </a>
+                <div class="border-t border-gray-100 my-1"></div>
+                <button onclick="AdminAuth.logout()" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                    <i class="fa-solid fa-arrow-right-from-bracket mr-2"></i> Logout
+                </button>
+            </div>
+        </div>
     </div>
 </header>
+
+<script>
+    // Profile Dropdown Toggle
+    document.getElementById('profileDropdownBtn')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.getElementById('profileDropdown')?.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', () => {
+        document.getElementById('profileDropdown')?.classList.add('hidden');
+    });
+
+    // Mobile Sidebar Toggle
+    document.getElementById('mobileMenuBtn')?.addEventListener('click', () => {
+        const sidebar = document.getElementById('sidebar');
+        const backdrop = document.getElementById('sidebarBackdrop');
+        
+        sidebar.classList.toggle('hidden');
+        sidebar.classList.toggle('absolute');
+        sidebar.classList.toggle('z-50');
+        sidebar.classList.toggle('left-0');
+        
+        backdrop.classList.toggle('hidden');
+        setTimeout(() => backdrop.classList.toggle('opacity-0'), 10);
+    });
+
+    document.getElementById('sidebarBackdrop')?.addEventListener('click', () => {
+        document.getElementById('mobileMenuBtn').click();
+    });
+</script>

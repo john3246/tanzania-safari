@@ -1,65 +1,135 @@
-<aside class="fixed inset-y-0 left-0 z-50 w-64 bg-[#263E22] text-slate-300 lg:static lg:block -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out border-r border-[#263E22] flex flex-col flex-shrink-0" id="sidebar">
-    <div class="p-6 pb-2">
-        <div class="flex items-center gap-3 mb-8">
-            <img src="/images/logo.png" alt="Logo" class="h-10 w-auto object-contain">
-            <button class="lg:hidden text-slate-400 absolute right-4 top-6 hover:text-white transition-colors" id="sidebarClose"><i class="ph ph-x text-xl"></i></button>
+<aside class="w-64 bg-forest-950 text-gray-300 h-screen overflow-y-auto flex-col flex-shrink-0 hidden md:flex" id="sidebar">
+    <div class="p-6 flex items-center gap-3 border-b border-forest-800">
+        <div class="w-10 h-10 bg-safari-500 rounded flex items-center justify-center">
+            <i class="fa-solid fa-map-location-dot text-white text-lg"></i>
+        </div>
+        <div>
+            <h1 class="text-safari-400 font-bold leading-tight uppercase tracking-wider">TANZANIA</h1>
+            <p class="text-xs uppercase tracking-widest text-safari-300">Safari Magic</p>
         </div>
     </div>
-    
-    <nav class="flex-1 overflow-y-auto px-4 pb-6 space-y-6 sidebar-nav custom-scrollbar">
+
+    <div class="p-4 border-b border-forest-800 flex items-center gap-3">
+        <img src="https://ui-avatars.com/api/?name=Admin+User&background=0D8ABC&color=fff" alt="Admin" class="w-10 h-10 rounded-full object-cover">
         <div>
-            <a href="#" class="nav-item flex items-center px-3 py-2.5 rounded-lg transition-colors active bg-[#365730] text-white" data-page="dashboard">
-                <i class="ph ph-house text-lg nav-icon mr-3"></i>
-                <span class="nav-label font-medium text-sm">Dashboard</span>
-            </a>
+            <p class="text-sm font-semibold text-white">Admin User</p>
+            <p class="text-xs text-gray-400">Super Administrator</p>
+        </div>
+    </div>
+
+    <nav class="flex-1 py-4">
+        <!-- Dashboard Group -->
+        <div class="mb-4">
+            <button class="w-full flex items-center justify-between px-6 py-2 text-xs font-semibold text-gray-500 hover:text-gray-300 uppercase tracking-wider group-toggle">
+                DASHBOARD
+                <i class="fa-solid fa-chevron-down text-[10px]"></i>
+            </button>
+            <ul class="mt-1 space-y-1">
+                <li>
+                    <a href="/admin/dashboard" class="nav-link flex items-center gap-3 px-6 py-2.5 text-sm transition-colors duration-200 border-l-4 border-transparent hover:bg-forest-900 hover:text-white" data-page="dashboard">
+                        <i class="fa-solid fa-house w-5 opacity-75"></i> Dashboard
+                    </a>
+                </li>
+            </ul>
         </div>
 
-        <div>
-            <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 px-3">Content Management</div>
-            <div class="space-y-1">
-                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm rounded-lg hover:bg-white/5 hover:text-white transition-colors" data-page="packages">
-                    <i class="ph ph-map-trifold text-lg nav-icon mr-3"></i><span class="nav-label">Tours</span>
-                </a>
-                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm rounded-lg hover:bg-white/5 hover:text-white transition-colors" data-page="destinations">
-                    <i class="ph ph-map-pin text-lg nav-icon mr-3"></i><span class="nav-label">Destinations</span>
-                </a>
-                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm rounded-lg hover:bg-white/5 hover:text-white transition-colors" data-page="blog">
-                    <i class="ph ph-article text-lg nav-icon mr-3"></i><span class="nav-label">Blog</span>
-                </a>
-                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm rounded-lg hover:bg-white/5 hover:text-white transition-colors" data-page="images">
-                    <i class="ph ph-image text-lg nav-icon mr-3"></i><span class="nav-label">Media Library</span>
-                </a>
-                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm rounded-lg hover:bg-white/5 hover:text-white transition-colors" data-page="reviews">
-                    <i class="ph ph-star text-lg nav-icon mr-3"></i><span class="nav-label">Reviews</span>
-                </a>
-            </div>
+        <!-- Content Management Group -->
+        <div class="mb-4">
+            <button class="w-full flex items-center justify-between px-6 py-2 text-xs font-semibold text-gray-500 hover:text-gray-300 uppercase tracking-wider group-toggle">
+                CONTENT MANAGEMENT
+                <i class="fa-solid fa-chevron-down text-[10px]"></i>
+            </button>
+            <ul class="mt-1 space-y-1">
+                <li>
+                    <a href="/admin/packages" class="nav-link flex items-center gap-3 px-6 py-2.5 text-sm transition-colors duration-200 border-l-4 border-transparent hover:bg-forest-900 hover:text-white" data-page="packages">
+                        <i class="fa-solid fa-map w-5 opacity-75"></i> Tours
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/destinations" class="nav-link flex items-center gap-3 px-6 py-2.5 text-sm transition-colors duration-200 border-l-4 border-transparent hover:bg-forest-900 hover:text-white" data-page="destinations">
+                        <i class="fa-solid fa-location-dot w-5 opacity-75"></i> Destinations
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/blog" class="nav-link flex items-center gap-3 px-6 py-2.5 text-sm transition-colors duration-200 border-l-4 border-transparent hover:bg-forest-900 hover:text-white" data-page="blog">
+                        <i class="fa-solid fa-file-lines w-5 opacity-75"></i> Blog
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/images" class="nav-link flex items-center gap-3 px-6 py-2.5 text-sm transition-colors duration-200 border-l-4 border-transparent hover:bg-forest-900 hover:text-white" data-page="images">
+                        <i class="fa-regular fa-image w-5 opacity-75"></i> Media Library
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/reviews" class="nav-link flex items-center gap-3 px-6 py-2.5 text-sm transition-colors duration-200 border-l-4 border-transparent hover:bg-forest-900 hover:text-white" data-page="reviews">
+                        <i class="fa-solid fa-star w-5 opacity-75"></i> Reviews
+                    </a>
+                </li>
+            </ul>
         </div>
 
-        <div>
-            <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 px-3">Bookings & Customers</div>
-            <div class="space-y-1">
-                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm rounded-lg hover:bg-white/5 hover:text-white transition-colors" data-page="bookings">
-                    <i class="ph ph-calendar-check text-lg nav-icon mr-3"></i><span class="nav-label">Bookings</span>
-                </a>
-                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm rounded-lg hover:bg-white/5 hover:text-white transition-colors" data-page="enquiries">
-                    <i class="ph ph-envelope-simple text-lg nav-icon mr-3"></i><span class="nav-label">Inquiries</span>
-                </a>
-            </div>
+        <!-- Bookings Group -->
+        <div class="mb-4">
+            <button class="w-full flex items-center justify-between px-6 py-2 text-xs font-semibold text-gray-500 hover:text-gray-300 uppercase tracking-wider group-toggle">
+                BOOKINGS & CUSTOMERS
+                <i class="fa-solid fa-chevron-down text-[10px]"></i>
+            </button>
+            <ul class="mt-1 space-y-1">
+                <li>
+                    <a href="/admin/bookings" class="nav-link flex items-center gap-3 px-6 py-2.5 text-sm transition-colors duration-200 border-l-4 border-transparent hover:bg-forest-900 hover:text-white" data-page="bookings">
+                        <i class="fa-solid fa-calendar w-5 opacity-75"></i> Bookings
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/enquiries" class="nav-link flex items-center gap-3 px-6 py-2.5 text-sm transition-colors duration-200 border-l-4 border-transparent hover:bg-forest-900 hover:text-white" data-page="enquiries">
+                        <i class="fa-solid fa-inbox w-5 opacity-75"></i> Inquiries
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/customers" class="nav-link flex items-center gap-3 px-6 py-2.5 text-sm transition-colors duration-200 border-l-4 border-transparent hover:bg-forest-900 hover:text-white" data-page="customers">
+                        <i class="fa-solid fa-users w-5 opacity-75"></i> Customers
+                    </a>
+                </li>
+            </ul>
         </div>
 
-        <div>
-            <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 px-3">System</div>
-            <div class="space-y-1">
-                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm rounded-lg hover:bg-white/5 hover:text-white transition-colors" data-page="users">
-                    <i class="ph ph-users-three text-lg nav-icon mr-3"></i><span class="nav-label">Users & Roles</span>
-                </a>
-                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm rounded-lg hover:bg-white/5 hover:text-white transition-colors" data-page="communications">
-                    <i class="ph ph-paper-plane-right text-lg nav-icon mr-3"></i><span class="nav-label">Communications</span>
-                </a>
-                <a href="#" class="nav-item flex items-center px-3 py-2 text-sm rounded-lg hover:bg-white/5 hover:text-white transition-colors" data-page="settings">
-                    <i class="ph ph-gear text-lg nav-icon mr-3"></i><span class="nav-label">Settings</span>
-                </a>
-            </div>
+        <!-- System Group -->
+        <div class="mb-4">
+            <button class="w-full flex items-center justify-between px-6 py-2 text-xs font-semibold text-gray-500 hover:text-gray-300 uppercase tracking-wider group-toggle">
+                SYSTEM
+                <i class="fa-solid fa-chevron-down text-[10px]"></i>
+            </button>
+            <ul class="mt-1 space-y-1">
+                <li>
+                    <a href="/admin/users" class="nav-link flex items-center gap-3 px-6 py-2.5 text-sm transition-colors duration-200 border-l-4 border-transparent hover:bg-forest-900 hover:text-white" data-page="users">
+                        <i class="fa-solid fa-shield-halved w-5 opacity-75"></i> Users & Roles
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/settings" class="nav-link flex items-center gap-3 px-6 py-2.5 text-sm transition-colors duration-200 border-l-4 border-transparent hover:bg-forest-900 hover:text-white" data-page="settings">
+                        <i class="fa-solid fa-gear w-5 opacity-75"></i> Settings
+                    </a>
+                </li>
+            </ul>
         </div>
     </nav>
 </aside>
+
+<script>
+    // Handle toggle
+    document.querySelectorAll('.group-toggle').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const ul = btn.nextElementSibling;
+            const icon = btn.querySelector('i');
+            if(ul.classList.contains('hidden')) {
+                ul.classList.remove('hidden');
+                icon.classList.remove('fa-chevron-right');
+                icon.classList.add('fa-chevron-down');
+            } else {
+                ul.classList.add('hidden');
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-right');
+            }
+        });
+    });
+</script>

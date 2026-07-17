@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-sand-100 dark:bg-slate-900">
+<html lang="en" class="h-full bg-gray-50">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tanzania Safari | Admin CMS</title>
+    <title>Tanzania Safari Magic | Admin CMS</title>
     <link rel="icon" type="image/png" href="/images/logo.png">
     
     <!-- Tailwind CSS -->
@@ -14,20 +14,16 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: {
-                            50: '#eef4fb',
-                            100: '#d9e6f6',
-                            500: '#0D47A1', // Deep Blue
-                            600: '#0a3882',
-                            700: '#082D66',
+                        forest: {
+                            50: '#f2f7f4', 100: '#e1efe6', 200: '#c5e0cf', 300: '#9cc9af',
+                            400: '#6ea988', 500: '#4c8c6a', 600: '#3a7053', 700: '#305943',
+                            800: '#284837', 900: '#223c2f', 950: '#0f2219',
                         },
-                        accent: {
-                            500: '#FF6F00', // Warm Orange
-                            600: '#e66400',
+                        safari: {
+                            50: '#fbf8f1', 100: '#f5efe0', 200: '#eadbb9', 300: '#ddc289',
+                            400: '#d1a45b', 500: '#c78a38', 600: '#b8722d', 700: '#995828',
+                            800: '#7e4726', 900: '#653a21', 950: '#371e10',
                         },
-                        sand: {
-                            100: '#FBF6EE', // Sand Pale
-                        }
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
@@ -37,36 +33,35 @@
         }
     </script>
 
-    <!-- FontAwesome (required for legacy templates) -->
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-    <!-- Phosphor Icons -->
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- CMS custom css for basic mechanics -->
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- CMS custom css -->
     <link rel="stylesheet" href="/css/admin.css">
 </head>
-<body class="h-full flex overflow-hidden font-sans text-slate-900 bg-sand-100">
+<body class="h-full flex overflow-hidden font-sans text-gray-900 bg-gray-50">
 
     <!-- Sidebar -->
     <!-- INJECT: sidebar -->
 
     <!-- Mobile Sidebar Backdrop -->
-    <div id="sidebarBackdrop" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity opacity-0"></div>
+    <div id="sidebarBackdrop" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden transition-opacity opacity-0"></div>
 
     <!-- Main Content Area -->
-    <div class="flex-1 flex flex-col overflow-hidden" id="adminMain">
+    <div class="flex-1 flex flex-col min-w-0 h-screen" id="adminMain">
         <!-- INJECT: header -->
 
-        <main class="flex-1 overflow-y-auto p-6 bg-sand-100">
-            
+        <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-gray-50/50">
             <!-- Dashboard -->
             <!-- INJECT: dashboard -->
 
-            <!-- Packages -->
+            <!-- Packages / Tours -->
             <!-- INJECT: packages -->
 
             <!-- Categories -->
@@ -95,51 +90,27 @@
 
             <!-- Media -->
             <!-- INJECT: images -->
-
         </main>
+        
+        <!-- Footer -->
+        <footer class="py-4 px-6 border-t border-gray-200 bg-white text-xs text-gray-500 flex justify-between items-center flex-shrink-0">
+            <p>&copy; 2024 Tanzania Safari Magic. All rights reserved.</p>
+            <div class="flex items-center gap-4">
+                <span>Version 1.0.0</span>
+                <span>Made with <i class="fa-solid fa-heart text-red-500"></i> in Tanzania</span>
+            </div>
+        </footer>
     </div>
 
-    <!-- Modals -->
-    
-    <!-- Package Modal -->
-    
+    <!-- INJECT: modals -->
 
-    <!-- Category Modal -->
-    
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
 
-    <!-- Enquiry Modal -->
-    <div class="modal-overlay" id="enqModal">
-        <div class="bg-white rounded-xl shadow-xl w-full max-w-lg border border-slate-100 overflow-hidden">
-            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-                <h3 class="font-semibold text-slate-800 text-base">Respond to Inquiry</h3>
-                <button class="text-slate-400 hover:text-slate-600" onclick="closeModal('enqModal')"><i class="ph ph-x text-xl"></i></button>
-            </div>
-            <div class="p-6 space-y-4">
-                <div id="enqDetails" class="bg-slate-50 p-4 rounded-lg border border-slate-100 text-sm space-y-2"></div>
-                <input type="hidden" id="enqRespondId">
-                <div class="space-y-1">
-                    <label class="text-xs font-medium text-slate-500">Your Message</label>
-                    <textarea class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" id="enqResponse" rows="6" placeholder="Write your professional response here..."></textarea>
-                </div>
-            </div>
-            <div class="px-6 py-4 border-t border-slate-100 flex justify-end space-x-2 bg-slate-50">
-                <button class="px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium hover:bg-white transition-colors" onclick="closeModal('enqModal')">Cancel</button>
-                <button class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors inline-flex items-center space-x-2" onclick="sendEnquiryResponse()"><i class="ph ph-paper-plane"></i> <span>Send Reply</span></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Destination Modal -->
-    
-
-    <!-- User Modal -->
-    
-
-    <!-- Blog Modal -->
-    
-
-    <div id="toastContainer"></div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.10/dayjs.min.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/layout-loader.js"></script>
     <script src="/js/admin.js"></script>
 </body>
 </html>
