@@ -945,22 +945,42 @@ async function loadBookings() {
     if (!body) return;
     try {
         const res = await apiRequest('GET', '/bookings');
-        body.innerHTML = (res.data || []).map(b => `
-            <tr>
-                <td data-label="Guest"><strong>${b.full_name}</strong><br><small>${b.email}</small></td>
-                <td data-label="Package">${b.package_name || '—'}</td>
-                <td data-label="Date">${new Date(b.start_date).toLocaleDateString()}</td>
-                <td data-label="Total">$${Number(b.total_price_usd).toLocaleString()}</td>
-                <td data-label="Status"><span class="status-badge status-${(b.status_name || 'pending').toLowerCase()}">${b.status_name || 'Pending'}</span></td>
-                <td data-label="Actions">
-                    <select class="form-control" style="padding: 4px; font-size: 11px; width: 120px" onchange="updateBookingStatus('${b.booking_id}', this.value)">
-                        <option value="">Update</option>
+        body.innerHTML = (res.data || []).map(b => {
+            const statusName = (b.status_name || '').toLowerCase();
+            const statusColor = statusName === 'confirmed' ? '#10b981' : statusName === 'pending' ? '#f59e0b' : '#ef4444';
+            const statusBg = statusName === 'confirmed' ? '#d1fae5' : statusName === 'pending' ? '#fef3c7' : '#fee2e2';
+            return `
+            <tr style="border-bottom: 1px solid #e5e7eb; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#f9fafb'" onmouseout="this.style.backgroundColor='transparent'">
+                <td data-label="Guest" style="padding: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 36px; height: 36px; border-radius: 50%; background: #072F1D; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">
+                            ${(b.full_name || 'G')[0].toUpperCase()}
+                        </div>
+                        <div>
+                            <strong style="color: #111827; font-size: 14px; display: block;">${b.full_name}</strong>
+                            <small style="color: #6b7280; font-size: 12px;">${b.email}</small>
+                        </div>
+                    </div>
+                </td>
+                <td data-label="Package" style="padding: 1rem; color: #374151; font-weight: 500;">${b.package_name || '-'}</td>
+                <td data-label="Date" style="padding: 1rem; color: #6b7280; font-size: 14px;"><i class="far fa-calendar-alt" style="margin-right: 6px;"></i>${new Date(b.start_date).toLocaleDateString()}</td>
+                <td data-label="Total" style="padding: 1rem; font-weight: 600; color: #111827;">$${Number(b.total_price_usd).toLocaleString()}</td>
+                <td data-label="Status" style="padding: 1rem;">
+                    <span style="padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: ${statusBg}; color: ${statusColor}; border: 1px solid ${statusColor}40;">
+                        ${b.status_name || 'Pending'}
+                    </span>
+                </td>
+                <td data-label="Actions" style="padding: 1rem;">
+                    <select class="form-control" style="padding: 6px 12px; font-size: 12px; width: 110px; border-radius: 6px; border: 1px solid #d1d5db; cursor: pointer; outline: none;" onchange="updateBookingStatus('${b.booking_id}', this.value); this.value=''">
+                        <option value="">Update...</option>
                         <option value="confirmed">Confirm</option>
                         <option value="cancelled">Cancel</option>
                     </select>
                 </td>
-            </tr>`).join('') || '<tr><td colspan="6">No bookings found.</td></tr>';
+            </tr>`;
+        }).join('') || '<tr><td colspan="6" style="padding: 2rem; text-align: center; color: #6b7280;">No bookings found.</td></tr>';
     } catch (e) {}
+}
 }
 
 async function updateBookingStatus(id, status) {
@@ -980,15 +1000,39 @@ async function loadEnquiries() {
     try {
         const res = await apiRequest('GET', '/enquiries');
         enquiriesList = res.data || [];
-        body.innerHTML = enquiriesList.map(e => `
-            <tr>
-                <td><strong>${e.full_name}</strong></td>
-                <td>${e.enquiry_type || 'General'}</td>
-                <td>${new Date(e.created_at).toLocaleDateString()}</td>
-                <td><span class="status-badge status-${(e.enquiry_status || 'new').toLowerCase()}">${e.enquiry_status || 'New'}</span></td>
-                <td><button class="btn btn-primary" style="padding: 4px 10px; font-size: 11px" onclick="openEnqModal('${e.enquiry_id}')">Respond</button></td>
-            </tr>`).join('') || '<tr><td colspan="5">No enquiries found.</td></tr>';
+        body.innerHTML = enquiriesList.map(e => {
+            const statusName = (e.enquiry_status || '').toLowerCase();
+            const statusColor = statusName === 'responded' ? '#10b981' : '#f59e0b';
+            const statusBg = statusName === 'responded' ? '#d1fae5' : '#fef3c7';
+            return `
+            <tr style="border-bottom: 1px solid #e5e7eb; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#f9fafb'" onmouseout="this.style.backgroundColor='transparent'">
+                <td style="padding: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 36px; height: 36px; border-radius: 50%; background: #072F1D; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">
+                            ${(e.full_name || 'G')[0].toUpperCase()}
+                        </div>
+                        <div>
+                            <strong style="color: #111827; font-size: 14px; display: block;">${e.full_name}</strong>
+                            <small style="color: #6b7280; font-size: 12px;">${e.email}</small>
+                        </div>
+                    </div>
+                </td>
+                <td style="padding: 1rem; color: #374151; font-weight: 500;">${e.enquiry_type || 'General'}</td>
+                <td style="padding: 1rem; color: #6b7280; font-size: 14px;"><i class="far fa-clock" style="margin-right: 6px;"></i>${new Date(e.created_at).toLocaleDateString()}</td>
+                <td style="padding: 1rem;">
+                    <span style="padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: ${statusBg}; color: ${statusColor}; border: 1px solid ${statusColor}40;">
+                        ${e.enquiry_status || 'New'}
+                    </span>
+                </td>
+                <td style="padding: 1rem;">
+                    <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px;" onclick="openEnqModal('${e.enquiry_id}')">
+                        <i class="fas fa-reply"></i> Respond
+                    </button>
+                </td>
+            </tr>`;
+        }).join('') || '<tr><td colspan="5" style="padding: 2rem; text-align: center; color: #6b7280;">No enquiries found.</td></tr>';
     } catch (e) {}
+}
 }
 
 function openEnqModal(id) {

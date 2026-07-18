@@ -21,7 +21,7 @@
             <div>
                 <p class="text-sm font-medium text-gray-500">Total Visitors</p>
                 <div class="flex items-end gap-2">
-                    <h3 class="text-xl font-bold text-gray-900">15,842</h3>
+                    <h3 class="text-xl font-bold text-gray-900" id="dash-visitors">15,842</h3>
                     <span class="text-xs font-semibold mb-1 text-emerald-500"><i class="fa-solid fa-arrow-up"></i> 12.5%</span>
                 </div>
             </div>
@@ -35,7 +35,7 @@
             <div>
                 <p class="text-sm font-medium text-gray-500">New Inquiries</p>
                 <div class="flex items-end gap-2">
-                    <h3 class="text-xl font-bold text-gray-900">236</h3>
+                    <h3 class="text-xl font-bold text-gray-900" id="dash-inquiries">236</h3>
                     <span class="text-xs font-semibold mb-1 text-emerald-500"><i class="fa-solid fa-arrow-up"></i> 8.3%</span>
                 </div>
             </div>
@@ -49,7 +49,7 @@
             <div>
                 <p class="text-sm font-medium text-gray-500">Total Bookings</p>
                 <div class="flex items-end gap-2">
-                    <h3 class="text-xl font-bold text-gray-900">124</h3>
+                    <h3 class="text-xl font-bold text-gray-900" id="dash-bookings">124</h3>
                     <span class="text-xs font-semibold mb-1 text-emerald-500"><i class="fa-solid fa-arrow-up"></i> 5.7%</span>
                 </div>
             </div>
@@ -63,7 +63,7 @@
             <div>
                 <p class="text-sm font-medium text-gray-500">Total Revenue</p>
                 <div class="flex items-end gap-2">
-                    <h3 class="text-xl font-bold text-gray-900">$45,231</h3>
+                    <h3 class="text-xl font-bold text-gray-900" id="dash-revenue">$45,231</h3>
                     <span class="text-xs font-semibold mb-1 text-emerald-500"><i class="fa-solid fa-arrow-up"></i> 18.6%</span>
                 </div>
             </div>
@@ -77,7 +77,7 @@
             <div>
                 <p class="text-sm font-medium text-gray-500">Active Tours</p>
                 <div class="flex items-end gap-2">
-                    <h3 class="text-xl font-bold text-gray-900">32</h3>
+                    <h3 class="text-xl font-bold text-gray-900" id="dash-tours">32</h3>
                     <span class="text-xs font-semibold mb-1 text-gray-400">---</span>
                 </div>
             </div>
@@ -180,26 +180,26 @@
             <div class="relative h-48 w-full flex justify-center">
                 <canvas id="bookingsChart"></canvas>
                 <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                    <span class="text-2xl font-bold text-gray-900">124</span>
+                    <span class="text-2xl font-bold text-gray-900" id="dash-chart-total-bookings">124</span>
                     <span class="text-xs text-gray-500">Total</span>
                 </div>
             </div>
             <div class="mt-6 space-y-3">
                 <div class="flex justify-between items-center text-sm">
                     <div class="flex items-center gap-2"><div class="w-2.5 h-2.5 rounded-full bg-[#10B981]"></div><span class="text-gray-600">Confirmed</span></div>
-                    <div class="font-semibold text-gray-900">45 <span class="text-gray-400 font-normal ml-1">(36%)</span></div>
+                    <div class="font-semibold text-gray-900"><span id="dash-confirmed-count">45</span> <span class="text-gray-400 font-normal ml-1">(<span id="dash-confirmed-percent">36</span>%)</span></div>
                 </div>
                 <div class="flex justify-between items-center text-sm">
                     <div class="flex items-center gap-2"><div class="w-2.5 h-2.5 rounded-full bg-[#F59E0B]"></div><span class="text-gray-600">Pending</span></div>
-                    <div class="font-semibold text-gray-900">32 <span class="text-gray-400 font-normal ml-1">(26%)</span></div>
+                    <div class="font-semibold text-gray-900"><span id="dash-pending-count">32</span> <span class="text-gray-400 font-normal ml-1">(<span id="dash-pending-percent">26</span>%)</span></div>
                 </div>
                 <div class="flex justify-between items-center text-sm">
                     <div class="flex items-center gap-2"><div class="w-2.5 h-2.5 rounded-full bg-[#EF4444]"></div><span class="text-gray-600">Cancelled</span></div>
-                    <div class="font-semibold text-gray-900">12 <span class="text-gray-400 font-normal ml-1">(10%)</span></div>
+                    <div class="font-semibold text-gray-900"><span id="dash-cancelled-count">12</span> <span class="text-gray-400 font-normal ml-1">(<span id="dash-cancelled-percent">10</span>%)</span></div>
                 </div>
                 <div class="flex justify-between items-center text-sm">
                     <div class="flex items-center gap-2"><div class="w-2.5 h-2.5 rounded-full bg-[#3B82F6]"></div><span class="text-gray-600">Completed</span></div>
-                    <div class="font-semibold text-gray-900">35 <span class="text-gray-400 font-normal ml-1">(28%)</span></div>
+                    <div class="font-semibold text-gray-900"><span id="dash-completed-count">35</span> <span class="text-gray-400 font-normal ml-1">(<span id="dash-completed-percent">28</span>%)</span></div>
                 </div>
             </div>
         </div>
