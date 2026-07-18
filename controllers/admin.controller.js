@@ -11,7 +11,7 @@ class AdminController {
             const { email, password } = req.body;
             const user = await userRepository.findByEmail(email);
             
-            if (!user || user.role_name !== 'Admin') {
+            if (!user || (user.role_name !== 'Admin' && user.role_name !== 'Super Admin')) {
                 return res.status(401).json({ success: false, message: 'Invalid credentials or access denied' });
             }
             
