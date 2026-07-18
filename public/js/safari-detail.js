@@ -96,12 +96,13 @@ function buildGallery(mediaItems) {
         return '<div class="gallery-main"><img src="/images/placeholder.jpeg" alt="Gallery"></div>';
     }
     const mainImg = mediaItems[0];
-    let html = `<div class="gallery-main" onclick="openLightbox('${mainImg.file_url}')"><img src="${mainImg.file_url}" alt="${mainImg.alt_text || 'Safari image'}"></div>`;
+    const mainImgUrl = typeof mainImg === 'string' ? mainImg : mainImg.file_url;
+    let html = `<div class="gallery-main" onclick="openLightbox('${mainImgUrl}')"><img src="${mainImgUrl}" alt="${mainImg.alt_text || 'Safari image'}" onerror="this.src='/images/placeholder.jpeg'"></div>`;
     if (mediaItems.length > 1) {
         html += '<div class="gallery-thumbs">';
         for (let i = 1; i < Math.min(mediaItems.length, 5); i++) {
-            const thumb = mediaItems[i];
-            html += `<div class="gallery-thumb" onclick="setGalleryMain('${thumb.file_url}')"><img src="${thumb.file_url}" alt="Thumbnail ${i}"></div>`;
+            const thumbUrl = typeof mediaItems[i] === 'string' ? mediaItems[i] : mediaItems[i].file_url;
+            html += `<div class="gallery-thumb" onclick="setGalleryMain('${thumbUrl}')"><img src="${thumbUrl}" alt="Thumbnail ${i}" onerror="this.src='/images/placeholder.jpeg'"></div>`;
         }
         html += '</div>';
     }
@@ -174,7 +175,10 @@ function renderSafariDetails(safari) {
     }
     
     const galleryEl = document.getElementById('gallery');
-    if(galleryEl) galleryEl.innerHTML = buildGallery(safari.image_urls || [safari.featured_image_url]);
+    if(galleryEl) {
+        const imgs = safari.image_urls && safari.image_urls.length > 0 ? safari.image_urls : [safari.featured_image_url || '/images/placeholder.jpeg'];
+        galleryEl.innerHTML = buildGallery(imgs);
+    }
     
     const itineraryList = document.getElementById('itineraryList');
     if(itineraryList) itineraryList.innerHTML = renderItinerary(safari.itinerary);

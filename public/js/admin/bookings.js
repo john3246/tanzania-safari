@@ -61,6 +61,11 @@ function renderBookings() {
                         <option value="cancelled" ${statusName === 'cancelled' ? 'selected' : ''}>Cancelled</option>
                     </select>
                 </td>
+                <td class="px-6 py-4">
+                    <button class="bg-primary-50 hover:bg-primary-100 text-primary-700 p-1.5 rounded-lg transition-colors" onclick="viewBookingDetails('${b.booking_id}')" title="View Details">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </td>
             </tr>`;
     }).join('');
 }
@@ -76,4 +81,26 @@ async function updateBookingStatus(id, status) {
         showToast('Updated & Notification Sent');
         loadBookings();
     } catch (e) {}
+}
+
+window.viewBookingDetails = function(id) {
+    const b = bookingsList.find(x => x.booking_id === id);
+    if (!b) return;
+
+    document.getElementById('detailBookingId').textContent = '#' + b.booking_id.substring(0,8).toUpperCase();
+    document.getElementById('detailCustomerName').textContent = b.full_name;
+    document.getElementById('detailCustomerEmail').textContent = b.email;
+    document.getElementById('detailCustomerPhone').textContent = b.phone || 'N/A';
+    document.getElementById('detailPackageName').textContent = b.package_name || 'N/A';
+    document.getElementById('detailStartDate').textContent = b.start_date ? new Date(b.start_date).toLocaleDateString() : 'N/A';
+    document.getElementById('detailAdults').textContent = b.number_of_adults || 0;
+    document.getElementById('detailChildren').textContent = b.number_of_children || 0;
+    document.getElementById('detailPrice').textContent = '$' + Number(b.total_price_usd).toLocaleString();
+    document.getElementById('detailSpecialRequests').textContent = b.special_requests || 'None';
+    
+    document.getElementById('bookingModal').classList.add('active');
+}
+
+window.closeBookingModal = function() {
+    document.getElementById('bookingModal').classList.remove('active');
 }

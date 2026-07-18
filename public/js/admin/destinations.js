@@ -36,7 +36,7 @@ function renderDestinations() {
             <td class="px-6 py-4">
                 <div class="flex gap-2">
                     <button class="bg-primary-50 hover:bg-primary-100 text-primary-700 p-1.5 rounded-lg transition-colors" onclick="openDestModal('${d.park_id}')" title="Edit">
-                        <i class="ph ph-pencil-simple"></i>
+                        <i class="fa-solid fa-pen"></i>
                     </button>
                 </div>
             </td>

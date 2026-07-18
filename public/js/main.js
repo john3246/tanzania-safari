@@ -19,10 +19,11 @@ if (yr) yr.textContent = new Date().getFullYear();
 function buildSafariCard(p) {
     const rating = parseFloat(p.avg_rating || 0).toFixed(1);
     const dest = Array.isArray(p.destinations) ? p.destinations.map(d => d.park_name || d).join(', ') : '';
+    const img = p.featured_image_url || (p.image_urls && p.image_urls.length > 0 ? p.image_urls[0] : `/images/safaris/${p.package_slug}/main.jpg`);
     return `
     <a href="/safaris/${p.package_slug}" class="safari-card fade-up">
       <div class="safari-card-img">
-        <img src="/images/safaris/${p.package_slug}/main.jpg" alt="${p.package_name}" loading="lazy" onerror="this.src='/images/placeholder.jpeg'">
+        <img src="${img}" alt="${p.package_name}" loading="lazy" onerror="this.src='/images/placeholder.jpeg'">
         ${p.is_featured ? '<span class="safari-card-badge"><i class="fas fa-star"></i> Featured</span>' : ''}
         <span class="safari-card-duration"><i class="fas fa-clock"></i> ${p.duration_days} Days</span>
       </div>
@@ -48,9 +49,10 @@ function buildSafariCard(p) {
 
 // ── Destination card builder ───────────────────────────────
 function buildDestCard(d) {
+    const img = d.featured_image_url || d.image_url || `/images/destinations/${d.park_slug}/main.jpg`;
     return `
     <a href="/destinations/${d.park_slug}" class="dest-card fade-up">
-      <img src="/images/destinations/${d.park_slug}/main.jpg" alt="${d.park_name}" loading="lazy" onerror="this.src='/images/placeholder.jpeg'">
+      <img src="${img}" alt="${d.park_name}" loading="lazy" onerror="this.src='/images/placeholder.jpeg'">
       <div class="dest-card-overlay"></div>
       <div class="dest-card-body">
         <div class="dest-card-name">${d.park_name}</div>

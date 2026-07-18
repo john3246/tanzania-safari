@@ -18,6 +18,14 @@
   <span class="value">{{formatDate start_date}}</span>
 </div>
 <div class="row">
+  <span class="label">Travelers</span>
+  <span class="value">{{number_of_adults}} Adults{{#if number_of_children}}, {{number_of_children}} Children{{/if}}</span>
+</div>
+<div class="row">
+  <span class="label">Total Price</span>
+  <span class="value">${{formatPrice total_price_usd}} USD</span>
+</div>
+<div class="row">
   <span class="label">Status</span>
   <span class="value"><span class="badge badge-success">Confirmed</span></span>
 </div>
