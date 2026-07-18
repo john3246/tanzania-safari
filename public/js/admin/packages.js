@@ -42,10 +42,10 @@ function renderPackages() {
                 <td class="px-6 py-4">
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors" onclick="openPackageModal('${p.package_id}')" title="Edit">
-                            <i class="ph ph-pencil-simple text-lg"></i>
+                            <i class="fa-solid fa-pen text-lg"></i>
                         </button>
                         <button class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" onclick="deletePackage('${p.package_id}')" title="Delete">
-                            <i class="ph ph-trash text-lg"></i>
+                            <i class="fa-solid fa-trash text-lg"></i>
                         </button>
                     </div>
                 </td>
@@ -240,3 +240,4 @@ async function deletePackage(id) {
     } catch (e) {}
 }
 window.filterPackages = function() { const term = document.getElementById('tourSearch').value.toLowerCase(); const rows = document.getElementById('pkgBody').querySelectorAll('tr'); rows.forEach(r => { const text = r.innerText.toLowerCase(); r.style.display = text.includes(term) ? '' : 'none'; }); };
+window.openPackageModal = openPackageModal; 

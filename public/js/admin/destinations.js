@@ -87,3 +87,4 @@ async function saveDestination(event) {
         setLoading(btn, false);
     }
 }
+window.openDestModal = openDestModal; 

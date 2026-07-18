@@ -33,7 +33,7 @@ async function loadEnquiries() {
                 </td>
                 <td class="px-6 py-4">
                     <button class="bg-primary-50 hover:bg-primary-100 text-primary-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors flex items-center gap-2" onclick="openEnqModal('${e.enquiry_id}')">
-                        <i class="ph ph-arrow-u-up-left"></i> Respond
+                        <i class="fa-solid fa-reply"></i> Respond
                     </button>
                 </td>
             </tr>`;

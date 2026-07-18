@@ -85,3 +85,4 @@ async function deleteBlog(id) {
         await loadBlogs();
     } catch (e) {}
 }
+window.openBlogModal = openBlogModal; 
