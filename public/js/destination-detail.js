@@ -157,7 +157,7 @@ function renderDestinationDetails(destination) {
     
     const html = `
         <!-- Hero Section -->
-        <section class="destination-hero" style="background-image: linear-gradient(rgba(13,71,161,0.4), rgba(0,0,0,0.8)), url('${heroImg}');">
+        <section class="destination-hero" style="background-image: url('${heroImg}');">
             <div class="container">
                 <div class="breadcrumb">
                     <a href="/">Home</a>
