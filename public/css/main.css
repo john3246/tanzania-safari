@@ -52,10 +52,10 @@ ul{list-style:none}
 .badge-featured{background:var(--gradient-gold);color:#fff}
 
 /* ── HEADER ── */
-.header{position:fixed;top:0;left:0;width:100%;z-index:var(--z-sticky);transition:all 0.4s cubic-bezier(0.4, 0, 0.2, 1);padding:0;background:rgba(0,0,0,0.2)}
-.header-inner{display:flex;align-items:center;justify-content:space-between;height:100px;transition:var(--transition)}
+.header{position:fixed;top:0;left:0;width:100%;z-index:var(--z-sticky);transition:all 0.4s cubic-bezier(0.4, 0, 0.2, 1);padding:0;background:rgba(0,0,0,0.85)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;height:70px;transition:var(--transition)}
 .header.scrolled{background:rgba(36, 17, 5, 0.98);backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);box-shadow:0 4px 20px rgba(0,0,0,0.2);padding:0}
-.header.scrolled .header-inner{height:80px}
+.header.scrolled .header-inner{height:60px}
 
 /* ── LOGO ── */
 .logo{display:flex;align-items:center;gap:0.875rem;color:#fff;text-decoration:none}
@@ -103,7 +103,7 @@ ul{list-style:none}
 @media(max-width:1024px){
     .header-right{gap:1rem}
     .mobile-toggle{display:flex}
-    .header-inner{height:80px}
+    .header-inner{height:65px}
     .nav{display:flex;position:fixed;top:0;right:-100%;width:300px;max-width:85vw;height:100vh;background:#fff;flex-direction:column;align-items:flex-start;padding:0;gap:0;transition:right 0.4s cubic-bezier(0.4, 0, 0.2, 1);box-shadow:var(--shadow-xl);z-index: 1001}
     .nav.active{right:0}
     .drawer-header { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 1.5rem; border-bottom: 1px solid var(--border-light); margin-bottom: 1rem; }
@@ -331,7 +331,7 @@ textarea.form-control{resize:vertical;min-height:120px}
 /* Responsive Fixes */
 @media(max-width:768px){
   .hero-side{display:none !important}
-  .header-inner{height:70px}
+  .header-inner{height:60px}
   .nav{display:flex;position:fixed;top:0;right:-100%;width:300px;max-width:85vw;height:100vh;background:#fff;flex-direction:column;align-items:flex-start;padding:0;gap:0;transition:right 0.4s cubic-bezier(0.4, 0, 0.2, 1);box-shadow:var(--shadow-xl);z-index: 1001}
   .nav.active{right:0}
   .drawer-header { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 1.5rem; border-bottom: 1px solid var(--border-light); margin-bottom: 1rem; }
