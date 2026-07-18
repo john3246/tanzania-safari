@@ -16,6 +16,11 @@ module.exports = async (req, res, next) => {
         if (!userQuery.rows.length) return res.status(403).json({ success: false, message: 'Forbidden' });
         req.user = userQuery.rows[0];
         req.user.role = userQuery.rows[0].role_name; // mapping role_name to role
+        if (!Array.isArray(req.user.permissions)) {
+            req.user.permissions = req.user.role === 'Super Admin' ? ['*'] : [];
+        } else if (req.user.role === 'Super Admin' && req.user.permissions.length === 0) {
+            req.user.permissions = ['*'];
+        }
         next();
     } catch {
         return res.status(401).json({ success: false, message: 'Invalid token' });
