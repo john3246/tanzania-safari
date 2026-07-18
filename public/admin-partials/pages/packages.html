@@ -111,7 +111,7 @@ const TourManager = {
     loadTours: async function() {
         try {
             document.getElementById('tourLoading').style.display = 'flex';
-            const res = await apiRequest('GET', '/tours');
+            const res = await apiRequest('GET', '/packages');
             this.data = res.data || [];
             this.renderRows();
         } catch (error) {
@@ -127,7 +127,7 @@ const TourManager = {
         
         tbody.innerHTML = '';
         
-        const filtered = this.data.filter(t => t.title?.toLowerCase().includes(searchTerm));
+        const filtered = this.data.filter(t => (t.package_name || '').toLowerCase().includes(searchTerm));
 
         if(filtered.length === 0) {
             tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-12 text-center text-gray-500">No tours found.</td></tr>`;
@@ -136,21 +136,24 @@ const TourManager = {
 
         filtered.forEach(tour => {
             let statusClass = 'bg-gray-100 text-gray-600';
-            if (tour.status === 'published') statusClass = 'bg-emerald-100 text-emerald-700';
-            if (tour.status === 'archived') statusClass = 'bg-red-100 text-red-700';
+            let statusText = 'Draft';
+            if (tour.is_active) {
+                statusClass = 'bg-emerald-100 text-emerald-700';
+                statusText = 'Active';
+            }
 
             const tr = document.createElement('tr');
             tr.className = 'hover:bg-gray-50/50 transition-colors';
             tr.innerHTML = `
-                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">${tour.title}</td>
+                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">${tour.package_name}</td>
                 <td class="px-6 py-4">${tour.duration_days} Days</td>
-                <td class="px-6 py-4 font-semibold text-gray-700">$${tour.price_usd}</td>
+                <td class="px-6 py-4 font-semibold text-gray-700">$${tour.base_price_usd}</td>
                 <td class="px-6 py-4">
-                    <span class="px-2.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wider ${statusClass}">${tour.status}</span>
+                    <span class="px-2.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wider ${statusClass}">${statusText}</span>
                 </td>
                 <td class="px-6 py-4 text-right">
-                    <button onclick="TourManager.editTour(${tour.id})" class="text-gray-400 hover:text-blue-600 p-1 mx-1 transition-colors" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
-                    <button onclick="TourManager.deleteTour(${tour.id})" class="text-gray-400 hover:text-red-600 p-1 mx-1 transition-colors" title="Delete"><i class="fa-solid fa-trash"></i></button>
+                    <button onclick="TourManager.editTour(${tour.package_id})" class="text-gray-400 hover:text-blue-600 p-1 mx-1 transition-colors" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
+                    <button onclick="TourManager.deleteTour(${tour.package_id})" class="text-gray-400 hover:text-red-600 p-1 mx-1 transition-colors" title="Delete"><i class="fa-solid fa-trash"></i></button>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -198,11 +201,11 @@ const TourManager = {
         const originalBtnText = btn.innerHTML;
         
         const payload = {
-            title: document.getElementById('tourName').value,
-            slug: document.getElementById('tourSlug').value,
+            package_name: document.getElementById('tourName').value,
+            package_slug: document.getElementById('tourSlug').value,
             duration_days: parseInt(document.getElementById('tourDuration').value),
-            price_usd: parseFloat(document.getElementById('tourPrice').value),
-            status: document.getElementById('tourStatus').value,
+            base_price_usd: parseFloat(document.getElementById('tourPrice').value),
+            is_active: document.getElementById('tourStatus').value === 'published'
         };
 
         try {
@@ -210,10 +213,10 @@ const TourManager = {
             btn.disabled = true;
 
             if (id) {
-                await apiRequest('PUT', `/tours/${id}`, payload);
+                await apiRequest('PUT', `/packages/${id}`, payload);
                 toast('Tour updated successfully');
             } else {
-                await apiRequest('POST', `/tours`, payload);
+                await apiRequest('POST', `/packages`, payload);
                 toast('Tour created successfully');
             }
             this.closeModal();
@@ -227,22 +230,22 @@ const TourManager = {
     },
 
     editTour: async function(id) {
-        const tour = this.data.find(t => t.id === id);
+        const tour = this.data.find(t => t.package_id === id);
         if(!tour) return;
         
         this.openModal(true);
-        document.getElementById('tourId').value = tour.id;
-        document.getElementById('tourName').value = tour.title;
-        document.getElementById('tourSlug').value = tour.slug;
+        document.getElementById('tourId').value = tour.package_id;
+        document.getElementById('tourName').value = tour.package_name;
+        document.getElementById('tourSlug').value = tour.package_slug;
         document.getElementById('tourDuration').value = tour.duration_days;
-        document.getElementById('tourPrice').value = tour.price_usd;
-        document.getElementById('tourStatus').value = tour.status;
+        document.getElementById('tourPrice').value = tour.base_price_usd;
+        document.getElementById('tourStatus').value = tour.is_active ? 'published' : 'draft';
     },
 
     deleteTour: async function(id) {
         if(confirm('Are you sure you want to delete this tour?')) {
             try {
-                await apiRequest('DELETE', `/tours/${id}`);
+                await apiRequest('DELETE', `/packages/${id}`);
                 toast('Tour deleted successfully');
                 this.loadTours();
             } catch (error) {
