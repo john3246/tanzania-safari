@@ -34,3 +34,14 @@
 {"level":"error","message":{"error":"","event":"worker_error"},"service":"tanzania-safari","timestamp":"2026-07-14 15:38:13"}
 {"level":"error","message":{"error":"","event":"worker_error"},"service":"tanzania-safari","timestamp":"2026-07-14 15:38:13"}
 {"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-07-14 15:38:14"}
+{"level":"error","message":{"error":"","event":"worker_error"},"service":"tanzania-safari","timestamp":"2026-07-18 14:20:45"}
+{"level":"error","message":{"error":"","event":"worker_error"},"service":"tanzania-safari","timestamp":"2026-07-18 14:20:45"}
+{"level":"error","message":{"error":"","event":"worker_error"},"service":"tanzania-safari","timestamp":"2026-07-18 14:20:45"}
+{"level":"error","message":{"error":"","event":"worker_error"},"service":"tanzania-safari","timestamp":"2026-07-18 14:20:45"}
+{"level":"error","message":{"error":"","event":"worker_error"},"service":"tanzania-safari","timestamp":"2026-07-18 14:20:45"}
+{"level":"error","message":{"error":"","event":"worker_error"},"service":"tanzania-safari","timestamp":"2026-07-18 14:20:45"}
+{"level":"error","message":{"error":"","event":"worker_error"},"service":"tanzania-safari","timestamp":"2026-07-18 14:20:45"}
+{"level":"error","message":{"error":"","event":"worker_error"},"service":"tanzania-safari","timestamp":"2026-07-18 14:20:45"}
+{"level":"error","message":{"error":"","event":"worker_error"},"service":"tanzania-safari","timestamp":"2026-07-18 14:20:45"}
+{"level":"error","message":{"error":"","event":"worker_error"},"service":"tanzania-safari","timestamp":"2026-07-18 14:20:45"}
+{"level":"error","message":{"error":"","event":"worker_error"},"service":"tanzania-safari","timestamp":"2026-07-18 14:20:45"}
