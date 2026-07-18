@@ -1,45 +1,73 @@
 // ── Bookings ──────────────────────────────────────────────────
+let bookingsList = [];
+
 async function loadBookings() {
     const body = document.getElementById('bookBody');
     if (!body) return;
     try {
         const res = await apiRequest('GET', '/bookings');
-        body.innerHTML = (res.data || []).map(b => {
-            const statusName = (b.status_name || '').toLowerCase();
-            const statusColor = statusName === 'confirmed' ? '#10b981' : statusName === 'pending' ? '#f59e0b' : '#ef4444';
-            const statusBg = statusName === 'confirmed' ? '#d1fae5' : statusName === 'pending' ? '#fef3c7' : '#fee2e2';
-            return `
-            <tr style="border-bottom: 1px solid #e5e7eb; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#f9fafb'" onmouseout="this.style.backgroundColor='transparent'">
-                <td data-label="Guest" style="padding: 1rem;">
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <div style="width: 36px; height: 36px; border-radius: 50%; background: #072F1D; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">
+        bookingsList = res.data || [];
+        renderBookings();
+    } catch (e) {}
+}
+
+function renderBookings() {
+    const body = document.getElementById('bookBody');
+    if (!body) return;
+    
+    const searchTerm = document.getElementById('bookingSearch')?.value.toLowerCase() || '';
+    
+    const filtered = bookingsList.filter(b => 
+        (b.booking_id && String(b.booking_id).toLowerCase().includes(searchTerm)) || 
+        (b.full_name && b.full_name.toLowerCase().includes(searchTerm)) ||
+        (b.package_name && b.package_name.toLowerCase().includes(searchTerm))
+    );
+
+    if (filtered.length === 0) {
+        body.innerHTML = '<tr><td colspan="7" class="px-6 py-12 text-center text-slate-500">No bookings found matching your search.</td></tr>';
+        return;
+    }
+
+    body.innerHTML = filtered.map(b => {
+        const statusName = (b.status_name || 'Pending').toLowerCase();
+        let statusClass = 'bg-slate-100 text-slate-700 border-slate-200';
+        if (statusName === 'confirmed') statusClass = 'bg-emerald-100 text-emerald-700 border-emerald-200';
+        if (statusName === 'pending') statusClass = 'bg-yellow-100 text-yellow-700 border-yellow-200';
+        if (statusName === 'cancelled') statusClass = 'bg-red-100 text-red-700 border-red-200';
+        
+        return `
+            <tr class="hover:bg-slate-50/50 transition-colors relative">
+                <td class="px-6 py-4 font-bold text-primary-600 whitespace-nowrap">#${b.booking_id.substring(0,8).toUpperCase()}</td>
+                <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-primary-900 text-white flex items-center justify-center font-bold text-xs">
                             ${(b.full_name || 'G')[0].toUpperCase()}
                         </div>
                         <div>
-                            <strong style="color: #111827; font-size: 14px; display: block;">${b.full_name}</strong>
-                            <small style="color: #6b7280; font-size: 12px;">${b.email}</small>
+                            <span class="font-medium text-slate-900 block">${b.full_name}</span>
+                            <span class="text-xs text-slate-500 block">${b.email}</span>
                         </div>
                     </div>
                 </td>
-                <td data-label="Package" style="padding: 1rem; color: #374151; font-weight: 500;">${b.package_name || '-'}</td>
-                <td data-label="Date" style="padding: 1rem; color: #6b7280; font-size: 14px;"><i class="far fa-calendar-alt" style="margin-right: 6px;"></i>${new Date(b.start_date).toLocaleDateString()}</td>
-                <td data-label="Total" style="padding: 1rem; font-weight: 600; color: #111827;">$${Number(b.total_price_usd).toLocaleString()}</td>
-                <td data-label="Status" style="padding: 1rem;">
-                    <span style="padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: ${statusBg}; color: ${statusColor}; border: 1px solid ${statusColor}40;">
-                        ${b.status_name || 'Pending'}
-                    </span>
-                </td>
-                <td data-label="Actions" style="padding: 1rem;">
-                    <select class="form-control" style="padding: 6px 12px; font-size: 12px; width: 110px; border-radius: 6px; border: 1px solid #d1d5db; cursor: pointer; outline: none;" onchange="updateBookingStatus('${b.booking_id}', this.value); this.value=''">
-                        <option value="">Update...</option>
-                        <option value="confirmed">Confirm</option>
-                        <option value="cancelled">Cancel</option>
+                <td class="px-6 py-4 text-slate-700">${b.package_name || '-'}</td>
+                <td class="px-6 py-4">${new Date(b.start_date).toLocaleDateString()}</td>
+                <td class="px-6 py-4">${b.number_of_adults + b.number_of_children}</td>
+                <td class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">$${Number(b.total_price_usd).toLocaleString()}</td>
+                <td class="px-6 py-4 relative">
+                    <select class="flex items-center justify-between min-w-[90px] gap-1 px-3 py-1 rounded-full text-[11px] font-bold border uppercase tracking-wider transition-colors outline-none cursor-pointer ${statusClass}" 
+                        onchange="updateBookingStatus('${b.booking_id}', this.value)" style="appearance: none;">
+                        <option value="pending" ${statusName === 'pending' ? 'selected' : ''}>Pending</option>
+                        <option value="confirmed" ${statusName === 'confirmed' ? 'selected' : ''}>Confirmed</option>
+                        <option value="cancelled" ${statusName === 'cancelled' ? 'selected' : ''}>Cancelled</option>
                     </select>
                 </td>
             </tr>`;
-        }).join('') || '<tr><td colspan="6" style="padding: 2rem; text-align: center; color: #6b7280;">No bookings found.</td></tr>';
-    } catch (e) {}
+    }).join('');
 }
+
+window.filterBookings = function() {
+    renderBookings();
+};
 
 async function updateBookingStatus(id, status) {
     if (!status) return;

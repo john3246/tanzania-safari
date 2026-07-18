@@ -16,17 +16,33 @@ async function loadCategories() {
 function renderCategories() {
     const body = document.getElementById('catBody');
     if (!body) return;
-    body.innerHTML = categoriesList.map(c => `
-        <tr>
-            <td><i class="${c.icon_class || 'fas fa-tag'}" style="margin-right:8px"></i> <strong>${c.category_name}</strong></td>
-            <td>${c.category_slug}</td>
-            <td>${c.package_count || 0}</td>
-            <td>${c.display_order}</td>
-            <td>
-                <button class="btn btn-icon" onclick="openCatModal('${c.category_id}')"><i class="fas fa-edit"></i></button>
-                <button class="btn btn-icon" onclick="deleteCategory('${c.category_id}')"><i class="fas fa-trash"></i></button>
-            </td>
-        </tr>`).join('') || '<tr><td colspan="5">No categories found</td></tr>';
+    
+    body.innerHTML = categoriesList.map(c => {
+        return `
+            <tr class="hover:bg-slate-50/50 transition-colors">
+                <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-primary-50 text-primary-600 flex items-center justify-center shrink-0">
+                            <i class="${c.icon_class || 'ph ph-tag'} text-xl"></i>
+                        </div>
+                        <span class="font-medium text-slate-900">${c.category_name}</span>
+                    </div>
+                </td>
+                <td class="px-6 py-4 text-slate-600">${c.category_slug}</td>
+                <td class="px-6 py-4 font-medium text-slate-700">${c.package_count || 0}</td>
+                <td class="px-6 py-4 text-slate-600">${c.display_order}</td>
+                <td class="px-6 py-4">
+                    <div class="flex items-center gap-2">
+                        <button class="p-2 text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors" onclick="openCatModal('${c.category_id}')" title="Edit">
+                            <i class="ph ph-pencil-simple text-lg"></i>
+                        </button>
+                        <button class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" onclick="deleteCategory('${c.category_id}')" title="Delete">
+                            <i class="ph ph-trash text-lg"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>`;
+    }).join('') || '<tr><td colspan="5" class="px-6 py-12 text-center text-slate-500">No categories found</td></tr>';
 }
 
 function openCatModal(id = null) {

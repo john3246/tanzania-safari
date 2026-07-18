@@ -1,258 +1,42 @@
 <div class="space-y-6">
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h1 class="text-2xl font-bold text-gray-900">Tours Management</h1>
-        <button onclick="TourManager.openModal()" class="w-full sm:w-auto bg-forest-600 hover:bg-forest-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-colors">
-            <i class="fa-solid fa-plus"></i> Add New Tour
+        <button onclick="openPackageModal()" class="w-full sm:w-auto bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-colors">
+            <i class="ph ph-plus"></i> Add New Tour
         </button>
     </div>
 
     <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden flex flex-col">
         <div class="p-4 border-b border-gray-200 flex justify-between items-center bg-gray-50/50">
             <div class="relative w-full max-w-sm">
-                <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
                 <input 
                     type="text" 
                     id="tourSearch"
                     placeholder="Search tours by name..." 
-                    class="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-forest-500"
-                    onkeyup="TourManager.filterTours()"
+                    class="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary-500"
+                    onkeyup="filterPackages()"
                 />
-            </div>
-            <div class="hidden sm:flex items-center gap-2">
-                <button class="px-3 py-1.5 border border-gray-200 rounded-md text-sm text-gray-600 bg-white hover:bg-gray-50"><i class="fa-solid fa-filter mr-1"></i> Filter</button>
             </div>
         </div>
         
         <div class="overflow-x-auto relative min-h-[300px]">
-            <div id="tourLoading" class="absolute inset-0 bg-white/80 z-10 flex items-center justify-center">
-                <i class="fa-solid fa-circle-notch fa-spin text-forest-600 text-3xl"></i>
-            </div>
             <div class="table-responsive">
-<table class="w-full text-left text-sm text-gray-600">
-                <thead class="bg-white border-b border-gray-200 text-gray-500 font-semibold text-xs uppercase tracking-wider">
-                    <tr>
-                        <th class="px-6 py-4">Tour Name</th>
-                        <th class="px-6 py-4">Duration</th>
-                        <th class="px-6 py-4">Price</th>
-                        <th class="px-6 py-4">Status</th>
-                        <th class="px-6 py-4 text-right">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100 bg-white" id="tourTableBody">
-                    <!-- JS will populate rows here -->
-                </tbody>
-            </table>
-</div>
+                <table class="w-full text-left text-sm text-gray-600">
+                    <thead class="bg-slate-50 text-slate-400 text-xs font-semibold uppercase border-b border-slate-100">
+                        <tr>
+                            <th class="px-6 py-4">Tour Name</th>
+                            <th class="px-6 py-4">Price</th>
+                            <th class="px-6 py-4">Duration</th>
+                            <th class="px-6 py-4">Status</th>
+                            <th class="px-6 py-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 bg-white" id="pkgBody">
+                        <!-- JS will populate rows here -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
-
-<!-- CRUD Modal -->
-<div id="tourModalOverlay" class="fixed inset-0 bg-black/50 z-[60] hidden opacity-0 transition-opacity"></div>
-<div id="tourModal" class="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl shadow-xl z-[70] w-full max-w-md p-6 hidden scale-95 opacity-0 transition-all max-h-[90vh] overflow-y-auto">
-    <div class="flex justify-between items-center mb-6">
-        <h3 class="text-lg font-bold text-gray-900" id="tourModalTitle">Create New Tour</h3>
-        <button onclick="TourManager.closeModal()" class="text-gray-400 hover:text-gray-700">
-            <i class="fa-solid fa-xmark text-lg"></i>
-        </button>
-    </div>
-    
-    <form id="tourForm" onsubmit="TourManager.saveTour(event)" class="space-y-4">
-        <input type="hidden" id="tourId">
-        
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Tour Name</label>
-            <input type="text" id="tourName" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest-500 focus:border-forest-500 outline-none">
-        </div>
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Slug URL</label>
-            <input type="text" id="tourSlug" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest-500 focus:border-forest-500 outline-none">
-        </div>
-        <div class="grid grid-cols-2 gap-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Duration (Days)</label>
-                <input type="number" id="tourDuration" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest-500 focus:border-forest-500 outline-none">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Price (USD)</label>
-                <input type="number" id="tourPrice" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest-500 focus:border-forest-500 outline-none">
-            </div>
-        </div>
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-            <select id="tourStatus" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest-500 focus:border-forest-500 outline-none bg-white">
-                <option value="draft">Draft</option>
-                <option value="published">Published</option>
-                <option value="archived">Archived</option>
-            </select>
-        </div>
-        
-        <div class="mt-8 flex justify-end gap-3 pt-4 border-t border-gray-100">
-            <button type="button" onclick="TourManager.closeModal()" class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg border border-gray-200">Cancel</button>
-            <button type="submit" id="saveTourBtn" class="px-4 py-2 bg-forest-600 hover:bg-forest-700 text-white rounded-lg text-sm font-medium min-w-[100px]">Save Tour</button>
-        </div>
-    </form>
-</div>
-
-<script>
-const TourManager = {
-    data: [],
-
-    init: async function() {
-        await this.loadTours();
-        
-        // Auto generate slug from title
-        document.getElementById('tourName').addEventListener('input', function(e) {
-            const slugInput = document.getElementById('tourSlug');
-            if (!document.getElementById('tourId').value) {
-                slugInput.value = e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
-            }
-        });
-    },
-
-    loadTours: async function() {
-        try {
-            document.getElementById('tourLoading').style.display = 'flex';
-            const res = await apiRequest('GET', '/tours');
-            this.data = res.data || [];
-            this.renderRows();
-        } catch (error) {
-            toast(error.message, 'error');
-        } finally {
-            document.getElementById('tourLoading').style.display = 'none';
-        }
-    },
-
-    renderRows: function() {
-        const tbody = document.getElementById('tourTableBody');
-        const searchTerm = document.getElementById('tourSearch').value.toLowerCase();
-        
-        tbody.innerHTML = '';
-        
-        const filtered = this.data.filter(t => t.title?.toLowerCase().includes(searchTerm));
-
-        if(filtered.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-12 text-center text-gray-500">No tours found.</td></tr>`;
-            return;
-        }
-
-        filtered.forEach(tour => {
-            let statusClass = 'bg-gray-100 text-gray-600';
-            if (tour.status === 'published') statusClass = 'bg-emerald-100 text-emerald-700';
-            if (tour.status === 'archived') statusClass = 'bg-red-100 text-red-700';
-
-            const tr = document.createElement('tr');
-            tr.className = 'hover:bg-gray-50/50 transition-colors';
-            tr.innerHTML = `
-                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">${tour.title}</td>
-                <td class="px-6 py-4">${tour.duration_days} Days</td>
-                <td class="px-6 py-4 font-semibold text-gray-700">$${tour.price_usd}</td>
-                <td class="px-6 py-4">
-                    <span class="px-2.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wider ${statusClass}">${tour.status}</span>
-                </td>
-                <td class="px-6 py-4 text-right">
-                    <button onclick="TourManager.editTour(${tour.id})" class="text-gray-400 hover:text-blue-600 p-1 mx-1 transition-colors" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
-                    <button onclick="TourManager.deleteTour(${tour.id})" class="text-gray-400 hover:text-red-600 p-1 mx-1 transition-colors" title="Delete"><i class="fa-solid fa-trash"></i></button>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
-    },
-
-    filterTours: function() {
-        this.renderRows();
-    },
-
-    openModal: function(isEdit = false) {
-        document.getElementById('tourForm').reset();
-        document.getElementById('tourId').value = '';
-        document.getElementById('tourModalTitle').innerText = isEdit ? 'Edit Tour' : 'Create New Tour';
-        
-        const overlay = document.getElementById('tourModalOverlay');
-        const modal = document.getElementById('tourModal');
-        
-        overlay.classList.remove('hidden');
-        modal.classList.remove('hidden');
-        
-        setTimeout(() => {
-            overlay.classList.remove('opacity-0');
-            modal.classList.remove('opacity-0', 'scale-95');
-        }, 10);
-    },
-
-    closeModal: function() {
-        const overlay = document.getElementById('tourModalOverlay');
-        const modal = document.getElementById('tourModal');
-        
-        overlay.classList.add('opacity-0');
-        modal.classList.add('opacity-0', 'scale-95');
-        
-        setTimeout(() => {
-            overlay.classList.add('hidden');
-            modal.classList.add('hidden');
-        }, 300);
-    },
-
-    saveTour: async function(e) {
-        e.preventDefault();
-        const id = document.getElementById('tourId').value;
-        const btn = document.getElementById('saveTourBtn');
-        const originalBtnText = btn.innerHTML;
-        
-        const payload = {
-            title: document.getElementById('tourName').value,
-            slug: document.getElementById('tourSlug').value,
-            duration_days: parseInt(document.getElementById('tourDuration').value),
-            price_usd: parseFloat(document.getElementById('tourPrice').value),
-            status: document.getElementById('tourStatus').value,
-        };
-
-        try {
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
-            btn.disabled = true;
-
-            if (id) {
-                await apiRequest('PUT', `/tours/${id}`, payload);
-                toast('Tour updated successfully');
-            } else {
-                await apiRequest('POST', `/tours`, payload);
-                toast('Tour created successfully');
-            }
-            this.closeModal();
-            this.loadTours();
-        } catch (error) {
-            toast(error.message, 'error');
-        } finally {
-            btn.innerHTML = originalBtnText;
-            btn.disabled = false;
-        }
-    },
-
-    editTour: async function(id) {
-        const tour = this.data.find(t => t.id === id);
-        if(!tour) return;
-        
-        this.openModal(true);
-        document.getElementById('tourId').value = tour.id;
-        document.getElementById('tourName').value = tour.title;
-        document.getElementById('tourSlug').value = tour.slug;
-        document.getElementById('tourDuration').value = tour.duration_days;
-        document.getElementById('tourPrice').value = tour.price_usd;
-        document.getElementById('tourStatus').value = tour.status;
-    },
-
-    deleteTour: async function(id) {
-        if(confirm('Are you sure you want to delete this tour?')) {
-            try {
-                await apiRequest('DELETE', `/tours/${id}`);
-                toast('Tour deleted successfully');
-                this.loadTours();
-            } catch (error) {
-                toast(error.message, 'error');
-            }
-        }
-    }
-};
-
-TourManager.init();
-</script>

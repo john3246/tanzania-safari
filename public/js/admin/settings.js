@@ -43,11 +43,11 @@ async function loadSettings() {
     if (sForm) {
         try {
             const res = await apiRequest('GET', '/settings');
-            sForm.innerHTML = `<div class="form-grid" style="grid-template-columns:1fr">${(res.data || []).map(s => `
-                <div class="form-group">
-                    <label>${s.setting_key.replace(/_/g, ' ').toUpperCase()}</label>
-                    <input class="form-control" name="${s.setting_key}" value="${s.setting_value || ''}">
-                </div>`).join('')}</div><button type="submit" class="btn btn-primary" style="width:100%">Save Configuration</button>`;
+            sForm.innerHTML = `<div class="space-y-4">${(res.data || []).map(s => `
+                <div class="space-y-1">
+                    <label class="text-xs font-medium text-slate-500">${s.setting_key.replace(/_/g, ' ').toUpperCase()}</label>
+                    <input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="${s.setting_key}" value="${s.setting_value || ''}">
+                </div>`).join('')}</div><div class="mt-6 flex justify-end"><button type="submit" class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">Save Configuration</button></div>`;
             
             sForm.onsubmit = async (e) => {
                 e.preventDefault();

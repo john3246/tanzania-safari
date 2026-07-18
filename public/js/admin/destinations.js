@@ -7,29 +7,6 @@ async function loadDestinations() {
         body.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem"><i class="fas fa-spinner fa-spin"></i> Initializing Destinations...</td></tr>';
     }
     try {
-        const res = await apiRequest('GET', '/destinations');
-        destinationsList = res.data || [];
-        renderDestinations();
-    } catch (e) {}
-}
-
-function renderDestinations() {
-    const body = document.getElementById('destBody');
-    if (!body) return;
-    body.innerHTML = destinationsList.map(d => `
-        <tr>
-            <td data-label="Destination"><strong>${d.park_name}</strong></td>
-            <td data-label="Location">${d.park_location || '—'}</td>
-            <td data-label="Packages">${d.safari_count || 0}</td>
-            <td data-label="Status"><span class="status-badge status-${d.is_active ? 'active' : 'inactive'}">${d.is_active ? 'Active' : 'Inactive'}</span></td>
-            <td data-label="Actions"><button class="btn btn-icon" onclick="openDestModal('${d.park_id}')"><i class="fas fa-edit"></i></button></td>
-        </tr>`).join('') || '<tr><td colspan="5">No destinations found</td></tr>';
-}
-
-function openDestModal(id = null) {
-    const form = document.getElementById('destForm');
-    if (!form) return;
-    form.reset();
     document.getElementById('destId').value = '';
     document.getElementById('destModalTitle').textContent = id ? 'Edit Destination' : 'New Destination';
     if (id) {

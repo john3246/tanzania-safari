@@ -16,21 +16,41 @@ async function loadPackages() {
 function renderPackages() {
     const body = document.getElementById('pkgBody');
     if (!body) return;
-    body.innerHTML = packagesList.map(p => `
-        <tr>
-            <td data-label="Package"><strong>${p.package_name}</strong></td>
-            <td data-label="Category">${p.category_name || '—'}</td>
-            <td data-label="Price">$${Number(p.base_price_usd).toLocaleString()}</td>
-            <td data-label="Duration">${p.duration_days} Days</td>
-            <td data-label="Status"><span class="status-badge status-${p.is_active ? 'active' : 'inactive'}">${p.is_active ? 'Active' : 'Inactive'}</span></td>
-            <td data-label="Actions">
-                <div style="display:flex; gap:6px">
-                    <button class="btn btn-icon" onclick="openPackageModal('${p.package_id}')"><i class="fas fa-edit"></i></button>
-                    <button class="btn btn-icon" onclick="deletePackage('${p.package_id}')"><i class="fas fa-trash"></i></button>
-                </div>
-            </td>
-        </tr>
-    `).join('') || '<tr><td colspan="6" style="text-align:center">No packages found.</td></tr>';
+    
+    body.innerHTML = packagesList.map(p => {
+        let statusClass = p.is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-600';
+        let statusText = p.is_active ? 'Active' : 'Inactive';
+        
+        return `
+            <tr class="hover:bg-slate-50/50 transition-colors">
+                <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                        <img src="${p.image_urls?.[0] || '/images/placeholder.jpeg'}" alt="Tour" class="w-12 h-12 rounded-lg object-cover bg-slate-100" onerror="this.src='/images/placeholder.jpeg'">
+                        <div>
+                            <div class="font-medium text-slate-900">${p.package_name}</div>
+                            <div class="text-xs text-slate-500 line-clamp-1">${p.category_name || '—'}</div>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-6 py-4 font-medium text-slate-700">${Number(p.base_price_usd).toLocaleString()}</td>
+                <td class="px-6 py-4 text-slate-600">${p.duration_days} Days</td>
+                <td class="px-6 py-4">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusClass}">
+                        ${statusText}
+                    </span>
+                </td>
+                <td class="px-6 py-4">
+                    <div class="flex items-center gap-2">
+                        <button class="p-2 text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors" onclick="openPackageModal('${p.package_id}')" title="Edit">
+                            <i class="ph ph-pencil-simple text-lg"></i>
+                        </button>
+                        <button class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" onclick="deletePackage('${p.package_id}')" title="Delete">
+                            <i class="ph ph-trash text-lg"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>`;
+    }).join('') || '<tr><td colspan="6" class="px-6 py-12 text-center text-slate-500">No packages found</td></tr>';
 }
 
 function openPackageModal(id = null) {
@@ -219,3 +239,4 @@ async function deletePackage(id) {
         loadPackages();
     } catch (e) {}
 }
+window.filterPackages = function() { const term = document.getElementById('tourSearch').value.toLowerCase(); const rows = document.getElementById('pkgBody').querySelectorAll('tr'); rows.forEach(r => { const text = r.innerText.toLowerCase(); r.style.display = text.includes(term) ? '' : 'none'; }); };

@@ -1,167 +1,41 @@
 <div class="space-y-6">
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h1 class="text-2xl font-bold text-gray-900">Recent Bookings</h1>
-        <div class="bg-white border border-gray-200 px-4 py-2 rounded-lg text-sm text-gray-600 shadow-sm flex items-center gap-2 cursor-pointer hover:bg-gray-50 transition-colors">
-            <i class="fa-regular fa-calendar"></i> Filter by Date
-        </div>
     </div>
 
     <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-visible flex flex-col min-h-[500px]">
         <div class="p-4 border-b border-gray-200 bg-gray-50/50 flex justify-between items-center">
             <div class="relative w-full max-w-md">
-                <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
                 <input 
                     type="text" 
                     id="bookingSearch"
                     placeholder="Search bookings by ID or Customer..." 
-                    class="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-forest-500"
-                    onkeyup="BookingManager.filterBookings()"
+                    class="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary-500"
+                    onkeyup="filterBookings()"
                 />
             </div>
         </div>
         
         <div class="overflow-x-auto relative min-h-[400px]">
             <div class="table-responsive">
-<table class="w-full text-left text-sm text-gray-600">
-                <thead class="bg-white border-b border-gray-200 text-gray-500 font-semibold text-xs uppercase tracking-wider">
-                    <tr>
-                        <th class="px-6 py-4">Booking ID</th>
-                        <th class="px-6 py-4">Customer</th>
-                        <th class="px-6 py-4">Tour</th>
-                        <th class="px-6 py-4">Date</th>
-                        <th class="px-6 py-4">Guests</th>
-                        <th class="px-6 py-4">Amount</th>
-                        <th class="px-6 py-4">Status</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100 bg-white" id="bookingTableBody">
-                    <!-- JS will populate rows here -->
-                </tbody>
-            </table>
-</div>
+                <table class="w-full text-left text-sm text-gray-600">
+                    <thead class="bg-slate-50 border-b border-slate-100 text-slate-400 font-semibold text-xs uppercase tracking-wider">
+                        <tr>
+                            <th class="px-6 py-4">Booking ID</th>
+                            <th class="px-6 py-4">Customer</th>
+                            <th class="px-6 py-4">Tour</th>
+                            <th class="px-6 py-4">Date</th>
+                            <th class="px-6 py-4">Guests</th>
+                            <th class="px-6 py-4">Amount</th>
+                            <th class="px-6 py-4">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 bg-white" id="bookBody">
+                        <!-- JS will populate rows here -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
-
-<script>
-const BookingManager = {
-    data: [
-        { id: '#TSM1245', customer: 'John Smith', avatar: 'https://ui-avatars.com/api/?name=John+Smith&background=random', tour: '7 Days Northern Circuit', date: 'Jun 12, 2024', guests: 2, amount: 3150, status: 'Confirmed' },
-        { id: '#TSM1244', customer: 'Emma Wilson', avatar: 'https://ui-avatars.com/api/?name=Emma+Wilson&background=random', tour: '5 Days Serengeti Safari', date: 'Jun 11, 2024', guests: 4, amount: 2850, status: 'Pending' },
-        { id: '#TSM1243', customer: 'Michael Brown', avatar: 'https://ui-avatars.com/api/?name=Michael+Brown&background=random', tour: '3 Days Tarangire Safari', date: 'Jun 10, 2024', guests: 2, amount: 1280, status: 'Confirmed' },
-        { id: '#TSM1242', customer: 'David Lee', avatar: 'https://ui-avatars.com/api/?name=David+Lee&background=random', tour: '7 Days Luxury Safari', date: 'Jun 10, 2024', guests: 2, amount: 5600, status: 'Pending' },
-        { id: '#TSM1241', customer: 'Sophia Martin', avatar: 'https://ui-avatars.com/api/?name=Sophia+Martin&background=random', tour: 'Camping Safari Adventure', date: 'Jun 09, 2024', guests: 3, amount: 1920, status: 'Cancelled' },
-    ],
-
-    statusColors: {
-        'Confirmed': 'bg-emerald-100 text-emerald-700 border-emerald-200',
-        'Pending': 'bg-yellow-100 text-yellow-700 border-yellow-200',
-        'Cancelled': 'bg-red-100 text-red-700 border-red-200',
-        'Completed': 'bg-blue-100 text-blue-700 border-blue-200',
-    },
-
-    openDropdownId: null,
-
-    renderRows: function() {
-        const tbody = document.getElementById('bookingTableBody');
-        const searchTerm = document.getElementById('bookingSearch').value.toLowerCase();
-        
-        tbody.innerHTML = '';
-        
-        const filtered = this.data.filter(b => 
-            b.id.toLowerCase().includes(searchTerm) || 
-            b.customer.toLowerCase().includes(searchTerm) ||
-            b.tour.toLowerCase().includes(searchTerm)
-        );
-
-        if(filtered.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="7" class="px-6 py-12 text-center text-gray-500">No bookings found matching your search.</td></tr>`;
-            return;
-        }
-
-        filtered.forEach(booking => {
-            const tr = document.createElement('tr');
-            tr.className = 'hover:bg-gray-50/50 transition-colors relative';
-            
-            // Dropdown HTML
-            let dropdownHTML = '';
-            if (this.openDropdownId === booking.id) {
-                dropdownHTML = `
-                    <div class="absolute z-50 mt-1 w-32 bg-white border border-gray-200 rounded-lg shadow-xl py-1 animate-fade-in-down" style="top: 100%; left: 0;">
-                        ${['Confirmed', 'Pending', 'Cancelled', 'Completed'].map(status => `
-                            <button onclick="BookingManager.changeStatus('${booking.id}', '${status}')" class="w-full text-left px-4 py-1.5 text-xs text-gray-700 hover:bg-gray-50 transition-colors">
-                                ${status}
-                            </button>
-                        `).join('')}
-                    </div>
-                `;
-            }
-
-            tr.innerHTML = `
-                <td class="px-6 py-4 font-bold text-forest-600 whitespace-nowrap">${booking.id}</td>
-                <td class="px-6 py-4">
-                    <div class="flex items-center gap-3">
-                        <img src="${booking.avatar}" alt="${booking.customer}" class="w-8 h-8 rounded-full">
-                        <span class="font-medium text-gray-900">${booking.customer}</span>
-                    </div>
-                </td>
-                <td class="px-6 py-4 text-gray-700">${booking.tour}</td>
-                <td class="px-6 py-4">${booking.date}</td>
-                <td class="px-6 py-4">${booking.guests}</td>
-                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">$${booking.amount}</td>
-                <td class="px-6 py-4 relative">
-                    <button onclick="BookingManager.toggleDropdown('${booking.id}', event)" class="flex items-center justify-between min-w-[90px] gap-1 px-3 py-1 rounded-full text-[11px] font-bold border uppercase tracking-wider transition-colors ${this.statusColors[booking.status]}">
-                        ${booking.status}
-                        <i class="fa-solid fa-chevron-down opacity-70"></i>
-                    </button>
-                    ${dropdownHTML}
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
-    },
-
-    filterBookings: function() {
-        this.renderRows();
-    },
-
-    toggleDropdown: function(id, e) {
-        e.stopPropagation();
-        this.openDropdownId = this.openDropdownId === id ? null : id;
-        this.renderRows();
-    },
-
-    changeStatus: function(id, newStatus) {
-        const booking = this.data.find(b => b.id === id);
-        if(booking) {
-            booking.status = newStatus;
-        }
-        this.openDropdownId = null;
-        this.renderRows();
-    }
-};
-
-// Close dropdown when clicking outside
-document.addEventListener('click', () => {
-    if(BookingManager.openDropdownId) {
-        BookingManager.openDropdownId = null;
-        BookingManager.renderRows();
-    }
-});
-
-// Add simple CSS animation for dropdown
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes fadeInDown {
-        from { opacity: 0; transform: translateY(-5px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    .animate-fade-in-down {
-        animation: fadeInDown 0.15s ease-out forwards;
-    }
-`;
-document.head.appendChild(style);
-
-// Initial render
-BookingManager.renderRows();
-</script>

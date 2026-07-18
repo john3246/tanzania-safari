@@ -7,36 +7,37 @@ async function loadEnquiries() {
         const res = await apiRequest('GET', '/enquiries');
         enquiriesList = res.data || [];
         body.innerHTML = enquiriesList.map(e => {
-            const statusName = (e.enquiry_status || '').toLowerCase();
-            const statusColor = statusName === 'responded' ? '#10b981' : '#f59e0b';
-            const statusBg = statusName === 'responded' ? '#d1fae5' : '#fef3c7';
+            const statusName = (e.enquiry_status || 'New').toLowerCase();
+            let statusClass = 'bg-yellow-100 text-yellow-700 border-yellow-200';
+            if (statusName === 'responded') statusClass = 'bg-emerald-100 text-emerald-700 border-emerald-200';
+            
             return `
-            <tr style="border-bottom: 1px solid #e5e7eb; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#f9fafb'" onmouseout="this.style.backgroundColor='transparent'">
-                <td style="padding: 1rem;">
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <div style="width: 36px; height: 36px; border-radius: 50%; background: #072F1D; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">
+            <tr class="hover:bg-slate-50/50 transition-colors">
+                <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-primary-900 text-white flex items-center justify-center font-bold text-xs">
                             ${(e.full_name || 'G')[0].toUpperCase()}
                         </div>
                         <div>
-                            <strong style="color: #111827; font-size: 14px; display: block;">${e.full_name}</strong>
-                            <small style="color: #6b7280; font-size: 12px;">${e.email}</small>
+                            <span class="font-medium text-slate-900 block">${e.full_name}</span>
+                            <span class="text-xs text-slate-500 block">${e.email}</span>
                         </div>
                     </div>
                 </td>
-                <td style="padding: 1rem; color: #374151; font-weight: 500;">${e.enquiry_type || 'General'}</td>
-                <td style="padding: 1rem; color: #6b7280; font-size: 14px;"><i class="far fa-clock" style="margin-right: 6px;"></i>${new Date(e.created_at).toLocaleDateString()}</td>
-                <td style="padding: 1rem;">
-                    <span style="padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: ${statusBg}; color: ${statusColor}; border: 1px solid ${statusColor}40;">
+                <td class="px-6 py-4 text-slate-700">${e.enquiry_type || 'General'}</td>
+                <td class="px-6 py-4 text-slate-600">${new Date(e.created_at).toLocaleDateString()}</td>
+                <td class="px-6 py-4">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider ${statusClass}">
                         ${e.enquiry_status || 'New'}
                     </span>
                 </td>
-                <td style="padding: 1rem;">
-                    <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px;" onclick="openEnqModal('${e.enquiry_id}')">
-                        <i class="fas fa-reply"></i> Respond
+                <td class="px-6 py-4">
+                    <button class="bg-primary-50 hover:bg-primary-100 text-primary-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors flex items-center gap-2" onclick="openEnqModal('${e.enquiry_id}')">
+                        <i class="ph ph-arrow-u-up-left"></i> Respond
                     </button>
                 </td>
             </tr>`;
-        }).join('') || '<tr><td colspan="5" style="padding: 2rem; text-align: center; color: #6b7280;">No enquiries found.</td></tr>';
+        }).join('') || '<tr><td colspan="5" class="px-6 py-12 text-center text-slate-500">No enquiries found.</td></tr>';
     } catch (e) {}
 }
 
@@ -45,8 +46,11 @@ function openEnqModal(id) {
     if (!e) return;
     document.getElementById('enqRespondId').value = id;
     document.getElementById('enqResponse').value = '';
-    document.getElementById('enqDetails').innerHTML = `<strong>${e.full_name}</strong><br><small>${e.email}</small><br><p style="margin-top:0.5rem; background:var(--bg-secondary); padding:0.75rem; border-radius:var(--radius-sm)">"${e.enquiry_message}"</p>`;
-    document.getElementById('enqModal').classList.add('active');
+    document.getElementById('enqDetails').innerHTML = `<div class="font-medium text-slate-900">${e.full_name}</div><div class="text-xs text-slate-500 mb-3">${e.email}</div><div class="bg-slate-50 p-3 rounded-lg text-sm text-slate-700 italic border border-slate-100">"${e.enquiry_message}"</div>`;
+    
+    // Show Modal
+    const modal = document.getElementById('enqModal');
+    if (modal) modal.classList.add('active');
 }
 
 async function sendEnquiryResponse() {
