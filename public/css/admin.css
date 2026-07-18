@@ -296,3 +296,11 @@ body {
 .dark ::-webkit-scrollbar-thumb:hover {
     background: #64748b;
 }
+
+/* Responsive Table Wrapper */
+.table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}

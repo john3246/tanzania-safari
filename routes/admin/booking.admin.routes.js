@@ -7,6 +7,6 @@ const { requirePermission } = require('../../middleware/rbacMiddleware');
 router.use(authenticate);
 
 router.get('/', bookingController.list);
-router.put('/:id/status', requirePermission('booking.confirm'), bookingController.updateStatus);
+router.put('/:id/status', requirePermission('bookings.edit'), bookingController.updateStatus);
 
 module.exports = router;

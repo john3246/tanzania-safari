@@ -577,64 +577,73 @@ function setupAccessibility() {
 }
 
 // ── Revenue Chart Logic ────────────────────────────────────────
-async function renderRevenueChart() {
+async function renderRevenueChart(stats = {}) {
     const canvas = document.getElementById('visitorsChartCanvas');
     const donutCanvas = document.getElementById('bookingsStatusChart');
-    if (!canvas || !donutCanvas) return;
+    
+    // In dashboard.html there's visitorsChart and bookingsChart
+    const dashVisitorsCanvas = document.getElementById('visitorsChart');
+    const dashBookingsCanvas = document.getElementById('bookingsChart');
 
-    if (window.visitorsChart) window.visitorsChart.destroy();
-    if (window.bookingsDonut) window.bookingsDonut.destroy();
+    if (window.visitorsChartInstance) window.visitorsChartInstance.destroy();
+    if (window.bookingsChartInstance) window.bookingsChartInstance.destroy();
 
-    // Line Chart (Visitors/Revenue Overview)
-    const ctx = canvas.getContext('2d');
-    window.visitorsChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-            datasets: [{
-                label: 'Visitors',
-                data: [12000, 15000, 18000, 22000, 19000, 25000, 28000, 32000, 29000, 35000, 38000, 42000],
-                borderColor: '#263E22',
-                backgroundColor: 'rgba(11, 59, 45, 0.1)',
-                borderWidth: 2,
-                fill: true,
-                tension: 0.4
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false }
+    // Use stats or mock data
+    const visitorData = stats.visitorsByMonth || [12000, 15000, 18000, 22000, 19000, 25000];
+    const visitorLabels = stats.visitorLabels || ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+
+    if (dashVisitorsCanvas) {
+        const ctx = dashVisitorsCanvas.getContext('2d');
+        window.visitorsChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: visitorLabels,
+                datasets: [{
+                    label: 'Visitors',
+                    data: visitorData,
+                    borderColor: '#263E22',
+                    backgroundColor: 'rgba(11, 59, 45, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }]
             },
-            scales: {
-                y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
-                x: { grid: { display: false } }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+                    x: { grid: { display: false } }
+                }
             }
-        }
-    });
+        });
+    }
 
-    // Donut Chart (Bookings Status)
-    const dCtx = donutCanvas.getContext('2d');
-    window.bookingsDonut = new Chart(dCtx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Confirmed', 'Pending', 'Cancelled'],
-            datasets: [{
-                data: [65, 45, 14],
-                backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
-                borderWidth: 0,
-                cutout: '75%'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false }
+    if (dashBookingsCanvas) {
+        const dCtx = dashBookingsCanvas.getContext('2d');
+        const confirmed = stats.bookings_confirmed || 45;
+        const pending = stats.bookings_pending || 32;
+        const cancelled = stats.bookings_cancelled || 12;
+        
+        window.bookingsChartInstance = new Chart(dCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Confirmed', 'Pending', 'Cancelled'],
+                datasets: [{
+                    data: [confirmed, pending, cancelled],
+                    backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+                    borderWidth: 0,
+                    cutout: '75%'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } }
             }
-        }
-    });
+        });
+    }
 }
 
 // ── Dashboard ─────────────────────────────────────────────────
@@ -649,7 +658,7 @@ async function loadDashboard() {
         if (document.getElementById('s-enquiries')) document.getElementById('s-enquiries').textContent = stats.total_enquiries || 0;
 
         // Render revenue chart
-        renderRevenueChart();
+        renderRevenueChart(stats);
 
         // Load Activity
         loadRecentActivity();

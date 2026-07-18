@@ -84,6 +84,81 @@
         </div>
     </div>
 
+    <!-- Quick Actions & System -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Quick Actions -->
+        <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
+            <h3 class="font-semibold text-gray-900 mb-4">Quick Actions</h3>
+            <div class="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+                <button class="flex flex-col items-center text-center gap-2 group nav-link" data-page="packages">
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center bg-emerald-50 text-emerald-600 border border-transparent group-hover:border-emerald-200 transition-all group-hover:scale-105">
+                        <i class="fa-solid fa-plus text-xl"></i>
+                    </div>
+                    <span class="text-xs font-medium text-gray-600 leading-tight">Add Tour</span>
+                </button>
+                <button class="flex flex-col items-center text-center gap-2 group nav-link" data-page="destinations">
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center bg-yellow-50 text-yellow-600 border border-transparent group-hover:border-yellow-200 transition-all group-hover:scale-105">
+                        <i class="fa-solid fa-location-dot text-xl"></i>
+                    </div>
+                    <span class="text-xs font-medium text-gray-600 leading-tight">New Dest.</span>
+                </button>
+                <button class="flex flex-col items-center text-center gap-2 group nav-link" data-page="blog">
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center bg-blue-50 text-blue-600 border border-transparent group-hover:border-blue-200 transition-all group-hover:scale-105">
+                        <i class="fa-solid fa-file-lines text-xl"></i>
+                    </div>
+                    <span class="text-xs font-medium text-gray-600 leading-tight">New Blog</span>
+                </button>
+                <button class="flex flex-col items-center text-center gap-2 group nav-link" data-page="images">
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center bg-orange-50 text-orange-600 border border-transparent group-hover:border-orange-200 transition-all group-hover:scale-105">
+                        <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
+                    </div>
+                    <span class="text-xs font-medium text-gray-600 leading-tight">Upload</span>
+                </button>
+                <button class="flex flex-col items-center text-center gap-2 group nav-link" data-page="bookings">
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center bg-forest-50 text-forest-600 border border-transparent group-hover:border-forest-200 transition-all group-hover:scale-105">
+                        <i class="fa-regular fa-calendar-plus text-xl"></i>
+                    </div>
+                    <span class="text-xs font-medium text-gray-600 leading-tight">New Booking</span>
+                </button>
+                <button class="flex flex-col items-center text-center gap-2 group nav-link" data-page="settings">
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center bg-gray-50 text-gray-600 border border-transparent group-hover:border-gray-200 transition-all group-hover:scale-105">
+                        <i class="fa-solid fa-gear text-xl"></i>
+                    </div>
+                    <span class="text-xs font-medium text-gray-600 leading-tight">Settings</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- System Overview -->
+        <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
+            <h3 class="font-semibold text-gray-900 mb-4">System Overview</h3>
+            <div class="space-y-4 text-sm">
+                <div>
+                    <div class="flex justify-between text-gray-600 mb-1">
+                        <span>Storage Usage <span class="text-gray-900 font-semibold ml-1">45%</span></span>
+                        <span>22.5 GB / 50 GB</span>
+                    </div>
+                    <div class="w-full bg-gray-100 rounded-full h-2">
+                        <div class="bg-forest-600 h-2 rounded-full" style="width: 45%;"></div>
+                    </div>
+                </div>
+                <div class="flex justify-between py-2 border-b border-gray-50">
+                    <span class="text-gray-500">Database</span>
+                    <span class="text-forest-600 font-medium flex items-center gap-1">Optimized <i class="fa-solid fa-check"></i></span>
+                </div>
+                <div class="flex justify-between py-2 border-b border-gray-50">
+                    <span class="text-gray-500">Node Version</span>
+                    <span class="font-medium text-gray-900">v18.x</span>
+                </div>
+                <div class="flex justify-between py-2">
+                    <span class="text-gray-500">System Status</span>
+                    <span class="text-forest-600 font-medium flex items-center gap-1">Healthy <div class="w-2 h-2 rounded-full bg-forest-500 ml-1"></div></span>
+                </div>
+            </div>
+        </div>
+</div>
+</div>
+
     <!-- Charts Row -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Visitors Chart -->
@@ -205,73 +280,4 @@
     </div>
 </div>
 
-<script>
-// Initialize Charts after a small delay to ensure DOM is ready
-setTimeout(() => {
-    // Destroy existing charts if they exist (handling SPA re-renders)
-    if(window.visitorsChartInstance) window.visitorsChartInstance.destroy();
-    if(window.bookingsChartInstance) window.bookingsChartInstance.destroy();
 
-    const ctxVisitors = document.getElementById('visitorsChart').getContext('2d');
-    window.visitorsChartInstance = new Chart(ctxVisitors, {
-        type: 'line',
-        data: {
-            labels: ['May 12', 'May 19', 'May 26', 'Jun 02', 'Jun 09', 'Jun 12'],
-            datasets: [{
-                label: 'Visitors',
-                data: [1000, 1700, 1200, 2000, 1500, 2800],
-                borderColor: '#4c8c6a',
-                backgroundColor: 'rgba(76, 140, 106, 0.1)',
-                borderWidth: 3,
-                tension: 0.4,
-                fill: true,
-                pointBackgroundColor: '#4c8c6a',
-                pointBorderColor: '#fff',
-                pointBorderWidth: 2,
-                pointRadius: 4,
-                pointHoverRadius: 6
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: { color: '#f3f4f6', drawBorder: false },
-                    ticks: { color: '#9ca3af', font: {size: 12} }
-                },
-                x: {
-                    grid: { display: false, drawBorder: false },
-                    ticks: { color: '#9ca3af', font: {size: 12} }
-                }
-            }
-        }
-    });
-
-    const ctxBookings = document.getElementById('bookingsChart').getContext('2d');
-    window.bookingsChartInstance = new Chart(ctxBookings, {
-        type: 'doughnut',
-        data: {
-            labels: ['Confirmed', 'Pending', 'Cancelled', 'Completed'],
-            datasets: [{
-                data: [45, 32, 12, 35],
-                backgroundColor: ['#10B981', '#F59E0B', '#EF4444', '#3B82F6'],
-                borderWidth: 0,
-                hoverOffset: 4
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            cutout: '75%',
-            plugins: {
-                legend: { display: false }
-            }
-        }
-    });
-}, 100);
-</script>
