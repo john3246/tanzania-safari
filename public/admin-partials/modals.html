@@ -107,7 +107,7 @@
                     </div>
                     <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Email</label><input type="email" name="email" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" required></div>
                     <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Phone</label><input type="text" name="phone" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500"></div>
-                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Password (New)</label><input type="password" name="password" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" placeholder="Leave blank to keep current"></div>
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Password (New)</label><input type="password" name="password" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" placeholder="Leave blank to keep current" autocomplete="new-password"></div>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="space-y-1">
                             <label class="text-xs font-medium text-slate-500">Role</label>
@@ -189,6 +189,27 @@
             <div class="px-6 py-4 border-t border-slate-100 flex justify-end space-x-2 bg-slate-50">
                 <button class="px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium hover:bg-white transition-colors" onclick="closeModal('destModal')">Cancel</button>
                 <button class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors" onclick="saveDestination()">Save Destination</button>
+            </div>
+        </div>
+    </div>
+    <!-- Enquiry Respond Modal -->
+    <div id="enqModal" class="modal fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 backdrop-blur-sm transition-opacity">
+        <div class="modal-content bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden scale-95 opacity-0 transition-all duration-300">
+            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h2 class="text-lg font-bold text-slate-800">Respond to Inquiry</h2>
+                <i class="ph ph-x text-xl text-slate-400 hover:text-red-500 cursor-pointer transition-colors" onclick="closeModal('enqModal')"></i>
+            </div>
+            <div class="p-6 max-h-[70vh] overflow-y-auto">
+                <input type="hidden" id="enqRespondId">
+                <div id="enqDetails" class="mb-4"></div>
+                <div class="space-y-1">
+                    <label class="text-xs font-medium text-slate-500">Your Response</label>
+                    <textarea id="enqResponse" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" rows="5" placeholder="Type your response here..."></textarea>
+                </div>
+            </div>
+            <div class="px-6 py-4 border-t border-slate-100 flex justify-end space-x-2 bg-slate-50">
+                <button class="px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium hover:bg-white transition-colors" onclick="closeModal('enqModal')">Cancel</button>
+                <button class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors" onclick="sendEnquiryResponse()">Send Response</button>
             </div>
         </div>
     </div>

@@ -42,6 +42,7 @@ app.use(helmet({
             imgSrc: ["'self'", "data:", "https://images.unsplash.com", "https://ui-avatars.com"], 
             connectSrc: [
                 "'self'", 
+                "https://cdn.jsdelivr.net",
                 "https://tanzaniasafarimagic.com", 
                 "https://www.tanzaniasafarimagic.com",
                 "https://tanzania-safari.onrender.com",

@@ -7,18 +7,28 @@ async function loadBlogs() {
         const res = await apiRequest('GET', '/blog');
         blogsList = res.data || [];
         body.innerHTML = blogsList.map(p => `
-            <tr>
-                <td><strong>${p.post_title}</strong></td>
-                <td>${p.author_name || 'Admin'}</td>
-                <td>${new Date(p.created_at).toLocaleDateString()}</td>
-                <td><span class="status-badge status-${p.is_published ? 'active' : 'inactive'}">${p.is_published ? 'Published' : 'Draft'}</span></td>
-                <td>
-                    <div style="display:flex; gap:6px">
-                        <button class="btn btn-icon" onclick="openBlogModal('${p.post_id}')"><i class="fas fa-edit"></i></button>
-                        <button class="btn btn-icon" onclick="deleteBlog('${p.post_id}')"><i class="fas fa-trash"></i></button>
-                    </div>
-                </td>
-            </tr>`).join('') || '<tr><td colspan="5">No blog posts</td></tr>';
+        <tr class="hover:bg-slate-50/50 transition-colors border-b border-slate-100">
+            <td class="px-6 py-4">
+                <div class="font-medium text-slate-900">${p.post_title}</div>
+            </td>
+            <td class="px-6 py-4 text-slate-600">${p.author_name || 'Admin'}</td>
+            <td class="px-6 py-4 text-slate-500">${new Date(p.created_at).toLocaleDateString()}</td>
+            <td class="px-6 py-4">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider ${p.is_published ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-700'}">
+                    ${p.is_published ? 'Published' : 'Draft'}
+                </span>
+            </td>
+            <td class="px-6 py-4">
+                <div class="flex gap-2">
+                    <button class="bg-primary-50 hover:bg-primary-100 text-primary-700 p-1.5 rounded-lg transition-colors" onclick="openBlogModal('${p.post_id}')" title="Edit">
+                        <i class="ph ph-pencil-simple"></i>
+                    </button>
+                    <button class="bg-red-50 hover:bg-red-100 text-red-700 p-1.5 rounded-lg transition-colors" onclick="deleteBlog('${p.post_id}')" title="Delete">
+                        <i class="ph ph-trash"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>`).join('') || '<tr><td colspan="5" class="px-6 py-12 text-center text-slate-500">No blog posts found.</td></tr>';
     } catch (e) {}
 }
 
@@ -42,8 +52,9 @@ function openBlogModal(id = null) {
     document.getElementById('blogModal').classList.add('active');
 }
 
-async function saveBlog() {
-    const btn = event.target;
+async function saveBlog(event) {
+    if (event) event.preventDefault();
+    const btn = document.activeElement;
     const form = document.getElementById('blogForm');
     const data = Object.fromEntries(new FormData(form));
     const id = document.getElementById('blogId').value;

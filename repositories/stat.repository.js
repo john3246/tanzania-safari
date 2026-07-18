@@ -12,10 +12,10 @@ class StatRepository {
                 (SELECT COUNT(*) FROM contact_enquiries) as total_enquiries,
                 (SELECT COUNT(*) FROM users WHERE is_active = true) as total_users,
                 (SELECT COALESCE(SUM(views_count), 0) FROM blog_posts) as total_views,
-                (SELECT COALESCE(SUM(total_price_usd), 0) FROM bookings b JOIN booking_statuses bs ON b.status_id = bs.status_id WHERE bs.code IN ('confirmed', 'CONFIRMED')) as total_revenue,
-                (SELECT COUNT(*) FROM bookings b JOIN booking_statuses bs ON b.status_id = bs.status_id WHERE bs.code IN ('confirmed', 'CONFIRMED')) as bookings_confirmed,
-                (SELECT COUNT(*) FROM bookings b JOIN booking_statuses bs ON b.status_id = bs.status_id WHERE bs.code IN ('pending', 'PENDING')) as bookings_pending,
-                (SELECT COUNT(*) FROM bookings b JOIN booking_statuses bs ON b.status_id = bs.status_id WHERE bs.code IN ('cancelled', 'CANCELLED')) as bookings_cancelled
+                (SELECT COALESCE(SUM(total_price_usd), 0) FROM bookings b JOIN booking_statuses bs ON b.status_id = bs.status_id WHERE bs.status_code IN ('confirmed', 'CONFIRMED')) as total_revenue,
+                (SELECT COUNT(*) FROM bookings b JOIN booking_statuses bs ON b.status_id = bs.status_id WHERE bs.status_code IN ('confirmed', 'CONFIRMED')) as bookings_confirmed,
+                (SELECT COUNT(*) FROM bookings b JOIN booking_statuses bs ON b.status_id = bs.status_id WHERE bs.status_code IN ('pending', 'PENDING')) as bookings_pending,
+                (SELECT COUNT(*) FROM bookings b JOIN booking_statuses bs ON b.status_id = bs.status_id WHERE bs.status_code IN ('cancelled', 'CANCELLED')) as bookings_cancelled
         `;
         const result = await db.query(query);
         const stats = result.rows[0];

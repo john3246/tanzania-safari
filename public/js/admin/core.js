@@ -531,37 +531,12 @@ function setupAccessibility() {
 // ── Initialization ────────────────────────────────────────────
 window.navigate = navigate;
 window.closeModal = closeModal;
-window.openPackageModal = openPackageModal;
-window.savePackage = savePackage;
-window.deletePackage = deletePackage;
-window.switchPkgTab = switchPkgTab;
-window.addItineraryDay = addItineraryDay;
-window.addPkgLocation = addPkgLocation;
-window.updateBookingStatus = updateBookingStatus;
-window.openEnqModal = openEnqModal;
-window.sendEnquiryResponse = sendEnquiryResponse;
-window.uploadProfilePhoto = uploadProfilePhoto;
-window.handleMediaUpload = handleMediaUpload;
-window.deleteImage = deleteImage;
-window.toggleReview = toggleReview;
-window.deleteReview = deleteReview;
-window.openDestModal = openDestModal;
-window.saveDestination = saveDestination;
-window.openCatModal = openCatModal;
-window.saveCategory = saveCategory;
-window.deleteCategory = deleteCategory;
-window.openUserModal = openUserModal;
-window.saveUser = saveUser;
-window.deleteUser = deleteUser;
-window.openBlogModal = openBlogModal;
-window.saveBlog = saveBlog;
-window.deleteBlog = deleteBlog;
+// End of assignments
 window.toggleSidebar = toggleSidebar;
 window.toggleDarkMode = toggleDarkMode;
 window.debounceSearch = debounceSearch;
 window.applyFilters = applyFilters;
 window.toggleSelectAll = toggleSelectAll;
-window.bulkAction = bulkAction;
 window.changePage = changePage;
 
 document.addEventListener('DOMContentLoaded', () => {

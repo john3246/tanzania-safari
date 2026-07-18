@@ -1,10 +1,6 @@
 // ── Revenue Chart Logic ────────────────────────────────────────
 
 async function renderRevenueChart(stats = {}) {
-    const canvas = document.getElementById('visitorsChartCanvas');
-    const donutCanvas = document.getElementById('bookingsStatusChart');
-    
-    // In dashboard.html there's visitorsChart and bookingsChart
     const dashVisitorsCanvas = document.getElementById('visitorsChart');
     const dashBookingsCanvas = document.getElementById('bookingsChart');
 
@@ -48,14 +44,33 @@ async function renderRevenueChart(stats = {}) {
         const confirmed = Number(stats.bookings_confirmed || 0);
         const pending = Number(stats.bookings_pending || 0);
         const cancelled = Number(stats.bookings_cancelled || 0);
+        const completed = Number(stats.bookings_completed || 0);
         
+        const total = confirmed + pending + cancelled + completed;
+
+        // Update Text
+        if (document.getElementById('dash-chart-total-bookings')) {
+            document.getElementById('dash-chart-total-bookings').textContent = total;
+            document.getElementById('dash-confirmed-count').textContent = confirmed;
+            document.getElementById('dash-confirmed-percent').textContent = total ? Math.round((confirmed / total) * 100) : 0;
+            
+            document.getElementById('dash-pending-count').textContent = pending;
+            document.getElementById('dash-pending-percent').textContent = total ? Math.round((pending / total) * 100) : 0;
+            
+            document.getElementById('dash-cancelled-count').textContent = cancelled;
+            document.getElementById('dash-cancelled-percent').textContent = total ? Math.round((cancelled / total) * 100) : 0;
+            
+            document.getElementById('dash-completed-count').textContent = completed;
+            document.getElementById('dash-completed-percent').textContent = total ? Math.round((completed / total) * 100) : 0;
+        }
+
         window.bookingsChartInstance = new Chart(dCtx, {
             type: 'doughnut',
             data: {
-                labels: ['Confirmed', 'Pending', 'Cancelled'],
+                labels: ['Confirmed', 'Pending', 'Cancelled', 'Completed'],
                 datasets: [{
-                    data: [confirmed, pending, cancelled],
-                    backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+                    data: [confirmed, pending, cancelled, completed],
+                    backgroundColor: ['#10b981', '#f59e0b', '#ef4444', '#3b82f6'],
                     borderWidth: 0,
                     cutout: '75%'
                 }]
@@ -75,7 +90,8 @@ async function loadDashboard() {
         const res = await apiRequest('GET', '/stats');
         if (!res || !res.data) return;
         const stats = res.data;
-                if (document.getElementById('dash-visitors')) {
+        
+        if (document.getElementById('dash-visitors')) {
             document.getElementById('dash-visitors').textContent = (stats.total_views || 0).toLocaleString();
         }
         if (document.getElementById('dash-inquiries')) document.getElementById('dash-inquiries').textContent = stats.total_enquiries || 0;
@@ -105,14 +121,14 @@ async function loadRecentActivity() {
         if (bBody) {
             bBody.innerHTML = (bRes.data || []).slice(0, 5).map(b => `
             <tr class="hover:bg-slate-50 transition-colors">
-                <td class="p-4 font-medium text-slate-800">#BK-${b.id}</td>
+                <td class="p-4 font-medium text-slate-800">#BK-${b.booking_id?.substring(0,8) || b.id}</td>
                 <td class="p-4">${b.full_name}</td>
                 <td class="p-4">${b.package_name || 'Safari Package'}</td>
                 <td class="p-4 text-slate-500">${new Date(b.created_at).toLocaleDateString()}</td>
-                <td class="p-4">${b.number_of_people}</td>
+                <td class="p-4">${(b.number_of_adults || 0) + (b.number_of_children || 0)}</td>
                 <td class="p-4 font-semibold">$${Number(b.total_price_usd).toLocaleString()}</td>
                 <td class="p-4 text-center">
-                    <span class="inline-flex items-center px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${b.status_name === 'Confirmed' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}">${b.status_name || 'Pending'}</span>
+                    <span class="inline-flex items-center px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${b.status_name === 'confirmed' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}">${b.status_name || 'Pending'}</span>
                 </td>
             </tr>`).join('') || '<tr><td colspan="7" class="p-4 text-center">No recent bookings</td></tr>';
         }
@@ -137,10 +153,10 @@ async function loadRecentActivity() {
         if (tBody) {
             tBody.innerHTML = (pRes.data || []).map(p => `
             <div class="flex items-center gap-3">
-                <img src="${p.main_image_url || '/images/placeholder.jpeg'}" class="w-12 h-12 rounded-lg object-cover" onerror="this.src='/images/placeholder.jpeg'">
+                <img src="${(p.image_urls && p.image_urls[0]) || '/images/placeholder.jpeg'}" class="w-12 h-12 rounded-lg object-cover" onerror="this.src='/images/placeholder.jpeg'">
                 <div class="flex-1 overflow-hidden">
-                    <div class="font-medium text-sm text-slate-800 truncate">${p.name}</div>
-                    <div class="text-xs text-slate-500">${p.days} Days • From $${p.price_per_person}</div>
+                    <div class="font-medium text-sm text-slate-800 truncate">${p.package_name}</div>
+                    <div class="text-xs text-slate-500">${p.duration_days} Days • From $${p.base_price_usd}</div>
                 </div>
                 <div class="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded">Active</div>
             </div>`).join('') || '<div class="text-center text-slate-400 text-sm py-4">No tours available</div>';
@@ -148,4 +164,3 @@ async function loadRecentActivity() {
 
     } catch (e) { console.error('Error loading recent activity:', e); }
 }
-
