@@ -1,30 +1,30 @@
 :root {
-  /* ✨ Primary: Luxury Green */
-  --primary:       #1F5E4A;
-  --primary-dark:  #163C2E;
-  --primary-light: #287A60;
-  --primary-pale:  rgba(31, 94, 74, 0.10);
+  /* ✨ Primary: Logo Green*/
+  --primary:       #263E22;
+  --primary-dark:  #1E311B;
+  --primary-light: #365730;
+  --primary-pale:  rgba(38, 62, 34, 0.10);
 
-  /* ✨ Secondary: Safari Gold */
-  --secondary:       #C79A3B;
-  --secondary-dark:  #A37A29;
-  --secondary-light: #E0B45C;
-  --secondary-pale:  rgba(199, 154, 59, 0.10);
+  /* ✨ Secondary: Logo Green*/
+  --secondary:       #263E22;
+  --secondary-dark:  #1E311B;
+  --secondary-light: #365730;
+  --secondary-pale:  rgba(38, 62, 34, 0.10);
 
-  /*Accent: Safari Gold*/
-  --accent:       #C79A3B;
-  --accent-dark:  #A37A29;
-  --accent-light: #E0B45C;
-  --accent-pale:  rgba(199, 154, 59, 0.10);
+  /*Accent: Warm Orange*/
+  --accent:       #FF6F00;
+  --accent-dark:  #C45500;
+  --accent-light: #FF8F00;
+  --accent-pale:  rgba(255, 111, 0, 0.10);
 
-  /* ── Neutral: Warm Sand / Earth */
-  --earth-dark:   #1E1E1E; /* Charcoal */
-  --earth-mid:    #4A4A4A;
-  --earth-light:  #888888;
-  --sand-dark:    #D1C9BC;
-  --sand-mid:     #E5DFD3;
-  --sand-light:   #F8F5EF; /* Warm Sand */
-  --sand-pale:    #FCFAF7;
+  /* ── Neutral: Safari Brown / Earth*/
+  --earth-dark:   #3D2B1F;
+  --earth-mid:    #6B4423;
+  --earth-light:  #A07048;
+  --sand-dark:    #C4A882;
+  --sand-mid:     #DEC9A8;
+  --sand-light:   #F5ECD9;
+  --sand-pale:    #FBF6EE;
 
   /* ── Lake Blue */
   --lake:         #1E6FA8;
@@ -33,39 +33,39 @@
   --lake-pale:    rgba(30, 111, 168, 0.10);
 
   /* ── Text */
-  --text-primary:   #1E1E1E; /* Charcoal */
-  --text-secondary: #4A4A4A;
-  --text-muted:     #888888;
-  --text-light:     #A0A0A0;
+  --text-primary:   #2A1A0E;
+  --text-secondary: #5C3D20;
+  --text-muted:     #8A6E54;
+  --text-light:     #B09070;
   --text-white:     #FFFFFF;
-  --text-on-dark:   rgba(255, 255, 255, 0.95);
+  --text-on-dark:   rgba(255, 255, 255, 0.90);
 
-  /* ── Backgrounds */
-  --bg-primary:   #F8F5EF; /* Warm Sand */
-  --bg-secondary: #FFFFFF;
-  --bg-muted:     #E5DFD3;
-  --bg-dark:      #163C2E; /* Dark Green */
-  --bg-darker:    #1E1E1E; /* Charcoal */
+  /* ── Backgrounds*/
+  --bg-primary:   #FAFAFA;
+  --bg-secondary: #F0F0F0;
+  --bg-muted:     #E0E0E0;
+  --bg-dark:      #2A1A0E;
+  --bg-darker:    #1A0E06;
   --bg-card:      #FFFFFF;
 
-  /* ── Border */
-  --border:       #E5DFD3;
-  --border-light: #F0EAE1;
+  /* ── Border*/
+  --border:       #E8D8C0;
+  --border-light: #F0E4CC;
   --border-focus: var(--primary);
 
-  /* ── Status Colors */
-  --success:      #1F5E4A;
+  /* ── Status Colors*/
+  --success:      #2E7D32;
   --success-bg:   #E8F5E9;
-  --warning:      #C79A3B;
+  --warning:      #E65100;
   --warning-bg:   #FFF3E0;
   --error:        #C62828;
   --error-bg:     #FFEBEE;
-  --info:         #1E6FA8;
+  --info:         #1565C0;
   --info-bg:      #E3F2FD;
 
   /* ── Typography */
-  --font-heading: 'Playfair Display', serif;
-  --font-body:    'Inter', sans-serif;
+  --font-heading: 'Poppins', sans-serif;
+  --font-body:    'Roboto', sans-serif;
 
   /* ── Spacing Scale */
   --space-1:  0.25rem;   /*  4px */
@@ -99,21 +99,21 @@
   --radius-full: 9999px;
 
   /* ── Shadows */
-  --shadow-xs:  0 1px 3px rgba(30, 30, 30, 0.05);
-  --shadow-sm:  0 2px 8px  rgba(30, 30, 30, 0.08);
-  --shadow-md:  0 8px 24px rgba(30, 30, 30, 0.12);
-  --shadow-lg:  0 16px 48px rgba(30, 30, 30, 0.15);
-  --shadow-xl:  0 24px 64px rgba(30, 30, 30, 0.20);
-  --shadow-card: 0 4px 20px rgba(30, 30, 30, 0.08);
-  --shadow-glow: 0 0 30px rgba(199, 154, 59, 0.25);
+  --shadow-xs:  0 1px 3px rgba(42, 26, 14, 0.08);
+  --shadow-sm:  0 2px 8px  rgba(42, 26, 14, 0.10);
+  --shadow-md:  0 8px 24px rgba(42, 26, 14, 0.12);
+  --shadow-lg:  0 16px 48px rgba(42, 26, 14, 0.15);
+  --shadow-xl:  0 24px 64px rgba(42, 26, 14, 0.18);
+  --shadow-card: 0 4px 20px rgba(42, 26, 14, 0.10);
+  --shadow-glow: 0 0 30px rgba(200, 134, 10, 0.25);
 
-  /* ── Gradients */
+  /* ── Gradients (Now Solid Colors) */
   --gradient-primary:  var(--primary);
-  --gradient-hero:     linear-gradient(to bottom, rgba(30, 30, 30, 0.2), rgba(30, 30, 30, 0.8));
-  --gradient-card:     linear-gradient(to top, rgba(30, 30, 30, 0.9), transparent);
-  --gradient-section:  var(--sand-light);
-  --gradient-gold:     var(--secondary);
-  --gradient-green:    var(--primary);
+  --gradient-hero:     rgba(42,26,14,0.60);
+  --gradient-card:     rgba(42,26,14,0.85);
+  --gradient-section:  var(--sand-pale);
+  --gradient-gold:     #C8860A;
+  --gradient-green:    var(--secondary);
 
   /* ── Transitions */
   --transition:      all 0.3s cubic-bezier(0.4, 0, 0.2, 1);

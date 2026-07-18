@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadPopularSafaris();
     await loadAboutContent();
     await loadTeamMembers();
-    await loadBlogPosts();hjjhjhj
+    await loadBlogPosts();
     await loadSettings();
     initBookingButtons();
 });
