@@ -254,9 +254,34 @@ async function startServer() {
     try {
       const db = require('./config/db');
       await db.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_token VARCHAR(255), ADD COLUMN IF NOT EXISTS reset_token_expires TIMESTAMP;');
-      console.log('Checked/Added reset_token columns on users table.');
+      
+      // Auto-create media_library table if missing
+      const mediaLibraryQuery = `
+      CREATE TABLE IF NOT EXISTS media_library (
+          id SERIAL PRIMARY KEY,
+          filename VARCHAR(255) NOT NULL,
+          original_filename VARCHAR(255) NOT NULL,
+          mime_type VARCHAR(100),
+          file_size BIGINT,
+          path TEXT,
+          url TEXT,
+          thumbnail_url TEXT,
+          webp_url TEXT,
+          alt_text VARCHAR(255),
+          caption TEXT,
+          folder VARCHAR(255) DEFAULT 'root',
+          tags JSONB DEFAULT '[]',
+          entity_type VARCHAR(100),
+          entity_id INTEGER,
+          uploaded_by INTEGER REFERENCES users(user_id) ON DELETE SET NULL,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          deleted_at TIMESTAMP
+      );`;
+      await db.query(mediaLibraryQuery);
+      console.log('Checked/Added reset_token columns and media_library table.');
     } catch (dbErr) {
-      console.warn('Could not run DB column migration:', dbErr.message);
+      console.warn('Could not run DB migrations:', dbErr.message);
     }
 
     // Verify SMTP connection on startup

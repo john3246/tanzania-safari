@@ -46,10 +46,8 @@ router.post('/forgot-password', validate(forgotSchema), async (req, res, next) =
         try {
             await emailService.sendPasswordResetEmail(user.email, resetUrl);
         } catch (emailError) {
-            console.error('Failed to send password reset email (SMTP might be unconfigured):', emailError.message);
-            console.log('--- RESET URL (For Development) ---');
-            console.log(resetUrl);
-            console.log('-----------------------------------');
+            console.error('Failed to send password reset email:', emailError.message);
+            return res.status(500).json({ success: false, message: 'Failed to send password reset email. Please ensure SMTP is configured correctly.' });
         }
 
         res.json({ success: true, message: successMessage });
