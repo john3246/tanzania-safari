@@ -21,41 +21,27 @@ function buildSafariCard(p) {
     const dest = Array.isArray(p.destinations) ? p.destinations.map(d => d.park_name || d).join(', ') : '';
     const img = p.featured_image_url || (p.image_urls && p.image_urls.length > 0 ? p.image_urls[0] : `/images/safaris/${p.package_slug}/main.jpg`);
     return `
-    <a href="/safaris/${p.package_slug}" class="safari-card fade-up relative overflow-hidden rounded-2xl block group h-[400px] hover:shadow-2xl transition-shadow bg-gray-900">
-      <img src="${img}" alt="${p.package_name}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" onerror="this.src='/images/placeholder.jpeg'">
-      
-      <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
-      
-      <div class="absolute bottom-0 left-0 w-full p-5 text-white flex flex-col justify-end">
-        <div class="flex justify-between items-start mb-2">
-          <div class="bg-primary-600/90 backdrop-blur-sm text-white text-xs font-bold px-2.5 py-1 rounded">
-            ${p.category_name || 'Safari'}
-          </div>
-        </div>
-        
-        <h3 class="text-xl font-bold mb-1 line-clamp-2 text-white" style="text-shadow: 0 2px 4px rgba(0,0,0,0.5);">${p.package_name}</h3>
-        
-        ${dest ? `<div class="text-sm text-gray-200 mb-2"><i class="fas fa-map-marker-alt text-primary-400 mr-1"></i>${dest}</div>` : ''}
-        
-        <div class="flex items-center text-sm text-yellow-400 mb-4">
-          <span class="stars">${stars(parseFloat(p.avg_rating || 0))}</span>
-          <span class="text-white ml-2">${rating} ${p.review_count > 0 ? `(${p.review_count})` : ''}</span>
-        </div>
-        
-        <div class="flex justify-between items-end border-t border-white/20 pt-4 mt-auto">
-          <div>
-            <div class="text-xs text-gray-300">From</div>
-            <div class="text-lg font-bold text-white">$${Number(p.base_price_usd).toLocaleString()}</div>
-            <div class="text-xs text-gray-300">per person</div>
-          </div>
-          <span class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded font-medium text-sm transition-colors shadow-lg">View Details</span>
-        </div>
+    <a href="/safaris/${p.package_slug}" class="safari-card fade-up">
+      <div class="safari-card-img">
+        <img src="${img}" alt="${p.package_name}" loading="lazy" onerror="this.src='/images/placeholder.jpeg'">
+        ${p.is_featured ? '<span class="safari-card-badge"><i class="fas fa-star"></i> Featured</span>' : ''}
+        <span class="safari-card-duration"><i class="fas fa-clock"></i> ${p.duration_days} Days</span>
       </div>
-      
-      <div class="absolute top-4 right-4 flex flex-col gap-2 items-end">
-        ${p.is_featured ? '<span class="bg-yellow-500/90 backdrop-blur-sm text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-lg"><i class="fas fa-star mr-1"></i> Featured</span>' : ''}
-        <div class="bg-black/60 backdrop-blur-md text-white text-xs font-medium px-2.5 py-1 rounded-full shadow-lg">
-          <i class="fas fa-clock mr-1"></i> ${p.duration_days} Days
+      <div class="safari-card-body">
+        <div class="safari-card-category">${p.category_name || 'Safari'}</div>
+        <h3 class="safari-card-title">${p.package_name}</h3>
+        ${dest ? `<div class="safari-card-location"><i class="fas fa-map-marker-alt"></i>${dest}</div>` : ''}
+        <div class="safari-card-rating">
+          <span class="stars">${stars(parseFloat(p.avg_rating || 0))}</span>
+          <span>${rating} ${p.review_count > 0 ? `(${p.review_count})` : ''}</span>
+        </div>
+        <div class="safari-card-footer">
+          <div class="safari-card-price">
+            <div class="from">From</div>
+            <div class="amount">$${Number(p.base_price_usd).toLocaleString()}</div>
+            <div class="per">per person</div>
+          </div>
+          <span class="btn btn-primary btn-sm">View Details</span>
         </div>
       </div>
     </a>`;
