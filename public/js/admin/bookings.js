@@ -85,13 +85,13 @@ async function updateBookingStatus(id, status) {
 
 window.viewBookingDetails = async function(id) {
     window.currentBookingId = id;
-    await navigate('booking-details', false);
     loadBookingDetails();
 }
 
 window.closeBookingDetails = function() {
     window.currentBookingId = null;
-    navigate('bookings', false);
+    const section = document.getElementById('bookingDetailsSection');
+    if (section) section.classList.add('hidden');
 }
 
 window.loadBookingDetails = async function() {
@@ -163,6 +163,11 @@ window.loadBookingDetails = async function() {
             };
         }
 
+        const section = document.getElementById('bookingDetailsSection');
+        if (section) {
+            section.classList.remove('hidden');
+            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
 
     } catch (e) {
         showToast('Failed to load booking details', 'error');
