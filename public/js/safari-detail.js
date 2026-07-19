@@ -116,6 +116,8 @@ window.setGalleryMain = function(url) {
 
 
 
+let pollingInterval = null;
+
 async function loadSafariDetails(slug) {
     try {
         const result = await API.getPackageBySlug(slug);
@@ -126,6 +128,23 @@ async function loadSafariDetails(slug) {
             renderSafariDetails(result.data);
             updatePageTitle(result.data.package_name);
             await loadRelatedSafaris(result.data.category_slug, result.data.package_id);
+            
+            // Setup polling for real-time updates
+            if (!pollingInterval) {
+                pollingInterval = setInterval(async () => {
+                    try {
+                        const updateRes = await API.getPackageBySlug(slug);
+                        if (updateRes && updateRes.success && updateRes.data) {
+                            if (JSON.stringify(currentSafari) !== JSON.stringify(updateRes.data)) {
+                                currentSafari = updateRes.data;
+                                renderSafariDetails(updateRes.data);
+                            }
+                        }
+                    } catch (err) {
+                        console.error('Polling error:', err);
+                    }
+                }, 30000);
+            }
         } else {
             document.getElementById('loadingState').style.display = 'none';
             showError('Safari package not found');
@@ -414,6 +433,17 @@ function initQuickBookingModal() {
 }
 function renderItinerary(items) {
     if (!items || items.length === 0) {
+        return '<p>Detailed itinerary coming soon.</p>';
+    }
+    if (typeof items === 'string') {
+        try {
+            items = JSON.parse(items);
+        } catch (e) {
+            console.error('Failed to parse itinerary', e);
+            return '<p>Detailed itinerary coming soon.</p>';
+        }
+    }
+    if (!Array.isArray(items)) {
         return '<p>Detailed itinerary coming soon.</p>';
     }
     items.sort((a, b) => a.day_number - b.day_number);

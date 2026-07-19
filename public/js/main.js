@@ -254,3 +254,40 @@ loadHomepage();
 // -- Reveal Animations --
 const revealObserver = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('revealed'); } }); }, { threshold: 0.1 });
 document.querySelectorAll('section, .feature-card').forEach(el => { el.classList.add('reveal-item'); revealObserver.observe(el); });
+
+// ── WhatsApp Floating Button ───────────────────────────────
+function initWhatsAppButton() {
+    const waPhone = "+255123456789"; // Default phone number
+    const waMessage = "Hello Tanzania Safari! I'm interested in booking a safari.";
+    const waUrl = `https://wa.me/${waPhone}?text=${encodeURIComponent(waMessage)}`;
+
+    const waBtn = document.createElement('a');
+    waBtn.href = waUrl;
+    waBtn.target = "_blank";
+    waBtn.className = "whatsapp-float fade-up";
+    waBtn.innerHTML = '<i class="fab fa-whatsapp"></i>';
+    
+    waBtn.style.position = 'fixed';
+    waBtn.style.bottom = '25px';
+    waBtn.style.left = '25px';
+    waBtn.style.backgroundColor = '#25d366';
+    waBtn.style.color = '#FFF';
+    waBtn.style.borderRadius = '50%';
+    waBtn.style.textAlign = 'center';
+    waBtn.style.fontSize = '32px';
+    waBtn.style.boxShadow = '0 4px 10px rgba(0,0,0,0.3)';
+    waBtn.style.zIndex = '9999';
+    waBtn.style.width = '60px';
+    waBtn.style.height = '60px';
+    waBtn.style.display = 'flex';
+    waBtn.style.alignItems = 'center';
+    waBtn.style.justifyContent = 'center';
+    waBtn.style.transition = 'all 0.3s ease';
+    waBtn.style.textDecoration = 'none';
+
+    waBtn.onmouseover = () => { waBtn.style.transform = 'scale(1.1)'; };
+    waBtn.onmouseleave = () => { waBtn.style.transform = 'scale(1)'; };
+
+    document.body.appendChild(waBtn);
+}
+initWhatsAppButton();

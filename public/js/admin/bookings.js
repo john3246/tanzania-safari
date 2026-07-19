@@ -98,7 +98,20 @@ window.viewBookingDetails = function(id) {
     document.getElementById('detailPrice').textContent = '$' + Number(b.total_price_usd).toLocaleString();
     document.getElementById('detailSpecialRequests').textContent = b.special_requests || 'None';
     
+    const btnApprove = document.getElementById('btnApproveBooking');
+    const btnReject = document.getElementById('btnRejectBooking');
+    const btnPending = document.getElementById('btnPendingBooking');
+    
+    if (btnApprove) btnApprove.onclick = () => updateBookingStatusFromModal(id, 'confirmed');
+    if (btnReject) btnReject.onclick = () => updateBookingStatusFromModal(id, 'cancelled');
+    if (btnPending) btnPending.onclick = () => updateBookingStatusFromModal(id, 'pending');
+
     document.getElementById('bookingModal').classList.add('active');
+}
+
+async function updateBookingStatusFromModal(id, status) {
+    await updateBookingStatus(id, status);
+    closeBookingModal();
 }
 
 window.closeBookingModal = function() {
