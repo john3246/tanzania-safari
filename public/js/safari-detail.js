@@ -385,6 +385,190 @@ function initQuickBookingModal() {
         });
     }
 }
+function renderItinerary(items) {
+    if (!items || items.length === 0) {
+        return '<p>Detailed itinerary coming soon.</p>';
+    }
+    items.sort((a, b) => a.day_number - b.day_number);
+    let html = '<div class="itinerary-timeline">';
+    items.forEach(item => {
+        html += `
+        <div class="itinerary-item">
+            <div class="itinerary-day">Day ${item.day_number}</div>
+            <div class="itinerary-title">${escapeHtml(item.title)}</div>
+            <div class="itinerary-desc">${escapeHtml(item.description).replace(/\n/g, '<br>')}</div>
+            <div class="itinerary-meta">
+        `;
+        if (item.accommodation) {
+            html += `<span><i class="fas fa-bed"></i> ${escapeHtml(item.accommodation)}</span>`;
+        }
+        if (item.meals_included) {
+            html += `<span><i class="fas fa-utensils"></i> ${escapeHtml(item.meals_included)}</span>`;
+        }
+        html += `</div></div>`;
+    });
+    html += '</div>';
+    return html;
+}
+
+async function loadRelatedSafaris(categorySlug, currentPackageId) {
+    const relatedGrid = document.getElementById('relatedGrid');
+    if (!relatedGrid) return;
+    
+    try {
+        const params = {
+            category: categorySlug,
+            limit: 3
+        };
+        
+        const result = await API.getPackages(params);
+        
+        if (result && result.success && result.data && result.data.length > 0) {
+            // Filter out current package
+            const related = result.data.filter(pkg => pkg.package_id !== currentPackageId).slice(0, 3);
+            
+            if (related.length > 0) {
+                relatedGrid.innerHTML = related.map(pkg => {
+                    const avgRating = parseFloat(pkg.avg_rating || 0).toFixed(1);
+                    const categoryIcon = getCategoryIcon(pkg.category_slug);
+                    
+                    return `
+                        <div class="related-card" onclick="window.location.href='/safaris/${pkg.package_slug}'">
+                            <div class="related-card-image">
+                                <i class="fas ${categoryIcon}" style="font-size: 48px;"></i>
+                            </div>
+                            <div class="related-card-content">
+                                <h3>${escapeHtml(pkg.package_name)}</h3>
+                                <p>${escapeHtml(pkg.short_description || 'Experience Tanzania\'s wildlife')}</p>
+                                <div class="related-card-meta">
+                                    <span class="related-price">$${parseInt(pkg.base_price_usd || 0).toLocaleString()}</span>
+                                    <span class="related-duration"><i class="fas fa-clock"></i> ${pkg.duration_days} days</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                relatedGrid.innerHTML = '<p>No related safaris found.</p>';
+            }
+        } else {
+            relatedGrid.innerHTML = '<p>No related safaris found.</p>';
+        }
+    } catch (error) {
+        console.error('Error loading related safaris:', error);
+        relatedGrid.innerHTML = '<p>Unable to load related safaris.</p>';
+    }
+}
+
+function getCategoryIcon(categorySlug) {
+    const icons = {
+        'wildlife-safari': 'fa-paw',
+        'mountain-trekking': 'fa-mountain',
+        'beach-holiday': 'fa-umbrella-beach',
+        'cultural-tour': 'fa-landmark',
+        'bird-watching': 'fa-dove',
+        'photography-safari': 'fa-camera'
+    };
+    return icons[categorySlug] || 'fa-tree';
+}
+
+function updatePageTitle(title) {
+    document.title = `${title} | Tanzania Safari Tours`;
+}
+
+function showError(message) {
+    const mainContent = document.getElementById('safariDetailContent');
+    if (mainContent) {
+        mainContent.innerHTML = `
+            <div style="text-align: center; padding: 4rem;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #ef4444; margin-bottom: 1rem;"></i>
+                <h2>${escapeHtml(message)}</h2>
+                <p style="margin-top: 1rem;">The safari package you're looking for might have been removed or doesn't exist.</p>
+                <a href="/safaris" class="btn btn-primary" style="margin-top: 2rem; display: inline-block;">
+                    <i class="fas fa-arrow-left"></i> Browse All Safaris
+                </a>
+            </div>
+        `;
+    }
+}
+
+function initQuickBookingModal() {
+    const quickBookBtn = document.getElementById('quickBookBtn');
+    const modal = document.getElementById('quickBookingModal');
+    const modalClose = document.querySelector('.modal-close');
+    
+    if (!quickBookBtn || !modal) return;
+    
+    quickBookBtn.addEventListener('click', () => {
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+        loadSafarisForDropdown();
+    });
+    
+    if (modalClose) {
+        modalClose.addEventListener('click', () => {
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
+        });
+    }
+    
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+    });
+    
+    const form = document.getElementById('quickBookingForm');
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('enquiryName');
+            const email = document.getElementById('enquiryEmail');
+            const message = document.getElementById('enquiryMessage');
+            
+            if (!name || !email || !message) return;
+            
+            if (!name.value.trim() || !email.value.trim() || !message.value.trim()) {
+                showNotification('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            if (!isValidEmail(email.value)) {
+                showNotification('Please enter a valid email address', 'error');
+                return;
+            }
+            
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            submitBtn.disabled = true;
+            
+            try {
+                await API.submitEnquiry({
+                    full_name: name.value,
+                    email: email.value,
+                    phone: document.getElementById('enquiryPhone')?.value || '',
+                    message: message.value,
+                    enquiry_type: 'Booking Inquiry',
+                    package_id: document.getElementById('preferredSafari')?.value || null
+                });
+                
+                showNotification('Enquiry sent successfully! We\'ll contact you within 24 hours.', 'success');
+                form.reset();
+                modal.classList.remove('show');
+                document.body.style.overflow = '';
+            } catch (error) {
+                console.error('Error submitting enquiry:', error);
+                showNotification(error.message || 'Failed to send enquiry. Please try again.', 'error');
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+    }
+}
 
 async function loadSafarisForDropdown() {
     const select = document.getElementById('preferredSafari');
@@ -408,7 +592,6 @@ function renderCard(pkg) {
     const formattedPrice = '$' + Number(pkg.base_price_usd).toLocaleString();
     document.getElementById('cardPrice').textContent = formattedPrice;
     
-    // Mobile sticky CTA updates
     const mobilePriceEl = document.getElementById('mobilePrice');
     if (mobilePriceEl) mobilePriceEl.textContent = formattedPrice;
     const mobileBookBtn = document.getElementById('mobileBookBtn');
@@ -427,6 +610,34 @@ function renderCard(pkg) {
     </div>`).join('');
     const bookBtn = document.getElementById('bookBtn');
     if (bookBtn) bookBtn.href = `/booking?package=${pkg.package_slug}`;
+}
+
+async function submitReview(event) {
+    event.preventDefault();
+    if (!currentSafari) return;
+    const author = document.getElementById('reviewAuthor').value;
+    const rating = document.getElementById('reviewRating').value;
+    const content = document.getElementById('reviewContent').value;
+    const btn = event.target.querySelector('button[type="submit"]');
+    const oldText = btn.innerHTML;
+    try {
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+        btn.disabled = true;
+        const res = await API.submitReview({
+            package_id: currentSafari.package_id,
+            first_name: author,
+            rating: parseInt(rating),
+            comment: content
+        });
+        toast(res.message || 'Review submitted successfully!', 'success');
+        event.target.reset();
+        document.getElementById('reviewFormContainer').style.display = 'none';
+    } catch(err) {
+        toast(err.message || 'Failed to submit review', 'error');
+    } finally {
+        btn.innerHTML = oldText;
+        btn.disabled = false;
+    }
 }
 
 function openBookingModal(slug, name) {
@@ -518,8 +729,8 @@ function escapeHtml(str) {
         .replace(/'/g, '&#39;');
 }
 
-// Make functions available globally
 window.openBookingModal = openBookingModal;
+window.submitReview = submitReview;
 
 // Tab interaction
 document.addEventListener('click', e => {

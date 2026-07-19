@@ -6,6 +6,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     loadComponent('header', '/includes/header.html', initHeader);
     loadComponent('footer', '/includes/footer.html', initFooter);
+    initSEO();
 });
 
 /**

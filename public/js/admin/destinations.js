@@ -38,6 +38,9 @@ function renderDestinations() {
                     <button class="bg-primary-50 hover:bg-primary-100 text-primary-700 p-1.5 rounded-lg transition-colors" onclick="openDestModal('${d.park_id}')" title="Edit">
                         <i class="fa-solid fa-pen"></i>
                     </button>
+                    <button class="bg-red-50 hover:bg-red-100 text-red-600 p-1.5 rounded-lg transition-colors" onclick="deleteDestination('${d.park_id}')" title="Delete">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
                 </div>
             </td>
         </tr>`;
@@ -94,4 +97,15 @@ async function saveDestination(event) {
         setLoading(btn, false);
     }
 }
+
+async function deleteDestination(id) {
+    if (!confirm('Are you sure you want to delete this destination?')) return;
+    try {
+        await apiRequest('DELETE', `/destinations/${id}`);
+        showToast('Destination deleted');
+        await loadDestinations();
+    } catch (e) {}
+}
+
 window.openDestModal = openDestModal; 
+window.deleteDestination = deleteDestination;

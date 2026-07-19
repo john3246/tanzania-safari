@@ -29,6 +29,24 @@ router.get('/stats', safariController.getGlobalStats || (async (req, res) => {
     }
 }));
 
+// ── Submit Review ─────────────────────────────────────────────
+router.post('/reviews', async (req, res) => {
+    try {
+        const { package_id, first_name, rating, comment } = req.body;
+        const db = require('../config/db');
+        const query = `
+            INSERT INTO reviews (package_id, first_name, last_name, rating, comment, is_approved)
+            VALUES ($1, $2, '', $3, $4, false)
+            RETURNING review_id
+        `;
+        const result = await db.query(query, [package_id, first_name, rating, comment]);
+        res.json({ success: true, message: 'Review submitted successfully and is pending approval.' });
+    } catch (error) {
+        console.error('Error submitting review:', error);
+        res.status(500).json({ success: false, message: 'Error submitting review' });
+    }
+});
+
 // ── Categories ────────────────────────────────────────────────
 router.get('/categories', safariController.getCategories || (async (req, res) => {
     try {

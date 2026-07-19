@@ -44,6 +44,9 @@ const API = {
     },
     async subscribeNewsletter(email) {
         return this.post('/newsletter', { email });
+    },
+    async submitReview(data) {
+        return this.post('/reviews', data);
     }
 };
 

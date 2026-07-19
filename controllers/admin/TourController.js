@@ -111,7 +111,8 @@ class TourController {
 
     async saveDestinations(req, res) {
         try {
-            await tourService.saveDestinations(req.params.id, req.body.parks);
+            const destinations = req.body.destinations || req.body.parks || [];
+            await tourService.saveDestinations(req.params.id, destinations);
             res.json({ success: true, message: 'Destinations saved successfully' });
         } catch (error) {
             res.status(400).json({ success: false, message: error.message });
