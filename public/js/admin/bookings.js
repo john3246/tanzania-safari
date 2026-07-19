@@ -83,17 +83,15 @@ async function updateBookingStatus(id, status) {
     } catch (e) {}
 }
 
-window.viewBookingDetails = function(id) {
+window.viewBookingDetails = async function(id) {
     window.currentBookingId = id;
+    await navigate('booking-details', false);
     loadBookingDetails();
 }
 
 window.closeBookingDetails = function() {
-    const detailsPage = document.getElementById('page-booking-details');
-    if (detailsPage) {
-        detailsPage.classList.add('hidden');
-    }
     window.currentBookingId = null;
+    navigate('bookings', false);
 }
 
 window.loadBookingDetails = async function() {
@@ -165,11 +163,6 @@ window.loadBookingDetails = async function() {
             };
         }
 
-        // Show the overlay
-        const detailsPage = document.getElementById('page-booking-details');
-        if (detailsPage) {
-            detailsPage.classList.remove('hidden');
-        }
 
     } catch (e) {
         showToast('Failed to load booking details', 'error');
