@@ -85,13 +85,13 @@ async function updateBookingStatus(id, status) {
 
 window.viewBookingDetails = async function(id) {
     window.currentBookingId = id;
+    await navigate('bookings_details', false);
     loadBookingDetails();
 }
 
 window.closeBookingDetails = function() {
     window.currentBookingId = null;
-    const section = document.getElementById('bookingDetailsSection');
-    if (section) section.classList.add('hidden');
+    navigate('bookings', false);
 }
 
 window.loadBookingDetails = async function() {
@@ -161,12 +161,6 @@ window.loadBookingDetails = async function() {
                     setLoading(btn, false, '<i class="fa-solid fa-paper-plane"></i> Send Reply');
                 }
             };
-        }
-
-        const section = document.getElementById('bookingDetailsSection');
-        if (section) {
-            section.classList.remove('hidden');
-            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
     } catch (e) {
