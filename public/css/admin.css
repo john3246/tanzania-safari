@@ -29,6 +29,9 @@ body {
 .page.active {
     display: block !important;
 }
+.page.active.flex {
+    display: flex !important;
+}
 
 /* Modal Overlay (Crucial for Modal Javascript) */
 .modal-overlay {
