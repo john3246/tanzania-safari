@@ -43,7 +43,14 @@ router.post('/forgot-password', validate(forgotSchema), async (req, res, next) =
 
         const resetUrl = `${process.env.ADMIN_URL || 'http://localhost:3000/admin'}/reset-password?token=${resetToken}`;
         
-        await emailService.sendPasswordResetEmail(user.email, resetUrl);
+        try {
+            await emailService.sendPasswordResetEmail(user.email, resetUrl);
+        } catch (emailError) {
+            console.error('Failed to send password reset email (SMTP might be unconfigured):', emailError.message);
+            console.log('--- RESET URL (For Development) ---');
+            console.log(resetUrl);
+            console.log('-----------------------------------');
+        }
 
         res.json({ success: true, message: successMessage });
     } catch (error) {

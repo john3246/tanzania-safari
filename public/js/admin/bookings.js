@@ -100,21 +100,27 @@ window.loadBookingDetails = async function() {
         if (!res || !res.data) throw new Error('Booking not found');
         const b = res.data;
 
-        document.getElementById('detailBookingId').textContent = '#' + b.booking_id.substring(0,8).toUpperCase();
-        document.getElementById('detailCustomerName').textContent = b.full_name;
-        document.getElementById('detailCustomerEmail').textContent = b.email;
+        document.getElementById('detailBookingId').textContent = '#' + String(b.booking_id || '').substring(0,8).toUpperCase();
+        document.getElementById('detailCustomerName').textContent = b.full_name || 'Guest';
+        
+        const emailEl = document.getElementById('detailCustomerEmail');
+        if(emailEl) {
+            emailEl.textContent = b.email || 'N/A';
+            emailEl.href = b.email ? `mailto:${b.email}` : '#';
+        }
+        
         document.getElementById('detailCustomerPhone').textContent = b.phone || 'N/A';
         document.getElementById('detailPackageName').textContent = b.package_name || 'N/A';
         document.getElementById('detailStartDate').textContent = b.start_date ? new Date(b.start_date).toLocaleDateString() : 'N/A';
         document.getElementById('detailAdults').textContent = b.number_of_adults || 0;
         document.getElementById('detailChildren').textContent = b.number_of_children || 0;
-        document.getElementById('detailPrice').textContent = '$' + Number(b.total_price_usd).toLocaleString();
+        document.getElementById('detailPrice').textContent = '$' + Number(b.total_price_usd || 0).toLocaleString();
         document.getElementById('detailSpecialRequests').textContent = b.special_requests || 'None';
         
         // Status Badge
         const statusBadge = document.getElementById('detailStatusBadge');
         if (statusBadge) {
-            const statusName = (b.status_name || 'Pending').toLowerCase();
+            const statusName = (b.status_name || b.current_status || 'Pending').toLowerCase();
             let statusClass = 'bg-slate-100 text-slate-700';
             if (statusName === 'confirmed') statusClass = 'bg-emerald-100 text-emerald-700';
             if (statusName === 'pending') statusClass = 'bg-yellow-100 text-yellow-700';

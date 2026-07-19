@@ -452,12 +452,12 @@ function renderItinerary(items) {
         html += `
         <div class="itinerary-item">
             <div class="itinerary-day">Day ${item.day_number}</div>
-            <div class="itinerary-title">${escapeHtml(item.title)}</div>
-            <div class="itinerary-desc">${escapeHtml(item.description).replace(/\n/g, '<br>')}</div>
+            <div class="itinerary-title">${escapeHtml(item.day_title || item.title)}</div>
+            <div class="itinerary-desc">${escapeHtml(item.day_description || item.description).replace(/\n/g, '<br>')}</div>
             <div class="itinerary-meta">
         `;
-        if (item.accommodation) {
-            html += `<span><i class="fas fa-bed"></i> ${escapeHtml(item.accommodation)}</span>`;
+        if (item.accommodation_type || item.accommodation) {
+            html += `<span><i class="fas fa-bed"></i> ${escapeHtml(item.accommodation_type || item.accommodation)}</span>`;
         }
         if (item.meals_included) {
             html += `<span><i class="fas fa-utensils"></i> ${escapeHtml(item.meals_included)}</span>`;
