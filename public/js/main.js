@@ -203,7 +203,7 @@ function renderSafaris(packages) {
         grid.innerHTML = '<p style="color:var(--text-muted);grid-column:1/-1;text-align:center;padding:2rem">No safari packages found.</p>';
         return;
     }
-    grid.innerHTML = packages.slice(0, 6).map(buildSafariCard).join('');
+    grid.innerHTML = packages.slice(0, 4).map(buildSafariCard).join('');
 }
 
 // ── Quick Book Modal ───────────────────────────────────────

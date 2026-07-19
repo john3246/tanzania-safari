@@ -39,60 +39,61 @@
 <div id="header"></div>
 
 <!-- Hero -->
-    <section class="hero" style="display: flex; align-items: center; min-height: 100vh; position: relative;">
-      <div class="hero-bg" style="position: absolute; width: 100%; height: 100%; inset: 0; z-index: 0;">
-        <video autoplay muted loop playsinline poster="/images/hero.jpg" class="hero-video" style="width: 100%; height: 100%; object-fit: cover;">
+    <section class="hero">
+      <div class="hero-bg">
+        <video autoplay muted loop playsinline poster="/images/hero.jpg" class="hero-video">
           <source src="/images/hero-video.mp4" type="video/mp4">
         </video>
       </div>
+      <div class="hero-overlay"></div>
       
-      <!-- Modern Solid Text Block instead of gradient overlay -->
-      <div class="hero-content" style="position: relative; z-index: 2; width: 100%; display: flex; padding-top: 80px;">
-        <div class="container" style="display: flex; gap: 2rem; align-items: flex-end; flex-wrap: wrap;">
-            
-            <div style="flex: 1; min-width: 300px; background: var(--bg-dark); padding: 4rem; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.4);">
-              <span class="section-tag" style="color: var(--primary); font-weight: 700; letter-spacing: 2px; text-transform: uppercase;">Explore the Untamed</span>
-              <h1 class="hero-title" style="font-size: clamp(3rem, 6vw, 5.5rem); line-height: 1.05; margin: 1.5rem 0; font-family: var(--font-heading); color: #fff;">Beauty of Tanzania</h1>
-              <p class="hero-subtitle" style="font-size: 1.125rem; color: rgba(255,255,255,0.8); margin-bottom: 2.5rem; max-width: 400px;">Bespoke safari adventures and luxury encounters with nature. We craft journeys that stay with you forever.</p>
-              <div class="hero-actions" style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                <a href="/safaris" class="btn btn-primary" style="padding: 1rem 2rem; border-radius: 50px;">Explore Tours</a>
-                <a href="/contact" class="btn" style="background: #fff; color: var(--bg-dark); padding: 1rem 2rem; border-radius: 50px; font-weight: 600;">Plan Your Trip</a>
-              </div>
+      <div class="hero-content">
+        <div class="container">
+            <span class="section-tag">Explore the Untamed</span>
+            <h1 class="hero-title">Beauty of Tanzania</h1>
+            <p class="hero-subtitle">Bespoke safari adventures and luxury encounters with nature. We craft journeys that stay with you forever.</p>
+            <div class="hero-actions">
+              <a href="/safaris" class="btn btn-primary">Explore Tours</a>
+              <a href="/contact" class="btn btn-secondary">Plan Your Trip</a>
             </div>
-
-            <!-- Integrated Search Filter -->
-            <div style="flex: 1; min-width: 300px; background: #fff; padding: 2.5rem; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.15);">
-              <h3 style="font-family: var(--font-heading); color: var(--text-primary); font-size: 1.5rem; margin-bottom: 1.5rem;">Find Your Adventure</h3>
-              <form class="search-filter-form" style="display: flex; flex-direction: column; gap: 1.25rem;" action="/safaris" method="GET">
-                <div>
-                  <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem; display: block;">Destination</label>
-                  <select name="destination" class="form-control" style="width: 100%; border: 2px solid var(--border-light); padding: 1rem; border-radius: 12px; font-size: 1rem; background: var(--bg-secondary);">
-                    <option value="">Any Destination</option>
-                    <option value="serengeti">Serengeti</option>
-                    <option value="ngorongoro">Ngorongoro</option>
-                    <option value="tarangire">Tarangire</option>
-                    <option value="kilimanjaro">Mount Kilimanjaro</option>
-                  </select>
-                </div>
-                <div>
-                  <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem; display: block;">Package Type</label>
-                  <select name="type" class="form-control" style="width: 100%; border: 2px solid var(--border-light); padding: 1rem; border-radius: 12px; font-size: 1rem; background: var(--bg-secondary);">
-                    <option value="">Any Package Type</option>
-                    <option value="Wildlife Safari">Wildlife Safari</option>
-                    <option value="Trekking">Trekking</option>
-                    <option value="Honeymoon">Honeymoon</option>
-                    <option value="Cultural">Cultural</option>
-                  </select>
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem; border-radius: 12px; font-size: 1.1rem; margin-top: 0.5rem;">
-                  <i class="fas fa-search"></i> Search Tours
-                </button>
-              </form>
-            </div>
-            
         </div>
       </div>
+      
+      <div class="hero-scroll-indicator">
+        <div class="scroll-mouse"><div class="scroll-wheel"></div></div>
+      </div>
     </section>
+
+<!-- Search Filter -->
+<section class="search-filter-section" style="background: var(--bg-card); padding: 1.5rem 0; box-shadow: var(--shadow-sm); position: relative; z-index: 10; margin-top: -3rem;">
+  <div class="container">
+    <form class="search-filter-form" style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: center;" action="/safaris" method="GET">
+      <div style="flex: 1; min-width: 200px;">
+        <select name="destination" class="form-control" style="width: 100%; border: 1px solid var(--border); padding: 0.75rem; border-radius: var(--radius-sm);">
+          <option value="">Any Destination</option>
+          <option value="serengeti">Serengeti</option>
+          <option value="ngorongoro">Ngorongoro</option>
+          <option value="tarangire">Tarangire</option>
+          <option value="kilimanjaro">Mount Kilimanjaro</option>
+        </select>
+      </div>
+      <div style="flex: 1; min-width: 200px;">
+        <select name="type" class="form-control" style="width: 100%; border: 1px solid var(--border); padding: 0.75rem; border-radius: var(--radius-sm);">
+          <option value="">Any Package Type</option>
+          <option value="Wildlife Safari">Wildlife Safari</option>
+          <option value="Trekking">Trekking</option>
+          <option value="Honeymoon">Honeymoon</option>
+          <option value="Cultural">Cultural</option>
+        </select>
+      </div>
+      <div style="flex: 1; min-width: 150px;">
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem;">
+          <i class="fas fa-search"></i> Search Tours
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
 
 <!-- Destinations -->
 <section class="section">
@@ -137,8 +138,9 @@
 </section>
 
 <!-- Why Choose Us -->
-<section class="section why-section">
-  <div class="container">
+<section class="section why-section" style="background-image: url('/images/hero-side-1.jpg'); background-size: cover; background-position: center; background-attachment: fixed; position: relative;">
+  <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.4);"></div>
+  <div class="container" style="position: relative; z-index: 2; padding: 4rem; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); border-radius: 24px; box-shadow: var(--shadow-lg);">
     <div class="section-header">
       <span class="section-eyebrow"><i class="fas fa-award"></i> Why Choose Us</span>
       <h2 class="section-title">Your Trusted <span>Safari Partner</span></h2>
@@ -185,8 +187,9 @@
 </section>
 
 <!-- Testimonials -->
-<section class="section">
-  <div class="container">
+<section class="section" style="background-image: url('/images/hero-side-2.jpg'); background-size: cover; background-position: center; background-attachment: fixed; position: relative;">
+  <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.4);"></div>
+  <div class="container" style="position: relative; z-index: 2; padding: 4rem; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); border-radius: 24px; box-shadow: var(--shadow-lg);">
     <div class="section-header">
       <span class="section-eyebrow"><i class="fas fa-quote-left"></i> Traveler Stories</span>
       <h2 class="section-title">What Our <span>Guests Say</span></h2>
