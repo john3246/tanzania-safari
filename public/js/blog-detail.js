@@ -23,7 +23,7 @@ async function loadPost() {
             </div>
             
             <div class="post-featured-img">
-                <img src="${imgSrc(data.featured_image_url, '/images/blog-placeholder.jpg')}" alt="${data.post_title}">
+                <img src="${imgSrc(data.featured_image_url, '/images/blog-placeholder.jpg')}" alt="${data.post_title}" loading="lazy" decoding="async">
             </div>
             
             <div class="post-content">

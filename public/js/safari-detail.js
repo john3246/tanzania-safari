@@ -97,12 +97,12 @@ function buildGallery(mediaItems) {
     }
     const mainImg = mediaItems[0];
     const mainImgUrl = typeof mainImg === 'string' ? mainImg : mainImg.file_url;
-    let html = `<div class="gallery-main" onclick="openLightbox('${mainImgUrl}')"><img src="${mainImgUrl}" alt="${mainImg.alt_text || 'Safari image'}" onerror="this.src='/images/placeholder.jpeg'"></div>`;
+    let html = `<div class="gallery-main" onclick="openLightbox('${mainImgUrl}')"><img src="${mainImgUrl}" alt="${mainImg.alt_text || 'Safari image'}" loading="lazy" decoding="async" onerror="this.src='/images/placeholder.jpeg'"></div>`;
     if (mediaItems.length > 1) {
         html += '<div class="gallery-thumbs">';
         for (let i = 1; i < Math.min(mediaItems.length, 5); i++) {
             const thumbUrl = typeof mediaItems[i] === 'string' ? mediaItems[i] : mediaItems[i].file_url;
-            html += `<div class="gallery-thumb" onclick="setGalleryMain('${thumbUrl}')"><img src="${thumbUrl}" alt="Thumbnail ${i}" onerror="this.src='/images/placeholder.jpeg'"></div>`;
+            html += `<div class="gallery-thumb" onclick="setGalleryMain('${thumbUrl}')"><img src="${thumbUrl}" alt="Thumbnail ${i}" loading="lazy" decoding="async" onerror="this.src='/images/placeholder.jpeg'"></div>`;
         }
         html += '</div>';
     }
@@ -199,8 +199,35 @@ function renderSafariDetails(safari) {
     }
     
     renderCard(safari);
+    injectJSONLDSchema(safari);
 }
 
+function injectJSONLDSchema(safari) {
+    const schema = {
+        "@context": "https://schema.org",
+        "@type": "Product", // Or TouristTrip
+        "name": safari.package_name,
+        "image": safari.image_urls && safari.image_urls.length > 0 ? safari.image_urls : [safari.featured_image_url || 'https://tanzaniasafarimagic.com/images/hero.jpg'],
+        "description": safari.short_description || safari.detailed_description,
+        "offers": {
+            "@type": "Offer",
+            "priceCurrency": "USD",
+            "price": safari.price,
+            "availability": "https://schema.org/InStock"
+        }
+    };
+    if (safari.avg_rating > 0) {
+        schema.aggregateRating = {
+            "@type": "AggregateRating",
+            "ratingValue": safari.avg_rating,
+            "reviewCount": safari.review_count || 1
+        };
+    }
+    const script = document.createElement('script');
+    script.type = "application/ld+json";
+    script.text = JSON.stringify(schema);
+    document.head.appendChild(script);
+}
 function renderItinerary(items) {
     if (!items || items.length === 0) {
         return '<p>Detailed itinerary coming soon.</p>';

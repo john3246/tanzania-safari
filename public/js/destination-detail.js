@@ -108,6 +108,7 @@ async function loadDestinationDetails(slug) {
             
             renderDestinationDetails(currentDestination);
             updatePageTitle(currentDestination.park_name);
+            injectDestinationSchema(currentDestination);
             await loadSafariPackagesForDestination(currentDestination.park_name);
             await loadRelatedDestinations(currentDestination.park_id, currentDestination.park_slug);
         } else {
@@ -205,13 +206,13 @@ function renderDestinationDetails(destination) {
                                     return `
                                         <div class="gallery">
                                             <div class="gallery-main group" onclick="openLightbox('${imgSrc(images[0])}')">
-                                                <img src="${imgSrc(images[0])}" alt="${escapeHtml(name)} main view" class="group-hover:scale-105 transition-transform duration-700">
+                                                <img src="${imgSrc(images[0])}" alt="${escapeHtml(name)} main view" class="group-hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async">
                                             </div>
                                             ${images.length > 1 ? `
                                             <div class="gallery-thumbs">
                                                 ${images.slice(1, 5).map((url, i) => `
                                                     <div class="gallery-thumb group" onclick="document.querySelector('.gallery-main img').src='${imgSrc(url)}'; document.querySelector('.gallery-main').setAttribute('onclick', 'openLightbox(\\'${imgSrc(url)}\\')')">
-                                                        <img src="${imgSrc(url)}" alt="${escapeHtml(name)} thumbnail ${i+1}" class="group-hover:scale-110 transition-transform duration-500">
+                                                        <img src="${imgSrc(url)}" alt="${escapeHtml(name)} thumbnail ${i+1}" class="group-hover:scale-110 transition-transform duration-500" loading="lazy" decoding="async">
                                                     </div>
                                                 `).join('')}
                                             </div>
@@ -322,6 +323,21 @@ function renderDestinationDetails(destination) {
     `;
     
     mainContent.innerHTML = html;
+    injectDestinationSchema(destination);
+}
+
+function injectDestinationSchema(destination) {
+    const schema = {
+        "@context": "https://schema.org",
+        "@type": "TouristDestination",
+        "name": destination.park_name,
+        "description": destination.park_description,
+        "image": destination.image_urls && destination.image_urls.length > 0 ? destination.image_urls[0] : (destination.image_url || 'https://tanzaniasafarimagic.com/images/hero.jpg')
+    };
+    const script = document.createElement('script');
+    script.type = "application/ld+json";
+    script.text = JSON.stringify(schema);
+    document.head.appendChild(script);
 }
 
 async function loadSafariPackagesForDestination(destinationName) {

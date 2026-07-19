@@ -266,3 +266,41 @@ function showToast(title, message, type = 'info') {
         toast.remove();
     };
 }
+
+/**
+ * Initializes and injects Open Graph and Twitter SEO tags dynamically based on the page content.
+ */
+function initSEO() {
+    // Basic OG Tags
+    const ogTitle = document.createElement('meta');
+    ogTitle.setAttribute('property', 'og:title');
+    ogTitle.setAttribute('content', document.title);
+    
+    const ogDesc = document.createElement('meta');
+    ogDesc.setAttribute('property', 'og:description');
+    const descMeta = document.querySelector('meta[name="description"]');
+    ogDesc.setAttribute('content', descMeta ? descMeta.getAttribute('content') : 'Experience authentic Tanzania safari tours with expert local guides.');
+
+    const ogUrl = document.createElement('meta');
+    ogUrl.setAttribute('property', 'og:url');
+    ogUrl.setAttribute('content', window.location.href);
+
+    const ogType = document.createElement('meta');
+    ogType.setAttribute('property', 'og:type');
+    ogType.setAttribute('content', 'website');
+
+    // Twitter Card Tags
+    const twCard = document.createElement('meta');
+    twCard.setAttribute('name', 'twitter:card');
+    twCard.setAttribute('content', 'summary_large_image');
+
+    const twTitle = document.createElement('meta');
+    twTitle.setAttribute('name', 'twitter:title');
+    twTitle.setAttribute('content', document.title);
+
+    const twDesc = document.createElement('meta');
+    twDesc.setAttribute('name', 'twitter:description');
+    twDesc.setAttribute('content', descMeta ? descMeta.getAttribute('content') : 'Experience authentic Tanzania safari tours.');
+
+    document.head.append(ogTitle, ogDesc, ogUrl, ogType, twCard, twTitle, twDesc);
+}

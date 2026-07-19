@@ -4,6 +4,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
+const compression = require('compression');
 require('dotenv').config();
 
 const indexRoutes = require('./routes/index');
@@ -17,6 +18,16 @@ const logger = require('./utils/logger');
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
+
+// ── Performance Optimization ──────────────────────────────────
+app.use(compression({
+    level: 6,
+    threshold: 100 * 1024,
+    filter: (req, res) => {
+        if (req.headers['x-no-compression']) return false;
+        return compression.filter(req, res);
+    }
+}));
 
 // ── Environment Configuration ─────────────────────────────────────
 // Instruct Express to trust headers set by Render's reverse proxy (e.g., X-Forwarded-For).
@@ -96,9 +107,13 @@ app.use(morgan('dev'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// ── Static files ──────────────────────────────────────────────
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// ── Static files with Aggressive Caching ──────────────────────────────────────────────
+const cacheOptions = {
+    maxAge: '30d',
+    etag: true
+};
+app.use(express.static(path.join(__dirname, 'public'), cacheOptions));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'), cacheOptions));
 
 // ── Crawler Fallbacks (Prevent 404 Pollution) ───────────────────
 app.get(['/favicon.ico', '/ads.txt', '/app-ads.txt', '/sellers.json'], (req, res) => {

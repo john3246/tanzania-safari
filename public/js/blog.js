@@ -13,7 +13,7 @@ async function loadBlog() {
         let html = `
         <div class="featured-post">
             <div class="featured-post-img">
-                <img src="${imgSrc(featured.featured_image_url, '/images/blog-placeholder.jpg')}" alt="${featured.post_title}">
+                <img src="${imgSrc(featured.featured_image_url, '/images/blog-placeholder.jpg')}" alt="${featured.post_title}" loading="lazy" decoding="async">
             </div>
             <div class="featured-post-body">
                 <span class="featured-badge">Featured Post</span>
@@ -30,7 +30,7 @@ async function loadBlog() {
             ${rest.map(post => `
                 <div class="blog-card">
                     <div class="blog-card-img">
-                        <img src="${imgSrc(post.featured_image_url, '/images/blog-placeholder.jpg')}" alt="${post.post_title}">
+                        <img src="${imgSrc(post.featured_image_url, '/images/blog-placeholder.jpg')}" alt="${post.post_title}" loading="lazy" decoding="async">
                     </div>
                     <div class="blog-card-body">
                         <div class="blog-card-meta">
