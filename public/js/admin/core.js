@@ -30,7 +30,7 @@ async function initAdminApp() {
 
         // Setup routing (load dashboard by default)
         const initialPage = window.location.hash.replace('#', '') || window.location.pathname.split('/').pop();
-        const validPages = ['dashboard', 'packages', 'categories', 'bookings', 'enquiries', 'settings', 'destinations', 'blog', 'reviews', 'users', 'images', 'communications'];
+        const validPages = ['dashboard', 'packages', 'categories', 'bookings', 'booking-details', 'enquiries', 'settings', 'destinations', 'blog', 'reviews', 'users', 'images', 'communications'];
         const pageToLoad = validPages.includes(initialPage) ? initialPage : 'dashboard';
         
         await navigate(pageToLoad, false); // pass false so we don't push state on initial load
@@ -181,6 +181,7 @@ async function navigate(page, pushState = true) {
         case 'packages': loadPackages(); break;
         case 'destinations': loadDestinations(); break;
         case 'bookings': loadBookings(); break;
+        case 'booking-details': loadBookingDetails(); break;
         case 'enquiries': loadEnquiries(); break;
         case 'users': loadUsers(); break;
         case 'blog': loadBlogs(); break;
@@ -202,6 +203,7 @@ function updateBreadcrumb(page) {
         'categories': 'Categories',
         'destinations': 'Destinations',
         'bookings': 'Bookings',
+        'booking-details': 'Booking Details',
         'enquiries': 'Inquiries',
         'blog': 'Blog Posts',
         'reviews': 'Reviews',
@@ -216,6 +218,7 @@ function updateBreadcrumb(page) {
         'categories': 'Inventory',
         'destinations': 'Inventory',
         'bookings': 'Overview',
+        'booking-details': 'Overview',
         'enquiries': 'Overview',
         'blog': 'Content',
         'reviews': 'Content',

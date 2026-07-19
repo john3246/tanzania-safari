@@ -7,6 +7,8 @@ const { requirePermission } = require('../../middleware/rbacMiddleware');
 router.use(authenticate);
 
 router.get('/', bookingController.list);
+router.get('/:id', requirePermission('bookings.view'), bookingController.getBooking);
 router.put('/:id/status', requirePermission('bookings.edit'), bookingController.updateStatus);
+router.post('/:id/reply', requirePermission('bookings.edit'), bookingController.replyToBooking);
 
 module.exports = router;

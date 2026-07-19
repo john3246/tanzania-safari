@@ -34,6 +34,47 @@ class BookingController {
             res.status(400).json({ success: false, message: error.message });
         }
     }
+
+    async getBooking(req, res) {
+        try {
+            const booking = await bookingService.repository.getBookingDetails(req.params.id);
+            if (!booking) return res.status(404).json({ success: false, message: 'Booking not found' });
+            res.json({ success: true, data: booking });
+        } catch (error) {
+            res.status(500).json({ success: false, message: error.message });
+        }
+    }
+
+    async replyToBooking(req, res) {
+        try {
+            const { message, subject } = req.body;
+            if (!message) return res.status(400).json({ success: false, message: 'Message is required' });
+
+            const booking = await bookingService.repository.getBookingDetails(req.params.id);
+            if (!booking) return res.status(404).json({ success: false, message: 'Booking not found' });
+
+            if (!booking.email) return res.status(400).json({ success: false, message: 'Customer email not found' });
+
+            const emailService = require('../../services/email');
+            await emailService.sendEmailDirect({
+                to: booking.email,
+                subject: subject || `Regarding your booking #${booking.booking_id.substring(0,8).toUpperCase()}`,
+                html: `
+                  <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
+                    <p>Dear ${booking.full_name},</p>
+                    <p>${message.replace(/\n/g, '<br>')}</p>
+                    <br>
+                    <p>Best regards,</p>
+                    <p><strong>Tanzania Safari Magic Team</strong></p>
+                  </div>
+                `
+            });
+
+            res.json({ success: true, message: 'Reply sent successfully' });
+        } catch (error) {
+            res.status(500).json({ success: false, message: error.message });
+        }
+    }
 }
 
 module.exports = new BookingController();

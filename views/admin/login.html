@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="/css/variables.css">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-body{font-family:var(--font-body), 'Inter',sans-serif;background:linear-gradient(135deg, #fdfbf7 0%, #eef2eb 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1rem}
+body{font-family:var(--font-body), 'Inter',sans-serif;background:url('/images/logo.png') no-repeat center center fixed, linear-gradient(135deg, #fdfbf7 0%, #eef2eb 100%);background-size:50%, cover;background-blend-mode:overlay;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1rem}
 .login-card{background:rgba(255, 255, 255, 0.95);backdrop-filter:blur(10px);border-radius:20px;width:100%;max-width:420px;overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.08);border:1px solid rgba(255,255,255,0.6)}
 .login-header{background:#263E22;padding:3rem 2rem;text-align:center;color:#fff;border-bottom:4px solid #D4AF37}
 .login-logo img {height: 70px; width: auto; margin: 0 auto; display: block; filter: brightness(0) invert(1);}
@@ -20,7 +20,7 @@ body{font-family:var(--font-body), 'Inter',sans-serif;background:linear-gradient
 .form-label{display:block;font-size:0.8rem;font-weight:600;color:#555;margin-bottom:0.6rem;text-transform:uppercase;letter-spacing:1px}
 .input-wrap{position:relative}
 .input-wrap i{position:absolute;left:1.2rem;top:50%;transform:translateY(-50%);color:#aaa;font-size:.9rem}
-.form-control{width:100%;padding:1rem 1rem 1rem 3rem;border:1px solid #e0e0e0;border-radius:10px;font-size:.95rem;font-family:inherit;outline:none;transition:all 0.3s ease;color:#333;background:#fafafa}
+.form-control{width:100%;padding:1rem 2.5rem 1rem 3rem;border:1px solid #e0e0e0;border-radius:10px;font-size:.95rem;font-family:inherit;outline:none;transition:all 0.3s ease;color:#333;background:#fafafa}
 .form-control:focus{border-color:#263E22;box-shadow:0 0 0 4px rgba(38, 62, 34, 0.1);background:#fff}
 .toggle-pw{position:absolute;right:1rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#aaa;font-size:.9rem;transition:all 0.3s}
 .toggle-pw:hover{color:#263E22}
