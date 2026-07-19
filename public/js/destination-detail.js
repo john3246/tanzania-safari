@@ -196,22 +196,32 @@ function renderDestinationDetails(destination) {
                         <!-- Photo Gallery -->
                         <div class="content-section">
                             <h2>Photo Gallery</h2>
-                            ${Array.isArray(destination.image_urls) && destination.image_urls.length > 0 ? `
-                                <div class="gallery">
-                                    <div class="gallery-main" onclick="openLightbox('${imgSrc(destination.image_urls[0])}')">
-                                        <img src="${imgSrc(destination.image_urls[0])}" alt="${name} view 1">
-                                    </div>
-                                    ${destination.image_urls.length > 1 ? `
-                                    <div class="gallery-thumbs">
-                                        ${destination.image_urls.slice(1, 5).map((url, i) => `
-                                            <div class="gallery-thumb" onclick="document.querySelector('.gallery-main img').src='${imgSrc(url)}'">
-                                                <img src="${imgSrc(url)}" alt="${name} thumbnail ${i+1}">
+                            ${(() => {
+                                const images = [];
+                                if (Array.isArray(destination.image_urls)) images.push(...destination.image_urls);
+                                if (destination.image_url && !images.includes(destination.image_url)) images.unshift(destination.image_url);
+                                
+                                if (images.length > 0) {
+                                    return `
+                                        <div class="gallery">
+                                            <div class="gallery-main group" onclick="openLightbox('${imgSrc(images[0])}')">
+                                                <img src="${imgSrc(images[0])}" alt="${escapeHtml(name)} main view" class="group-hover:scale-105 transition-transform duration-700">
                                             </div>
-                                        `).join('')}
-                                    </div>
-                                    ` : ''}
-                                </div>
-                            ` : '<p style="color: var(--text-muted);">Photos of this destination will be available soon.</p>'}
+                                            ${images.length > 1 ? `
+                                            <div class="gallery-thumbs">
+                                                ${images.slice(1, 5).map((url, i) => `
+                                                    <div class="gallery-thumb group" onclick="document.querySelector('.gallery-main img').src='${imgSrc(url)}'; document.querySelector('.gallery-main').setAttribute('onclick', 'openLightbox(\\'${imgSrc(url)}\\')')">
+                                                        <img src="${imgSrc(url)}" alt="${escapeHtml(name)} thumbnail ${i+1}" class="group-hover:scale-110 transition-transform duration-500">
+                                                    </div>
+                                                `).join('')}
+                                            </div>
+                                            ` : ''}
+                                        </div>
+                                    `;
+                                } else {
+                                    return '<p style="color: var(--text-muted);"><i class="ph ph-image text-4xl mb-2 block"></i>Photos of this destination will be available soon.</p>';
+                                }
+                            })()}
                         </div>
 
                         <!-- Lightbox -->

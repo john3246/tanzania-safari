@@ -21,13 +21,13 @@ function buildSafariCard(p) {
     <a href="/safaris/${p.package_slug}" class="safari-card">
       <div class="safari-card-img">
         <img src="${img}" alt="${p.package_name}" loading="lazy" onerror="this.src='/images/placeholder.jpeg'">
-        ${p.is_featured ? '<span class="safari-card-badge"><i class="fas fa-star"></i> Featured</span>' : ''}
-        <span class="safari-card-duration"><i class="fas fa-clock"></i> ${p.duration_days} Days</span>
+        ${p.is_featured ? '<span class="safari-card-badge"><i class="ph-fill ph-star"></i> Featured</span>' : ''}
+        <span class="safari-card-duration"><i class="ph ph-clock"></i> ${p.duration_days} Days</span>
       </div>
       <div class="safari-card-body">
         <div class="safari-card-category">${p.category_name || 'Safari'}</div>
         <h3 class="safari-card-title">${p.package_name}</h3>
-        ${dest ? `<div class="safari-card-location"><i class="fas fa-map-marker-alt"></i>${dest}</div>` : ''}
+        ${dest ? `<div class="safari-card-location"><i class="ph ph-map-pin"></i>${dest}</div>` : ''}
         <div class="safari-card-rating"><span class="stars">${stars(parseFloat(p.avg_rating||0))}</span><span>${rating} ${p.review_count>0?'('+p.review_count+')':''}</span></div>
         <div class="safari-card-footer">
           <div class="safari-card-price"><div class="from">From</div><div class="amount">$${Number(p.base_price_usd).toLocaleString()}</div><div class="per">per person</div></div>

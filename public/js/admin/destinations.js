@@ -20,7 +20,7 @@ function renderDestinations() {
         <tr class="hover:bg-slate-50/50 transition-colors border-b border-slate-100">
             <td class="px-6 py-4">
                 <div class="flex items-center gap-3">
-                    <img src="${d.image_url || '/images/placeholder.jpg'}" alt="${d.park_name}" class="w-10 h-10 rounded-lg object-cover bg-slate-100">
+                    <img src="${(d.image_urls && d.image_urls.length > 0) ? d.image_urls[0] : (d.image_url || '/images/placeholder.jpg')}" alt="${d.park_name}" class="w-10 h-10 rounded-lg object-cover bg-slate-100">
                     <div>
                         <div class="font-medium text-slate-900">${d.park_name}</div>
                         <div class="text-xs text-slate-500">${d.location || 'Unknown'}</div>
@@ -58,6 +58,7 @@ function openDestModal(id = null) {
                 const el = form.querySelector(`[name="${k}"]`);
                 if (el) { 
                     if (el.type === 'checkbox') el.checked = !!v; 
+                    else if (Array.isArray(v)) el.value = v.join(', ');
                     else el.value = v || ''; 
                 }
             });
@@ -74,6 +75,12 @@ async function saveDestination(event) {
     
     data.is_active = !!form.querySelector('[name="is_active"]')?.checked;
     data.is_unesco_heritage = !!form.querySelector('[name="is_unesco_heritage"]')?.checked;
+    
+    if (data.image_urls) {
+        data.image_urls = data.image_urls.split(',').map(s => s.trim()).filter(s => s);
+    } else {
+        data.image_urls = [];
+    }
     
     setLoading(btn, true);
     try {
