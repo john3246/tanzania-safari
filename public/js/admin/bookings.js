@@ -83,7 +83,3 @@ async function updateBookingStatus(id, status) {
     } catch (e) {}
 }
 
-window.viewBookingDetails = async function(id) {
-    window.currentBookingId = id;
-    await navigate('booking-details', true);
-}
