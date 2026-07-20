@@ -3,7 +3,7 @@ let currentView = 'list';
 
 async function loadBookings() {
     try {
-        const res = await apiFetch('/api/admin/bookings');
+        const res = await apiRequest('GET', '/bookings');
         if (res.success) {
             allBookings = res.data;
             renderBookings();

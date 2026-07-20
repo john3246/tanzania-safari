@@ -7,7 +7,7 @@ async function loadBookingDetails() {
     }
 
     try {
-        const res = await apiFetch(`/api/admin/bookings/${window.currentBookingId}`);
+        const res = await apiRequest('GET', `/bookings/${window.currentBookingId}`);
         if (res.success) {
             currentBookingData = res.data;
             renderBookingDetails();
@@ -182,10 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Approving...';
             btn.disabled = true;
 
-            const res = await apiFetch(`/api/admin/bookings/${window.currentBookingId}/status`, {
-                method: 'PUT',
-                body: JSON.stringify({ status: 'confirmed' })
-            });
+            const res = await apiRequest('PUT', `/bookings/${window.currentBookingId}/status`, { status: 'confirmed' });
 
             if(res.success) {
                 showToast('Booking approved successfully', 'success');
@@ -209,10 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Rejecting...';
             btn.disabled = true;
 
-            const res = await apiFetch(`/api/admin/bookings/${window.currentBookingId}/status`, {
-                method: 'PUT',
-                body: JSON.stringify({ status: 'rejected' })
-            });
+            const res = await apiRequest('PUT', `/bookings/${window.currentBookingId}/status`, { status: 'rejected' });
 
             if(res.success) {
                 showToast('Booking rejected successfully', 'success');
@@ -241,10 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btnSubmitPayment.innerHTML = 'Saving...';
             btnSubmitPayment.disabled = true;
 
-            const res = await apiFetch(`/api/admin/bookings/${window.currentBookingId}/payments`, {
-                method: 'POST',
-                body: JSON.stringify({ amount, currency: 'USD', payment_method: method, notes })
-            });
+            const res = await apiRequest('POST', `/bookings/${window.currentBookingId}/payments`, { amount, currency: 'USD', payment_method: method, notes });
 
             if(res.success) {
                 showToast('Payment logged!', 'success');
@@ -275,10 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btnSendReply.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
             btnSendReply.disabled = true;
 
-            const res = await apiFetch(`/api/admin/bookings/${window.currentBookingId}/reply`, {
-                method: 'POST',
-                body: JSON.stringify({ subject, message })
-            });
+            const res = await apiRequest('POST', `/bookings/${window.currentBookingId}/reply`, { subject, message });
 
             if(res.success) {
                 showToast('Email sent successfully', 'success');
@@ -307,10 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btnAddNote.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
             btnAddNote.disabled = true;
 
-            const res = await apiFetch(`/api/admin/bookings/${window.currentBookingId}/notes`, {
-                method: 'POST',
-                body: JSON.stringify({ note })
-            });
+            const res = await apiRequest('POST', `/bookings/${window.currentBookingId}/notes`, { note });
 
             if(res.success) {
                 showToast('Note saved successfully', 'success');
