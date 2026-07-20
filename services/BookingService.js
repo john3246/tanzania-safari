@@ -1,6 +1,5 @@
 const BaseService = require('./BaseService');
 const bookingRepository = require('../repositories/BookingRepository');
-const paymentRepository = require('../repositories/PaymentRepository');
 const communicationRepository = require('../repositories/CommunicationRepository');
 const emailService = require('./email');
 
@@ -17,28 +16,15 @@ class BookingService extends BaseService {
         const booking = await this.repository.getBookingDetails(bookingId);
         if (!booking) return null;
 
-        const payments = await paymentRepository.getPaymentsByBookingId(bookingId);
         const communications = await communicationRepository.getCommunicationsByBookingId(bookingId);
 
         return {
             ...booking,
-            payments,
             communications
         };
     }
 
-    async addPayment(bookingId, paymentData, userId) {
-        const payment = await paymentRepository.create({
-            booking_id: bookingId,
-            ...paymentData,
-            recorded_by: userId
-        });
 
-        // Log this action
-        await this.logCommunication(bookingId, 'system', 'Payment Logged', `A payment of ${paymentData.amount} ${paymentData.currency || 'USD'} was logged.`, 'internal', userId);
-
-        return payment;
-    }
 
     async logCommunication(bookingId, type, subject, content, direction, senderId = null) {
         return await communicationRepository.create({

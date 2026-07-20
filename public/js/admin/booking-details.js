@@ -51,52 +51,12 @@ function renderBookingDetails() {
     document.getElementById('detailChildren').innerText = b.children || '0';
     document.getElementById('detailSpecialRequests').innerText = b.special_requests || 'No special requests.';
 
-    // Right Panel: Financials
-    const total = parseFloat(b.total_amount || 0);
-    const paid = parseFloat(b.paid_amount || 0);
-    const balance = total - paid;
-    
-    document.getElementById('financeTotal').innerText = `$${total.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
-    document.getElementById('financePaid').innerText = `$${paid.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
-    document.getElementById('financeBalance').innerText = `$${balance.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
-
-    // Render Payments
-    renderPaymentHistory();
-
     // Render Communications
     renderTimeline();
 
     // Toggle Action Buttons based on status
     document.getElementById('btnApproveBooking').style.display = b.status_name === 'Confirmed' ? 'none' : 'flex';
     document.getElementById('btnRejectBooking').style.display = (b.status_name === 'Rejected' || b.status_name === 'Cancelled') ? 'none' : 'flex';
-}
-
-function renderPaymentHistory() {
-    const list = document.getElementById('paymentHistoryList');
-    list.innerHTML = '';
-
-    const payments = currentBookingData.payments || [];
-    if (payments.length === 0) {
-        list.innerHTML = `<li class="p-4 text-center text-gray-500 text-sm">No payments recorded yet.</li>`;
-        return;
-    }
-
-    payments.forEach(p => {
-        list.innerHTML += `
-            <li class="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
-                        <i class="fa-solid fa-money-bill"></i>
-                    </div>
-                    <div>
-                        <p class="text-sm font-bold text-gray-900">$${parseFloat(p.amount).toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
-                        <p class="text-xs text-gray-500">${p.payment_method} &middot; ${new Date(p.payment_date).toLocaleDateString()}</p>
-                    </div>
-                </div>
-                ${p.notes ? `<i class="fa-solid fa-comment-dots text-gray-300" title="${p.notes}"></i>` : ''}
-            </li>
-        `;
-    });
 }
 
 function renderTimeline() {
@@ -220,37 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    const btnSubmitPayment = document.getElementById('btnSubmitPayment');
-    if (btnSubmitPayment) {
-        btnSubmitPayment.onclick = async () => {
-            const amount = document.getElementById('payAmount').value;
-            const method = document.getElementById('payMethod').value;
-            const notes = document.getElementById('payNotes').value;
 
-            if(!amount || amount <= 0) {
-                showToast('Please enter a valid amount', 'warning');
-                return;
-            }
-
-            btnSubmitPayment.innerHTML = 'Saving...';
-            btnSubmitPayment.disabled = true;
-
-            const res = await apiRequest('POST', `/bookings/${window.currentBookingId}/payments`, { amount, currency: 'USD', payment_method: method, notes });
-
-            if(res.success) {
-                showToast('Payment logged!', 'success');
-                document.getElementById('addPaymentModal').classList.add('hidden');
-                document.getElementById('payAmount').value = '';
-                document.getElementById('payNotes').value = '';
-                loadBookingDetails();
-            } else {
-                showToast(res.message || 'Failed to log payment', 'error');
-            }
-
-            btnSubmitPayment.innerHTML = 'Save Payment';
-            btnSubmitPayment.disabled = false;
-        };
-    }
 
     const btnSendReply = document.getElementById('btnSendReply');
     if (btnSendReply) {

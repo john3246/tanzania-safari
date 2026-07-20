@@ -45,17 +45,7 @@ class BookingController {
         }
     }
 
-    async logPayment(req, res) {
-        try {
-            const { amount, currency, payment_method, notes } = req.body;
-            if (!amount) return res.status(400).json({ success: false, message: 'Amount is required' });
 
-            const payment = await bookingService.addPayment(req.params.id, { amount, currency, payment_method, notes }, req.user?.id);
-            res.json({ success: true, data: payment, message: 'Payment logged successfully' });
-        } catch (error) {
-            res.status(500).json({ success: false, message: error.message });
-        }
-    }
 
     async addNote(req, res) {
         try {

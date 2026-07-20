@@ -56,7 +56,7 @@ function renderBookings(bookingsToRender = allBookings) {
             statusIcon = 'fa-xmark';
         }
 
-        const value = b.total_amount ? `$${Number(b.total_amount).toLocaleString()}` : '<span class="text-gray-400">TBD</span>';
+
 
         tr.innerHTML = `
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary-600">
@@ -81,7 +81,7 @@ function renderBookings(bookingsToRender = allBookings) {
                 ${new Date(b.created_at).toLocaleDateString()}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                ${value}
+                -
             </td>
             <td class="px-6 py-4 whitespace-nowrap">
                 <span class="px-2.5 py-1 inline-flex items-center gap-1.5 text-xs leading-5 font-semibold rounded-full ${statusClass}">
@@ -138,7 +138,6 @@ function renderPipeline() {
                                     <i class="fa-solid fa-user"></i>
                                 </div>
                             </div>
-                            <span class="text-sm font-bold text-gray-700">${b.total_amount ? '$'+Number(b.total_amount).toLocaleString() : 'TBD'}</span>
                         </div>
                     </div>
                 `).join('')}
