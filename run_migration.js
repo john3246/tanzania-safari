@@ -3,21 +3,6 @@ const db = require('./config/db');
 async function migrate() {
     try {
         await db.query(`
-            CREATE TABLE IF NOT EXISTS booking_payments (
-                payment_id SERIAL PRIMARY KEY,
-                booking_id UUID REFERENCES bookings(booking_id) ON DELETE CASCADE,
-                amount DECIMAL(10, 2) NOT NULL,
-                currency VARCHAR(10) DEFAULT 'USD',
-                payment_method VARCHAR(50),
-                payment_status VARCHAR(50) DEFAULT 'Completed',
-                transaction_reference VARCHAR(255),
-                payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                notes TEXT,
-                recorded_by UUID REFERENCES users(user_id) ON DELETE SET NULL,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            );
-
             CREATE TABLE IF NOT EXISTS booking_communications (
                 communication_id SERIAL PRIMARY KEY,
                 booking_id UUID REFERENCES bookings(booking_id) ON DELETE CASCADE,
