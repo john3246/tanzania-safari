@@ -30,7 +30,7 @@ async function initAdminApp() {
 
         // Setup routing (load dashboard by default)
         const initialPage = window.location.hash.replace('#', '') || window.location.pathname.split('/').pop();
-        const validPages = ['dashboard', 'packages', 'categories', 'bookings', 'bookings_details', 'enquiries', 'settings', 'destinations', 'blog', 'reviews', 'users', 'images', 'communications'];
+        const validPages = ['dashboard', 'packages', 'categories', 'bookings', 'booking-details', 'enquiries', 'settings', 'destinations', 'blog', 'reviews', 'users', 'images', 'communications'];
         const pageToLoad = validPages.includes(initialPage) ? initialPage : 'dashboard';
         
         await navigate(pageToLoad, false); // pass false so we don't push state on initial load
@@ -148,7 +148,7 @@ async function navigate(page, pushState = true) {
     }
     
     if (pushState) {
-        window.history.pushState({ page }, '', '/admin#' + page);
+        window.history.pushState({ page }, '', '/admin/' + page);
     }
 
     // UI Updates
@@ -181,7 +181,7 @@ async function navigate(page, pushState = true) {
         case 'packages': loadPackages(); break;
         case 'destinations': loadDestinations(); break;
         case 'bookings': loadBookings(); break;
-        case 'bookings_details': loadBookingDetails(); break;
+        case 'booking-details': loadBookingDetails(); break;
         case 'enquiries': loadEnquiries(); break;
         case 'users': loadUsers(); break;
         case 'blog': loadBlogs(); break;
