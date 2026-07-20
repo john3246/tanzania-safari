@@ -28,7 +28,7 @@ class BookingController {
             if (!finalStatusId) {
                 return res.status(400).json({ success: false, message: 'status_id or valid status string is required' });
             }
-            await bookingService.updateStatus(req.params.id, parseInt(finalStatusId));
+            await bookingService.updateStatus(req.params.id, parseInt(finalStatusId), req.user?.id);
             res.json({ success: true });
         } catch (error) {
             res.status(400).json({ success: false, message: error.message });
@@ -37,9 +37,33 @@ class BookingController {
 
     async getBooking(req, res) {
         try {
-            const booking = await bookingService.repository.getBookingDetails(req.params.id);
+            const booking = await bookingService.getBookingFullDetails(req.params.id);
             if (!booking) return res.status(404).json({ success: false, message: 'Booking not found' });
             res.json({ success: true, data: booking });
+        } catch (error) {
+            res.status(500).json({ success: false, message: error.message });
+        }
+    }
+
+    async logPayment(req, res) {
+        try {
+            const { amount, currency, payment_method, notes } = req.body;
+            if (!amount) return res.status(400).json({ success: false, message: 'Amount is required' });
+
+            const payment = await bookingService.addPayment(req.params.id, { amount, currency, payment_method, notes }, req.user?.id);
+            res.json({ success: true, data: payment, message: 'Payment logged successfully' });
+        } catch (error) {
+            res.status(500).json({ success: false, message: error.message });
+        }
+    }
+
+    async addNote(req, res) {
+        try {
+            const { note } = req.body;
+            if (!note) return res.status(400).json({ success: false, message: 'Note content is required' });
+
+            const comm = await bookingService.logCommunication(req.params.id, 'note', 'Internal Note', note, 'internal', req.user?.id);
+            res.json({ success: true, data: comm, message: 'Note added successfully' });
         } catch (error) {
             res.status(500).json({ success: false, message: error.message });
         }
@@ -56,9 +80,11 @@ class BookingController {
             if (!booking.email) return res.status(400).json({ success: false, message: 'Customer email not found' });
 
             const emailService = require('../../services/email');
+            const finalSubject = subject || `Regarding your booking #${booking.booking_id.substring(0,8).toUpperCase()}`;
+            
             await emailService.sendEmailDirect({
                 to: booking.email,
-                subject: subject || `Regarding your booking #${booking.booking_id.substring(0,8).toUpperCase()}`,
+                subject: finalSubject,
                 html: `
                   <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
                     <p>Dear ${booking.full_name},</p>
@@ -69,6 +95,9 @@ class BookingController {
                   </div>
                 `
             });
+
+            // Log this email
+            await bookingService.logCommunication(req.params.id, 'email', finalSubject, message, 'outbound', req.user?.id);
 
             res.json({ success: true, message: 'Reply sent successfully' });
         } catch (error) {
