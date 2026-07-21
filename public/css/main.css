@@ -177,6 +177,89 @@ ul{list-style:none}
 .dest-card-arrow{width:40px;height:40px;background:rgba(255,255,255,0.15);backdrop-filter:blur(5px);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.9rem;transition:var(--transition);}
 .dest-card:hover .dest-card-arrow{background:var(--primary);color:#fff;transform:translateX(5px)}
 
+/* ── CORPORATE DESTINATION CARD ── */
+.corp-dest-card {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+  transition: all 0.4s cubic-bezier(0.2, 0, 0.2, 1);
+  border: 1px solid #eaeaea;
+  text-decoration: none;
+  height: 100%;
+}
+.corp-dest-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+  border-color: #d1d1d1;
+}
+.corp-dest-img {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+  border-bottom: 1px solid #f0f0f0;
+}
+.corp-dest-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s ease;
+}
+.corp-dest-card:hover .corp-dest-img img {
+  transform: scale(1.08);
+}
+.corp-dest-badge {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  background: rgba(255,255,255,0.95);
+  color: #333;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border-radius: 2px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.corp-dest-content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+.corp-dest-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 1.25rem;
+  font-family: var(--font-heading);
+}
+.corp-dest-footer {
+  margin-top: auto;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.corp-dest-explore {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: gap 0.3s ease;
+}
+.corp-dest-card:hover .corp-dest-explore {
+  gap: 0.75rem;
+}
+
 /* ── GRIDS ── */
 .safari-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.75rem}
 .dest-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem}

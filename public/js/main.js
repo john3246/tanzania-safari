@@ -51,14 +51,15 @@ function buildSafariCard(p) {
 function buildDestCard(d) {
     const img = d.featured_image_url || d.image_url || `/images/destinations/${d.park_slug}/main.jpg`;
     return `
-    <a href="/destinations/${d.park_slug}" class="dest-card fade-up">
-      <img src="${img}" alt="${d.park_name}" loading="lazy" onerror="this.src='/images/placeholder.jpeg'">
-      <div class="dest-card-overlay"></div>
-      <div class="dest-card-body">
-        <div class="dest-card-name">${d.park_name}</div>
-        <div class="dest-card-meta">
-          <span class="dest-card-count"><i class="fas fa-binoculars"></i> ${d.safari_count || 0} Safaris</span>
-          <div class="dest-card-arrow"><i class="fas fa-arrow-right"></i></div>
+    <a href="/destinations/${d.park_slug}" class="corp-dest-card fade-up">
+      <div class="corp-dest-img">
+        <img src="${img}" alt="${d.park_name}" loading="lazy" onerror="this.src='/images/placeholder.jpeg'">
+        <div class="corp-dest-badge">${d.safari_count || 0} Tours</div>
+      </div>
+      <div class="corp-dest-content">
+        <h3 class="corp-dest-title">${d.park_name}</h3>
+        <div class="corp-dest-footer">
+          <span class="corp-dest-explore">Explore Region <i class="fas fa-arrow-right"></i></span>
         </div>
       </div>
     </a>`;
