@@ -108,6 +108,7 @@ async function loadDestinationDetails(slug) {
             
             renderDestinationDetails(currentDestination);
             updatePageTitle(currentDestination.park_name);
+            updateMetaDescription(currentDestination.park_description);
             injectDestinationSchema(currentDestination);
             await loadSafariPackagesForDestination(currentDestination.park_name);
             await loadRelatedDestinations(currentDestination.park_id, currentDestination.park_slug);
@@ -158,8 +159,10 @@ function renderDestinationDetails(destination) {
     
     const html = `
         <!-- Hero Section -->
-        <section class="destination-hero" style="background-image: url('${heroImg}');">
-            <div class="container">
+        <section class="destination-hero relative overflow-hidden" style="position: relative; z-index: 1;">
+            <img src="${heroImg}" alt="Scenic view of ${escapeHtml(name)} in Tanzania" fetchpriority="high" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2;">
+            <div class="hero-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: -1;"></div>
+            <div class="container" style="position: relative; z-index: 10;">
                 <div class="breadcrumb">
                     <a href="/">Home</a>
                     <i class="fas fa-chevron-right"></i>
@@ -612,6 +615,15 @@ function getClimate(name) {
 
 function updatePageTitle(title) {
     document.title = `${title} | Tanzania Safari Tours`;
+}
+
+function updateMetaDescription(description) {
+    if (!description) return;
+    let metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+        const truncated = description.length > 155 ? description.substring(0, 152) + '...' : description;
+        metaDesc.setAttribute('content', truncated);
+    }
 }
 
 function showError(message) {
