@@ -11,41 +11,45 @@ let deadLetterQueue = null;
 const redisUrl = process.env.REDIS_URL; // If undefined, queue will be disabled
 
 // Try to connect to Redis, but don't fail if unavailable
-try {
-  redis = new Redis(redisUrl, {
-    maxRetriesPerRequest: null,
-    retryDelayOnFailover: 100,
-    enableReadyCheck: true,
-    enableOfflineQueue: false,
-    retryStrategy: (times) => {
-      if (times > 3) {
-        logger.warn({ event: 'redis_retry_failed', attempts: times }, 'Redis connection failed after retries, running without queue');
-        return null; // Stop retrying
+if (redisUrl) {
+  try {
+    redis = new Redis(redisUrl, {
+      maxRetriesPerRequest: null,
+      retryDelayOnFailover: 100,
+      enableReadyCheck: true,
+      enableOfflineQueue: false,
+      retryStrategy: (times) => {
+        if (times > 3) {
+          logger.warn({ event: 'redis_retry_failed', attempts: times }, 'Redis connection failed after retries, running without queue');
+          return null; // Stop retrying
+        }
+        return Math.min(times * 100, 3000);
       }
-      return Math.min(times * 100, 3000);
-    }
-  });
+    });
 
-  redis.on('error', (err) => {
-    if (!redisAvailable) {
-      logger.warn({ event: 'redis_error', error: err.message }, 'Redis connection error - running without queue');
-    }
-  });
+    redis.on('error', (err) => {
+      if (!redisAvailable) {
+        logger.warn({ event: 'redis_error', error: err.message }, 'Redis connection error - running without queue');
+      }
+    });
 
-  redis.on('connect', () => {
-    redisAvailable = true;
-    logger.info({ event: 'redis_connected' }, 'Redis connected');
-  });
+    redis.on('connect', () => {
+      redisAvailable = true;
+      logger.info({ event: 'redis_connected' }, 'Redis connected');
+    });
 
-  // Set a timeout to determine if Redis is available
-  setTimeout(() => {
-    if (!redisAvailable) {
-      logger.warn({ event: 'redis_unavailable' }, 'Redis not available - email queue disabled, emails will be sent synchronously');
-      redis = null;
-    }
-  }, 5000);
-} catch (error) {
-  logger.warn({ event: 'redis_init_failed', error: error.message }, 'Failed to initialize Redis - running without queue');
+    // Set a timeout to determine if Redis is available
+    setTimeout(() => {
+      if (!redisAvailable) {
+        logger.warn({ event: 'redis_unavailable' }, 'Redis not available - email queue disabled, emails will be sent synchronously');
+        redis = null;
+      }
+    }, 5000);
+  } catch (error) {
+    logger.warn({ event: 'redis_init_failed', error: error.message }, 'Failed to initialize Redis - running without queue');
+  }
+} else {
+  logger.info({ event: 'redis_disabled' }, 'REDIS_URL not set - running without queue');
 }
 
 // Email queue configuration

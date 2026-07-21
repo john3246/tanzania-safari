@@ -1,1 +1,12 @@
 .whatsapp-float { position: fixed; bottom: 30px; left: 30px; background-color: #25d366; color: #FFF; border-radius: 50px; text-align: center; font-size: 30px; box-shadow: 2px 2px 3px #999; z-index: 100; display: flex; align-items: center; justify-content: center; width: 60px; height: 60px; transition: all 0.3s ease; text-decoration: none; } .whatsapp-float:hover { background-color: #128c7e; transform: scale(1.1); box-shadow: 2px 4px 6px rgba(0,0,0,0.2); }
+
+.wave-anim {
+  animation: pulse-wave 1.5s infinite;
+  box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+}
+
+@keyframes pulse-wave {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+  50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(37, 211, 102, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+}

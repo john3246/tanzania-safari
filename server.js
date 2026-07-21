@@ -1,5 +1,7 @@
 const express = require('express');
 const path = require('path');
+const http = require('http');
+const socketIo = require('socket.io');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
@@ -17,6 +19,7 @@ const emailService = require('./services/email');
 const logger = require('./utils/logger');
 
 const app  = express();
+const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
 
 // ── Performance Optimization ──────────────────────────────────
@@ -247,6 +250,54 @@ app.use((err, req, res, next) => {
     });
 });
 
+// ── Live Chat (Socket.io) ─────────────────────────────────────
+const io = socketIo(server, {
+    cors: {
+        origin: '*', // For dev, or use allowedOrigins
+        methods: ['GET', 'POST']
+    }
+});
+
+const activeChats = {}; // Memory store for MVP live chat
+
+io.on('connection', (socket) => {
+    console.log('New chat client connected:', socket.id);
+
+    // Client joins/starts a chat
+    socket.on('join_chat', (data) => {
+        const chatId = (data && data.chatId) ? data.chatId : socket.id;
+        socket.join(chatId);
+        if (!activeChats[chatId]) {
+            activeChats[chatId] = { id: chatId, status: 'open', messages: [] };
+        }
+        // Notify admin
+        io.to('admin_room').emit('chat_updated', activeChats[chatId]);
+        socket.emit('chat_joined', { chatId, chat: activeChats[chatId] });
+    });
+
+    // Admin joins admin room
+    socket.on('admin_join', () => {
+        socket.join('admin_room');
+        socket.emit('all_chats', activeChats);
+    });
+
+    // Send message
+    socket.on('send_message', (data) => {
+        const { chatId, sender, message } = data;
+        const msg = { id: Date.now(), sender, message, timestamp: new Date() };
+        
+        if (activeChats[chatId]) {
+            activeChats[chatId].messages.push(msg);
+            io.to(chatId).emit('new_message', { chatId, msg });
+            io.to('admin_room').emit('chat_updated', activeChats[chatId]);
+        }
+    });
+
+    socket.on('disconnect', () => {
+        console.log('Chat client disconnected:', socket.id);
+    });
+});
+
 // ── Server Startup with SMTP Verification ───────────────────────
 async function startServer() {
   try {
@@ -304,7 +355,7 @@ async function startServer() {
     logger.info({ event: 'worker_starting' }, 'Starting email worker...');
     // Worker is already started by requiring the module
 
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       logger.info({
         event: 'server_started',
         port: PORT,

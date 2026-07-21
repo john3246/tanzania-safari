@@ -108,69 +108,74 @@ async function processEmailJob(job) {
 /**
  * Create email worker
  */
-const emailWorker = new Worker('email-queue', async (job) => {
-  return await processEmailJob(job);
-}, {
-  connection: redis,
-  concurrency: CONCURRENCY,
-  limiter: {
-    max: parseInt(process.env.EMAIL_MAX_PER_MINUTE) || 20,
-    duration: 60000 // 1 minute
-  }
-});
+let emailWorker = null;
+if (redis) {
+  emailWorker = new Worker('email-queue', async (job) => {
+    return await processEmailJob(job);
+  }, {
+    connection: redis,
+    concurrency: CONCURRENCY,
+    limiter: {
+      max: parseInt(process.env.EMAIL_MAX_PER_MINUTE) || 20,
+      duration: 60000 // 1 minute
+    }
+  });
 
-// Worker event handlers
-emailWorker.on('completed', (job) => {
-  logger.info({
-    event: 'job_completed',
-    jobId: job.id,
-    jobName: job.name
-  }, 'Email job completed');
-});
+  // Worker event handlers
+  emailWorker.on('completed', (job) => {
+    logger.info({
+      event: 'job_completed',
+      jobId: job.id,
+      jobName: job.name
+    }, 'Email job completed');
+  });
 
-emailWorker.on('failed', (job, err) => {
-  logger.error({
-    event: 'job_failed',
-    jobId: job?.id,
-    jobName: job?.name,
-    error: err.message,
-    attemptsMade: job?.attemptsMade,
-    attemptsLeft: RETRY_ATTEMPTS - (job?.attemptsMade || 0)
-  }, 'Email job failed');
+  emailWorker.on('failed', (job, err) => {
+    logger.error({
+      event: 'job_failed',
+      jobId: job?.id,
+      jobName: job?.name,
+      error: err.message,
+      attemptsMade: job?.attemptsMade,
+      attemptsLeft: RETRY_ATTEMPTS - (job?.attemptsMade || 0)
+    }, 'Email job failed');
 
-  // Move to dead letter queue if max retries exceeded
-  if (job && job.attemptsMade >= RETRY_ATTEMPTS) {
-    deadLetterQueue.add(job.name, job.data, {
-      attempts: 1,
-      removeOnComplete: 1000,
-      removeOnFail: 10000
-    }).then(() => {
-      logger.warn({
-        event: 'job_moved_to_dlq',
-        jobId: job.id
-      }, 'Job moved to dead letter queue');
-    }).catch((err) => {
-      logger.error({
-        event: 'dlq_move_failed',
-        jobId: job.id,
-        error: err.message
-      }, 'Failed to move job to dead letter queue');
-    });
-  }
-});
+    // Move to dead letter queue if max retries exceeded
+    if (job && job.attemptsMade >= RETRY_ATTEMPTS) {
+      deadLetterQueue.add(job.name, job.data, {
+        attempts: 1,
+        removeOnComplete: 1000,
+        removeOnFail: 10000
+      }).then(() => {
+        logger.warn({
+          event: 'job_moved_to_dlq',
+          jobId: job.id
+        }, 'Job moved to dead letter queue');
+      }).catch((err) => {
+        logger.error({
+          event: 'dlq_move_failed',
+          jobId: job.id,
+          error: err.message
+        }, 'Failed to move job to dead letter queue');
+      });
+    }
+  });
 
-emailWorker.on('error', (err) => {
-  logger.error({
-    event: 'worker_error',
-    error: err.message
-  }, 'Email worker error');
-});
+  emailWorker.on('error', (err) => {
+    logger.error({
+      event: 'worker_error',
+      error: err.message
+    }, 'Email worker error');
+  });
+}
 
 // Graceful shutdown
 async function closeWorker() {
   try {
-    await emailWorker.close();
-    logger.info({ event: 'worker_closed' }, 'Email worker closed');
+    if (emailWorker) {
+      await emailWorker.close();
+      logger.info({ event: 'worker_closed' }, 'Email worker closed');
+    }
   } catch (error) {
     logger.error({ event: 'worker_close_failed', error: error.message }, 'Failed to close worker');
   }
