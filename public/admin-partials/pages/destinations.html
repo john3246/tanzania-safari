@@ -1,44 +1,51 @@
 <div id="page-destinations" class="page">
-<div class="space-y-6">
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h1 class="text-2xl font-bold text-gray-900">Destination Management</h1>
-        <button onclick="openDestModal()" class="w-full sm:w-auto bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-colors">
-            <i class="ph ph-plus"></i> Add Destination
-        </button>
-    </div>
+    <div class="space-y-6">
+        <!-- Header Section -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Destinations Management</h1>
+                <p class="text-sm text-gray-500 mt-1">Add, edit, and configure national parks, game reserves, and geographical regions.</p>
+            </div>
+            <button onclick="openDestModal()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 shadow-sm transition-all duration-200">
+                <i class="ph ph-plus-circle text-lg"></i> Add Destination
+            </button>
+        </div>
 
-    <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden flex flex-col">
-        <div class="p-4 border-b border-gray-200 flex justify-between items-center bg-gray-50/50">
-            <div class="relative w-full max-w-sm">
-                <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
-                <input 
-                    type="text" 
-                    id="destSearch"
-                    placeholder="Search destinations..." 
-                    class="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary-500"
-                    onkeyup="filterDestinations()"
-                />
+        <!-- Filter Bar -->
+        <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden flex flex-col">
+            <div class="p-4 border-b border-gray-200 bg-gray-50/50 flex flex-col sm:flex-row gap-4 items-center justify-between">
+                <div class="relative w-full sm:w-80">
+                    <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
+                    <input 
+                        type="text" 
+                        id="destSearch"
+                        placeholder="Search destinations..." 
+                        class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+                        onkeyup="filterDestinations()"
+                    />
+                </div>
             </div>
-        </div>
-        
-        <div class="overflow-x-auto relative min-h-[300px]">
-            <div class="table-responsive">
-                <table class="w-full text-left text-sm text-gray-600">
-                    <thead class="bg-slate-50 text-slate-400 text-xs font-semibold uppercase border-b border-slate-100">
-                        <tr>
-                            <th class="px-6 py-4">Destination Name</th>
-                            <th class="px-6 py-4">Region/Country</th>
-                            <th class="px-6 py-4">Tours Count</th>
-                            <th class="px-6 py-4">Status</th>
-                            <th class="px-6 py-4">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100 bg-white" id="destBody">
-                        <!-- JS will populate rows here -->
-                    </tbody>
-                </table>
+            
+            <!-- Table Section -->
+            <div class="overflow-x-auto relative min-h-[300px]">
+                <div class="table-responsive">
+                    <table class="w-full text-left text-sm text-gray-600">
+                        <thead class="bg-gray-50 text-gray-400 text-xs font-semibold uppercase tracking-wider border-b border-gray-150">
+                            <tr>
+                                <th class="px-6 py-4">Destination Name</th>
+                                <th class="px-6 py-4">Region / Country</th>
+                                <th class="px-6 py-4">Tours Count</th>
+                                <th class="px-6 py-4">Featured</th>
+                                <th class="px-6 py-4">Status</th>
+                                <th class="px-6 py-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 bg-white" id="destBody">
+                            <!-- Populated dynamically via javascript -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
 </div>

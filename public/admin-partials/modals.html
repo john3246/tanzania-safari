@@ -222,41 +222,41 @@
                 <form id="destForm" class="space-y-4">
                     <input type="hidden" id="destId" name="id">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Destination Name</label><input type="text" name="name" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" required></div>
-                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Slug</label><input type="text" name="slug" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" required></div>
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Destination Name</label><input type="text" name="name" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" required></div>
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Slug</label><input type="text" name="slug" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" required></div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Country</label><input type="text" name="country" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500"></div>
-                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Region</label><input type="text" name="region" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500"></div>
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Country</label><input type="text" name="country" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500"></div>
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Region</label><input type="text" name="region" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500"></div>
                     </div>
-                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Short Description</label><textarea name="short_description" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" rows="2"></textarea></div>
-                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Detailed Description</label><textarea name="description" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" rows="4"></textarea></div>
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Short Description</label><textarea name="short_description" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" rows="2"></textarea></div>
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Detailed Description</label><textarea name="description" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" rows="4"></textarea></div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Latitude</label><input type="number" step="any" name="latitude" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500"></div>
-                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Longitude</label><input type="number" step="any" name="longitude" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500"></div>
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Latitude</label><input type="number" step="any" name="latitude" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500"></div>
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Longitude</label><input type="number" step="any" name="longitude" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500"></div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Featured Image URL</label><input type="text" name="featured_image_url" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" placeholder="/images/dest1.jpg"></div>
-                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Gallery URLs (comma separated)</label><input type="text" name="gallery_urls_csv" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" placeholder="/images/img1.jpg, /images/img2.jpg"></div>
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Featured Image URL</label><input type="text" name="featured_image_url" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" placeholder="https://images.unsplash.com/..."></div>
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Gallery URLs (comma separated)</label><input type="text" name="gallery_urls_csv" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" placeholder="url1, url2..."></div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">SEO Title</label><input type="text" name="seo_title" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500"></div>
-                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">SEO Description</label><input type="text" name="seo_description" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500"></div>
-                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">SEO Keywords</label><input type="text" name="seo_keywords" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500"></div>
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">SEO Title</label><input type="text" name="seo_title" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500"></div>
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">SEO Description</label><input type="text" name="seo_description" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500"></div>
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">SEO Keywords</label><input type="text" name="seo_keywords" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500"></div>
                     </div>
                     <div class="flex items-center gap-6 p-4 bg-slate-50 rounded-lg border border-slate-100 flex-wrap">
-                        <label class="inline-flex items-center text-sm font-medium text-slate-600"><input type="checkbox" name="is_featured" class="rounded border-slate-300 text-primary-500 focus:ring-primary-500 mr-2"> Featured</label>
-                        <label class="inline-flex items-center text-sm font-medium text-slate-600"><input type="checkbox" name="is_active" class="rounded border-slate-300 text-primary-500 focus:ring-primary-500 mr-2" checked> Active</label>
+                        <label class="inline-flex items-center text-sm font-medium text-slate-600"><input type="checkbox" name="is_featured" class="rounded border-slate-300 text-emerald-500 focus:ring-emerald-500 mr-2"> Featured</label>
+                        <label class="inline-flex items-center text-sm font-medium text-slate-600"><input type="checkbox" name="is_active" class="rounded border-slate-300 text-emerald-500 focus:ring-emerald-500 mr-2" checked> Active</label>
                         <div class="flex items-center gap-2 ml-auto">
                             <label class="text-xs font-medium text-slate-500">Display Order</label>
-                            <input type="number" name="display_order" class="bg-white border border-slate-200 rounded-lg px-2 py-1 text-sm outline-none focus:border-primary-500 w-20" value="0">
+                            <input type="number" name="display_order" class="bg-white border border-slate-200 rounded-lg px-2 py-1 text-sm outline-none focus:border-emerald-500 w-20" value="0">
                         </div>
                     </div>
                 </form>
             </div>
             <div class="px-6 py-4 border-t border-slate-100 flex justify-end space-x-2 bg-slate-50 shrink-0">
                 <button class="px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium hover:bg-white transition-colors" onclick="closeModal('destModal')">Cancel</button>
-                <button class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors" onclick="saveDestination()">Save Destination</button>
+                <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors" onclick="saveDestination(event)">Save Destination</button>
             </div>
         </div>
     </div>

@@ -206,46 +206,84 @@ function addItineraryDay(data = {}) {
     const container = document.getElementById('itineraryContainer');
     const dayNum = container.children.length + 1;
     const div = document.createElement('div');
-    div.className = 'itinerary-day bg-gray-50 p-4 rounded-lg relative border border-gray-150 mb-3';
+    div.className = 'itinerary-day bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col md:flex-row mb-4 transition-all hover:shadow-md hover:border-slate-300';
     div.innerHTML = `
-        <i class="fas fa-trash remove-day absolute top-4 right-4 text-gray-400 hover:text-red-500 cursor-pointer" onclick="this.parentElement.remove()"></i>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div class="space-y-1 md:col-span-1">
-                <label class="text-xs font-semibold text-gray-500">Day Number</label>
-                <input type="number" class="w-full bg-white border border-gray-200 rounded px-3 py-1.5 text-sm outline-none day-num" value="${data.day || dayNum}">
-            </div>
-            <div class="space-y-1 md:col-span-3">
-                <label class="text-xs font-semibold text-gray-500">Day Title</label>
-                <input type="text" class="w-full bg-white border border-gray-200 rounded px-3 py-1.5 text-sm outline-none day-title" value="${data.title || ''}" placeholder="e.g. Arrival in Arusha">
+        <!-- Drag & Order handle panel -->
+        <div class="bg-slate-50 px-4 py-3 md:py-0 md:w-16 flex md:flex-col items-center justify-between md:justify-center gap-2 border-b md:border-b-0 md:border-r border-slate-100 shrink-0">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest md:my-2">Day</span>
+            <span class="text-xl font-extrabold text-emerald-600 day-badge">${data.day || dayNum}</span>
+            <div class="flex md:flex-col gap-1">
+                <button type="button" onclick="moveItineraryDay(this, -1)" class="p-1 text-slate-400 hover:text-emerald-600 transition-colors" title="Move Up"><i class="fa-solid fa-chevron-up"></i></button>
+                <button type="button" onclick="moveItineraryDay(this, 1)" class="p-1 text-slate-400 hover:text-emerald-600 transition-colors" title="Move Down"><i class="fa-solid fa-chevron-down"></i></button>
             </div>
         </div>
-        <div class="space-y-1 mt-3">
-            <label class="text-xs font-semibold text-gray-500">Description</label>
-            <textarea class="w-full bg-white border border-gray-200 rounded px-3 py-1.5 text-sm outline-none day-desc" rows="2">${data.description || ''}</textarea>
+        <!-- Input fields panel -->
+        <div class="flex-1 p-5 space-y-4">
+            <div class="flex items-start justify-between gap-4">
+                <div class="flex-1 space-y-1">
+                    <label class="text-xs font-semibold uppercase tracking-wider text-slate-400">Day Title</label>
+                    <input type="text" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 day-title" value="${data.title || ''}" placeholder="e.g. Arrival & Safari Briefing">
+                </div>
+                <input type="hidden" class="day-num" value="${data.day || dayNum}">
+                <button type="button" onclick="this.closest('.itinerary-day').remove(); reindexItineraryDays();" class="mt-7 p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Delete Day">
+                    <i class="fa-solid fa-trash-can text-base"></i>
+                </button>
+            </div>
+            <div class="space-y-1">
+                <label class="text-xs font-semibold uppercase tracking-wider text-slate-400">Activity & Route Description</label>
+                <textarea class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 day-desc" rows="3" placeholder="Describe the activities, routes, scenic views, and schedule for this day...">${data.description || ''}</textarea>
+            </div>
         </div>
     `;
     container.appendChild(div);
 }
 
+function moveItineraryDay(btn, direction) {
+    const item = btn.closest('.itinerary-day');
+    if (!item) return;
+    if (direction === -1) {
+        const prev = item.previousElementSibling;
+        if (prev) item.parentNode.insertBefore(item, prev);
+    } else {
+        const next = item.nextElementSibling;
+        if (next) item.parentNode.insertBefore(next, item);
+    }
+    reindexItineraryDays();
+}
+
+function reindexItineraryDays() {
+    const items = document.querySelectorAll('#itineraryContainer .itinerary-day');
+    items.forEach((item, index) => {
+        const dayVal = index + 1;
+        item.querySelector('.day-badge').textContent = dayVal;
+        item.querySelector('.day-num').value = dayVal;
+    });
+}
+
 function addPkgLocation(data = {}) {
     const container = document.getElementById('locationsContainer');
     const div = document.createElement('div');
-    div.className = 'location-item bg-gray-50 p-4 rounded-lg relative border border-gray-150 mb-3';
+    div.className = 'location-item bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex items-start gap-4 mb-4 transition-all hover:shadow-md hover:border-slate-300';
     
     div.innerHTML = `
-        <i class="fas fa-trash remove-location absolute top-4 right-4 text-gray-400 hover:text-red-500 cursor-pointer" onclick="this.parentElement.remove()"></i>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="p-2.5 bg-emerald-50 rounded-lg text-emerald-600 shrink-0">
+            <i class="fa-solid fa-location-dot text-lg"></i>
+        </div>
+        <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="space-y-1">
-                <label class="text-xs font-semibold text-gray-500">Destination</label>
-                <select class="w-full bg-white border border-gray-200 rounded px-3 py-1.5 text-sm outline-none loc-park">
+                <label class="text-xs font-semibold uppercase tracking-wider text-slate-400">Destination Park</label>
+                <select class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 loc-park">
                     ${tourDestinations.map(d => `<option value="${d.id}" ${data.park_id == d.id ? 'selected' : ''}>${d.name}</option>`).join('')}
                 </select>
             </div>
             <div class="space-y-1">
-                <label class="text-xs font-semibold text-gray-500">Visit Day</label>
-                <input type="number" class="w-full bg-white border border-gray-200 rounded px-3 py-1.5 text-sm outline-none loc-day" value="${data.visit_day || 1}">
+                <label class="text-xs font-semibold uppercase tracking-wider text-slate-400">Visit Day</label>
+                <input type="number" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 loc-day" value="${data.visit_day || 1}">
             </div>
         </div>
+        <button type="button" onclick="this.closest('.location-item').remove()" class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors shrink-0" title="Remove Location">
+            <i class="fa-solid fa-trash-can text-base"></i>
+        </button>
     `;
     container.appendChild(div);
 }
