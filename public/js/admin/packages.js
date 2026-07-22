@@ -25,7 +25,7 @@ function renderPackages() {
             <tr class="hover:bg-slate-50/50 transition-colors">
                 <td class="px-6 py-4">
                     <div class="flex items-center gap-3">
-                        <img src="${p.image_urls?.[0] || '/images/placeholder.jpeg'}" alt="Tour" class="w-12 h-12 rounded-lg object-cover bg-slate-100" onerror="this.src='/images/placeholder.jpeg'">
+                        <img src="${p.image_urls?.[0] || '/images/optimized/balloon.webp'}" alt="Tour" class="w-12 h-12 rounded-lg object-cover bg-slate-100" onerror="this.src='/images/optimized/balloon.webp'">
                         <div>
                             <div class="font-medium text-slate-900">${p.package_name}</div>
                             <div class="text-xs text-slate-500 line-clamp-1">${p.category_name || '—'}</div>

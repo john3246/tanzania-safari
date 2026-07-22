@@ -51,7 +51,7 @@ const API = {
 };
 
 // ── Image helper ───────────────────────────────────────────
-function imgSrc(url, fallback = '/images/placeholder.jpeg') {
+function imgSrc(url, fallback = '/images/optimized/balloon.webp') {
     if (!url) return fallback;
     if (url.startsWith('http') || url.startsWith('/')) return url;
     return '/' + url;

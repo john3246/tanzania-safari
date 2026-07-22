@@ -28,7 +28,7 @@ function renderDestinations() {
         <tr class="hover:bg-slate-50/50 transition-colors border-b border-slate-100 dest-row">
             <td class="px-6 py-4">
                 <div class="flex items-center gap-3">
-                    <img src="${d.featured_image_url || '/images/placeholder.jpeg'}" alt="${d.name}" class="w-10 h-10 rounded-lg object-cover bg-slate-100" onerror="this.src='/images/placeholder.jpeg'">
+                    <img src="${d.featured_image_url || '/images/optimized/balloon.webp'}" alt="${d.name}" class="w-10 h-10 rounded-lg object-cover bg-slate-100" onerror="this.src='/images/optimized/balloon.webp'">
                     <div>
                         <div class="font-medium text-slate-900">${d.name}</div>
                         <div class="text-xs text-slate-500">${d.slug}</div>

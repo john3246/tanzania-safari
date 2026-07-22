@@ -56,7 +56,7 @@ function fmtDate(d) {
     return new Date(d).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 }
 
-function imgSrc(src, fallback = '/images/placeholder.jpeg') {
+function imgSrc(src, fallback = '/images/optimized/balloon.webp') {
     if (!src) return fallback;
     if (src.startsWith('http')) return src;
     return src.startsWith('/') ? src : '/' + src;

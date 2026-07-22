@@ -20,7 +20,7 @@ function buildSafariCard(p) {
     return `
     <a href="/safaris/${p.package_slug}" class="safari-card">
       <div class="safari-card-img">
-        <img src="${img}" alt="${p.package_name}" loading="lazy" onerror="this.src='/images/placeholder.jpeg'">
+        <img src="${img}" alt="${p.package_name}" loading="lazy" onerror="this.src='/images/optimized/balloon.webp'">
         ${p.is_featured ? '<span class="safari-card-badge"><i class="ph-fill ph-star"></i> Featured</span>' : ''}
         <span class="safari-card-duration"><i class="ph ph-clock"></i> ${p.duration_days} Days</span>
       </div>

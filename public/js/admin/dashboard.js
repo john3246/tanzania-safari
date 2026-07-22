@@ -153,7 +153,7 @@ async function loadRecentActivity() {
         if (tBody) {
             tBody.innerHTML = (pRes.data || []).map(p => `
             <div class="flex items-center gap-3">
-                <img src="${(p.image_urls && p.image_urls[0]) || '/images/placeholder.jpeg'}" class="w-12 h-12 rounded-lg object-cover" onerror="this.src='/images/placeholder.jpeg'">
+                <img src="${(p.image_urls && p.image_urls[0]) || '/images/optimized/balloon.webp'}" class="w-12 h-12 rounded-lg object-cover" onerror="this.src='/images/optimized/balloon.webp'">
                 <div class="flex-1 overflow-hidden">
                     <div class="font-medium text-sm text-slate-800 truncate">${p.package_name}</div>
                     <div class="text-xs text-slate-500">${p.duration_days} Days • From $${p.base_price_usd}</div>

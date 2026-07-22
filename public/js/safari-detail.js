@@ -93,16 +93,16 @@ function initMobileMenu() {
 
 function buildGallery(mediaItems) {
     if (!mediaItems || mediaItems.length === 0) {
-        return '<div class="gallery-main"><img src="/images/placeholder.jpeg" alt="Gallery"></div>';
+        return '<div class="gallery-main"><img src="/images/optimized/balloon.webp" alt="Gallery"></div>';
     }
     const mainImg = mediaItems[0];
     const mainImgUrl = typeof mainImg === 'string' ? mainImg : mainImg.file_url;
-    let html = `<div class="gallery-main" onclick="openLightbox('${mainImgUrl}')"><img src="${mainImgUrl}" alt="${mainImg.alt_text || 'Safari image'}" loading="lazy" decoding="async" onerror="this.src='/images/placeholder.jpeg'"></div>`;
+    let html = `<div class="gallery-main" onclick="openLightbox('${mainImgUrl}')"><img src="${mainImgUrl}" alt="${mainImg.alt_text || 'Safari image'}" loading="lazy" decoding="async" onerror="this.src='/images/optimized/balloon.webp'"></div>`;
     if (mediaItems.length > 1) {
         html += '<div class="gallery-thumbs">';
         for (let i = 1; i < Math.min(mediaItems.length, 5); i++) {
             const thumbUrl = typeof mediaItems[i] === 'string' ? mediaItems[i] : mediaItems[i].file_url;
-            html += `<div class="gallery-thumb" onclick="setGalleryMain('${thumbUrl}')"><img src="${thumbUrl}" alt="Thumbnail ${i}" loading="lazy" decoding="async" onerror="this.src='/images/placeholder.jpeg'"></div>`;
+            html += `<div class="gallery-thumb" onclick="setGalleryMain('${thumbUrl}')"><img src="${thumbUrl}" alt="Thumbnail ${i}" loading="lazy" decoding="async" onerror="this.src='/images/optimized/balloon.webp'"></div>`;
         }
         html += '</div>';
     }
@@ -157,7 +157,7 @@ async function loadSafariDetails(slug) {
 
 function renderSafariDetails(safari) {
     const heroImg = document.getElementById('heroImg');
-    if(heroImg) heroImg.src = imgSrc(safari.featured_image_url || safari.image_urls?.[0], '/images/placeholder.jpeg');
+    if(heroImg) heroImg.src = imgSrc(safari.featured_image_url || safari.image_urls?.[0], '/images/optimized/balloon.webp');
     
     const heroTitle = document.getElementById('heroTitle');
     if(heroTitle) heroTitle.textContent = safari.package_name;
@@ -195,7 +195,7 @@ function renderSafariDetails(safari) {
     
     const galleryEl = document.getElementById('gallery');
     if(galleryEl) {
-        const imgs = safari.image_urls && safari.image_urls.length > 0 ? safari.image_urls : [safari.featured_image_url || '/images/placeholder.jpeg'];
+        const imgs = safari.image_urls && safari.image_urls.length > 0 ? safari.image_urls : [safari.featured_image_url || '/images/optimized/balloon.webp'];
         galleryEl.innerHTML = buildGallery(imgs);
     }
     

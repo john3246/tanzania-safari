@@ -13,7 +13,7 @@ async function loadDestinations() {
         grid.innerHTML = data.map(d => `
         <a href="/destinations/${d.park_slug}" class="dest-card group">
           <div class="dest-card-img-wrapper">
-              <img src="${(d.image_urls && d.image_urls.length > 0) ? d.image_urls[0] : (d.image_url || '/images/placeholder.jpeg')}" alt="${d.park_name}" loading="lazy" class="group-hover:scale-110 transition-transform duration-700">
+              <img src="${(d.image_urls && d.image_urls.length > 0) ? d.image_urls[0] : (d.image_url || '/images/optimized/balloon.webp')}" alt="${d.park_name}" loading="lazy" class="group-hover:scale-110 transition-transform duration-700">
               ${d.image_urls && d.image_urls.length > 1 ? `<div class="absolute top-3 right-3 bg-black/50 backdrop-blur-md text-white text-xs px-2 py-1 rounded-md"><i class="ph ph-images"></i> ${d.image_urls.length} Photos</div>` : ''}
           </div>
           <div class="dest-card-overlay"></div>

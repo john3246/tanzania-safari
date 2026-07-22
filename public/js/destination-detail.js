@@ -378,7 +378,7 @@ async function loadSafariPackagesForDestination(destinationName) {
             if (packagesToShow.length > 0) {
                 packagesGrid.innerHTML = packagesToShow.map(pkg => {
                     const avgRating = parseFloat(pkg.avg_rating || 0).toFixed(1);
-                    const pkgImg = imgSrc(pkg.featured_image_url || pkg.image_urls?.[0], '/images/placeholder.jpeg');
+                    const pkgImg = imgSrc(pkg.featured_image_url || pkg.image_urls?.[0], '/images/optimized/balloon.webp');
                     return `
                         <div class="package-card" onclick="window.location.href='/safaris/${pkg.package_slug}'">
                             <div class="package-card-image">
