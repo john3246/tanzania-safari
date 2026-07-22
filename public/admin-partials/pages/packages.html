@@ -1,44 +1,67 @@
 <div id="page-packages" class="page">
-<div class="space-y-6">
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h1 class="text-2xl font-bold text-gray-900">Tours Management</h1>
-        <button onclick="openPackageModal()" class="w-full sm:w-auto bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-colors">
-            <i class="ph ph-plus"></i> Add New Tour
-        </button>
-    </div>
+    <div class="space-y-6">
+        <!-- Header Section -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Tours Management</h1>
+                <p class="text-sm text-gray-500 mt-1">Manage and publish tour itineraries, pricing, categories, and SEO options.</p>
+            </div>
+            <button onclick="openPackageModal()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 shadow-sm transition-all duration-200">
+                <i class="ph ph-plus-circle text-lg"></i> Add New Tour
+            </button>
+        </div>
 
-    <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden flex flex-col">
-        <div class="p-4 border-b border-gray-200 flex justify-between items-center bg-gray-50/50">
-            <div class="relative w-full max-w-sm">
-                <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
-                <input 
-                    type="text" 
-                    id="tourSearch"
-                    placeholder="Search tours by name..." 
-                    class="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-primary-500"
-                    onkeyup="filterPackages()"
-                />
+        <!-- Filter Bar -->
+        <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden flex flex-col">
+            <div class="p-4 border-b border-gray-200 bg-gray-50/50 flex flex-col md:flex-row gap-4 items-center justify-between">
+                <div class="relative w-full md:w-80">
+                    <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
+                    <input 
+                        type="text" 
+                        id="tourSearch"
+                        placeholder="Search tours..." 
+                        class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+                        onkeyup="filterPackages()"
+                    />
+                </div>
+                
+                <div class="flex flex-wrap items-center gap-3 w-full md:w-auto justify-end">
+                    <select id="filterCategory" onchange="filterPackages()" class="bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all">
+                        <option value="">All Categories</option>
+                    </select>
+                    <select id="filterDestination" onchange="filterPackages()" class="bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all">
+                        <option value="">All Destinations</option>
+                    </select>
+                    <select id="filterStatus" onchange="filterPackages()" class="bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all">
+                        <option value="">All Statuses</option>
+                        <option value="draft">Draft</option>
+                        <option value="published">Published</option>
+                        <option value="archived">Archived</option>
+                    </select>
+                </div>
             </div>
-        </div>
-        
-        <div class="overflow-x-auto relative min-h-[300px]">
-            <div class="table-responsive">
-                <table class="w-full text-left text-sm text-gray-600">
-                    <thead class="bg-slate-50 text-slate-400 text-xs font-semibold uppercase border-b border-slate-100">
-                        <tr>
-                            <th class="px-6 py-4">Tour Name</th>
-                            <th class="px-6 py-4">Price</th>
-                            <th class="px-6 py-4">Duration</th>
-                            <th class="px-6 py-4">Status</th>
-                            <th class="px-6 py-4">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100 bg-white" id="pkgBody">
-                        <!-- JS will populate rows here -->
-                    </tbody>
-                </table>
+            
+            <!-- Table Section -->
+            <div class="overflow-x-auto relative min-h-[300px]">
+                <div class="table-responsive">
+                    <table class="w-full text-left text-sm text-gray-600">
+                        <thead class="bg-gray-50 text-gray-400 text-xs font-semibold uppercase tracking-wider border-b border-gray-150">
+                            <tr>
+                                <th class="px-6 py-4">Tour Name / Route</th>
+                                <th class="px-6 py-4">Category</th>
+                                <th class="px-6 py-4">Price (USD)</th>
+                                <th class="px-6 py-4">Duration</th>
+                                <th class="px-6 py-4">Status</th>
+                                <th class="px-6 py-4">Active</th>
+                                <th class="px-6 py-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 bg-white" id="pkgBody">
+                            <!-- Populated dynamically via javascript -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
 </div>

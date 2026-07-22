@@ -1,69 +1,122 @@
 <div class="modal-overlay" id="pkgModal">
-        <div class="bg-white rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col border border-slate-100">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-5xl max-h-[95vh] overflow-hidden flex flex-col border border-slate-100">
             <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-                <h3 class="font-semibold text-slate-800 text-base" id="pkgModalTitle">Package Details</h3>
+                <h3 class="font-semibold text-slate-800 text-base" id="pkgModalTitle">Tour Details</h3>
                 <button class="text-slate-400 hover:text-slate-600" onclick="closeModal('pkgModal')"><i class="ph ph-x text-xl"></i></button>
             </div>
             
             <div class="flex-1 overflow-y-auto p-6 space-y-6">
                 <div class="flex border-b border-slate-200">
-                    <button class="tab-btn px-4 py-2 border-b-2 border-transparent font-medium text-sm text-slate-500 [&.active]:border-primary-500 [&.active]:text-primary-600 active" onclick="switchPkgTab('general')">General Info</button>
-                    <button class="tab-btn px-4 py-2 border-b-2 border-transparent font-medium text-sm text-slate-500 [&.active]:border-primary-500 [&.active]:text-primary-600" onclick="switchPkgTab('itinerary')">Itinerary</button>
-                    <button class="tab-btn px-4 py-2 border-b-2 border-transparent font-medium text-sm text-slate-500 [&.active]:border-primary-500 [&.active]:text-primary-600" onclick="switchPkgTab('locations')">Locations</button>
+                    <button class="tab-btn px-4 py-2 border-b-2 border-transparent font-medium text-sm text-slate-500 [&.active]:border-emerald-500 [&.active]:text-emerald-600 active" onclick="switchPkgTab('general')">General Info</button>
+                    <button class="tab-btn px-4 py-2 border-b-2 border-transparent font-medium text-sm text-slate-500 [&.active]:border-emerald-500 [&.active]:text-emerald-600" onclick="switchPkgTab('itinerary')">Itinerary</button>
+                    <button class="tab-btn px-4 py-2 border-b-2 border-transparent font-medium text-sm text-slate-500 [&.active]:border-emerald-500 [&.active]:text-emerald-600" onclick="switchPkgTab('locations')">Locations</button>
+                    <button class="tab-btn px-4 py-2 border-b-2 border-transparent font-medium text-sm text-slate-500 [&.active]:border-emerald-500 [&.active]:text-emerald-600" onclick="switchPkgTab('seo')">SEO & OG Settings</button>
                 </div>
 
                 <div class="tab-content block" id="pkg-tab-general">
                     <form id="pkgForm" class="space-y-4">
-                        <input type="hidden" name="package_id" id="pkgId">
+                        <input type="hidden" name="id" id="pkgId">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Name</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="package_name" required></div>
-                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Slug</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="package_slug" required></div>
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Title</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" name="title" required></div>
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Slug</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" name="slug" required></div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="space-y-1">
+                                <label class="text-xs font-medium text-slate-500">Category</label>
+                                <select class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" name="category_id" id="pkgCategorySelect"></select>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-xs font-medium text-slate-500">Destination</label>
+                                <select class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" name="destination_id" id="pkgDestinationSelect"></select>
+                            </div>
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Price (USD)</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" type="number" name="price_usd" required></div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Duration (Days)</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" type="number" name="duration_days" required></div>
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Duration (Nights)</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" type="number" name="duration_nights"></div>
+                            <div class="space-y-1">
+                                <label class="text-xs font-medium text-slate-500">Difficulty</label>
+                                <select class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" name="difficulty">
+                                    <option>Easy</option>
+                                    <option>Moderate</option>
+                                    <option>Challenging</option>
+                                    <option>Extreme</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Group Size Min</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" type="number" name="group_size_min" value="1"></div>
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Group Size Max</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" type="number" name="group_size_max" value="12"></div>
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Min Age Limit</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" type="number" name="age_minimum" value="6"></div>
+                        </div>
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Overview</label><textarea class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" name="overview" required rows="2"></textarea></div>
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Description</label><textarea class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" name="description" rows="4"></textarea></div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Featured Image URL</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" name="featured_image_url" placeholder="e.g. https://images.unsplash.com/..."></div>
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Gallery Image URLs (CSV)</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" name="gallery_urls_csv" placeholder="url1, url2..."></div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Category</label><select class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="category_id" id="pkgCategorySelect"></select></div>
-                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Price (USD)</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" type="number" name="base_price_usd" required></div>
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Highlights (one per line)</label><textarea class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" name="highlights_text" rows="3"></textarea></div>
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Travel Tips (one per line)</label><textarea class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" name="travel_tips_text" rows="3"></textarea></div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Duration (Days)</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" type="number" name="duration_days" required></div>
-                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Duration (Nights)</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" type="number" name="duration_nights"></div>
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Included (one per line)</label><textarea class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" name="included_text" rows="3"></textarea></div>
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Excluded (one per line)</label><textarea class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" name="excluded_text" rows="3"></textarea></div>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Difficulty</label><select class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="difficulty_level"><option>Easy</option><option>Moderate</option><option>Challenging</option></select></div>
-                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Min/Max Pax</label><div class="flex space-x-2"><input class="w-1/2 bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" type="number" name="minimum_pax" placeholder="Min"><input class="w-1/2 bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" type="number" name="maximum_pax" placeholder="Max"></div></div>
-                        </div>
-                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Short Description</label><textarea class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="short_description" required rows="2"></textarea></div>
-                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Detailed Description</label><textarea class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="detailed_description" rows="5"></textarea></div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Featured Image Slug</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="featured_image_url" placeholder="e.g. serengeti-hero"></div>
-                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Other Image Slugs (CSV)</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="image_urls_csv" placeholder="img1, img2..."></div>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Included (one per line)</label><textarea class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="included_features_text" rows="4"></textarea></div>
-                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Excluded (one per line)</label><textarea class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="excluded_features_text" rows="4"></textarea></div>
-                        </div>
-                        <div class="flex items-center gap-6 p-4 bg-slate-50 rounded-lg border border-slate-100 flex-wrap">
-                            <label class="inline-flex items-center text-sm font-medium text-slate-600"><input type="checkbox" name="is_featured" class="rounded border-slate-300 text-primary-500 focus:ring-primary-500 mr-2"> Featured</label>
-                            <label class="inline-flex items-center text-sm font-medium text-slate-600"><input type="checkbox" name="is_private" class="rounded border-slate-300 text-primary-500 focus:ring-primary-500 mr-2" checked> Private</label>
-                            <label class="inline-flex items-center text-sm font-medium text-slate-600"><input type="checkbox" name="is_customizable" class="rounded border-slate-300 text-primary-500 focus:ring-primary-500 mr-2" checked> Customizable</label>
-                            <label class="inline-flex items-center text-sm font-medium text-slate-600"><input type="checkbox" name="is_active" class="rounded border-slate-300 text-primary-500 focus:ring-primary-500 mr-2" checked> Active</label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center bg-slate-50 p-4 rounded-lg border border-slate-100">
+                            <div class="flex items-center gap-6">
+                                <label class="inline-flex items-center text-sm font-medium text-slate-600"><input type="checkbox" name="is_featured" class="rounded border-slate-300 text-emerald-500 focus:ring-emerald-500 mr-2"> Featured</label>
+                                <label class="inline-flex items-center text-sm font-medium text-slate-600"><input type="checkbox" name="is_active" class="rounded border-slate-300 text-emerald-500 focus:ring-emerald-500 mr-2" checked> Active</label>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-xs font-medium text-slate-500">Status</label>
+                                <select class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-emerald-500" name="status">
+                                    <option value="draft">Draft</option>
+                                    <option value="published">Published</option>
+                                    <option value="archived">Archived</option>
+                                </select>
+                            </div>
                         </div>
                     </form>
                 </div>
 
                 <div class="tab-content hidden space-y-4" id="pkg-tab-itinerary">
                     <div id="itineraryContainer" class="space-y-4"></div>
-                    <button class="bg-primary-500 hover:bg-primary-600 text-white px-3 py-1.5 rounded-md text-xs font-medium transition-colors" onclick="addItineraryDay()"><i class="ph ph-plus mr-1"></i> Add Day</button>
+                    <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-md text-xs font-medium transition-colors" onclick="addItineraryDay()"><i class="ph ph-plus mr-1"></i> Add Day</button>
                 </div>
 
                 <div class="tab-content hidden space-y-4" id="pkg-tab-locations">
                     <div id="locationsContainer" class="space-y-3"></div>
-                    <button class="bg-primary-500 hover:bg-primary-600 text-white px-3 py-1.5 rounded-md text-xs font-medium transition-colors" onclick="addPkgLocation()"><i class="ph ph-plus mr-1"></i> Add Park</button>
+                    <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-md text-xs font-medium transition-colors" onclick="addPkgLocation()"><i class="ph ph-plus mr-1"></i> Add Park</button>
+                </div>
+
+                <div class="tab-content hidden space-y-4" id="pkg-tab-seo">
+                    <form id="seoForm" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">SEO Title</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" name="seo_title"></div>
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Canonical URL</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" name="canonical_url" type="url"></div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">SEO Keywords (Comma Separated)</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" name="seo_keywords" placeholder="safari, serengeti..."></div>
+                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Meta Robots</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" name="meta_robots" placeholder="index, follow"></div>
+                        </div>
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">SEO Description</label><textarea class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" name="seo_description" rows="2"></textarea></div>
+                        
+                        <div class="border-t border-slate-200 pt-4 mt-4">
+                            <h4 class="font-semibold text-slate-700 text-sm mb-3">Open Graph Settings</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="space-y-1"><label class="text-xs font-medium text-slate-500">OG Title</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" name="og_title"></div>
+                                <div class="space-y-1"><label class="text-xs font-medium text-slate-500">OG Image URL</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" name="og_image_url" type="url"></div>
+                            </div>
+                            <div class="space-y-1 mt-2"><label class="text-xs font-medium text-slate-500">OG Description</label><textarea class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500" name="og_description" rows="2"></textarea></div>
+                        </div>
+                    </form>
                 </div>
             </div>
             
             <div class="px-6 py-4 border-t border-slate-100 flex justify-end space-x-2 bg-slate-50">
                 <button class="px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium hover:bg-white transition-colors" onclick="closeModal('pkgModal')">Discard</button>
-                <button class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors" onclick="savePackage()">Save Package</button>
+                <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors" onclick="savePackage()">Save Tour</button>
             </div>
         </div>
     </div>

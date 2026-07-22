@@ -203,6 +203,31 @@ CREATE TABLE IF NOT EXISTS public.currencies
     CONSTRAINT currencies_currency_code_key UNIQUE (currency_code)
 );
 
+CREATE TABLE IF NOT EXISTS public.email_logs
+(
+    id serial NOT NULL,
+    recipient_email character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    subject character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    template_name character varying(50) COLLATE pg_catalog."default",
+    status character varying(20) COLLATE pg_catalog."default" DEFAULT 'sent'::character varying,
+    error_message text COLLATE pg_catalog."default",
+    sent_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT email_logs_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS public.email_templates
+(
+    id serial NOT NULL,
+    name character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    subject character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    body text COLLATE pg_catalog."default" NOT NULL,
+    type character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT email_templates_pkey PRIMARY KEY (id),
+    CONSTRAINT email_templates_type_key UNIQUE (type)
+);
+
 CREATE TABLE IF NOT EXISTS public.guide_assignments
 (
     assignment_id uuid NOT NULL DEFAULT uuid_generate_v4(),
@@ -251,6 +276,48 @@ CREATE TABLE IF NOT EXISTS public.guides
 
 COMMENT ON TABLE public.guides
     IS 'Safari guide profiles with specialties and availability.';
+
+CREATE TABLE IF NOT EXISTS public.media_library
+(
+    id serial NOT NULL,
+    filename character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    original_name character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    mime_type character varying(100) COLLATE pg_catalog."default",
+    file_size integer,
+    folder character varying(100) COLLATE pg_catalog."default" DEFAULT 'general'::character varying,
+    url character varying(500) COLLATE pg_catalog."default" NOT NULL,
+    alt_text character varying(255) COLLATE pg_catalog."default",
+    caption text COLLATE pg_catalog."default",
+    uploaded_by uuid,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    deleted_at timestamp without time zone,
+    CONSTRAINT media_library_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS public.menu_items
+(
+    id serial NOT NULL,
+    menu_id integer,
+    parent_id integer,
+    title character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    url character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    order_index integer DEFAULT 0,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT menu_items_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS public.menus
+(
+    id serial NOT NULL,
+    name character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    location character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT menus_pkey PRIMARY KEY (id),
+    CONSTRAINT menus_location_key UNIQUE (location)
+);
 
 CREATE TABLE IF NOT EXISTS public.national_parks
 (
@@ -347,6 +414,22 @@ CREATE TABLE IF NOT EXISTS public.package_itinerary
     max_altitude_m integer,
     image_urls text[] COLLATE pg_catalog."default",
     CONSTRAINT package_itinerary_pkey PRIMARY KEY (itinerary_id)
+);
+
+CREATE TABLE IF NOT EXISTS public.pages
+(
+    id serial NOT NULL,
+    title character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    slug character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    content text COLLATE pg_catalog."default",
+    meta_title character varying(255) COLLATE pg_catalog."default",
+    meta_description text COLLATE pg_catalog."default",
+    status character varying(20) COLLATE pg_catalog."default" DEFAULT 'draft'::character varying,
+    author_id uuid,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT pages_pkey PRIMARY KEY (id),
+    CONSTRAINT pages_slug_key UNIQUE (slug)
 );
 
 CREATE TABLE IF NOT EXISTS public.password_reset_tokens
@@ -693,6 +776,20 @@ ALTER TABLE IF EXISTS public.guides
     ON DELETE CASCADE;
 CREATE INDEX IF NOT EXISTS guides_user_id_key
     ON public.guides(user_id);
+
+
+ALTER TABLE IF EXISTS public.menu_items
+    ADD CONSTRAINT menu_items_menu_id_fkey FOREIGN KEY (menu_id)
+    REFERENCES public.menus (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE CASCADE;
+
+
+ALTER TABLE IF EXISTS public.menu_items
+    ADD CONSTRAINT menu_items_parent_id_fkey FOREIGN KEY (parent_id)
+    REFERENCES public.menu_items (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE CASCADE;
 
 
 ALTER TABLE IF EXISTS public.notifications
