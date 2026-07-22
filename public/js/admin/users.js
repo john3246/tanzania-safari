@@ -16,10 +16,10 @@ async function loadUsers() {
                         ${u.is_active ? 'Active' : 'Inactive'}
                     </span>
                 </td>
-                <td class="px-6 py-4">
-                    <div class="flex items-center space-x-3">
-                        <button class="text-slate-400 hover:text-primary-600 transition-colors" onclick="openUserModal('${u.user_id}')" title="Edit"><i class="ph ph-pencil-simple text-lg"></i></button>
-                        <button class="text-slate-400 hover:text-red-600 transition-colors" onclick="deleteUser('${u.user_id}')" title="Delete"><i class="ph ph-trash text-lg"></i></button>
+                <td class="px-6 py-4 text-right">
+                    <div class="flex items-center space-x-3 justify-end">
+                        <button class="text-slate-400 hover:text-emerald-600 transition-colors p-2 hover:bg-emerald-50 rounded-lg" onclick="openUserModal('${u.user_id}')" title="Edit"><i class="fa-solid fa-pencil text-sm"></i></button>
+                        <button class="text-slate-400 hover:text-red-600 transition-colors p-2 hover:bg-red-50 rounded-lg" onclick="deleteUser('${u.user_id}')" title="Delete"><i class="fa-solid fa-trash text-sm"></i></button>
                     </div>
                 </td>
             </tr>`).join('') || '<tr><td colspan="5" class="px-6 py-8 text-center text-slate-500">No users found.</td></tr>';

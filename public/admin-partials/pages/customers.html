@@ -1,0 +1,101 @@
+<div id="page-customers" class="page">
+    <div class="space-y-6">
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Customer CRM</h1>
+                <p class="text-sm text-gray-500 mt-1">View, manage, and inspect all customer accounts and profiles.</p>
+            </div>
+            <button onclick="openUserModal()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 shadow-sm transition-all duration-200">
+                <i class="fa-solid fa-user-plus text-sm"></i> Add Customer
+            </button>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="bg-white p-4 border border-gray-200 rounded-xl shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="relative w-full sm:w-72">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <input 
+                    type="text" 
+                    id="customerSearch"
+                    placeholder="Search name or email..." 
+                    class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900"
+                    onkeyup="filterCustomers()"
+                />
+            </div>
+        </div>
+
+        <!-- Table Card -->
+        <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+                <div class="table-responsive">
+                    <table class="w-full text-left text-sm text-gray-600">
+                        <thead class="bg-gray-50 text-gray-400 text-xs font-semibold uppercase tracking-wider border-b border-gray-150">
+                            <tr>
+                                <th class="px-6 py-4">Customer</th>
+                                <th class="px-6 py-4">Email</th>
+                                <th class="px-6 py-4">Phone</th>
+                                <th class="px-6 py-4">Status</th>
+                                <th class="px-6 py-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customerBody" class="divide-y divide-gray-100 bg-white">
+                            <!-- JS populated -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+async function loadCustomers() {
+    const body = document.getElementById('customerBody');
+    if (!body) return;
+    body.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-gray-500"><i class="fas fa-spinner fa-spin mr-2"></i> Loading customers...</td></tr>';
+    try {
+        const res = await apiRequest('GET', '/users');
+        window.allCustomersList = res.data || [];
+        renderCustomers(window.allCustomersList);
+    } catch (e) {
+        console.error(e);
+        showToast('Failed to load customers', 'error');
+    }
+}
+
+function renderCustomers(list) {
+    const body = document.getElementById('customerBody');
+    if (!body) return;
+    body.innerHTML = list.map(c => `
+        <tr class="hover:bg-slate-50 transition-colors border-b border-slate-100">
+            <td class="px-6 py-4 font-semibold text-slate-800">${escapeHtml(c.first_name)} ${escapeHtml(c.last_name || '')}</td>
+            <td class="px-6 py-4 text-slate-500">${escapeHtml(c.email)}</td>
+            <td class="px-6 py-4 text-slate-500">${escapeHtml(c.phone || '—')}</td>
+            <td class="px-6 py-4">
+                <span class="px-2.5 py-1 text-xs font-medium rounded-full ${c.is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'}">
+                    ${c.is_active ? 'Active' : 'Inactive'}
+                </span>
+            </td>
+            <td class="px-6 py-4 text-right">
+                <div class="flex items-center space-x-3 justify-end">
+                    <button class="text-slate-400 hover:text-emerald-600 transition-colors p-2 hover:bg-emerald-50 rounded-lg" onclick="openUserModal('${c.user_id}')" title="Edit"><i class="fa-solid fa-pencil text-sm"></i></button>
+                    <button class="text-slate-400 hover:text-red-65500 transition-colors p-2 hover:bg-red-50 rounded-lg" onclick="deleteUser('${c.user_id}')" title="Delete"><i class="fa-solid fa-trash text-sm"></i></button>
+                </div>
+            </td>
+        </tr>
+    `).join('') || '<tr><td colspan="5" class="px-6 py-8 text-center text-slate-500">No customers found.</td></tr>';
+}
+
+function filterCustomers() {
+    const searchVal = document.getElementById('customerSearch').value.toLowerCase();
+    const filtered = (window.allCustomersList || []).filter(c => 
+        (c.first_name + ' ' + (c.last_name || '')).toLowerCase().includes(searchVal) ||
+        c.email.toLowerCase().includes(searchVal)
+    );
+    renderCustomers(filtered);
+}
+
+// Map globally
+window.loadCustomers = loadCustomers;
+</script>

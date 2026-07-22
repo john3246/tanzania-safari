@@ -81,7 +81,7 @@ function renderBookings(bookingsToRender = allBookings) {
                 ${new Date(b.created_at).toLocaleDateString()}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                -
+                $${parseFloat(b.total_price || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </td>
             <td class="px-6 py-4 whitespace-nowrap">
                 <span class="px-2.5 py-1 inline-flex items-center gap-1.5 text-xs leading-5 font-semibold rounded-full ${statusClass}">

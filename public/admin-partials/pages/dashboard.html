@@ -91,37 +91,37 @@
         <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
             <h3 class="font-semibold text-gray-900 mb-4">Quick Actions</h3>
             <div class="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-3 xl:grid-cols-6 gap-4">
-                <button class="flex flex-col items-center text-center gap-2 group" onclick="switchPage('packages'); setTimeout(openPackageModal, 300)">
+                <button class="flex flex-col items-center text-center gap-2 group" onclick="navigate('packages'); setTimeout(() => openPackageModal(), 300)">
                     <div class="w-14 h-14 rounded-2xl flex items-center justify-center bg-emerald-50 text-emerald-600 border border-transparent group-hover:border-emerald-200 transition-all group-hover:scale-105">
                         <i class="fa-solid fa-plus text-xl"></i>
                     </div>
                     <span class="text-xs font-medium text-gray-600 leading-tight">Add Tour</span>
                 </button>
-                <button class="flex flex-col items-center text-center gap-2 group" onclick="switchPage('destinations'); setTimeout(openDestModal, 300)">
+                <button class="flex flex-col items-center text-center gap-2 group" onclick="navigate('destinations'); setTimeout(() => openDestModal(), 300)">
                     <div class="w-14 h-14 rounded-2xl flex items-center justify-center bg-yellow-50 text-yellow-600 border border-transparent group-hover:border-yellow-200 transition-all group-hover:scale-105">
                         <i class="fa-solid fa-location-dot text-xl"></i>
                     </div>
                     <span class="text-xs font-medium text-gray-600 leading-tight">New Dest.</span>
                 </button>
-                <button class="flex flex-col items-center text-center gap-2 group" onclick="switchPage('blog'); setTimeout(openBlogModal, 300)">
+                <button class="flex flex-col items-center text-center gap-2 group" onclick="navigate('blog'); setTimeout(() => openBlogModal(), 300)">
                     <div class="w-14 h-14 rounded-2xl flex items-center justify-center bg-blue-50 text-blue-600 border border-transparent group-hover:border-blue-200 transition-all group-hover:scale-105">
                         <i class="fa-solid fa-file-lines text-xl"></i>
                     </div>
                     <span class="text-xs font-medium text-gray-600 leading-tight">New Blog</span>
                 </button>
-                <button class="flex flex-col items-center text-center gap-2 group nav-link" data-page="images">
+                <button class="flex flex-col items-center text-center gap-2 group" onclick="navigate('images')">
                     <div class="w-14 h-14 rounded-2xl flex items-center justify-center bg-orange-50 text-orange-600 border border-transparent group-hover:border-orange-200 transition-all group-hover:scale-105">
                         <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
                     </div>
                     <span class="text-xs font-medium text-gray-600 leading-tight">Upload</span>
                 </button>
-                <button class="flex flex-col items-center text-center gap-2 group nav-link" data-page="bookings">
+                <button class="flex flex-col items-center text-center gap-2 group" onclick="navigate('bookings'); setTimeout(() => showNewBookingModal(), 300)">
                     <div class="w-14 h-14 rounded-2xl flex items-center justify-center bg-forest-50 text-forest-600 border border-transparent group-hover:border-forest-200 transition-all group-hover:scale-105">
                         <i class="fa-regular fa-calendar-plus text-xl"></i>
                     </div>
                     <span class="text-xs font-medium text-gray-600 leading-tight">New Booking</span>
                 </button>
-                <button class="flex flex-col items-center text-center gap-2 group nav-link" data-page="settings">
+                <button class="flex flex-col items-center text-center gap-2 group" onclick="navigate('settings')">
                     <div class="w-14 h-14 rounded-2xl flex items-center justify-center bg-gray-50 text-gray-600 border border-transparent group-hover:border-gray-200 transition-all group-hover:scale-105">
                         <i class="fa-solid fa-gear text-xl"></i>
                     </div>

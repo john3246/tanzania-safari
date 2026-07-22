@@ -1,50 +1,61 @@
 <div id="page-settings" class="page">
-<div class="page space-y-6" id="page-settings">
-                <div class="bg-white rounded-xl border border-slate-200 shadow-2xs p-6 max-w-3xl">
-                    <h3 class="font-semibold text-slate-850 text-base mb-6 pb-2 border-b border-slate-100">Personal Account</h3>
-                    
-                    <div class="flex flex-col sm:flex-row items-center gap-6 mb-8 pb-8 border-b border-slate-100">
-                        <div id="profileImagePreview" class="w-24 h-24 rounded-xl bg-slate-50 border-2 border-dashed border-slate-200 overflow-hidden flex items-center justify-center text-3xl text-primary-500">
-                            <i class="ph ph-user-circle"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-medium text-slate-800 mb-1">Profile Photo</h4>
-                            <p class="text-xs text-slate-400 mb-3">Update your avatar. Recommended size: 400x400px.</p>
-                            <button class="bg-primary-500 hover:bg-primary-600 text-white px-3 py-1.5 rounded-md text-xs font-medium transition-colors" onclick="document.getElementById('profileImgInput').click()"><i class="ph ph-upload-simple mr-1"></i> Upload New</button>
-                            <input type="file" id="profileImgInput" class="hidden" accept="image/*" onchange="uploadProfilePhoto(this.files[0])">
-                        </div>
-                    </div>
+    <div class="space-y-6">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 tracking-tight">System Settings & Profile</h1>
+            <p class="text-sm text-gray-500 mt-1">Configure profile details, manage security, and edit global site variables.</p>
+        </div>
 
-                    <form id="profileForm" class="space-y-4">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">First Name</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="first_name" id="profFirst" required></div>
-                            <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Last Name</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="last_name" id="profLast"></div>
-                        </div>
-                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Email Address</label><input class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-400 cursor-not-allowed outline-none" name="email" id="profEmail" readonly></div>
-                        <button type="submit" class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors inline-flex items-center space-x-2"><i class="ph ph-check"></i> <span>Update Details</span></button>
-                    </form>
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 max-w-3xl">
+            <h3 class="font-bold text-slate-800 text-base mb-6 pb-2 border-b border-gray-150">Personal Account</h3>
+            
+            <div class="flex flex-col sm:flex-row items-center gap-6 mb-8 pb-8 border-b border-gray-150">
+                <div id="profileImagePreview" class="w-20 h-20 rounded-xl bg-slate-50 border-2 border-dashed border-slate-200 overflow-hidden flex items-center justify-center text-3xl text-emerald-600">
+                    <i class="fa-solid fa-circle-user"></i>
                 </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="bg-white rounded-xl border border-slate-200 shadow-2xs p-6">
-                        <h3 class="font-semibold text-slate-800 text-base mb-4">System Configuration</h3>
-                        <form id="settingsForm" class="space-y-4"></form>
-                    </div>
-                    
-                    <div class="bg-white rounded-xl border border-slate-200 shadow-2xs p-6">
-                        <h3 class="font-semibold text-slate-800 text-base mb-4">Security & Account</h3>
-                        <form id="passwordForm" class="space-y-4">
-                            <div class="space-y-1">
-                                <label class="text-xs font-medium text-slate-500">New Password</label>
-                                <input type="password" name="new_password" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" required>
-                            </div>
-                            <div class="space-y-1">
-                                <label class="text-xs font-medium text-slate-500">Confirm Password</label>
-                                <input type="password" name="confirm_password" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" required>
-                            </div>
-                            <button type="submit" class="w-full bg-primary-500 hover:bg-primary-600 text-white py-2 rounded-lg text-sm font-medium transition-colors">Update Password</button>
-                        </form>
-                    </div>
+                <div class="text-center sm:text-left">
+                    <h4 class="font-bold text-slate-800 mb-1 text-sm">Profile Photo</h4>
+                    <p class="text-xs text-slate-400 mb-3">Update your avatar. Recommended size: 400x400px.</p>
+                    <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition-all" onclick="document.getElementById('profileImgInput').click()">
+                        <i class="fa-solid fa-cloud-arrow-up mr-1.5"></i> Upload New
+                    </button>
+                    <input type="file" id="profileImgInput" class="hidden" accept="image/*" onchange="uploadProfilePhoto(this.files[0])">
                 </div>
             </div>
+
+            <form id="profileForm" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">First Name</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20" name="first_name" id="profFirst" required></div>
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Last Name</label><input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20" name="last_name" id="profLast"></div>
+                </div>
+                <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Email Address</label><input class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-400 cursor-not-allowed outline-none" name="email" id="profEmail" readonly></div>
+                <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all inline-flex items-center space-x-2">
+                    <i class="fa-solid fa-check"></i> <span>Update Details</span>
+                </button>
+            </form>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-3xl">
+            <!-- System Settings -->
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                <h3 class="font-bold text-slate-800 text-base mb-4 border-b border-gray-100 pb-2">System Configuration</h3>
+                <form id="settingsForm" class="space-y-4"></form>
+            </div>
+            
+            <!-- Password Security -->
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                <h3 class="font-bold text-slate-800 text-base mb-4 border-b border-gray-100 pb-2">Security & Account</h3>
+                <form id="passwordForm" class="space-y-4">
+                    <div class="space-y-1">
+                        <label class="text-xs font-medium text-slate-500">New Password</label>
+                        <input type="password" name="new_password" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20" required>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-medium text-slate-500">Confirm Password</label>
+                        <input type="password" name="confirm_password" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20" required>
+                    </div>
+                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-lg text-sm font-semibold transition-all shadow-sm">Update Password</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>

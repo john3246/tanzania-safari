@@ -20,11 +20,11 @@ async function loadBlogs() {
             </td>
             <td class="px-6 py-4">
                 <div class="flex gap-2">
-                    <button class="bg-primary-50 hover:bg-primary-100 text-primary-700 p-1.5 rounded-lg transition-colors" onclick="openBlogModal('${p.post_id}')" title="Edit">
-                        <i class="ph ph-pencil-simple"></i>
+                    <button class="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors" onclick="openBlogModal('${p.post_id}')" title="Edit">
+                        <i class="fa-solid fa-pencil text-sm"></i>
                     </button>
-                    <button class="bg-red-50 hover:bg-red-100 text-red-700 p-1.5 rounded-lg transition-colors" onclick="deleteBlog('${p.post_id}')" title="Delete">
-                        <i class="ph ph-trash"></i>
+                    <button class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" onclick="deleteBlog('${p.post_id}')" title="Delete">
+                        <i class="fa-solid fa-trash text-sm"></i>
                     </button>
                 </div>
             </td>
