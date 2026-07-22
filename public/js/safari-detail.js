@@ -203,10 +203,10 @@ function renderSafariDetails(safari) {
     if(itineraryList) itineraryList.innerHTML = renderItinerary(safari.itinerary);
     
     const includesList = document.getElementById('includesList');
-    if(includesList) includesList.innerHTML = (safari.inclusions || []).map(i => '<li style="margin-bottom:0.75rem;display:flex;align-items:center;gap:0.75rem;color:var(--text-secondary)"><i class="fas fa-check" style="color:var(--success)"></i> ' + escapeHtml(i) + '</li>').join('');
+    if(includesList) includesList.innerHTML = (safari.included_features || safari.inclusions || []).map(i => '<li style="margin-bottom:0.75rem;display:flex;align-items:center;gap:0.75rem;color:var(--text-secondary)"><i class="fas fa-check" style="color:var(--success)"></i> ' + escapeHtml(i) + '</li>').join('');
     
     const excludesList = document.getElementById('excludesList');
-    if(excludesList) excludesList.innerHTML = (safari.exclusions || []).map(i => '<li style="margin-bottom:0.75rem;display:flex;align-items:center;gap:0.75rem;color:var(--text-secondary)"><i class="fas fa-times" style="color:var(--error)"></i> ' + escapeHtml(i) + '</li>').join('');
+    if(excludesList) excludesList.innerHTML = (safari.excluded_features || safari.exclusions || []).map(i => '<li style="margin-bottom:0.75rem;display:flex;align-items:center;gap:0.75rem;color:var(--text-secondary)"><i class="fas fa-times" style="color:var(--error)"></i> ' + escapeHtml(i) + '</li>').join('');
     
     const reviewsList = document.getElementById('reviewsList');
     if(reviewsList) {

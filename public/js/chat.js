@@ -2,19 +2,17 @@ let socket;
 let currentChatId = localStorage.getItem('chatId');
 
 document.addEventListener('DOMContentLoaded', () => {
-    const floatBtn = document.getElementById('socialFloatBtn');
+    const floatBtn = document.getElementById('openLiveChatBtn');
     const chatWidget = document.getElementById('liveChatWidget');
     const closeChatBtn = document.getElementById('closeLiveChat');
     const chatInput = document.getElementById('chatInput');
     const sendChatBtn = document.getElementById('sendChatBtn');
     const chatMessages = document.getElementById('chatMessages');
 
-    if (!chatWidget) return;
+    if (!chatWidget || !floatBtn) return;
 
     // Toggle Chat
     floatBtn.addEventListener('click', (e) => {
-        // Default behavior toggles the social float menu
-        // We will intercept it or just open the chat
         if (chatWidget.style.display === 'none' || chatWidget.style.display === '') {
             chatWidget.style.display = 'flex';
             if (!socket) initChat();
