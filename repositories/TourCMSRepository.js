@@ -58,7 +58,11 @@ class TourCMSRepository extends BaseRepository {
         if (data.description !== undefined) payload.detailed_description = data.description;
         if (data.price_usd !== undefined) payload.base_price_usd = data.price_usd;
         if (data.duration_days !== undefined) payload.duration_days = data.duration_days;
-        if (data.duration_nights !== undefined) payload.duration_nights = data.duration_nights;
+        if (data.duration_nights !== undefined) {
+            payload.duration_nights = data.duration_nights !== null ? data.duration_nights : Math.max(0, (data.duration_days || 1) - 1);
+        } else if (data.duration_days !== undefined) {
+            payload.duration_nights = Math.max(0, data.duration_days - 1);
+        }
         if (data.category_id !== undefined) payload.category_id = data.category_id;
         if (data.difficulty !== undefined) payload.difficulty_level = data.difficulty;
         if (data.group_size_min !== undefined) payload.minimum_pax = data.group_size_min;

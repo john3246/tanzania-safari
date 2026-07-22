@@ -140,7 +140,7 @@ async function saveEditDest(btn) {
 
     // Clean empty values to make sure Zod optional schema parses them correctly
     Object.keys(data).forEach(key => {
-        if (data[key] === '' || data[key] === null || data[key] === undefined) {
+        if (data[key] === '' || data[key] === null || data[key] === undefined || (typeof data[key] === 'number' && isNaN(data[key]))) {
             delete data[key];
         }
     });

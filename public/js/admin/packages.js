@@ -280,6 +280,13 @@ async function saveEditTour(btn) {
     delete data.included_text;
     delete data.excluded_text;
 
+    // Clean empty values, empty strings, and NaN values so they match Zod optional schema
+    Object.keys(data).forEach(key => {
+        if (data[key] === '' || data[key] === null || data[key] === undefined || (typeof data[key] === 'number' && isNaN(data[key]))) {
+            delete data[key];
+        }
+    });
+
     setLoading(btn, true);
     try {
         if (id) {
