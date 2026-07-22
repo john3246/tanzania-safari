@@ -1,0 +1,113 @@
+<div id="page-edit-destination" class="page">
+    <div class="space-y-6">
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900 tracking-tight" id="editDestTitle">Edit Destination</h1>
+                <p class="text-xs text-gray-500 mt-1">Configure name, slug, descriptions, region mapping, and gallery images.</p>
+            </div>
+            <button onclick="navigate('destinations')" class="inline-flex items-center gap-2 rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 transition-colors shadow-sm">
+                <i class="ph ph-arrow-left"></i> Back to Destinations
+            </button>
+        </div>
+
+        <!-- Form Wrapper -->
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-12">
+            <!-- Main Content Form (Left - 2/3) -->
+            <div class="lg:col-span-8 space-y-6">
+                <!-- Name & Slug -->
+                <div class="bg-white rounded-2xl border border-gray-150 p-6 shadow-sm shadow-slate-100/50 space-y-4">
+                    <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2 border-b border-slate-100 pb-3">
+                        <i class="fa-solid fa-circle-info text-amber-500"></i> Basic Information
+                    </h2>
+                    
+                    <form id="editDestForm" class="space-y-4">
+                        <input type="hidden" name="id" id="editDestId">
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-1">
+                                <label class="text-xs font-semibold uppercase tracking-wider text-slate-500">Destination Name</label>
+                                <input class="w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-gray-900 placeholder:text-gray-400" name="name" required placeholder="e.g. Serengeti National Park">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-xs font-semibold uppercase tracking-wider text-slate-500">Slug</label>
+                                <input class="w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-gray-900 placeholder:text-gray-400" name="slug" required placeholder="e.g. serengeti-national-park">
+                            </div>
+                        </div>
+
+                        <div class="space-y-1">
+                            <label class="text-xs font-semibold uppercase tracking-wider text-slate-500">Detailed Description</label>
+                            <textarea class="w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-gray-900 placeholder:text-gray-400" name="description" rows="6" placeholder="Describe the park wildlife highlights, scenery, and rules..."></textarea>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Gallery / Media URLs -->
+                <div class="bg-white rounded-2xl border border-gray-150 p-6 shadow-sm shadow-slate-100/50 space-y-4">
+                    <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2 border-b border-slate-100 pb-3">
+                        <i class="fa-solid fa-images text-amber-500"></i> Media Gallery
+                    </h2>
+                    
+                    <form id="editDestMediaForm" class="space-y-4">
+                        <div class="space-y-1">
+                            <label class="text-xs font-semibold uppercase tracking-wider text-slate-500">Featured Image URL</label>
+                            <input class="w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-gray-900 placeholder:text-gray-400" name="featured_image_url" placeholder="https://...">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-xs font-semibold uppercase tracking-wider text-slate-500">Gallery Image URLs (CSV)</label>
+                            <textarea class="w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-gray-900 placeholder:text-gray-400" name="gallery_urls_csv" rows="3" placeholder="url1, url2..."></textarea>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Sidebar (Right - 1/3) -->
+            <div class="lg:col-span-4 space-y-6">
+                <!-- Status & Actions -->
+                <div class="bg-white rounded-2xl border border-gray-150 p-6 shadow-sm shadow-slate-100/50 space-y-4">
+                    <h3 class="text-base font-bold text-slate-800 border-b border-slate-100 pb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-paper-plane text-amber-500"></i> Status & Actions
+                    </h3>
+                    
+                    <div class="space-y-3">
+                        <div class="flex flex-col gap-2 pt-2">
+                            <label class="inline-flex items-center text-sm font-semibold text-slate-600 cursor-pointer">
+                                <input type="checkbox" id="editDestActive" class="rounded border-slate-300 text-amber-500 focus:ring-amber-500 mr-2"> Active / Visible
+                            </label>
+                            <label class="inline-flex items-center text-sm font-semibold text-slate-600 cursor-pointer">
+                                <input type="checkbox" id="editDestFeatured" class="rounded border-slate-300 text-amber-500 focus:ring-amber-500 mr-2"> UNESCO / Featured
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-slate-100 pt-4 flex gap-2">
+                        <button onclick="saveEditDest(this)" class="flex-1 bg-amber-600 hover:bg-amber-700 text-white font-semibold px-5 py-2.5 rounded-lg transition-all text-sm flex items-center justify-center gap-2 shadow-sm shadow-amber-600/10">
+                            <i class="ph ph-floppy-disk text-lg"></i> Save Changes
+                        </button>
+                        <button onclick="navigate('destinations')" class="border border-slate-200 hover:bg-slate-50 text-slate-600 font-semibold px-4 py-2.5 rounded-lg transition-all text-sm">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Geography / Regional settings -->
+                <div class="bg-white rounded-2xl border border-gray-150 p-6 shadow-sm shadow-slate-100/50 space-y-4">
+                    <h3 class="text-base font-bold text-slate-800 border-b border-slate-100 pb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-location-dot text-amber-500"></i> Geography
+                    </h3>
+                    
+                    <form id="editDestGeoForm" class="space-y-3">
+                        <div class="space-y-1">
+                            <label class="text-xs font-semibold uppercase tracking-wider text-slate-500">Region</label>
+                            <input class="w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-gray-900 placeholder:text-gray-400" name="region" placeholder="e.g. Northern Tanzania">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-xs font-semibold uppercase tracking-wider text-slate-500">Country</label>
+                            <input class="w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-gray-900" name="country" value="Tanzania" readonly>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

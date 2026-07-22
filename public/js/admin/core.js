@@ -30,7 +30,7 @@ async function initAdminApp() {
 
         // Setup routing (load dashboard by default)
         const initialPage = window.location.hash.replace('#', '') || window.location.pathname.split('/').pop();
-        const validPages = ['dashboard', 'packages', 'categories', 'bookings', 'booking-details', 'enquiries', 'settings', 'destinations', 'blog', 'reviews', 'users', 'images', 'communications', 'edit-tour'];
+        const validPages = ['dashboard', 'packages', 'categories', 'bookings', 'booking-details', 'enquiries', 'settings', 'destinations', 'blog', 'reviews', 'users', 'images', 'communications', 'edit-tour', 'edit-destination'];
         const pageToLoad = validPages.includes(initialPage) ? initialPage : 'dashboard';
         
         await navigate(pageToLoad, false); // pass false so we don't push state on initial load
@@ -188,8 +188,8 @@ async function navigate(page, pushState = true) {
         case 'reviews': loadReviews(); break;
         case 'categories': loadCategories(); break;
         case 'images': loadImages(); break;
-        case 'settings': loadSettings(); loadProfile(); break;
         case 'edit-tour': if (window.initEditTourPage) { window.initEditTourPage(); } else { setTimeout(() => window.initEditTourPage?.(), 100); } break;
+        case 'edit-destination': if (window.initEditDestPage) { window.initEditDestPage(); } else { setTimeout(() => window.initEditDestPage?.(), 100); } break;
     }
 }
 

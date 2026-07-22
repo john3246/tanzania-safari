@@ -22,7 +22,7 @@ function renderDestinations() {
     if (!body) return;
     
     body.innerHTML = destinationsList.map(d => {
-        const statusClass = d.is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-65500';
+        const statusClass = d.is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500';
         const statusText = d.is_active ? 'Active' : 'Inactive';
         const featuredBadge = d.is_featured 
             ? '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-amber-100 text-amber-800"><i class="fa-solid fa-star mr-1"></i> Featured</span>'
@@ -64,54 +64,75 @@ function renderDestinations() {
 }
 
 function openDestModal(id = null) {
-    const form = document.getElementById('destForm');
-    if (!form) return;
-    form.reset();
-    document.getElementById('destId').value = '';
-    document.getElementById('destModalTitle').textContent = id ? 'Edit Destination' : 'New Destination';
-    
+    window.currentEditDestId = id;
+    navigate('edit-destination');
+}
+
+// ── Edit Destination Page Workspace ──────────────────────────
+async function initEditDestPage() {
+    const editForm = document.getElementById('editDestForm');
+    const mediaForm = document.getElementById('editDestMediaForm');
+    const geoForm = document.getElementById('editDestGeoForm');
+
+    if (!editForm) return;
+
+    // Reset Forms
+    editForm.reset();
+    mediaForm.reset();
+    geoForm.reset();
+
+    document.getElementById('editDestId').value = '';
+
+    const id = window.currentEditDestId;
+    document.getElementById('editDestTitle').textContent = id ? 'Edit Destination' : 'Create New Destination';
+
     if (id) {
         const d = destinationsList.find(x => x.id == id);
         if (d) {
-            document.getElementById('destId').value = d.id;
+            document.getElementById('editDestId').value = d.id;
+            
+            // Populate fields
             Object.entries(d).forEach(([k, v]) => {
-                const el = form.querySelector(`[name="${k}"]`);
-                if (el) { 
-                    if (el.type === 'checkbox') el.checked = !!v; 
-                    else el.value = v || ''; 
-                }
+                [editForm, mediaForm, geoForm].forEach(f => {
+                    const el = f.querySelector(`[name="${k}"]`);
+                    if (el) {
+                        if (el.type === 'checkbox') el.checked = !!v;
+                        else el.value = v || '';
+                    }
+                });
             });
+
+            // Set checkboxes
+            document.getElementById('editDestActive').checked = !!d.is_active;
+            document.getElementById('editDestFeatured').checked = !!d.is_featured;
+
+            // Populate CSV Gallery
             if (d.gallery_urls) {
-                form.querySelector('[name="gallery_urls_csv"]').value = d.gallery_urls.join(', ');
+                mediaForm.querySelector('[name="gallery_urls_csv"]').value = d.gallery_urls.join(', ');
             }
         }
     }
-    document.getElementById('destModal').classList.add('active');
 }
 
-async function saveDestination(event) {
-    // Prevent default form actions if event exists
-    if (event) {
-        event.preventDefault();
-    }
-    
-    const btn = document.querySelector('#destModal button.bg-emerald-600');
-    const form = document.getElementById('destForm');
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData);
-    const id = document.getElementById('destId').value;
-    
-    data.is_active = !!form.querySelector('[name="is_active"]')?.checked;
-    data.is_featured = !!form.querySelector('[name="is_featured"]')?.checked;
-    
-    // Parse numeric fields properly
-    if (data.display_order) data.display_order = parseInt(data.display_order) || 0;
-    if (data.latitude) data.latitude = parseFloat(data.latitude) || null;
-    if (data.longitude) data.longitude = parseFloat(data.longitude) || null;
-    
-    // Parse CSV gallery urls
+async function saveEditDest(btn) {
+    const id = document.getElementById('editDestId').value;
+    const editData = Object.fromEntries(new FormData(document.getElementById('editDestForm')));
+    const mediaData = Object.fromEntries(new FormData(document.getElementById('editDestMediaForm')));
+    const geoData = Object.fromEntries(new FormData(document.getElementById('editDestGeoForm')));
+
+    const data = {
+        ...editData,
+        ...mediaData,
+        ...geoData
+    };
+
+    // Parse status and boolean checkboxes
+    data.is_active = !!document.getElementById('editDestActive').checked;
+    data.is_featured = !!document.getElementById('editDestFeatured').checked;
+
+    // Process Gallery CSV
     if (data.gallery_urls_csv) {
-        data.gallery_urls = data.gallery_urls_csv.split(',').map(s => s.trim()).filter(s => s);
+        data.gallery_urls = data.gallery_urls_csv.split(',').map(s => s.trim()).filter(Boolean);
         delete data.gallery_urls_csv;
     } else {
         data.gallery_urls = [];
@@ -123,7 +144,7 @@ async function saveDestination(event) {
             delete data[key];
         }
     });
-    
+
     setLoading(btn, true);
     try {
         if (id) {
@@ -133,8 +154,7 @@ async function saveDestination(event) {
             await apiRequest('POST', '/destinations', data);
             showToast('Destination created successfully');
         }
-        closeModal('destModal');
-        await loadDestinations();
+        navigate('destinations');
     } catch (e) {
         console.error(e);
         showToast(e.message || 'Error saving destination', 'error');
@@ -165,4 +185,5 @@ window.filterDestinations = function() {
 
 window.openDestModal = openDestModal; 
 window.deleteDestination = deleteDestination;
-window.saveDestination = saveDestination;
+window.initEditDestPage = initEditDestPage;
+window.saveEditDest = saveEditDest;
