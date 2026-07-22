@@ -607,3 +607,11 @@ textarea.form-control{resize:vertical;min-height:120px}
 @media(max-width: 480px) { .live-chat-widget { width: calc(100% - 40px); right: 20px; bottom: 90px; } }
 
 @import url('whatsapp.css');
+
+/* Hero Slideshow */
+.hero-slideshow { position: absolute; inset: 0; z-index: -1; }
+.hero-slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1s ease-in-out; background-size: cover; background-position: center; }
+.hero-slide.active { opacity: 1; }
+.hero-slide::after { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.5); }
+.hero-hook-word { position: absolute; top: 10%; right: 10%; font-family: var(--font-heading); font-size: clamp(2rem, 5vw, 4rem); font-weight: 700; color: rgba(255,255,255,0.15); text-transform: uppercase; letter-spacing: 5px; pointer-events: none; }
+

@@ -258,7 +258,7 @@ document.querySelectorAll('section, .feature-card').forEach(el => { el.classList
 
 // ── WhatsApp Floating Button ───────────────────────────────
 function initWhatsAppButton() {
-    const waPhone = "+255123456789"; // Default phone number
+    const waPhone = "+255695108009"; // Default phone number
     const waMessage = "Hello Tanzania Safari! I'm interested in booking a safari.";
     const waUrl = `https://wa.me/${waPhone}?text=${encodeURIComponent(waMessage)}`;
 

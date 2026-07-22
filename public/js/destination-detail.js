@@ -159,9 +159,21 @@ function renderDestinationDetails(destination) {
     
     const html = `
         <!-- Hero Section -->
-        <section class="destination-hero relative overflow-hidden" style="position: relative; z-index: 1;">
-            <img src="${heroImg}" alt="Scenic view of ${escapeHtml(name)} in Tanzania" fetchpriority="high" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2;">
-            <div class="hero-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: -1;"></div>
+        <section class="destination-hero relative overflow-hidden page-hero" style="position: relative; z-index: 1;">
+            <div class="hero-slideshow">
+                <div class="hero-slide active" style="background-image: url('/images/optimized/mount-kilimanjaro-national-park.webp');">
+                  <span class="hero-hook-word">Kilimanjaro</span>
+                </div>
+                <div class="hero-slide" style="background-image: url('/images/optimized/wamasai.webp');">
+                  <span class="hero-hook-word">Culture</span>
+                </div>
+                <div class="hero-slide" style="background-image: url('/images/optimized/balloon.webp');">
+                  <span class="hero-hook-word">Adventure</span>
+                </div>
+                <div class="hero-slide" style="background-image: url('/images/optimized/mbugani.webp');">
+                  <span class="hero-hook-word">Wildlife</span>
+                </div>
+            </div>
             <div class="container" style="position: relative; z-index: 10;">
                 <div class="breadcrumb">
                     <a href="/">Home</a>
