@@ -10,7 +10,6 @@ async function loadPackages() {
         body.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem"><i class="fas fa-spinner fa-spin"></i> Initializing Tours...</td></tr>';
     }
     try {
-        // Fetch active categories & destinations first for labels/filters
         await Promise.all([
             loadFiltersData(),
             fetchToursList()
@@ -103,7 +102,7 @@ function renderPackages() {
                 </td>
                 <td class="px-6 py-4 text-right">
                     <div class="flex items-center gap-2 justify-end">
-                        <button class="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors" onclick="openPackageModal('${t.id}')" title="Edit">
+                        <button class="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" onclick="openPackageModal('${t.id}')" title="Edit">
                             <i class="fa-solid fa-pen text-lg"></i>
                         </button>
                         <button class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" onclick="deletePackage('${t.id}')" title="Delete">
@@ -116,113 +115,209 @@ function renderPackages() {
 }
 
 function openPackageModal(id = null) {
-    const form = document.getElementById('pkgForm');
-    const seoForm = document.getElementById('seoForm');
-    if (!form || !seoForm) return;
+    window.currentEditTourId = id;
+    navigate('edit-tour');
+}
 
-    form.reset();
+// ── Edit Tour Page Workspace ─────────────────────────────────
+async function initEditTourPage() {
+    const editForm = document.getElementById('editTourForm');
+    const detailsForm = document.getElementById('editTourDetailsForm');
+    const seoForm = document.getElementById('editTourSEOForm');
+    const pricingForm = document.getElementById('editTourPricingForm');
+    const classificationForm = document.getElementById('editTourClassificationForm');
+    const mediaForm = document.getElementById('editTourMediaForm');
+
+    if (!editForm) return;
+
+    // Reset Forms
+    editForm.reset();
+    detailsForm.reset();
     seoForm.reset();
-    document.getElementById('pkgId').value = '';
-    document.getElementById('pkgModalTitle').textContent = id ? 'Edit Tour' : 'New Tour';
+    pricingForm.reset();
+    classificationForm.reset();
+    mediaForm.reset();
     
-    // Reset Tabs
-    switchPkgTab('general');
+    document.getElementById('editTourId').value = '';
     document.getElementById('itineraryContainer').innerHTML = '';
     document.getElementById('locationsContainer').innerHTML = '';
 
-    // Populate category & destination selects inside modal
-    const catSelect = document.getElementById('pkgCategorySelect');
+    // Load filter categories & destinations if not already loaded
+    if (tourCategories.length === 0 || tourDestinations.length === 0) {
+        const [catsRes, destsRes] = await Promise.all([
+            apiRequest('GET', '/tour-categories'),
+            apiRequest('GET', '/destinations')
+        ]);
+        tourCategories = catsRes.data || [];
+        tourDestinations = destsRes.data || [];
+    }
+
+    // Populate category dropdown
+    const catSelect = document.getElementById('editTourCategorySelect');
     if (catSelect) {
         catSelect.innerHTML = '<option value="">Select Category</option>' +
             tourCategories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
     }
 
-    const destSelect = document.getElementById('pkgDestinationSelect');
+    // Populate destination dropdown
+    const destSelect = document.getElementById('editTourDestinationSelect');
     if (destSelect) {
         destSelect.innerHTML = '<option value="">Select Destination</option>' +
             tourDestinations.map(d => `<option value="${d.id}">${d.name}</option>`).join('');
     }
 
+    const id = window.currentEditTourId;
+    document.getElementById('editTourTitle').textContent = id ? 'Edit Tour' : 'Create New Tour';
+
     if (id) {
-        const t = packagesList.find(x => x.id == id);
-        if (t) {
-            document.getElementById('pkgId').value = t.id;
-            
-            // Populate General Form
-            Object.entries(t).forEach(([k, v]) => {
-                const el = form.querySelector(`[name="${k}"]`);
-                if (el) {
-                    if (el.type === 'checkbox') el.checked = !!v;
-                    else el.value = v || '';
-                }
-            });
+        try {
+            const res = await apiRequest('GET', `/tours/${id}`);
+            const t = res.data;
+            if (t) {
+                document.getElementById('editTourId').value = t.id;
 
-            // Populate SEO Form
-            Object.entries(t).forEach(([k, v]) => {
-                const el = seoForm.querySelector(`[name="${k}"]`);
-                if (el) {
-                    el.value = v || '';
+                // Populate form fields
+                Object.entries(t).forEach(([k, v]) => {
+                    [editForm, detailsForm, seoForm, pricingForm, classificationForm, mediaForm].forEach(f => {
+                        const el = f.querySelector(`[name="${k}"]`);
+                        if (el) {
+                            if (el.type === 'checkbox') el.checked = !!v;
+                            else el.value = v || '';
+                        }
+                    });
+                });
+
+                // Set status & switches
+                document.getElementById('editTourStatus').value = t.status || 'draft';
+                document.getElementById('editTourActive').checked = !!t.is_active;
+                document.getElementById('editTourFeatured').checked = !!t.is_featured;
+
+                // Populate CSV/Text fields
+                if (t.gallery_urls) mediaForm.querySelector('[name="gallery_urls_csv"]').value = t.gallery_urls.join(', ');
+                if (t.highlights) detailsForm.querySelector('[name="highlights_text"]').value = t.highlights.join('\n');
+                if (t.travel_tips) detailsForm.querySelector('[name="travel_tips_text"]').value = t.travel_tips.join('\n');
+                if (t.included) detailsForm.querySelector('[name="included_text"]').value = t.included.join('\n');
+                if (t.excluded) detailsForm.querySelector('[name="excluded_text"]').value = t.excluded.join('\n');
+
+                // Load itinerary
+                if (t.itinerary) {
+                    t.itinerary.forEach(day => addItineraryDay(day));
                 }
-            });
-            
-            if (t.gallery_urls) form.querySelector('[name="gallery_urls_csv"]').value = t.gallery_urls.join(', ');
-            if (t.highlights) form.querySelector('[name="highlights_text"]').value = t.highlights.join('\n');
-            if (t.travel_tips) form.querySelector('[name="travel_tips_text"]').value = t.travel_tips.join('\n');
-            if (t.included) form.querySelector('[name="included_text"]').value = t.included.join('\n');
-            if (t.excluded) form.querySelector('[name="excluded_text"]').value = t.excluded.join('\n');
-            
-            // Load itinerary & related tours if needed
-            loadTourSubData(id);
+                // Load destinations/parks
+                if (t.destination_id) {
+                    addPkgLocation({ park_id: t.destination_id });
+                }
+            }
+        } catch (e) {
+            console.error('Error fetching tour sub-data:', e);
+            showToast('Failed to load tour details', 'error');
         }
     }
-    document.getElementById('pkgModal').classList.add('active');
 }
 
-async function loadTourSubData(id) {
+async function saveEditTour(btn) {
+    const id = document.getElementById('editTourId').value;
+    
+    // Gather and structure form payloads
+    const editData = Object.fromEntries(new FormData(document.getElementById('editTourForm')));
+    const detailsData = Object.fromEntries(new FormData(document.getElementById('editTourDetailsForm')));
+    const seoData = Object.fromEntries(new FormData(document.getElementById('editTourSEOForm')));
+    const pricingData = Object.fromEntries(new FormData(document.getElementById('editTourPricingForm')));
+    const classificationData = Object.fromEntries(new FormData(document.getElementById('editTourClassificationForm')));
+    const mediaData = Object.fromEntries(new FormData(document.getElementById('editTourMediaForm')));
+
+    const data = {
+        ...editData,
+        ...detailsData,
+        ...seoData,
+        ...pricingData,
+        ...classificationData,
+        ...mediaData
+    };
+
+    // Parse status and boolean checkboxes
+    data.status = document.getElementById('editTourStatus').value;
+    data.is_active = !!document.getElementById('editTourActive').checked;
+    data.is_featured = !!document.getElementById('editTourFeatured').checked;
+
+    // Parse numeric fields
+    if (data.price_usd) data.price_usd = parseFloat(data.price_usd);
+    if (data.duration_days) data.duration_days = parseInt(data.duration_days);
+    if (data.duration_nights) data.duration_nights = parseInt(data.duration_nights);
+    if (data.category_id) data.category_id = parseInt(data.category_id);
+    if (data.destination_id) data.destination_id = parseInt(data.destination_id);
+    if (data.group_size_min) data.group_size_min = parseInt(data.group_size_min);
+    if (data.group_size_max) data.group_size_max = parseInt(data.group_size_max);
+    if (data.age_minimum) data.age_minimum = parseInt(data.age_minimum);
+
+    // Process lists and arrays
+    if (data.gallery_urls_csv) data.gallery_urls = data.gallery_urls_csv.split(',').map(s => s.trim()).filter(Boolean);
+    else data.gallery_urls = [];
+
+    if (data.highlights_text) data.highlights = data.highlights_text.split('\n').map(s => s.trim()).filter(Boolean);
+    else data.highlights = [];
+
+    if (data.travel_tips_text) data.travel_tips = data.travel_tips_text.split('\n').map(s => s.trim()).filter(Boolean);
+    else data.travel_tips = [];
+
+    if (data.included_text) data.included = data.included_text.split('\n').map(s => s.trim()).filter(Boolean);
+    else data.included = [];
+
+    if (data.excluded_text) data.excluded = data.excluded_text.split('\n').map(s => s.trim()).filter(Boolean);
+    else data.excluded = [];
+
+    // Parse daily itinerary items
+    data.itinerary = Array.from(document.querySelectorAll('.itinerary-day')).map(el => ({
+        day: parseInt(el.querySelector('.day-num').value),
+        title: el.querySelector('.day-title').value,
+        description: el.querySelector('.day-desc').value
+    }));
+
+    // Prune temp form values
+    delete data.gallery_urls_csv;
+    delete data.highlights_text;
+    delete data.travel_tips_text;
+    delete data.included_text;
+    delete data.excluded_text;
+
+    setLoading(btn, true);
     try {
-        const res = await apiRequest('GET', `/tours/${id}`);
-        if (res.data && res.data.itinerary) {
-            res.data.itinerary.forEach(day => addItineraryDay(day));
+        if (id) {
+            await apiRequest('PUT', `/tours/${id}`, data);
+            showToast('Tour updated successfully');
+        } else {
+            await apiRequest('POST', '/tours', data);
+            showToast('Tour created successfully');
         }
-        // If there were locations in the tour details, load them
-        // In the corporate schema, destination_id references a destination.
-        if (res.data && res.data.destination_id) {
-            addPkgLocation({ park_id: res.data.destination_id });
-        }
+        navigate('packages');
     } catch (e) {
-        console.error('Error loading sub-data:', e);
+        console.error(e);
+        showToast(e.message || 'Failed to save tour details', 'error');
+    } finally {
+        setLoading(btn, false);
     }
-}
-
-function switchPkgTab(tab) {
-    document.querySelectorAll('.modal-tabs .tab-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.textContent.toLowerCase().includes(tab.substring(0, 3)));
-    });
-    document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
-    document.getElementById(`pkg-tab-${tab}`).style.display = 'block';
 }
 
 function addItineraryDay(data = {}) {
     const container = document.getElementById('itineraryContainer');
+    if (!container) return;
     const dayNum = container.children.length + 1;
     const div = document.createElement('div');
-    div.className = 'itinerary-day bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col md:flex-row mb-4 transition-all hover:shadow-md hover:border-slate-300';
+    div.className = 'itinerary-day bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col md:flex-row mb-4 transition-all hover:shadow-md hover:border-slate-350';
     div.innerHTML = `
-        <!-- Drag & Order handle panel -->
         <div class="bg-slate-50 px-4 py-3 md:py-0 md:w-16 flex md:flex-col items-center justify-between md:justify-center gap-2 border-b md:border-b-0 md:border-r border-slate-100 shrink-0">
             <span class="text-xs font-bold text-slate-400 uppercase tracking-widest md:my-2">Day</span>
-            <span class="text-xl font-extrabold text-emerald-600 day-badge">${data.day || dayNum}</span>
+            <span class="text-xl font-extrabold text-amber-600 day-badge">${data.day || dayNum}</span>
             <div class="flex md:flex-col gap-1">
-                <button type="button" onclick="moveItineraryDay(this, -1)" class="p-1 text-slate-400 hover:text-emerald-600 transition-colors" title="Move Up"><i class="fa-solid fa-chevron-up"></i></button>
-                <button type="button" onclick="moveItineraryDay(this, 1)" class="p-1 text-slate-400 hover:text-emerald-600 transition-colors" title="Move Down"><i class="fa-solid fa-chevron-down"></i></button>
+                <button type="button" onclick="moveItineraryDay(this, -1)" class="p-1 text-slate-400 hover:text-amber-600 transition-colors" title="Move Up"><i class="fa-solid fa-chevron-up"></i></button>
+                <button type="button" onclick="moveItineraryDay(this, 1)" class="p-1 text-slate-400 hover:text-amber-600 transition-colors" title="Move Down"><i class="fa-solid fa-chevron-down"></i></button>
             </div>
         </div>
-        <!-- Input fields panel -->
         <div class="flex-1 p-5 space-y-4">
             <div class="flex items-start justify-between gap-4">
                 <div class="flex-1 space-y-1">
                     <label class="text-xs font-semibold uppercase tracking-wider text-slate-400">Day Title</label>
-                    <input type="text" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 day-title" value="${data.title || ''}" placeholder="e.g. Arrival & Safari Briefing">
+                    <input type="text" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20 day-title" value="${data.title || ''}" placeholder="e.g. Arrival & Safari Briefing">
                 </div>
                 <input type="hidden" class="day-num" value="${data.day || dayNum}">
                 <button type="button" onclick="this.closest('.itinerary-day').remove(); reindexItineraryDays();" class="mt-7 p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Delete Day">
@@ -231,7 +326,7 @@ function addItineraryDay(data = {}) {
             </div>
             <div class="space-y-1">
                 <label class="text-xs font-semibold uppercase tracking-wider text-slate-400">Activity & Route Description</label>
-                <textarea class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 day-desc" rows="3" placeholder="Describe the activities, routes, scenic views, and schedule for this day...">${data.description || ''}</textarea>
+                <textarea class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20 day-desc" rows="3" placeholder="Describe the activities, routes, scenic views, and schedule for this day...">${data.description || ''}</textarea>
             </div>
         </div>
     `;
@@ -262,23 +357,24 @@ function reindexItineraryDays() {
 
 function addPkgLocation(data = {}) {
     const container = document.getElementById('locationsContainer');
+    if (!container) return;
     const div = document.createElement('div');
-    div.className = 'location-item bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex items-start gap-4 mb-4 transition-all hover:shadow-md hover:border-slate-300';
+    div.className = 'location-item bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex items-start gap-4 mb-4 transition-all hover:shadow-md hover:border-slate-350';
     
     div.innerHTML = `
-        <div class="p-2.5 bg-emerald-50 rounded-lg text-emerald-600 shrink-0">
+        <div class="p-2.5 bg-amber-50 rounded-lg text-amber-600 shrink-0">
             <i class="fa-solid fa-location-dot text-lg"></i>
         </div>
         <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="space-y-1">
                 <label class="text-xs font-semibold uppercase tracking-wider text-slate-400">Destination Park</label>
-                <select class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 loc-park">
+                <select class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20 loc-park">
                     ${tourDestinations.map(d => `<option value="${d.id}" ${data.park_id == d.id ? 'selected' : ''}>${d.name}</option>`).join('')}
                 </select>
             </div>
             <div class="space-y-1">
                 <label class="text-xs font-semibold uppercase tracking-wider text-slate-400">Visit Day</label>
-                <input type="number" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 loc-day" value="${data.visit_day || 1}">
+                <input type="number" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20 loc-day" value="${data.visit_day || 1}">
             </div>
         </div>
         <button type="button" onclick="this.closest('.location-item').remove()" class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors shrink-0" title="Remove Location">
@@ -286,81 +382,6 @@ function addPkgLocation(data = {}) {
         </button>
     `;
     container.appendChild(div);
-}
-
-async function savePackage() {
-    const btn = event.target;
-    const form = document.getElementById('pkgForm');
-    const seoForm = document.getElementById('seoForm');
-    
-    const formData = new FormData(form);
-    const seoData = Object.fromEntries(new FormData(seoForm));
-    const data = { ...Object.fromEntries(formData), ...seoData };
-    const id = document.getElementById('pkgId').value;
-    
-    setLoading(btn, true);
-    
-    try {
-        // Parse numbers
-        if (data.price_usd) data.price_usd = parseFloat(data.price_usd);
-        if (data.duration_days) data.duration_days = parseInt(data.duration_days);
-        if (data.duration_nights) data.duration_nights = parseInt(data.duration_nights);
-        if (data.category_id) data.category_id = parseInt(data.category_id);
-        if (data.destination_id) data.destination_id = parseInt(data.destination_id);
-        if (data.group_size_min) data.group_size_min = parseInt(data.group_size_min);
-        if (data.group_size_max) data.group_size_max = parseInt(data.group_size_max);
-        if (data.age_minimum) data.age_minimum = parseInt(data.age_minimum);
-
-        // Process Checkboxes
-        data.is_featured = !!form.querySelector('[name="is_featured"]').checked;
-        data.is_active = !!form.querySelector('[name="is_active"]').checked;
-        
-        // Parse CSV/Text Areas
-        if (data.gallery_urls_csv) data.gallery_urls = data.gallery_urls_csv.split(',').map(s => s.trim()).filter(s => s);
-        else data.gallery_urls = [];
-        
-        if (data.highlights_text) data.highlights = data.highlights_text.split('\n').map(s => s.trim()).filter(s => s);
-        else data.highlights = [];
-        
-        if (data.travel_tips_text) data.travel_tips = data.travel_tips_text.split('\n').map(s => s.trim()).filter(s => s);
-        else data.travel_tips = [];
-
-        if (data.included_text) data.included = data.included_text.split('\n').map(s => s.trim()).filter(s => s);
-        else data.included = [];
-        
-        if (data.excluded_text) data.excluded = data.excluded_text.split('\n').map(s => s.trim()).filter(s => s);
-        else data.excluded = [];
-
-        // Itinerary Days
-        data.itinerary = Array.from(document.querySelectorAll('.itinerary-day')).map(el => ({
-            day: parseInt(el.querySelector('.day-num').value),
-            title: el.querySelector('.day-title').value,
-            description: el.querySelector('.day-desc').value
-        }));
-
-        // Cleanup temp CSV/text values
-        delete data.gallery_urls_csv;
-        delete data.highlights_text;
-        delete data.travel_tips_text;
-        delete data.included_text;
-        delete data.excluded_text;
-
-        if (id) {
-            await apiRequest('PUT', `/tours/${id}`, data);
-            showToast('Tour updated successfully');
-        } else {
-            await apiRequest('POST', '/tours', data);
-            showToast('Tour created successfully');
-        }
-
-        closeModal('pkgModal');
-        await fetchToursList();
-    } catch (e) { 
-        console.error(e);
-        showToast(e.message || 'Error saving tour', 'error');
-    } finally {
-        setLoading(btn, false);
-    }
 }
 
 async function deletePackage(id) {
@@ -378,4 +399,10 @@ window.filterPackages = function() {
     fetchToursList();
 };
 
-window.openPackageModal = openPackageModal; 
+window.openPackageModal = openPackageModal;
+window.initEditTourPage = initEditTourPage;
+window.saveEditTour = saveEditTour;
+window.addItineraryDay = addItineraryDay;
+window.addPkgLocation = addPkgLocation;
+window.moveItineraryDay = moveItineraryDay;
+window.reindexItineraryDays = reindexItineraryDays;
