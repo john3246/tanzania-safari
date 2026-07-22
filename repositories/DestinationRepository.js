@@ -16,17 +16,17 @@ class DestinationRepository extends BaseRepository {
             short_description: row.park_description ? row.park_description.substring(0, 200) : '',
             description: row.park_description,
             country: 'Tanzania',
-            region: row.location,
-            latitude: row.latitude ? parseFloat(row.latitude) : null,
-            longitude: row.longitude ? parseFloat(row.longitude) : null,
-            featured_image_url: row.featured_image_url,
-            gallery_urls: row.gallery_urls || [],
-            is_featured: row.is_featured,
+            region: row.park_location || '',
+            latitude: null,
+            longitude: null,
+            featured_image_url: row.image_urls?.[0] || null,
+            gallery_urls: row.image_urls || [],
+            is_featured: row.is_unesco_heritage || false,
             is_active: row.is_active,
-            display_order: row.display_order,
-            seo_title: row.meta_title,
-            seo_description: row.meta_description,
-            seo_keywords: Array.isArray(row.meta_keywords) ? row.meta_keywords.join(', ') : '',
+            display_order: 0,
+            seo_title: '',
+            seo_description: '',
+            seo_keywords: '',
             created_at: row.created_at,
             updated_at: row.updated_at,
             tour_count: row.tour_count !== undefined ? parseInt(row.tour_count) : undefined
@@ -40,19 +40,11 @@ class DestinationRepository extends BaseRepository {
         if (data.name !== undefined) payload.park_name = data.name;
         if (data.slug !== undefined) payload.park_slug = data.slug;
         if (data.description !== undefined) payload.park_description = data.description;
-        if (data.region !== undefined) payload.location = data.region;
-        if (data.latitude !== undefined) payload.latitude = data.latitude;
-        if (data.longitude !== undefined) payload.longitude = data.longitude;
-        if (data.featured_image_url !== undefined) payload.featured_image_url = data.featured_image_url;
-        if (data.gallery_urls !== undefined) payload.gallery_urls = data.gallery_urls;
-        if (data.is_featured !== undefined) payload.is_featured = data.is_featured;
+        if (data.region !== undefined) payload.park_location = data.region;
+        if (data.is_featured !== undefined) payload.is_unesco_heritage = data.is_featured;
         if (data.is_active !== undefined) payload.is_active = data.is_active;
-        if (data.display_order !== undefined) payload.display_order = data.display_order;
-        if (data.seo_title !== undefined) payload.meta_title = data.seo_title;
-        if (data.seo_description !== undefined) payload.meta_description = data.seo_description;
-        if (data.seo_keywords !== undefined) {
-            payload.meta_keywords = data.seo_keywords.split(',').map(s => s.trim()).filter(Boolean);
-        }
+        if (data.gallery_urls !== undefined) payload.image_urls = data.gallery_urls;
+        else if (data.featured_image_url !== undefined) payload.image_urls = [data.featured_image_url];
         return payload;
     }
 
@@ -119,7 +111,6 @@ class DestinationRepository extends BaseRepository {
             LEFT JOIN (
                 SELECT destination_id, COUNT(*) as count
                 FROM (
-                    -- Map safari_packages destinations
                     SELECT sp.package_id, pd.park_id as destination_id
                     FROM safari_packages sp
                     LEFT JOIN package_destinations pd ON sp.package_id = pd.package_id
@@ -133,7 +124,7 @@ class DestinationRepository extends BaseRepository {
         let index = 1;
 
         if (options.search) {
-            query += ` AND (np.park_name ILIKE $${index} OR np.park_description ILIKE $${index} OR np.location ILIKE $${index})`;
+            query += ` AND (np.park_name ILIKE $${index} OR np.park_description ILIKE $${index} OR np.park_location ILIKE $${index})`;
             values.push(`%${options.search}%`);
             index++;
         }
@@ -145,22 +136,20 @@ class DestinationRepository extends BaseRepository {
         }
 
         if (options.isFeatured !== undefined) {
-            query += ` AND np.is_featured = $${index}`;
+            query += ` AND np.is_unesco_heritage = $${index}`;
             values.push(options.isFeatured);
             index++;
         }
 
         if (options.orderBy) {
-            let orderCol = 'np.display_order';
+            let orderCol = 'np.park_name';
             if (options.orderBy === 'name') orderCol = 'np.park_name';
-            else if (options.orderBy === 'display_order') orderCol = 'np.display_order';
-            
             query += ` ORDER BY ${orderCol}`;
             if (options.orderDirection) {
                 query += ` ${options.orderDirection}`;
             }
         } else {
-            query += ` ORDER BY np.display_order ASC, np.park_name ASC`;
+            query += ` ORDER BY np.park_name ASC`;
         }
 
         if (options.limit) {
@@ -181,7 +170,7 @@ class DestinationRepository extends BaseRepository {
         const query = `
             SELECT * FROM national_parks
             WHERE is_active = TRUE
-            ORDER BY display_order ASC, park_name ASC
+            ORDER BY park_name ASC
         `;
         const result = await db.query(query);
         return result.rows.map(row => this.mapRow(row));
@@ -202,8 +191,8 @@ class DestinationRepository extends BaseRepository {
                 ) t
                 GROUP BY destination_id
             ) tour_count ON np.park_id = tour_count.destination_id
-            WHERE np.is_featured = TRUE AND np.is_active = TRUE
-            ORDER BY np.display_order ASC, np.park_name ASC
+            WHERE np.is_unesco_heritage = TRUE AND np.is_active = TRUE
+            ORDER BY np.park_name ASC
             LIMIT $1
         `;
         const result = await db.query(query, [limit]);
@@ -213,8 +202,8 @@ class DestinationRepository extends BaseRepository {
     async getByRegion(region) {
         const query = `
             SELECT * FROM national_parks
-            WHERE location ILIKE $1 AND is_active = TRUE
-            ORDER BY display_order ASC, park_name ASC
+            WHERE park_location ILIKE $1 AND is_active = TRUE
+            ORDER BY park_name ASC
         `;
         const result = await db.query(query, [`%${region}%`]);
         return result.rows.map(row => this.mapRow(row));
@@ -222,10 +211,10 @@ class DestinationRepository extends BaseRepository {
 
     async getRegions() {
         const query = `
-            SELECT DISTINCT location as region
+            SELECT DISTINCT park_location as region
             FROM national_parks
-            WHERE location IS NOT NULL
-            ORDER BY location ASC
+            WHERE park_location IS NOT NULL
+            ORDER BY park_location ASC
         `;
         const result = await db.query(query);
         return result.rows.map(row => row.region);
