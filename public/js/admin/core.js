@@ -188,6 +188,7 @@ async function navigate(page, pushState = true) {
         case 'reviews': loadReviews(); break;
         case 'categories': loadCategories(); break;
         case 'images': loadImages(); break;
+        case 'settings': loadProfile(); loadSettings(); break;
         case 'customers': if (window.loadCustomers) { window.loadCustomers(); } else { setTimeout(() => window.loadCustomers?.(), 100); } break;
         case 'chat': if (window.initChatPage) { window.initChatPage(); } else { setTimeout(() => window.initChatPage?.(), 100); } break;
         case 'edit-tour': if (window.initEditTourPage) { window.initEditTourPage(); } else { setTimeout(() => window.initEditTourPage?.(), 100); } break;

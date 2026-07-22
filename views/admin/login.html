@@ -1,220 +1,237 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-slate-900">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Admin Login | Tanzania Safari</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tanzania Safari Magic | CMS Login</title>
     <link rel="icon" type="image/png" href="/images/logo.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link rel="stylesheet" href="/css/variables.css">
-<style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-body{font-family:var(--font-body), 'Inter',sans-serif;background-color:#1d4b25;background-image:url('/images/logo.png');background-repeat:no-repeat;background-position:center;background-size:400px;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1rem;position:relative;z-index:1}
-body::before {content:"";position:absolute;inset:0;background:rgba(255,255,255,0.92);z-index:-1;}
-.login-card{background:transparent;width:100%;max-width:440px;overflow:hidden;border:none;box-shadow:none;position:relative;z-index:2;}
-.login-header{background:transparent;padding:1rem 2rem 1rem;text-align:center;color:#263E22;}
-.login-logo img {height: 120px; width: auto; margin: 0 auto; display: block;}
-.login-subtitle{font-size:0.95rem;opacity:0.9; margin-top: 1.5rem; color: #D4AF37; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700;}
-.login-body{padding:1.5rem 2.5rem 3rem}
-.form-group{margin-bottom:1.5rem}
-.form-label{display:block;font-size:0.85rem;font-weight:700;color:#263E22;margin-bottom:0.6rem;text-transform:uppercase;letter-spacing:1px}
-.input-wrap{position:relative; display:flex; align-items:center;}
-.input-wrap > i.fa-envelope, .input-wrap > i.fa-lock{position:absolute;left:1.2rem;color:#94a3b8;font-size:1.1rem;pointer-events:none;z-index:10;}
-.form-control{width:100%;padding:1.2rem 3.5rem 1.2rem 3.5rem;border:2px solid #e2e8f0;border-radius:12px;font-size:1rem;font-family:inherit;outline:none;transition:all 0.3s ease;color:#1e293b;background:#ffffff;font-weight:500;}
-.form-control:focus{border-color:#263E22;background:#fff;box-shadow:0 4px 12px rgba(38, 62, 34, 0.05)}
-.toggle-pw{position:absolute;right:0.5rem;height:100%;width:3rem;background:none;border:none;cursor:pointer;color:#94a3b8;font-size:1.1rem;transition:all 0.3s;display:flex;align-items:center;justify-content:center;z-index:10;}
-.btn-login{width:100%;padding:1.2rem;background:#D4AF37;color:#1E311B;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;transition:all 0.3s ease;margin-top:.5rem;font-family:inherit;text-transform:uppercase;letter-spacing:1px}
-.btn-login:hover{background:#C5A028;transform:translateY(-2px);box-shadow:0 10px 20px rgba(212, 175, 55, 0.2)}
-.btn-login:disabled{opacity:.7;cursor:not-allowed;transform:none;box-shadow:none}
-.error-msg{background:#fef2f2;color:#dc2626;border-radius:10px;padding:1rem;font-size:.875rem;margin-bottom:1.5rem;display:none;align-items:center;gap:.625rem; border:1px solid #f87171}
-.error-msg.show{display:flex}
-.login-footer{text-align:center;padding:0 2.5rem 2.5rem;font-size:.9rem;color:#888}
-.login-footer a{color:#263E22;font-weight:600;text-decoration:none;transition:all 0.3s}
-.login-footer a:hover{color:#1a2a17;text-decoration:underline}
-
-/* Modal Styles */
-.modal-overlay {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 1000;
-  opacity: 0; transition: opacity 0.3s ease;
-}
-.modal-overlay.show { display: flex; opacity: 1; }
-.modal-card {
-  background: #fff; width: 100%; max-width: 420px; border-radius: 20px;
-  padding: 2.5rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); transform: translateY(-20px); transition: transform 0.3s ease;
-}
-.modal-overlay.show .modal-card { transform: translateY(0); }
-.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-.modal-title { font-size: 1.5rem; font-weight: 700; color: #263E22; }
-.close-modal { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #aaa; transition: color 0.3s; }
-.close-modal:hover { color: #333; }
-.forgot-pw-link { display: block; text-align: right; font-size: 0.85rem; color: #263E22; text-decoration: none; margin-top: 0.6rem; font-weight: 600; }
-.forgot-pw-link:hover { text-decoration: underline; }
-.success-msg { background: #f0fdf4; color: #166534; border-radius: 10px; padding: 1rem; font-size: 0.875rem; margin-bottom: 1.5rem; display: none; align-items: center; gap: 0.625rem; border: 1px solid #86efac; }
-.success-msg.show { display: flex; }
-</style>
-</head>
-<body>
-<div class="login-card">
-  <div class="login-header">
-    <div class="login-logo"><img src="/images/logo.png" alt="Tanzania Safari Logo"></div>
-    <div class="login-subtitle">Admin Control Panel</div>
-  </div>
-  <div class="login-body">
-    <div class="error-msg" id="errorMsg"><i class="fas fa-exclamation-circle"></i><span id="errorText">Invalid credentials</span></div>
-    <form id="loginForm">
-      <div class="form-group">
-        <label class="form-label">Email Address</label>
-        <div class="input-wrap">
-          <i class="fas fa-envelope"></i>
-          <input class="form-control" type="email" name="email" required placeholder="admin@tanzaniasafari.com" autocomplete="email" id="emailInput">
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Password</label>
-        <div class="input-wrap">
-          <i class="fas fa-lock"></i>
-          <input class="form-control" type="password" name="password" required placeholder="Enter your password" autocomplete="current-password" id="passwordInput">
-          <button type="button" class="toggle-pw" id="togglePw"><i class="fas fa-eye"></i></button>
-        </div>
-        <a href="#" class="forgot-pw-link" id="forgotPwLink">Forgot Password?</a>
-      </div>
-      <button type="submit" class="btn-login" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Sign In to Dashboard</button>
-    </form>
-  </div>
-  <div class="login-footer"><a href="/"><i class="fas fa-arrow-left"></i> Back to Website</a></div>
-</div>
-
-<!-- Forgot Password Modal -->
-<div class="modal-overlay" id="forgotPwModal">
-  <div class="modal-card">
-    <div class="modal-header">
-      <h3 class="modal-title">Reset Password</h3>
-      <button class="close-modal" id="closeModal">&times;</button>
-    </div>
-    <div class="error-msg" id="forgotErrorMsg"><i class="fas fa-exclamation-circle"></i><span id="forgotErrorText">Error</span></div>
-    <div class="success-msg" id="forgotSuccessMsg"><i class="fas fa-check-circle"></i><span id="forgotSuccessText">Success</span></div>
-    <form id="forgotPwForm">
-      <div class="form-group">
-        <label class="form-label">Email Address</label>
-        <div class="input-wrap">
-          <i class="fas fa-envelope"></i>
-          <input class="form-control" type="email" name="email" required placeholder="Enter your email address">
-        </div>
-      </div>
-      <button type="submit" class="btn-login" id="forgotBtn"><i class="fas fa-paper-plane"></i> Send Reset Link</button>
-    </form>
-  </div>
-</div>
-<script>
-document.getElementById('togglePw').addEventListener('click', function(){
-  const inp = document.getElementById('passwordInput');
-  const icon = this.querySelector('i');
-  if (inp.type === 'password') { inp.type = 'text'; icon.className = 'fas fa-eye-slash'; }
-  else { inp.type = 'password'; icon.className = 'fas fa-eye'; }
-});
-
-document.getElementById('loginForm').addEventListener('submit', async e => {
-  e.preventDefault();
-  const btn = document.getElementById('loginBtn');
-  const err = document.getElementById('errorMsg');
-  err.classList.remove('show');
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing In...';
-  btn.disabled = true;
-  const { email, password } = Object.fromEntries(new FormData(e.target));
-  try {
-    const r = await fetch('/api/admin/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
-    });
-    const data = await r.json();
-    if (!r.ok || !data.success) throw new Error(data.message || 'Login failed');
-    localStorage.setItem('adminToken', data.token);
-    localStorage.setItem('adminUser', JSON.stringify(data.user));
-    window.location.href = '/admin';
-  } catch (ex) {
-    document.getElementById('errorText').textContent = ex.message;
-    err.classList.add('show');
-    btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In to Dashboard';
-    btn.disabled = false;
-  }
-});
-
-// Redirect if already logged in
-if (localStorage.getItem('adminToken')) window.location.href = '/admin';
-
-// Handle URL messages (from redirect)
-const urlParams = new URLSearchParams(window.location.search);
-const msgCode = urlParams.get('msg');
-const errorMsg = document.getElementById('errorMsg');
-const errorText = document.getElementById('errorText');
-
-if (msgCode === 'registration_closed') {
-    errorText.innerHTML = '<strong>Access Denied:</strong> Admin registration is closed. The system is already initialized.';
-    errorMsg.classList.add('show');
-    errorMsg.style.backgroundColor = '#e3f2fd';
-    errorMsg.style.color = '#1565c0';
-    errorMsg.style.borderColor = '#90caf9';
-    errorMsg.querySelector('i').className = 'fas fa-info-circle';
-} else if (msgCode === 'setup_complete') {
-    errorText.innerHTML = '<strong>Success:</strong> Admin account created! You can now log in.';
-    errorMsg.classList.add('show');
-    errorMsg.style.backgroundColor = '#e8f5e9';
-    errorMsg.style.color = '#2e7d32';
-    errorMsg.style.borderColor = '#a5d6a7';
-    errorMsg.querySelector('i').className = 'fas fa-check-circle';
-    errorMsg.querySelector('i').className = 'fas fa-check-circle';
-}
-
-// Forgot Password Logic
-const forgotModal = document.getElementById('forgotPwModal');
-document.getElementById('forgotPwLink').addEventListener('click', e => {
-  e.preventDefault();
-  forgotModal.classList.add('show');
-});
-document.getElementById('closeModal').addEventListener('click', () => {
-  forgotModal.classList.remove('show');
-});
-forgotModal.addEventListener('click', e => {
-  if (e.target === forgotModal) forgotModal.classList.remove('show');
-});
-
-document.getElementById('forgotPwForm').addEventListener('submit', async e => {
-  e.preventDefault();
-  const btn = document.getElementById('forgotBtn');
-  const err = document.getElementById('forgotErrorMsg');
-  const success = document.getElementById('forgotSuccessMsg');
-  
-  err.classList.remove('show');
-  success.classList.remove('show');
-  
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-  btn.disabled = true;
-  
-  const { email } = Object.fromEntries(new FormData(e.target));
-  
-  try {
-    const r = await fetch('/api/auth/forgot-password', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email })
-    });
-    const data = await r.json();
-    if (!r.ok || !data.success) throw new Error(data.message || 'Failed to send reset link');
     
-    document.getElementById('forgotSuccessText').textContent = data.message;
-    success.classList.add('show');
-    document.getElementById('forgotPwForm').reset();
-  } catch (ex) {
-    document.getElementById('forgotErrorText').textContent = ex.message;
-    err.classList.add('show');
-  } finally {
-    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Reset Link';
-    btn.disabled = false;
-  }
-});
-</script>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="h-full flex items-center justify-center font-sans bg-slate-950 relative overflow-hidden">
+    <!-- Background Accents -->
+    <div class="absolute -top-40 -left-40 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl"></div>
+
+    <div class="w-full max-w-md px-6 py-12 relative z-10">
+        <!-- Logo and Heading -->
+        <div class="flex flex-col items-center mb-8">
+            <img src="/images/logo.png" alt="Tanzania Safari Magic Logo" class="h-16 w-auto mb-4 object-contain">
+            <h1 class="text-2xl font-bold text-white tracking-tight text-center">Tanzania Safari Magic</h1>
+            <p class="text-xs text-slate-400 mt-1 uppercase tracking-widest font-semibold">Corporate CMS Admin Portal</p>
+        </div>
+
+        <!-- Login Card -->
+        <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-8 shadow-2xl backdrop-blur-md">
+            <div id="errorMsg" class="hidden mb-6 bg-red-950/50 border border-red-500/50 text-red-200 text-xs px-4 py-3 rounded-lg flex items-center gap-2">
+                <i class="fa-solid fa-circle-exclamation text-red-500"></i>
+                <span id="errorText">Invalid email or password</span>
+            </div>
+
+            <form id="loginForm" class="space-y-5">
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Email Address</label>
+                    <div class="relative">
+                        <i class="fa-regular fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
+                        <input 
+                            type="email" 
+                            name="email" 
+                            id="emailInput" 
+                            required 
+                            placeholder="admin@tsmagic.com" 
+                            class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-11 pr-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 transition-all placeholder:text-slate-600"
+                        >
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Password</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
+                        <input 
+                            type="password" 
+                            name="password" 
+                            id="passwordInput" 
+                            required 
+                            placeholder="••••••••" 
+                            class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-11 pr-12 py-3 text-sm text-white focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 transition-all placeholder:text-slate-600"
+                        >
+                        <button type="button" id="togglePw" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300">
+                            <i class="fa-regular fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="text-right mt-2">
+                        <a href="#" id="forgotPwLink" class="text-xs text-emerald-500 hover:text-emerald-400 font-semibold transition-colors">Forgot Password?</a>
+                    </div>
+                </div>
+
+                <button 
+                    type="submit" 
+                    id="loginBtn" 
+                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl text-sm transition-all shadow-lg shadow-emerald-950/20 flex items-center justify-center gap-2 mt-2"
+                >
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In to CMS
+                </button>
+            </form>
+        </div>
+
+        <div class="text-center mt-8">
+            <a href="/" class="text-xs text-slate-500 hover:text-slate-400 transition-colors inline-flex items-center gap-2">
+                <i class="fa-solid fa-arrow-left"></i> Back to Live Website
+            </a>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgotPwModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-8 mx-4 shadow-2xl relative">
+            <button id="closeModal" class="absolute top-4 right-4 text-slate-500 hover:text-slate-350">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <h3 class="text-lg font-bold text-white mb-2">Reset Password</h3>
+            <p class="text-xs text-slate-400 mb-6">Enter your email address and we'll send you link instructions to reset your password.</p>
+            
+            <div id="forgotErrorMsg" class="hidden mb-4 bg-red-950/50 border border-red-500/50 text-red-200 text-xs px-4 py-3 rounded-lg flex items-center gap-2">
+                <i class="fa-solid fa-circle-exclamation text-red-500"></i>
+                <span id="forgotErrorText">Email not found</span>
+            </div>
+            
+            <div id="forgotSuccessMsg" class="hidden mb-4 bg-emerald-950/50 border border-emerald-500/50 text-emerald-200 text-xs px-4 py-3 rounded-lg flex items-center gap-2">
+                <i class="fa-solid fa-circle-check text-emerald-500"></i>
+                <span id="forgotSuccessText">Reset link has been dispatched!</span>
+            </div>
+
+            <form id="forgotPwForm" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Email Address</label>
+                    <input 
+                        type="email" 
+                        name="email" 
+                        id="forgotEmailInput" 
+                        required 
+                        placeholder="admin@tsmagic.com" 
+                        class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 transition-all placeholder:text-slate-600"
+                    >
+                </div>
+                <button 
+                    type="submit" 
+                    id="forgotBtn" 
+                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl text-sm transition-all flex items-center justify-center gap-2"
+                >
+                    Send Reset Link
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Login scripts -->
+    <script>
+        const API_BASE = '/api';
+
+        // Toggle Password visibility
+        const togglePw = document.getElementById('togglePw');
+        const pwInput = document.getElementById('passwordInput');
+        togglePw.addEventListener('click', () => {
+            const isPw = pwInput.type === 'password';
+            pwInput.type = isPw ? 'text' : 'password';
+            togglePw.innerHTML = isPw ? '<i class="fa-regular fa-eye-slash"></i>' : '<i class="fa-regular fa-eye"></i>';
+        });
+
+        // Handle Login submission
+        const loginForm = document.getElementById('loginForm');
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('loginBtn');
+            const errorMsg = document.getElementById('errorMsg');
+            
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+            errorMsg.classList.add('hidden');
+
+            try {
+                const res = await fetch(API_BASE + '/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(Object.fromEntries(new FormData(loginForm)))
+                });
+                
+                const result = await res.json();
+                if (!res.ok) throw new Error(result.message || 'Login failed');
+
+                if (result.token) {
+                    localStorage.setItem('adminToken', result.token);
+                    window.location.href = '/admin/dashboard';
+                }
+            } catch (err) {
+                console.error(err);
+                document.getElementById('errorText').textContent = err.message;
+                errorMsg.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In to CMS';
+            }
+        });
+
+        // Forgot password modal triggers
+        const forgotModal = document.getElementById('forgotPwModal');
+        document.getElementById('forgotPwLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            forgotModal.classList.remove('hidden');
+        });
+        document.getElementById('closeModal').addEventListener('click', () => {
+            forgotModal.classList.add('hidden');
+        });
+
+        // Handle Forgot password submission
+        const forgotForm = document.getElementById('forgotPwForm');
+        forgotForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('forgotBtn');
+            const errDiv = document.getElementById('forgotErrorMsg');
+            const successDiv = document.getElementById('forgotSuccessMsg');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+            errDiv.classList.add('hidden');
+            successDiv.classList.add('hidden');
+
+            try {
+                const res = await fetch(API_BASE + '/auth/forgot-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(Object.fromEntries(new FormData(forgotForm)))
+                });
+                const result = await res.json();
+                if (!res.ok) throw new Error(result.message || 'Request failed');
+
+                successDiv.classList.remove('hidden');
+                forgotForm.reset();
+            } catch (err) {
+                console.error(err);
+                document.getElementById('forgotErrorText').textContent = err.message;
+                errDiv.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Send Reset Link';
+            }
+        });
+    </script>
 </body>
 </html>

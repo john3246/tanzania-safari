@@ -209,3 +209,37 @@ window.viewBookingDetails = async function(id) {
     window.currentBookingId = id;
     await navigate('booking-details', true);
 }
+
+function exportBookingsCSV() {
+    if (allBookings.length === 0) {
+        showToast('No bookings available to export', 'warning');
+        return;
+    }
+    const headers = ['Booking Reference', 'Customer Name', 'Email', 'Package', 'Start Date', 'End Date', 'Adults', 'Children', 'Total Price', 'Status'];
+    const rows = allBookings.map(b => [
+        b.booking_reference,
+        b.full_name,
+        b.email,
+        b.package_name,
+        new Date(b.start_date).toLocaleDateString(),
+        new Date(b.end_date).toLocaleDateString(),
+        b.number_of_adults || 0,
+        b.number_of_children || 0,
+        b.total_price_usd || b.total_price || 0,
+        b.status_name
+    ]);
+    
+    let csvContent = "data:text/csv;charset=utf-8," 
+        + [headers.join(','), ...rows.map(e => e.map(val => `"${String(val).replace(/"/g, '""')}"`).join(','))].join('\n');
+        
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `bookings_export_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast('Bookings exported successfully');
+}
+
+window.exportBookingsCSV = exportBookingsCSV;

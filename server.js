@@ -53,7 +53,7 @@ app.use(helmet({
             scriptSrc: ["'self'", "'unsafe-eval'", "'unsafe-inline'", "https://cdnjs.cloudflare.com", "https://cdn.tailwindcss.com", "https://unpkg.com", "https://cdn.jsdelivr.net"],
             scriptSrcAttr: ["'unsafe-inline'"],
             styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com", "https://unpkg.com", "https://cdn.tailwindcss.com", "https://cdn.jsdelivr.net"],
-            imgSrc: ["'self'", "data:", "https://images.unsplash.com", "https://ui-avatars.com"], 
+            imgSrc: ["'self'", "data:", "blob:", "https:", "http:"], 
             connectSrc: [
                 "'self'", 
                 "https://cdn.jsdelivr.net",
@@ -65,7 +65,7 @@ app.use(helmet({
                 "ws://localhost:3000",
                 "wss://tanzania-safari.onrender.com"
             ],
-            fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com", "https://unpkg.com"],
+            fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com", "https://unpkg.com", "https://fonts.googleapis.com", "https://cdn.jsdelivr.net", "data:", "https://ka-f.fontawesome.com"],
             objectSrc: ["'none'"],
             mediaSrc: ["'self'"],
             frameSrc: ["'none'"],
