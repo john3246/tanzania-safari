@@ -32,7 +32,7 @@ class DestinationService extends BaseService {
     async update(id, data) {
         if (data.slug) {
             const existing = await this.repository.findBySlug(data.slug);
-            if (existing && existing.id !== id) {
+            if (existing && String(existing.id) !== String(id)) {
                 throw new Error('Slug already exists');
             }
         }

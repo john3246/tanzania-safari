@@ -54,7 +54,7 @@ function openBlogModal(id = null) {
 
 async function saveBlog(event) {
     if (event) event.preventDefault();
-    const btn = document.activeElement;
+    const btn = document.querySelector('#blogModal button.bg-emerald-600');
     const form = document.getElementById('blogForm');
     const data = Object.fromEntries(new FormData(form));
     const id = document.getElementById('blogId').value;

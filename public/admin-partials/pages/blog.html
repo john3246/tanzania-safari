@@ -1,16 +1,36 @@
 <div id="page-blog" class="page">
-<div class="page bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden" id="page-blog">
-                <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-                    <h3 class="font-semibold text-slate-800">Content Strategy</h3>
-                    <button class="bg-primary-500 hover:bg-primary-600 text-white px-3.5 py-1.5 rounded-md text-sm font-medium transition-colors inline-flex items-center space-x-2" onclick="openBlogModal()"><i class="ph ph-plus"></i> <span>New Post</span></button>
-                </div>
-                <div class="overflow-x-auto">
-                    <div class="table-responsive">
-<table class="w-full text-left text-sm text-slate-600">
-                        <thead class="bg-slate-50 text-slate-400 text-xs font-semibold uppercase border-b border-slate-100"><tr class="h-11"><th class="px-6">Title</th><th class="px-6">Author</th><th class="px-6">Date</th><th class="px-6">Status</th><th class="px-6">Actions</th></tr></thead>
-                        <tbody id="blogBody" class="divide-y divide-slate-100"></tbody>
+    <div class="space-y-6">
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Content Strategy (Blog)</h1>
+                <p class="text-sm text-gray-500 mt-1">Write, edit, and publish articles, travel guides, and company news.</p>
+            </div>
+            <button onclick="openBlogModal()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 shadow-sm transition-all duration-200">
+                <i class="ph ph-plus-circle text-lg"></i> New Post
+            </button>
+        </div>
+
+        <!-- Table Card -->
+        <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+                <div class="table-responsive">
+                    <table class="w-full text-left text-sm text-gray-600">
+                        <thead class="bg-gray-50 text-gray-400 text-xs font-semibold uppercase tracking-wider border-b border-gray-150">
+                            <tr>
+                                <th class="px-6 py-4">Title</th>
+                                <th class="px-6 py-4">Author</th>
+                                <th class="px-6 py-4">Published Date</th>
+                                <th class="px-6 py-4">Status</th>
+                                <th class="px-6 py-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="blogBody" class="divide-y divide-gray-100 bg-white">
+                            <!-- JS populated -->
+                        </tbody>
                     </table>
-</div>
                 </div>
             </div>
+        </div>
+    </div>
 </div>
