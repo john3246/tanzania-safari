@@ -174,24 +174,26 @@ function renderDestinationDetails(destination) {
                   <span class="hero-hook-word">Wildlife</span>
                 </div>
             </div>
-            <div class="container" style="position: relative; z-index: 10;">
-                <div class="breadcrumb" style="text-shadow: 0 2px 10px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.6);">
-                    <a href="/">Home</a>
-                    <i class="fas fa-chevron-right"></i>
-                    <a href="/destinations">Destinations</a>
-                    <i class="fas fa-chevron-right"></i>
-                    <span>${escapeHtml(name)}</span>
-                </div>
-                <h1 class="destination-title" style="text-shadow: 0 4px 20px rgba(0,0,0,0.8), 0 0 40px rgba(0,0,0,0.6);">${escapeHtml(name)}</h1>
-                <div class="destination-badges">
-                    <div class="badge">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span>Tanzania, East Africa</span>
+            <div class="container" style="position: relative; z-index: 10; display: flex; align-items: center; height: 100%; min-height: 500px;">
+                <div class="corp-hero-box" style="background: rgba(255, 255, 255, 0.95); padding: 3.5rem; border-radius: 4px; max-width: 650px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border-left: 6px solid var(--accent); text-align: left;">
+                    <div class="breadcrumb" style="color: #666; margin-bottom: 1rem; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">
+                        <a href="/" style="color: var(--accent); text-decoration: none;">Home</a>
+                        <i class="fas fa-chevron-right" style="margin: 0 0.5rem; font-size: 0.75rem;"></i>
+                        <a href="/destinations" style="color: var(--accent); text-decoration: none;">Destinations</a>
+                        <i class="fas fa-chevron-right" style="margin: 0 0.5rem; font-size: 0.75rem;"></i>
+                        <span style="color: #333;">${escapeHtml(name)}</span>
                     </div>
-                    ${isUnesco ? '<div class="badge unesco"><i class="fas fa-flag-checkered"></i> UNESCO World Heritage Site</div>' : ''}
-                    <div class="badge">
-                        <i class="fas fa-safari"></i>
-                        <span>${destination.safari_count || 0} Safari Packages</span>
+                    <h1 class="destination-title" style="color: #1a1a1a; text-shadow: none; font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.1; margin-bottom: 1.5rem; margin-top: 0; text-align: left;">${escapeHtml(name)}</h1>
+                    <div class="destination-badges" style="justify-content: flex-start; gap: 0.75rem; flex-wrap: wrap; margin-top: 0;">
+                        <div class="badge" style="background: var(--bg-secondary); border: 1px solid #e0e0e0; color: #333; text-shadow: none;">
+                            <i class="fas fa-map-marker-alt" style="color: var(--accent);"></i>
+                            <span>Tanzania, East Africa</span>
+                        </div>
+                        ${isUnesco ? '<div class="badge unesco" style="background: var(--accent); border-color: var(--accent); color: #fff; text-shadow: none;"><i class="fas fa-flag-checkered"></i> UNESCO Site</div>' : ''}
+                        <div class="badge" style="background: var(--bg-secondary); border: 1px solid #e0e0e0; color: #333; text-shadow: none;">
+                            <i class="fas fa-safari" style="color: var(--accent);"></i>
+                            <span>${destination.safari_count || 0} Packages</span>
+                        </div>
                     </div>
                 </div>
             </div>
