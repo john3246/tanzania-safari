@@ -62,9 +62,17 @@ class LiveChat {
             if (e.key === 'Enter') this.sendMessage();
         };
 
-        // Link to the existing openLiveChatBtn in the social menu
-        this.btn = document.getElementById('openLiveChatBtn');
+        // Link to the main social float button for a true corporate experience
+        this.btn = document.getElementById('socialFloatBtn');
+        const menu = document.querySelector('.social-float-menu');
+        if (menu) menu.style.display = 'none'; // Hide the old submenu to act purely as a chat button
+
         if (this.btn) {
+            // Remove previous event listeners by cloning if necessary, or just override
+            const newBtn = this.btn.cloneNode(true);
+            this.btn.parentNode.replaceChild(newBtn, this.btn);
+            this.btn = newBtn;
+            
             this.btn.onclick = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -85,10 +93,13 @@ class LiveChat {
             this.hasUnread = false;
             if (this.btn) {
                 this.btn.style.boxShadow = '';
-                this.btn.innerHTML = '<i class="fas fa-headset"></i>';
+                this.btn.innerHTML = '<i class="fas fa-times"></i>';
             }
         } else {
             this.window.classList.remove('active');
+            if (this.btn) {
+                this.btn.innerHTML = '<i class="fas fa-comments"></i>';
+            }
         }
     }
 

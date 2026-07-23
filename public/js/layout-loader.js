@@ -16,11 +16,21 @@ function loadChatScripts() {
     if (typeof io === 'undefined') {
         const ioScript = document.createElement('script');
         ioScript.src = '/socket.io/socket.io.js';
-        ioScript.onload = () => {
-            const chatScript = document.createElement('script');
-            chatScript.src = '/js/chat.js';
-            document.body.appendChild(chatScript);
+        
+        const loadChat = () => {
+            if (!document.querySelector('script[src="/js/chat.js"]')) {
+                const chatScript = document.createElement('script');
+                chatScript.src = '/js/chat.js';
+                document.body.appendChild(chatScript);
+            }
         };
+        
+        ioScript.onload = loadChat;
+        ioScript.onerror = () => {
+            console.error('Socket.io failed to load. Chat will run in offline mode.');
+            loadChat();
+        };
+        
         document.body.appendChild(ioScript);
     } else {
         const chatScript = document.createElement('script');
