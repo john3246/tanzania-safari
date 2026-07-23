@@ -62,27 +62,22 @@ class LiveChat {
             if (e.key === 'Enter') this.sendMessage();
         };
 
-        // Link to the header chat button
-        this.btn = document.getElementById('headerLiveChatBtn');
-        const menu = document.querySelector('.social-float-menu');
-        if (menu) menu.style.display = ''; // Restore the social float menu if it was hidden
-
-        // Also still support the old openLiveChatBtn if it exists in social float
-        const oldBtn = document.getElementById('openLiveChatBtn');
-        if (oldBtn) {
-            oldBtn.addEventListener('click', (e) => {
-                e.preventDefault(); e.stopPropagation();
-                if (!this.isOpen) this.toggleChat();
-            });
-        }
-
-        if (this.btn) {
-            this.btn.addEventListener('click', (e) => {
+        // Use event delegation for chat buttons to handle async layout loading
+        document.addEventListener('click', (e) => {
+            const btn = e.target.closest('#headerLiveChatBtn, #openLiveChatBtn, #socialFloatBtn');
+            if (btn && btn.id !== 'socialFloatBtn') { // socialFloatBtn is handled by layout-loader for toggling menu, unless they want it to open chat.
+                // If they click headerLiveChatBtn or openLiveChatBtn
                 e.preventDefault();
                 e.stopPropagation();
                 this.toggleChat();
-            });
-        }
+            } else if (btn && btn.id === 'socialFloatBtn') {
+                // If they click the main float button, and the menu was hidden, we might want to open chat. But we restored the menu. So do nothing here.
+            }
+        });
+        
+        // Restore social float menu
+        const menu = document.querySelector('.social-float-menu');
+        if (menu) menu.style.display = '';
     }
 
     toggleChat() {
