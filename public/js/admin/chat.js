@@ -134,8 +134,9 @@ function sendAdminMessage() {
     const text = chatInput.value.trim();
     if (!text || !currentAdminChatId || !adminSocket) return;
     
-    adminSocket.emit('admin_message', {
+    adminSocket.emit('send_message', {
         chatId: currentAdminChatId,
+        sender: 'admin',
         message: text
     });
     chatInput.value = '';
@@ -152,13 +153,7 @@ function escapeHtml(str) {
 }
 
 // Listen for SPA navigation events or MutationObserver to check active page
-document.addEventListener('DOMContentLoaded', () => {
-    const chatSection = document.getElementById('page-chat');
-    if (chatSection) {
-        initAdminChat();
-    }
-});
-
-// Map globally
+// Map globally for the core.js router
+window.initChatPage = initAdminChat;
 window.initAdminChat = initAdminChat;
 window.sendAdminMessage = sendAdminMessage;

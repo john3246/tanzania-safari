@@ -125,8 +125,11 @@ class LiveChat {
                 if (!this.isOpen) {
                     this.hasUnread = true;
                     // Add some corporate pulse effect
-                    this.btn.style.boxShadow = '0 0 0 0 rgba(255, 111, 0, 0.7)';
-                    this.btn.innerHTML = '<i class="fas fa-comment-dots"></i><span style="position:absolute;top:0;right:0;width:12px;height:12px;background:red;border-radius:50%;border:2px solid white"></span>';
+                    const headerBtn = document.getElementById('headerLiveChatBtn');
+                    if (headerBtn) {
+                        headerBtn.style.boxShadow = '0 0 0 0 rgba(255, 111, 0, 0.7)';
+                        headerBtn.innerHTML = '<i class="fas fa-comment-dots"></i><span style="position:absolute;top:0;right:0;width:12px;height:12px;background:red;border-radius:50%;border:2px solid white"></span>';
+                    }
                 }
             }
         });
