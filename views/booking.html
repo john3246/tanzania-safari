@@ -23,23 +23,23 @@
 .step.done .step-label{color:var(--success)}
 .step-line{flex:1;height:2px;background:var(--border);margin:0 .5rem}
 .step.done .step-line{background:var(--success)}
-.form-card{background:#fff;border-radius:var(--radius-lg);padding:2rem;box-shadow:var(--shadow-sm);border:1px solid var(--border)}
+.form-card{background:#fff;border-radius:12px;padding:2.5rem;box-shadow:0 4px 20px rgba(0,0,0,0.05);border:1px solid var(--border-light)}
 .form-step{display:none}.form-step.active{display:block}
-.booking-summary{background:#fff;border-radius:var(--radius-lg);padding:1.75rem;box-shadow:var(--shadow-md);border:1px solid var(--border);position:sticky;top:100px}
+.booking-summary{background:#fff;border-radius:12px;padding:2rem;box-shadow:0 8px 30px rgba(0,0,0,0.08);border:1px solid var(--border-light);position:sticky;top:100px}
 .summary-row{display:flex;justify-content:space-between;padding:.625rem 0;border-bottom:1px solid var(--border-light);font-size:.9rem}
 .summary-row:last-child{border:none;font-weight:700;font-size:1rem}
 .summary-label{color:var(--text-muted)}
 .summary-value{font-weight:600;color:var(--earth-dark)}
 .step-nav{display:flex;justify-content:space-between;margin-top:1.75rem;gap:1rem}
-.success-box{text-align:center;padding:3rem 2rem;display:none}
-.success-box .icon{width:80px;height:80px;background:var(--success-bg);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:2.5rem;color:var(--success)}
+.success-box{text-align:center;padding:4rem 2.5rem;display:none;background:#fff;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.06);border:1px solid var(--border-light)}
+.success-box .icon{width:80px;height:80px;background:rgba(16,185,129,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:2.5rem;color:var(--success)}
 </style>
 </head>
 <body>
 <!-- Header -->
 <div id="header"></div>
 
-<section class="page-hero">
+<section class="page-hero" style="position: relative; z-index: 1;">
   <div class="hero-slideshow">
     <div class="hero-slide active" style="background-image: url('/images/optimized/mount-kilimanjaro-national-park.webp');">
       <span class="hero-hook-word">Kilimanjaro</span>
@@ -54,10 +54,12 @@
       <span class="hero-hook-word">Wildlife</span>
     </div>
   </div>
-<div class="page-hero-content">
+<div class="page-hero-content" style="position: relative; z-index: 10;">
     <div class="container">
-      <h1 class="page-hero-title">Book Your Safari</h1>
-      <div class="page-hero-breadcrumb"><a href="/">Home</a><span>/</span><span>Booking</span></div>
+      <h1 class="page-hero-title" style="text-shadow: 0 4px 20px rgba(0,0,0,0.8), 0 0 40px rgba(0,0,0,0.6)">Book Your Safari</h1>
+      <div class="page-hero-breadcrumb" style="text-shadow: 0 2px 10px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.6)">
+        <a href="/">Home</a><span>/</span><span>Booking</span>
+      </div>
     </div>
   </div>
 </section>

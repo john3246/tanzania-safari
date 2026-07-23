@@ -175,14 +175,14 @@ function renderDestinationDetails(destination) {
                 </div>
             </div>
             <div class="container" style="position: relative; z-index: 10;">
-                <div class="breadcrumb">
+                <div class="breadcrumb" style="text-shadow: 0 2px 10px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.6);">
                     <a href="/">Home</a>
                     <i class="fas fa-chevron-right"></i>
                     <a href="/destinations">Destinations</a>
                     <i class="fas fa-chevron-right"></i>
                     <span>${escapeHtml(name)}</span>
                 </div>
-                <h1 class="destination-title">${escapeHtml(name)}</h1>
+                <h1 class="destination-title" style="text-shadow: 0 4px 20px rgba(0,0,0,0.8), 0 0 40px rgba(0,0,0,0.6);">${escapeHtml(name)}</h1>
                 <div class="destination-badges">
                     <div class="badge">
                         <i class="fas fa-map-marker-alt"></i>
