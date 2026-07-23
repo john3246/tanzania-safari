@@ -62,24 +62,26 @@ class LiveChat {
             if (e.key === 'Enter') this.sendMessage();
         };
 
-        // Create the "Say Hi" tooltip
-        this.tooltip = document.createElement('div');
-        this.tooltip.className = 'chat-tooltip';
-        this.tooltip.innerHTML = 'Hi! Need help? 👋';
-        this.container.appendChild(this.tooltip);
-
-        // Link to the main social float button for a true corporate experience
-        this.btn = document.getElementById('socialFloatBtn');
+        // Link to the header chat button
+        this.btn = document.getElementById('headerLiveChatBtn');
         const menu = document.querySelector('.social-float-menu');
-        if (menu) menu.style.display = 'none'; // Hide the old submenu to act purely as a chat button
+        if (menu) menu.style.display = ''; // Restore the social float menu if it was hidden
+
+        // Also still support the old openLiveChatBtn if it exists in social float
+        const oldBtn = document.getElementById('openLiveChatBtn');
+        if (oldBtn) {
+            oldBtn.addEventListener('click', (e) => {
+                e.preventDefault(); e.stopPropagation();
+                if (!this.isOpen) this.toggleChat();
+            });
+        }
 
         if (this.btn) {
-            // Use capture phase to intercept the click before other listeners
             this.btn.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 this.toggleChat();
-            }, true);
+            });
         }
     }
 
@@ -87,7 +89,6 @@ class LiveChat {
         this.isOpen = !this.isOpen;
         if (this.isOpen) {
             this.window.classList.add('active');
-            if (this.tooltip) this.tooltip.style.opacity = '0';
             
             if (!this.socket) this.connectSocket();
             setTimeout(() => this.input.focus(), 300);
@@ -95,15 +96,8 @@ class LiveChat {
             
             // Remove unread state
             this.hasUnread = false;
-            if (this.btn) {
-                this.btn.style.boxShadow = '';
-                this.btn.innerHTML = '<i class="fas fa-times"></i>';
-            }
         } else {
             this.window.classList.remove('active');
-            if (this.btn) {
-                this.btn.innerHTML = '<i class="fas fa-comments"></i>';
-            }
         }
     }
 
