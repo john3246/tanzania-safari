@@ -9,13 +9,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="/css/variables.css">
-<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/variables.css?v=2">
+<link rel="stylesheet" href="/css/main.css?v=2">
 </head>
 <body>
 <!-- Header -->
 <div id="header"></div>
 
 <style>
+/* ── Destinations Page Custom ── */
+.destinations-hero{min-height:50vh;display:flex;align-items:center;justify-content:center;position:relative;background:#000;color:#fff;overflow:hidden}
+.destinations-hero::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,0.5);z-index:1}
+.destinations-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.dest-hero-content{position:relative;z-index:2;text-align:center;padding:0 1rem;max-width:800px;margin:0 auto}
+.dest-hero-title{font-size:clamp(2.5rem,5vw,4rem);font-weight:800;margin-bottom:1rem;font-family:var(--font-heading)}
+.dest-hero-subtitle{font-size:1.1rem;color:rgba(255,255,255,0.9)}
+
 .hero-bg-grid {
   position: absolute;
   top: 0;
@@ -64,23 +73,52 @@
     </div>
   </div>
 <div class="page-hero-content"><div class="container">
-    <h1 class="page-hero-title" style="text-shadow: 0 4px 20px rgba(0,0,0,0.6)">Explore Destinations</h1>
-    <div class="page-hero-breadcrumb" style="text-shadow: 0 2px 10px rgba(0,0,0,0.5)"><a href="/">Home</a><span>/</span><span>Destinations</span></div>
-  </div></div>
+    <h1 class="page-hero-title" style="text-shadow: 0 4px 20px rgba(0,0,0,0.6)">Tanzania Destinations</h1>
+    <div class="page-hero-breadcrumb" style="text-shadow: 0 2px 10px rgba(0,0,0,0.5)">
+        <a href="/">Home</a><span>/</span><span>Destinations</span>
+    </div>
+</div></div>
 </section>
 
-<section class="section bg-sand">
+<!-- Main Regions -->
+<section class="section bg-light" id="northern-circuit">
   <div class="container">
-    <div class="section-header">
-      <span class="section-eyebrow"><i class="fas fa-globe-africa"></i> Tanzania's Best</span>
-      <h2 class="section-title">Iconic <span>National Parks & Reserves</span></h2>
-      <p class="section-desc">From the world-famous Serengeti to the pristine beaches of Zanzibar — discover the diversity of Tanzania's natural wonders.</p>
+    <div class="section-header text-center" style="max-width: 700px; margin: 0 auto 4rem;">
+      <span class="section-eyebrow">The Classic Safari</span>
+      <h2 class="section-title">Northern Circuit</h2>
+      <p class="section-desc">The most famous safari route in the world. Witness the Great Migration, spot the Big Five, and marvel at the Ngorongoro Crater.</p>
     </div>
-    <div class="dest-grid" id="destinationsGrid">
-      <div class="skeleton-card" style="aspect-ratio:4/5"><div class="skeleton" style="width:100%;height:100%"></div></div>
-      <div class="skeleton-card" style="aspect-ratio:4/5"><div class="skeleton" style="width:100%;height:100%"></div></div>
-      <div class="skeleton-card" style="aspect-ratio:4/5"><div class="skeleton" style="width:100%;height:100%"></div></div>
-      <div class="skeleton-card" style="aspect-ratio:4/5"><div class="skeleton" style="width:100%;height:100%"></div></div>
+    <div class="dest-grid" id="northernDestGrid">
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div style="padding:1.5rem"><div class="skeleton-line"></div></div></div>
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div style="padding:1.5rem"><div class="skeleton-line"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="southern-circuit">
+  <div class="container">
+    <div class="section-header text-center" style="max-width: 700px; margin: 0 auto 4rem;">
+      <span class="section-eyebrow">Wild & Untamed</span>
+      <h2 class="section-title">Southern Circuit</h2>
+      <p class="section-desc">Off the beaten path. Vast, untouched wilderness areas perfect for walking safaris and boat safaris with fewer crowds.</p>
+    </div>
+    <div class="dest-grid" id="southernDestGrid">
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div style="padding:1.5rem"><div class="skeleton-line"></div></div></div>
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div style="padding:1.5rem"><div class="skeleton-line"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section bg-light" id="zanzibar">
+  <div class="container">
+    <div class="section-header text-center" style="max-width: 700px; margin: 0 auto 4rem;">
+      <span class="section-eyebrow">Spice Island</span>
+      <h2 class="section-title">Zanzibar & Coast</h2>
+      <p class="section-desc">The perfect post-safari retreat. Pristine white sand beaches, turquoise waters, and rich cultural history.</p>
+    </div>
+    <div class="dest-grid" id="zanzibarDestGrid">
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div style="padding:1.5rem"><div class="skeleton-line"></div></div></div>
+        <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div style="padding:1.5rem"><div class="skeleton-line"></div></div></div>
     </div>
   </div>
 </section>
