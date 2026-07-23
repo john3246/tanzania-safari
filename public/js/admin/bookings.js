@@ -243,3 +243,5 @@ function exportBookingsCSV() {
 }
 
 window.exportBookingsCSV = exportBookingsCSV;
+
+window.showNewBookingModal = function() { showToast('Manual booking creation is currently disabled. Customers must book via the public website.', 'info'); };
