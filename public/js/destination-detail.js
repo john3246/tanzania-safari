@@ -382,7 +382,7 @@ async function loadSafariPackagesForDestination(destinationName) {
                     return `
                         <div class="package-card" onclick="window.location.href='/safaris/${pkg.package_slug}'">
                             <div class="package-card-image">
-                                <img src="${pkgImg}" alt="${escapeHtml(pkg.package_name)}" loading="lazy">
+                                <img src="${pkgImg}" alt="${escapeHtml(pkg.package_name)}" loading="lazy" decoding="async">
                                 <div class="package-card-badge">${pkg.category_name || 'Safari'}</div>
                             </div>
                             <div class="package-card-header">

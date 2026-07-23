@@ -23,7 +23,7 @@ function buildSafariCard(p) {
     return `
     <a href="/safaris/${p.package_slug}" class="safari-card fade-up">
       <div class="safari-card-img">
-        <img src="${img}" alt="${p.package_name}" loading="lazy" onerror="this.src='/images/optimized/balloon.webp'">
+        <img src="${img}" alt="${p.package_name}" loading="lazy" decoding="async" onerror="this.src='/images/optimized/balloon.webp'">
         ${p.is_featured ? '<span class="safari-card-badge"><i class="fas fa-star"></i> Featured</span>' : ''}
         <span class="safari-card-duration"><i class="fas fa-clock"></i> ${p.duration_days} Days</span>
       </div>
@@ -53,7 +53,7 @@ function buildDestCard(d) {
     return `
     <a href="/destinations/${d.park_slug}" class="corp-dest-card fade-up">
       <div class="corp-dest-img">
-        <img src="${img}" alt="${d.park_name}" loading="lazy" onerror="this.src='/images/optimized/balloon.webp'">
+        <img src="${img}" alt="${d.park_name}" loading="lazy" decoding="async" onerror="this.src='/images/optimized/balloon.webp'">
         <div class="corp-dest-badge">${d.safari_count || 0} Tours</div>
       </div>
       <div class="corp-dest-content">
@@ -75,7 +75,7 @@ function buildTestimonialCard(r) {
       <p class="testimonial-text">"${r.comment || r.review_comment || ''}"</p>
       <div class="testimonial-author">
         <div class="testimonial-avatar">
-          ${r.user_image ? `<img src="${imgSrc(r.user_image)}" alt="${name}">` : initial}
+          ${r.user_image ? `<img src="${imgSrc(r.user_image)}" alt="${name}" loading="lazy" decoding="async">` : initial}
         </div>
         <div>
           <div class="testimonial-name">${name}</div>

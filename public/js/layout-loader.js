@@ -5,9 +5,29 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     loadComponent('header', '/includes/header.html', initHeader);
-    loadComponent('footer', '/includes/footer.html', initFooter);
+    loadComponent('footer', '/includes/footer.html', () => {
+        initFooter();
+        loadChatScripts();
+    });
     initSEO();
 });
+
+function loadChatScripts() {
+    if (typeof io === 'undefined') {
+        const ioScript = document.createElement('script');
+        ioScript.src = '/socket.io/socket.io.js';
+        ioScript.onload = () => {
+            const chatScript = document.createElement('script');
+            chatScript.src = '/js/chat.js';
+            document.body.appendChild(chatScript);
+        };
+        document.body.appendChild(ioScript);
+    } else {
+        const chatScript = document.createElement('script');
+        chatScript.src = '/js/chat.js';
+        document.body.appendChild(chatScript);
+    }
+}
 
 /**
  * Fetches and injects an HTML component into a container by ID

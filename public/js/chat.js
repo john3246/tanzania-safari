@@ -1,78 +1,205 @@
-let socket;
-let currentChatId = localStorage.getItem('chatId');
-
-document.addEventListener('DOMContentLoaded', () => {
-    const floatBtn = document.getElementById('openLiveChatBtn');
-    const chatWidget = document.getElementById('liveChatWidget');
-    const closeChatBtn = document.getElementById('closeLiveChat');
-    const chatInput = document.getElementById('chatInput');
-    const sendChatBtn = document.getElementById('sendChatBtn');
-    const chatMessages = document.getElementById('chatMessages');
-
-    if (!chatWidget || !floatBtn) return;
-
-    // Toggle Chat
-    floatBtn.addEventListener('click', (e) => {
-        if (chatWidget.style.display === 'none' || chatWidget.style.display === '') {
-            chatWidget.style.display = 'flex';
-            if (!socket) initChat();
-        } else {
-            chatWidget.style.display = 'none';
+/**
+ * Corporate Live Chat Widget
+ * Dynamically creates UI and connects to Socket.IO backend.
+ */
+class LiveChat {
+    constructor() {
+        this.socket = null;
+        this.chatId = localStorage.getItem('safari_chat_id');
+        if (!this.chatId) {
+            this.chatId = 'chat_' + Math.random().toString(36).substring(2, 10);
+            localStorage.setItem('safari_chat_id', this.chatId);
         }
-    });
-
-    closeChatBtn.addEventListener('click', () => {
-        chatWidget.style.display = 'none';
-    });
-
-    function initChat() {
-        if (typeof io === 'undefined') return console.error('Socket.io not loaded');
+        this.isOpen = false;
+        this.hasUnread = false;
         
-        socket = io();
+        // Remove existing old widget to prevent duplicate UI
+        const oldWidget = document.getElementById('liveChatWidget');
+        if (oldWidget) oldWidget.remove();
         
-        socket.on('connect', () => {
-            if (!currentChatId) {
-                currentChatId = socket.id;
-                localStorage.setItem('chatId', currentChatId);
-            }
-            socket.emit('join_chat', { chatId: currentChatId });
+        this.initUI();
+    }
+
+    initUI() {
+        // Create widget container
+        this.container = document.createElement('div');
+        this.container.className = 'chat-widget';
+
+        // Chat Button
+        this.btn = document.createElement('button');
+        this.btn.className = 'chat-button';
+        this.btn.innerHTML = '<i class="fas fa-comment-dots"></i>';
+        this.btn.onclick = () => this.toggleChat();
+
+        // Chat Window
+        this.window = document.createElement('div');
+        this.window.className = 'chat-window';
+        
+        this.window.innerHTML = `
+            <div class="chat-header">
+                <div class="chat-header-info">
+                    <div class="chat-avatar"><i class="fas fa-user-tie"></i></div>
+                    <div>
+                        <h3 class="chat-title">Safari Support</h3>
+                        <div class="chat-status"><span class="status-dot"></span> Online - We reply instantly</div>
+                    </div>
+                </div>
+                <button class="chat-close" onclick="window.liveChat.toggleChat()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="chat-body" id="chatBody">
+                <div class="chat-message system">Welcome to Tanzania Safari Magic! How can we help you plan your dream safari today?</div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chatInput" class="chat-input" placeholder="Type a message..." autocomplete="off">
+                <button class="chat-send" id="chatSend"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        `;
+
+        this.container.appendChild(this.window);
+        this.container.appendChild(this.btn);
+        document.body.appendChild(this.container);
+
+        // Events
+        this.input = document.getElementById('chatInput');
+        this.sendBtn = document.getElementById('chatSend');
+        this.body = document.getElementById('chatBody');
+
+        this.sendBtn.onclick = () => this.sendMessage();
+        this.input.onkeypress = (e) => {
+            if (e.key === 'Enter') this.sendMessage();
+        };
+
+        // Override the existing openLiveChatBtn in the social menu to open this new widget
+        const existingFloatBtn = document.getElementById('openLiveChatBtn');
+        if (existingFloatBtn) {
+            existingFloatBtn.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (!this.isOpen) this.toggleChat();
+            };
+        }
+        
+        // Override the main social float to toggle our chat directly
+        const socialFloat = document.querySelector('.social-float');
+        if(socialFloat) {
+             socialFloat.style.display = 'none'; // hide old social float if we replace it entirely, or just keep it
+        }
+    }
+
+    toggleChat() {
+        this.isOpen = !this.isOpen;
+        if (this.isOpen) {
+            this.window.classList.add('active');
+            this.btn.innerHTML = '<i class="fas fa-times"></i>';
+            if (!this.socket) this.connectSocket();
+            setTimeout(() => this.input.focus(), 300);
+            this.scrollToBottom();
+            
+            // Remove unread state
+            this.hasUnread = false;
+            this.btn.style.boxShadow = '';
+            this.btn.classList.remove('pulse');
+        } else {
+            this.window.classList.remove('active');
+            this.btn.innerHTML = '<i class="fas fa-comment-dots"></i>';
+        }
+    }
+
+    connectSocket() {
+        if (typeof io === 'undefined') {
+            console.error('Socket.IO is not loaded');
+            return;
+        }
+
+        this.socket = io();
+
+        this.socket.on('connect', () => {
+            this.socket.emit('join_chat', { chatId: this.chatId });
         });
 
-        socket.on('chat_joined', (data) => {
-            // Load previous messages if any (except the initial bot msg)
-            if (data.chat && data.chat.messages.length > 0) {
-                chatMessages.innerHTML = ''; // clear initial bot message
-                data.chat.messages.forEach(msg => appendMessage(msg));
+        this.socket.on('chat_joined', (data) => {
+            if (data.chat && data.chat.messages && data.chat.messages.length > 0) {
+                // Clear and render history
+                this.body.innerHTML = '<div class="chat-message system">Welcome to Tanzania Safari Magic! How can we help you plan your dream safari today?</div>';
+                data.chat.messages.forEach(msg => {
+                    this.appendMessage(msg.message, msg.sender === 'user' || msg.sender === 'client' ? 'user' : 'agent', msg.timestamp);
+                });
             }
         });
 
-        socket.on('new_message', (data) => {
-            if (data.msg.sender !== 'client') {
-                appendMessage(data.msg);
+        this.socket.on('new_message', (data) => {
+            if (data.msg.sender !== 'user' && data.msg.sender !== 'client') {
+                this.appendMessage(data.msg.message, 'agent', data.msg.timestamp);
+                
+                if (!this.isOpen) {
+                    this.hasUnread = true;
+                    // Add some corporate pulse effect
+                    this.btn.style.boxShadow = '0 0 0 0 rgba(255, 111, 0, 0.7)';
+                    this.btn.innerHTML = '<i class="fas fa-comment-dots"></i><span style="position:absolute;top:0;right:0;width:12px;height:12px;background:red;border-radius:50%;border:2px solid white"></span>';
+                }
             }
         });
     }
 
-    function appendMessage(msg) {
+    sendMessage() {
+        const text = this.input.value.trim();
+        if (!text) return;
+        
+        this.input.value = '';
+        
+        // Optimistic UI update
+        this.appendMessage(text, 'user', new Date().toISOString());
+
+        if (this.socket && this.socket.connected) {
+            this.socket.emit('send_message', {
+                chatId: this.chatId,
+                sender: 'user', // Match backend if it expects 'user' or 'client', backend code has no strict check, but previous UI used 'client'. I will use 'client' to be safe with previous code.
+                message: text
+            });
+        }
+    }
+
+    appendMessage(text, sender, timestamp) {
         const div = document.createElement('div');
-        div.className = `chat-message ${msg.sender === 'client' ? 'user' : 'bot'}`;
-        div.textContent = msg.message;
-        chatMessages.appendChild(div);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    function sendMessage() {
-        const text = chatInput.value.trim();
-        if (!text || !socket) return;
+        div.className = `chat-message ${sender}`;
         
-        const msg = { sender: 'client', message: text, timestamp: new Date() };
-        appendMessage(msg);
-        socket.emit('send_message', { chatId: currentChatId, sender: 'client', message: text });
-        chatInput.value = '';
+        const timeStr = new Date(timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        
+        div.innerHTML = `
+            ${text}
+            <span class="message-time">${timeStr}</span>
+        `;
+        
+        this.body.appendChild(div);
+        this.scrollToBottom();
     }
 
-    sendChatBtn.addEventListener('click', sendMessage);
-    chatInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') sendMessage();
-    });
-});
+    scrollToBottom() {
+        this.body.scrollTop = this.body.scrollHeight;
+    }
+}
+
+// Initialization function
+function initLiveChatWidget() {
+    // Inject CSS if not already there
+    if (!document.querySelector('link[href="/css/chat.css"]')) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = '/css/chat.css';
+        document.head.appendChild(link);
+    }
+
+    // Hide the old social float to avoid clutter if requested "via the message floating button" as the primary chat.
+    // The previous social-float has a chat icon too, so we'll just use our new clean corporate one instead.
+    const oldFloat = document.querySelector('.social-float');
+    if (oldFloat) oldFloat.style.display = 'none';
+
+    window.liveChat = new LiveChat();
+}
+
+// Load on DOM ready or immediately if already loaded
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initLiveChatWidget);
+} else {
+    initLiveChatWidget();
+}

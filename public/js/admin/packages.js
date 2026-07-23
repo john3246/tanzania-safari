@@ -82,7 +82,7 @@ function renderPackages() {
             <tr class="hover:bg-slate-50/50 transition-colors">
                 <td class="px-6 py-4">
                     <div class="flex items-center gap-3">
-                        <img src="${t.featured_image_url || '/images/optimized/balloon.webp'}" alt="Tour" class="w-12 h-12 rounded-lg object-cover bg-slate-100" onerror="this.src='/images/optimized/balloon.webp'">
+                        <img src="${t.featured_image_url || '/images/optimized/balloon.webp'}" alt="Tour" loading="lazy" decoding="async" class="w-12 h-12 rounded-lg object-cover bg-slate-100" onerror="this.src='/images/optimized/balloon.webp'">
                         <div>
                             <div class="font-semibold text-slate-900">${t.title}</div>
                             <div class="text-xs text-slate-400">${t.slug}</div>
