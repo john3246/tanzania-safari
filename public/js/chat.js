@@ -62,22 +62,24 @@ class LiveChat {
             if (e.key === 'Enter') this.sendMessage();
         };
 
+        // Create the "Say Hi" tooltip
+        this.tooltip = document.createElement('div');
+        this.tooltip.className = 'chat-tooltip';
+        this.tooltip.innerHTML = 'Hi! Need help? 👋';
+        this.container.appendChild(this.tooltip);
+
         // Link to the main social float button for a true corporate experience
         this.btn = document.getElementById('socialFloatBtn');
         const menu = document.querySelector('.social-float-menu');
         if (menu) menu.style.display = 'none'; // Hide the old submenu to act purely as a chat button
 
         if (this.btn) {
-            // Remove previous event listeners by cloning if necessary, or just override
-            const newBtn = this.btn.cloneNode(true);
-            this.btn.parentNode.replaceChild(newBtn, this.btn);
-            this.btn = newBtn;
-            
-            this.btn.onclick = (e) => {
+            // Use capture phase to intercept the click before other listeners
+            this.btn.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 this.toggleChat();
-            };
+            }, true);
         }
     }
 
@@ -85,6 +87,8 @@ class LiveChat {
         this.isOpen = !this.isOpen;
         if (this.isOpen) {
             this.window.classList.add('active');
+            if (this.tooltip) this.tooltip.style.opacity = '0';
+            
             if (!this.socket) this.connectSocket();
             setTimeout(() => this.input.focus(), 300);
             this.scrollToBottom();

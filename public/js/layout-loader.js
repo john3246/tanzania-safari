@@ -18,9 +18,9 @@ function loadChatScripts() {
         ioScript.src = '/socket.io/socket.io.js';
         
         const loadChat = () => {
-            if (!document.querySelector('script[src="/js/chat.js"]')) {
+            if (!document.querySelector('script[src^="/js/chat.js"]')) {
                 const chatScript = document.createElement('script');
-                chatScript.src = '/js/chat.js';
+                chatScript.src = '/js/chat.js?v=' + Date.now();
                 document.body.appendChild(chatScript);
             }
         };
@@ -34,7 +34,7 @@ function loadChatScripts() {
         document.body.appendChild(ioScript);
     } else {
         const chatScript = document.createElement('script');
-        chatScript.src = '/js/chat.js';
+        chatScript.src = '/js/chat.js?v=' + Date.now();
         document.body.appendChild(chatScript);
     }
 }
