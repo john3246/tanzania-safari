@@ -4,8 +4,9 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadComponent('header', '/includes/header.html', initHeader);
-    loadComponent('footer', '/includes/footer.html', () => {
+    const cb = '?v=' + Date.now();
+    loadComponent('header', '/includes/header.html' + cb, initHeader);
+    loadComponent('footer', '/includes/footer.html' + cb, () => {
         initFooter();
         loadChatScripts();
     });
