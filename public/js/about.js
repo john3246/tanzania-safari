@@ -111,7 +111,7 @@ async function loadAboutContent() {
                             </div>
                             <div class="stat-card">
                                 <div class="stat-number">5,000+</div>
-                                <div class="stat-label">Happy Travelers</div>
+                                <div class="stat-label">Guests Hosted</div>
                             </div>
                             <div class="stat-card">
                                 <div class="stat-number">50+</div>
@@ -209,8 +209,8 @@ async function loadTeamMembers() {
                                         </div>
                                         <div class="team-info">
                                             <h3>${escapeHtml(fullName)}</h3>
-                                            <div class="team-title">${member.guide_id ? 'Professional Safari Guide' : 'Travel Expert'}</div>
-                                            ${member.years_experience ? `<div class="team-experience"><i class="fas fa-calendar-alt"></i> ${member.years_experience}+ years experience</div>` : ''}
+                                            <div class="team-title">${member.guide_id ? 'Safari Specialist' : 'Travel Consultant'}</div>
+                                            ${member.years_experience ? `<div class="team-experience"><i class="fas fa-briefcase"></i> ${member.years_experience}+ Years Experience</div>` : ''}
                                             ${languages.length > 0 ? `
                                                 <div class="team-languages">
                                                     ${languages.slice(0, 3).map(lang => `<span class="language-tag">${escapeHtml(lang)}</span>`).join('')}

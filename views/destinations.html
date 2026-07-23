@@ -56,6 +56,104 @@
   .hero-bg-grid { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
   .hero-bg-img:nth-child(1) { grid-column: span 2; grid-row: span 1; }
 }
+
+/* ── Corporate Revamp Styles ── */
+.corp-dest-card {
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    text-decoration: none;
+    color: var(--text-dark);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid var(--border-light);
+}
+.corp-dest-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+}
+.corp-dest-img {
+    position: relative;
+    height: 240px;
+    overflow: hidden;
+}
+.corp-dest-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+.corp-dest-card:hover .corp-dest-img img {
+    transform: scale(1.08);
+}
+.corp-img-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(4px);
+    color: #fff;
+    font-size: 0.75rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    font-weight: 600;
+}
+.corp-dest-content {
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+.corp-dest-header {
+    margin-bottom: 1rem;
+}
+.corp-dest-header h3 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.35rem;
+    font-family: var(--font-heading);
+    color: #1a1a1a;
+}
+.corp-dest-location {
+    font-size: 0.85rem;
+    color: var(--primary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.corp-dest-desc {
+    font-size: 0.95rem;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+}
+.corp-dest-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1.25rem;
+    border-top: 1px solid #f0f0f0;
+}
+.corp-dest-safaris {
+    font-size: 0.85rem;
+    color: #555;
+}
+.corp-dest-action {
+    font-size: 0.9rem;
+    color: var(--primary);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.corp-dest-card:hover .corp-dest-action i {
+    transform: translateX(4px);
+}
+.corp-dest-action i {
+    transition: transform 0.3s ease;
+}
 </style>
 <section class="page-hero" style="background-image: url('/images/optimized/lake-manyara-national-park.webp');">
   <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.5);"></div>
