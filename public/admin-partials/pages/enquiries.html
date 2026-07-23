@@ -11,3 +11,24 @@
                 </div>
             </div>
 </div>
+<!-- Enquiry Response Modal -->
+<div class=""modal-backdrop"" id=""enqModal"">
+    <div class=""modal"">
+        <div class=""modal-header"">
+            <h3 class=""modal-title"">Respond to Inquiry</h3>
+            <button class=""modal-close"" onclick=""document.getElementById('enqModal').classList.remove('active')"">&times;</button>
+        </div>
+        <div class=""modal-body"">
+            <div id=""enqDetails"" class=""mb-4""></div>
+            <input type=""hidden"" id=""enqRespondId"">
+            <div class=""form-group"">
+                <label class=""form-label"">Your Response</label>
+                <textarea id=""enqResponse"" class=""form-control"" rows=""5"" placeholder=""Type your response here...""></textarea>
+            </div>
+        </div>
+        <div class=""modal-footer"">
+            <button class=""btn btn-outline"" onclick=""document.getElementById('enqModal').classList.remove('active')"">Cancel</button>
+            <button class=""btn btn-primary"" onclick=""sendEnquiryResponse()"">Send Response</button>
+        </div>
+    </div>
+</div>
