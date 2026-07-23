@@ -25,12 +25,6 @@ class LiveChat {
         this.container = document.createElement('div');
         this.container.className = 'chat-widget';
 
-        // Chat Button
-        this.btn = document.createElement('button');
-        this.btn.className = 'chat-button';
-        this.btn.innerHTML = '<i class="fas fa-comment-dots"></i>';
-        this.btn.onclick = () => this.toggleChat();
-
         // Chat Window
         this.window = document.createElement('div');
         this.window.className = 'chat-window';
@@ -56,7 +50,6 @@ class LiveChat {
         `;
 
         this.container.appendChild(this.window);
-        this.container.appendChild(this.btn);
         document.body.appendChild(this.container);
 
         // Events
@@ -69,20 +62,14 @@ class LiveChat {
             if (e.key === 'Enter') this.sendMessage();
         };
 
-        // Override the existing openLiveChatBtn in the social menu to open this new widget
-        const existingFloatBtn = document.getElementById('openLiveChatBtn');
-        if (existingFloatBtn) {
-            existingFloatBtn.onclick = (e) => {
+        // Link to the existing openLiveChatBtn in the social menu
+        this.btn = document.getElementById('openLiveChatBtn');
+        if (this.btn) {
+            this.btn.onclick = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                if (!this.isOpen) this.toggleChat();
+                this.toggleChat();
             };
-        }
-        
-        // Override the main social float to toggle our chat directly
-        const socialFloat = document.querySelector('.social-float');
-        if(socialFloat) {
-             socialFloat.style.display = 'none'; // hide old social float if we replace it entirely, or just keep it
         }
     }
 
@@ -90,18 +77,18 @@ class LiveChat {
         this.isOpen = !this.isOpen;
         if (this.isOpen) {
             this.window.classList.add('active');
-            this.btn.innerHTML = '<i class="fas fa-times"></i>';
             if (!this.socket) this.connectSocket();
             setTimeout(() => this.input.focus(), 300);
             this.scrollToBottom();
             
             // Remove unread state
             this.hasUnread = false;
-            this.btn.style.boxShadow = '';
-            this.btn.classList.remove('pulse');
+            if (this.btn) {
+                this.btn.style.boxShadow = '';
+                this.btn.innerHTML = '<i class="fas fa-headset"></i>';
+            }
         } else {
             this.window.classList.remove('active');
-            this.btn.innerHTML = '<i class="fas fa-comment-dots"></i>';
         }
     }
 
@@ -188,11 +175,6 @@ function initLiveChatWidget() {
         link.href = '/css/chat.css';
         document.head.appendChild(link);
     }
-
-    // Hide the old social float to avoid clutter if requested "via the message floating button" as the primary chat.
-    // The previous social-float has a chat icon too, so we'll just use our new clean corporate one instead.
-    const oldFloat = document.querySelector('.social-float');
-    if (oldFloat) oldFloat.style.display = 'none';
 
     window.liveChat = new LiveChat();
 }
