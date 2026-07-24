@@ -53,10 +53,52 @@ function renderBookingDetails() {
 
     // Render Communications
     renderTimeline();
+    
+    // Render Financials
+    renderFinancials();
 
     // Toggle Action Buttons based on status
     document.getElementById('btnApproveBooking').style.display = b.status_name === 'Confirmed' ? 'none' : 'flex';
     document.getElementById('btnRejectBooking').style.display = (b.status_name === 'Rejected' || b.status_name === 'Cancelled') ? 'none' : 'flex';
+}
+
+function formatMoney(amount) {
+    return '$' + parseFloat(amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function renderFinancials() {
+    const b = currentBookingData;
+    if (!b) return;
+
+    const total = parseFloat(b.total_amount || 0);
+    const discount = parseFloat(b.discount_amount || 0);
+    const paid = parseFloat(b.paid_amount || 0);
+    const balance = Math.max(0, total - discount - paid);
+
+    document.getElementById('detailTotalAmount').innerText = formatMoney(total);
+    document.getElementById('detailDiscountAmount').innerText = '-' + formatMoney(discount);
+    document.getElementById('detailPaidAmount').innerText = formatMoney(paid);
+    document.getElementById('detailBalanceDue').innerText = formatMoney(balance);
+
+    const payList = document.getElementById('paymentHistoryList');
+    payList.innerHTML = '';
+    
+    const payments = b.payments || [];
+    if (payments.length === 0) {
+        payList.innerHTML = '<li class="p-5 text-center text-gray-400 text-sm italic">No payments recorded yet.</li>';
+    } else {
+        payments.forEach(p => {
+            payList.innerHTML += `
+                <li class="p-4 hover:bg-gray-50 transition-colors flex justify-between items-center group">
+                    <div>
+                        <p class="text-sm font-bold text-gray-900">${formatMoney(p.amount)}</p>
+                        <p class="text-xs text-gray-500">${new Date(p.payment_date).toLocaleDateString()} &middot; ${p.payment_method}</p>
+                    </div>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full border border-emerald-100">${p.payment_status}</span>
+                </li>
+            `;
+        });
+    }
 }
 
 function renderTimeline() {
@@ -237,6 +279,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
             btnAddNote.innerHTML = '<i class="fa-solid fa-thumbtack"></i> Save Note';
             btnAddNote.disabled = false;
+        };
+    }
+
+    const btnRecordPayment = document.getElementById('btnRecordPayment');
+    if (btnRecordPayment) {
+        btnRecordPayment.onclick = async () => {
+            const amountStr = prompt('Enter payment amount to record (e.g. 500.00):');
+            if(!amountStr) return;
+            const amount = parseFloat(amountStr);
+            if(isNaN(amount) || amount <= 0) {
+                showToast('Invalid amount', 'error');
+                return;
+            }
+
+            const method = prompt('Enter payment method (e.g. credit_card, bank_transfer):', 'credit_card');
+            if(!method) return;
+
+            const res = await apiRequest('POST', `/bookings/${window.currentBookingId}/payments`, { amount, payment_method: method });
+
+            if(res.success) {
+                showToast('Payment recorded successfully', 'success');
+                loadBookingDetails();
+            } else {
+                showToast(res.message || 'Failed to record payment', 'error');
+            }
         };
     }
 });

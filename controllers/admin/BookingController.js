@@ -94,6 +94,36 @@ class BookingController {
             res.status(500).json({ success: false, message: error.message });
         }
     }
+
+    async addPayment(req, res) {
+        try {
+            const { amount, payment_method } = req.body;
+            if (!amount || amount <= 0) {
+                return res.status(400).json({ success: false, message: 'Invalid payment amount' });
+            }
+
+            const paymentRepository = require('../../repositories/PaymentRepository');
+            const db = require('../../config/db');
+
+            // Insert payment record
+            const comm = await paymentRepository.create({
+                booking_id: req.params.id,
+                amount: amount,
+                payment_method: payment_method || 'manual',
+                payment_status: 'completed'
+            });
+
+            // Update booking paid_amount
+            await db.query(`UPDATE bookings SET paid_amount = COALESCE(paid_amount, 0) + $1 WHERE booking_id = $2`, [amount, req.params.id]);
+
+            // Log communication
+            await bookingService.logCommunication(req.params.id, 'system', 'Payment Recorded', `A payment of $${amount} was recorded via ${payment_method || 'manual'}.`, 'internal', req.user?.id);
+
+            res.json({ success: true, data: comm, message: 'Payment recorded successfully' });
+        } catch (error) {
+            res.status(500).json({ success: false, message: error.message });
+        }
+    }
 }
 
 module.exports = new BookingController();

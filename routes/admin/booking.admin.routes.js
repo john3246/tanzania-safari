@@ -11,5 +11,6 @@ router.get('/:id', requirePermission('bookings.view'), bookingController.getBook
 router.put('/:id/status', requirePermission('bookings.edit'), bookingController.updateStatus);
 router.post('/:id/reply', requirePermission('bookings.edit'), bookingController.replyToBooking);
 router.post('/:id/notes', requirePermission('bookings.view'), bookingController.addNote);
+router.post('/:id/payments', requirePermission('bookings.edit'), bookingController.addPayment);
 
 module.exports = router;

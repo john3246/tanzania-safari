@@ -1,6 +1,7 @@
 const BaseService = require('./BaseService');
 const bookingRepository = require('../repositories/BookingRepository');
 const communicationRepository = require('../repositories/CommunicationRepository');
+const paymentRepository = require('../repositories/PaymentRepository');
 const emailService = require('./email');
 
 class BookingService extends BaseService {
@@ -17,10 +18,12 @@ class BookingService extends BaseService {
         if (!booking) return null;
 
         const communications = await communicationRepository.getCommunicationsByBookingId(bookingId);
+        const payments = await paymentRepository.getPaymentsByBookingId(bookingId);
 
         return {
             ...booking,
-            communications
+            communications,
+            payments
         };
     }
 
