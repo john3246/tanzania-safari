@@ -1,4 +1,4 @@
-// ── Executive Corporate Media Manager (Direct Copy Path + Copy Slug + Edit Name + Delete) ──
+// ── Executive Corporate Media Manager (PATH COPY FIRST + Edit Name + Delete) ──
 
 window.MediaManager = {
     files: [],
@@ -191,50 +191,49 @@ window.MediaManager = {
                     <!-- Card Details & Corporate Actions Bar -->
                     <div class="p-4 bg-white space-y-3 flex-1 flex flex-col justify-between border-t-2 border-slate-200">
                         <div>
-                            <div class="flex items-center justify-between gap-2 mb-1.5">
+                            <div class="flex items-center justify-between gap-2 mb-1">
                                 <p class="text-slate-900 text-xs font-black truncate" title="${file.filename}">${file.filename}</p>
-                                <span class="bg-slate-200 text-slate-900 text-[10px] font-black px-2 py-0.5 rounded">${sizeMB}</span>
+                                <span class="bg-slate-200 text-slate-900 text-[10px] font-black px-2 py-0.5 rounded shrink-0">${sizeMB}</span>
                             </div>
                             
-                            <!-- Copyable Path Banner (PROMINENT) -->
+                            <!-- PRIMARY COPY ELEMENT: MEDIA PATH BANNER -->
                             <div class="my-2">
                                 <button 
-                                    onclick="MediaManager.copyText('${encodedUrl}', 'Media Path copied to clipboard!', event)"
-                                    class="w-full bg-blue-50 hover:bg-blue-100 border-2 border-blue-400 text-blue-950 font-mono font-black text-[11px] px-3 py-2 rounded-xl text-left flex items-center justify-between gap-1.5 transition-all shadow-sm cursor-pointer group"
-                                    title="Click to copy image path: ${mediaPath}"
+                                    onclick="MediaManager.copyText('${mediaPath}', 'Path URL copied to clipboard!', event)"
+                                    class="w-full bg-blue-700 hover:bg-blue-800 text-white font-mono font-black text-[11px] p-2.5 rounded-xl text-left flex items-center justify-between gap-2 transition-all shadow-md cursor-pointer group"
+                                    title="Click to copy media path: ${mediaPath}"
                                 >
                                     <div class="truncate">
-                                        <span class="text-[9px] text-blue-700 font-extrabold uppercase block tracking-wider">Path (Click to Copy):</span>
-                                        <span class="truncate block text-slate-900 font-bold">${mediaPath}</span>
+                                        <span class="text-[9px] text-blue-200 font-extrabold uppercase block tracking-wider">CLICK TO COPY PATH:</span>
+                                        <span class="truncate block text-white font-black">${mediaPath}</span>
                                     </div>
-                                    <i class="fa-solid fa-copy text-sm text-blue-700 group-hover:scale-110 transition-transform"></i>
+                                    <i class="fa-solid fa-copy text-sm text-white group-hover:scale-110 transition-transform"></i>
                                 </button>
                             </div>
 
-                            <!-- Slug Badge Info -->
-                            <div class="my-1.5 flex items-center justify-between text-[11px] bg-slate-100 p-2 rounded-lg border border-slate-200">
-                                <span class="font-bold text-slate-600">Slug:</span>
-                                <span class="font-mono font-black text-purple-900 truncate max-w-[150px]">${fileSlug}</span>
+                            <!-- Slug Info (Secondary) -->
+                            <div class="my-1 flex items-center justify-between text-[11px] text-slate-600 px-1 font-bold">
+                                <span>Slug:</span>
+                                <span class="font-mono text-purple-900 font-extrabold truncate max-w-[150px]">${fileSlug}</span>
                             </div>
                         </div>
 
-                        <!-- Solid High Visibility Corporate Action Buttons -->
+                        <!-- Solid Corporate Action Buttons Bar -->
                         <div class="grid grid-cols-3 gap-1.5 pt-2 border-t-2 border-slate-200">
                             <!-- Button 1: Copy Path -->
                             <button 
-                                data-url="${encodedUrl}" 
-                                onclick="MediaManager.copyText(this.dataset.url, 'Image Path copied!', event)" 
+                                onclick="MediaManager.copyText('${mediaPath}', 'Image Path copied!', event)" 
                                 class="bg-blue-700 hover:bg-blue-800 text-white font-black text-[11px] py-2 rounded-xl flex items-center justify-center gap-1 shadow transition-all active:scale-95 cursor-pointer uppercase tracking-wider"
-                                title="Copy relative media path"
+                                title="Copy media path: ${mediaPath}"
                             >
-                                <i class="fa-solid fa-link text-[10px]"></i> PATH
+                                <i class="fa-solid fa-link text-[10px]"></i> COPY PATH
                             </button>
                             
-                            <!-- Button 2: Edit Name & Slug -->
+                            <!-- Button 2: Edit Details -->
                             <button 
                                 onclick="MediaManager.editMedia('${file.id}', '${encodedUrl}', '${file.filename.replace(/'/g, "\\'")}', '${fileSlug}', '${(file.alt_text || '').replace(/'/g, "\\'")}', event)"
                                 class="bg-emerald-700 hover:bg-emerald-800 text-white font-black text-[11px] py-2 rounded-xl flex items-center justify-center gap-1 shadow transition-all active:scale-95 cursor-pointer uppercase tracking-wider"
-                                title="Edit Filename & Unique Slug"
+                                title="Edit Filename & Slug"
                             >
                                 <i class="fa-solid fa-pen-to-square text-[10px]"></i> EDIT
                             </button>
@@ -290,8 +289,7 @@ window.MediaManager = {
 
     copyText: function(text, successMsg, e) {
         if (e) e.stopPropagation();
-        const absoluteText = (text.startsWith('/') && !text.startsWith('http')) ? window.location.origin + text : text;
-        navigator.clipboard.writeText(absoluteText).then(() => {
+        navigator.clipboard.writeText(text).then(() => {
             if (typeof showToast === 'function') showToast(successMsg || 'Path copied to clipboard!', 'success');
         }).catch(err => {
             console.error('Failed to copy: ', err);
