@@ -186,3 +186,5 @@
 {"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-07-24 16:32:22"}
 {"level":"error","message":{"errors":["Invalid recipient email"],"event":"email_validation_failed"},"service":"tanzania-safari","timestamp":"2026-07-24 16:32:25"}
 {"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-07-24 20:21:28"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-07-24 22:15:01"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-07-24 22:16:03"}

@@ -113,14 +113,14 @@ router.get('/active', requirePermission('tours.view'), tourCMSController.getActi
 // GET /api/admin/tours/featured - Get featured tours
 router.get('/featured', requirePermission('tours.view'), tourCMSController.getFeatured);
 
+// GET /api/admin/tours/slug/:slug - Get tour by slug
+router.get('/slug/:slug', requirePermission('tours.view'), tourCMSController.getBySlug);
+
 // POST /api/admin/tours - Create tour
 router.post('/', requirePermission('tours.create'), validate(createTourSchema), tourCMSController.create);
 
 // GET /api/admin/tours/:id - Get tour by ID
 router.get('/:id', requirePermission('tours.view'), tourCMSController.getById);
-
-// GET /api/admin/tours/slug/:slug - Get tour by slug
-router.get('/slug/:slug', requirePermission('tours.view'), tourCMSController.getBySlug);
 
 // PUT /api/admin/tours/:id - Update tour
 router.put('/:id', requirePermission('tours.edit'), validate(updateTourSchema), tourCMSController.update);
