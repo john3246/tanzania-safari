@@ -1,28 +1,25 @@
 /* 
- * Premium Notion/Linear-Inspired Styles for Safari CMS Admin 
+ * Executive Corporate CMS Admin Design System 
+ * Solid Colors • Ultra High Contrast • Zero Overlaps
  */
 
 :root {
-    --bg-main: #fcfcfc;
+    --bg-main: #f8fafc;
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     --sidebar-width: 16rem;
     --sidebar-collapsed-width: 4rem;
 }
 
-.dark {
-    --bg-main: #0f172a;
-}
-
 body {
     font-family: var(--font-sans);
     background-color: var(--bg-main);
+    color: #0f172a;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
-    transition: background-color 0.3s ease;
 }
 
-/* Page Toggling (Crucial for JS Navigation) */
+/* Page Toggling (Crucial for SPA Navigation) */
 .page {
     display: none !important;
 }
@@ -33,12 +30,12 @@ body {
     display: flex !important;
 }
 
-/* Modal Overlay (Crucial for Modal Javascript) */
+/* Modal Overlay System */
 .modal-overlay {
     display: none !important;
     position: fixed;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(15, 23, 42, 0.85);
     backdrop-filter: blur(4px);
     z-index: 50;
     align-items: center;
@@ -50,26 +47,176 @@ body {
     display: flex !important;
 }
 
+/* ── Absolute Corporate Color Hierarchy ── */
+
+/* 1. Global Card & Container Styling */
+.card, .page-card, .bg-white {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    border-color: #cbd5e1 !important;
+}
+
+/* 2. Text Visibility Enforcement */
+h1, h2, h3, h4, h5, h6 {
+    color: #0f172a !important;
+    font-weight: 900 !important;
+}
+
+p, span, label, td, th {
+    color: #0f172a;
+}
+
+.text-white h1, .text-white h2, .text-white h3, .text-white p, .text-white span, .text-white label {
+    color: #ffffff !important;
+}
+
+/* 3. Solid Action Buttons System */
+button, .btn {
+    font-family: var(--font-sans);
+    font-weight: 800;
+    letter-spacing: 0.025em;
+    transition: all 0.15s ease-in-out;
+}
+
+/* Primary Corporate Action Button (Emerald/Corporate Green) */
+.btn-primary, button[type="submit"], .bg-emerald-600, .bg-\[\#075e54\] {
+    background-color: #075e54 !important;
+    color: #ffffff !important;
+    border: 1px solid #043933 !important;
+    font-weight: 900 !important;
+}
+.btn-primary:hover, button[type="submit"]:hover {
+    background-color: #054840 !important;
+}
+
+/* Blue Action Buttons (Copy / Link / Navigation) */
+.btn-blue, .bg-blue-700, .bg-blue-600 {
+    background-color: #1d4ed8 !important;
+    color: #ffffff !important;
+    border: 1px solid #1e40af !important;
+    font-weight: 900 !important;
+}
+.btn-blue:hover, .bg-blue-700:hover {
+    background-color: #1e40af !important;
+}
+
+/* Green Edit Buttons */
+.btn-emerald, .bg-emerald-700 {
+    background-color: #047857 !important;
+    color: #ffffff !important;
+    border: 1px solid #065f46 !important;
+    font-weight: 900 !important;
+}
+.btn-emerald:hover, .bg-emerald-700:hover {
+    background-color: #065f46 !important;
+}
+
+/* Red Danger Buttons (Delete / Cancel) */
+.btn-danger, .bg-red-600, .bg-red-700 {
+    background-color: #dc2626 !important;
+    color: #ffffff !important;
+    border: 1px solid #991b1b !important;
+    font-weight: 900 !important;
+}
+.btn-danger:hover, .bg-red-600:hover {
+    background-color: #b91c1c !important;
+}
+
+/* Purple Badges & Videos */
+.bg-purple-900, .bg-purple-800 {
+    background-color: #581c87 !important;
+    color: #ffffff !important;
+    font-weight: 900 !important;
+}
+
+/* Slate Dark Buttons */
+.bg-slate-900 {
+    background-color: #0f172a !important;
+    color: #ffffff !important;
+    font-weight: 900 !important;
+}
+
+/* 4. Filter Chips & Tabs */
+.filter-btn, .media-filter-btn, .enq-filter-btn {
+    border-radius: 0.75rem;
+    font-weight: 800;
+    padding: 0.5rem 1rem;
+}
+.filter-btn.active, .media-filter-btn.active, .enq-filter-btn.active {
+    background-color: #0f172a !important;
+    color: #ffffff !important;
+    border: 2px solid #0f172a !important;
+}
+
+/* 5. Solid Table Design */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+thead tr {
+    background-color: #0f172a !important;
+    color: #ffffff !important;
+}
+thead th {
+    color: #ffffff !important;
+    font-weight: 900 !important;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    padding: 0.875rem 1rem;
+}
+tbody tr {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+}
+tbody tr:hover {
+    background-color: #f8fafc;
+}
+tbody td {
+    padding: 0.875rem 1rem;
+    color: #0f172a !important;
+    font-weight: 700;
+    font-size: 0.8125rem;
+}
+
+/* 6. High Contrast Form Controls */
+input[type="text"], input[type="email"], input[type="password"], input[type="number"], select, textarea {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    border: 2px solid #94a3b8 !important;
+    border-radius: 0.75rem;
+    font-weight: 700;
+}
+input:focus, select:focus, textarea:focus {
+    border-color: #075e54 !important;
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(7, 94, 84, 0.15) !important;
+}
+
 /* Status Badge Styles mapped to JS generated elements */
 .status-badge {
     display: inline-flex;
     align-items: center;
-    padding: 0.125rem 0.5rem;
+    padding: 0.25rem 0.625rem;
     border-radius: 9999px;
     font-size: 0.75rem;
-    font-weight: 500;
+    font-weight: 900;
+    text-transform: uppercase;
 }
 .status-pending, .status-new {
-    background-color: #fef3c7;
-    color: #d97706;
+    background-color: #fef3c7 !important;
+    color: #92400e !important;
+    border: 1px solid #f59e0b !important;
 }
-.status-active, .status-confirmed, .status-completed {
-    background-color: #dcfce7;
-    color: #16a34a;
+.status-active, .status-confirmed, .status-completed, .status-responded {
+    background-color: #dcfce7 !important;
+    color: #166534 !important;
+    border: 1px solid #22c55e !important;
 }
 .status-cancelled, .status-rejected {
-    background-color: #fee2e2;
-    color: #dc2626;
+    background-color: #fee2e2 !important;
+    color: #991b1b !important;
+    border: 1px solid #ef4444 !important;
 }
 
 /* Toast Notification Styles */
@@ -83,227 +230,21 @@ body {
     gap: 0.75rem;
 }
 .toast {
-    background-color: #ffffff;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    border-radius: 8px;
+    background-color: #0f172a !important;
+    color: #ffffff !important;
+    border: 2px solid #334155;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
     padding: 1rem;
     display: flex;
     align-items: flex-start;
     gap: 0.75rem;
     width: 320px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    transform: translateX(0);
-    opacity: 1;
+    font-weight: 800;
 }
 .toast-success {
-    border-left: 4px solid #16a34a;
+    border-left: 6px solid #22c55e !important;
 }
 .toast-error {
-    border-left: 4px solid #dc2626;
-}
-.toast-icon {
-    font-size: 1.25rem;
-}
-.toast-success .toast-icon {
-    color: #16a34a;
-}
-.toast-error .toast-icon {
-    color: #dc2626;
-}
-.toast-content {
-    flex: 1;
-}
-.toast-title {
-    font-weight: 600;
-    font-size: 0.875rem;
-    color: #1e293b;
-}
-.toast-msg {
-    font-size: 0.875rem;
-    color: #64748b;
-    margin-top: 0.125rem;
-}
-
-/* Collapsible Sidebar Styles */
-#sidebar.collapsed {
-    width: var(--sidebar-collapsed-width);
-}
-
-#sidebar.collapsed .sidebar-logo,
-#sidebar.collapsed .nav-text,
-#sidebar.collapsed .nav-label,
-#sidebar.collapsed #userName,
-#sidebar.collapsed #sidebarAvatarImg {
-    display: none;
-}
-
-#sidebar.collapsed .nav-icon {
-    margin-right: 0;
-}
-
-#sidebar.collapsed .nav-item {
-    justify-content: center;
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
-}
-
-#sidebar.collapsed #sidebarCollapse i {
-    transform: rotate(180deg);
-}
-
-#sidebar.collapsed .sidebar-logo::after {
-    content: 'S';
-    display: block;
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: #c25b2a;
-}
-
-#sidebar.collapsed .sidebar-logo {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Dark Mode Sidebar Styles */
-.dark #sidebar {
-    background-color: #1e293b;
-    border-color: #334155;
-}
-
-.dark .nav-item {
-    color: #94a3b8;
-}
-
-.dark .nav-item:hover {
-    background-color: #334155;
-    color: #e2e8f0;
-}
-
-.dark .nav-item.active {
-    background-color: rgba(194, 91, 42, 0.1);
-    color: #c25b2a;
-}
-
-.dark .nav-label {
-    color: #64748b;
-}
-
-.dark #userName {
-    color: #e2e8f0;
-}
-
-.dark .text-slate-400 {
-    color: #64748b;
-}
-
-/* Breadcrumb Styles */
-.breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.875rem;
-    color: #64748b;
-}
-
-.breadcrumb-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.breadcrumb-item:not(:last-child)::after {
-    content: '/';
-    color: #cbd5e1;
-}
-
-.breadcrumb-item a {
-    color: #64748b;
-    text-decoration: none;
-    transition: color 0.15s;
-}
-
-.breadcrumb-item a:hover {
-    color: #c25b2a;
-}
-
-.breadcrumb-item.active {
-    color: #1e293b;
-    font-weight: 500;
-}
-
-/* Tab Content Styles */
-.tab-content {
-    display: none;
-}
-.tab-content.block {
-    display: block;
-}
-
-.tab-btn {
-    color: #64748b;
-    border-bottom: 2px solid transparent;
-    transition: all 0.15s;
-}
-.tab-btn:hover {
-    color: #475569;
-}
-.tab-btn.active {
-    color: #c25b2a;
-    border-bottom-color: #c25b2a;
-}
-
-/* Mobile Sidebar Responsiveness */
-#sidebar.open {
-    transform: translateX(0) !important;
-}
-
-#sidebarBackdrop.active {
-    display: block !important;
-    opacity: 1 !important;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.animate-fade-in {
-    animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-#sidebarBackdrop.active {
-    display: block !important;
-    opacity: 1 !important;
-}
-
-/* Custom Scrollbar for a premium feel */
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
-}
-.dark ::-webkit-scrollbar-thumb {
-    background: #475569;
-}
-.dark ::-webkit-scrollbar-thumb:hover {
-    background: #64748b;
-}
-
-/* Responsive Table Wrapper */
-.table-responsive {
-    display: block;
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    border-left: 6px solid #ef4444 !important;
 }
