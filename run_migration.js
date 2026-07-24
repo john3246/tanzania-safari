@@ -6,25 +6,30 @@ async function migrate() {
             CREATE TABLE IF NOT EXISTS booking_communications (
                 communication_id SERIAL PRIMARY KEY,
                 booking_id UUID REFERENCES bookings(booking_id) ON DELETE CASCADE,
-                type VARCHAR(50) NOT NULL, -- e.g., 'email', 'note', 'status_change', 'system'
+                type VARCHAR(50) NOT NULL,
                 subject VARCHAR(255),
                 content TEXT NOT NULL,
-                direction VARCHAR(20), -- 'inbound', 'outbound', 'internal'
-                sender_id UUID REFERENCES users(user_id) ON DELETE SET NULL, -- Null if system generated
+                direction VARCHAR(20),
+                sender_id UUID REFERENCES users(user_id) ON DELETE SET NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
             
-            -- Add missing columns to bookings for financials if needed
             ALTER TABLE bookings ADD COLUMN IF NOT EXISTS total_amount DECIMAL(10, 2) DEFAULT 0.00;
             ALTER TABLE bookings ADD COLUMN IF NOT EXISTS paid_amount DECIMAL(10, 2) DEFAULT 0.00;
             ALTER TABLE bookings ADD COLUMN IF NOT EXISTS discount_amount DECIMAL(10, 2) DEFAULT 0.00;
+
+            ALTER TABLE contact_enquiries ADD COLUMN IF NOT EXISTS responses JSONB DEFAULT '[]'::jsonb;
+            ALTER TABLE contact_enquiries ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+            ALTER TABLE media_library ADD COLUMN IF NOT EXISTS slug VARCHAR(255);
         `);
-        console.log("Migration successful!");
-        process.exit(0);
+        console.log("Database migrations applied successfully!");
     } catch (err) {
-        console.error("Migration failed:", err);
-        process.exit(1);
+        console.error("Migration warning/failed:", err.message);
     }
 }
 
-migrate();
+module.exports = migrate;
+
+if (require.main === module) {
+    migrate().then(() => process.exit(0));
+}

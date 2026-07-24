@@ -345,6 +345,14 @@ async function startServer() {
       logger.warn({ event: 'smtp_startup_failed' }, 'SMTP connection failed on startup, but server will continue');
     }
 
+    // Auto-run DB migrations on startup (crucial for Render production DB)
+    try {
+      const runMigrations = require('./run_migration');
+      await runMigrations();
+    } catch (migErr) {
+      logger.warn({ event: 'migration_warning', error: migErr.message }, 'Migration skipped or failed');
+    }
+
     // Validate environment
     const envValidation = emailService.validateEnvironment();
     if (!envValidation.valid) {

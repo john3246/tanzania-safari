@@ -185,3 +185,4 @@
 {"level":"info","message":{"environment":"development","event":"server_started","port":"3000","smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-07-21 22:36:39"}
 {"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-07-24 16:32:22"}
 {"level":"error","message":{"errors":["Invalid recipient email"],"event":"email_validation_failed"},"service":"tanzania-safari","timestamp":"2026-07-24 16:32:25"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-07-24 20:21:28"}

@@ -1,171 +1,155 @@
-<div id="page-enquiries" class="page bg-[#f0f2f5] min-h-[calc(100vh-65px)] flex flex-col font-sans">
+<div id="page-enquiries" class="page bg-slate-100 p-6 min-h-screen font-sans text-slate-900">
     
-    <!-- WhatsApp PC Outer Container -->
-    <div class="flex-1 flex h-[calc(100vh-65px)] max-h-[calc(100vh-65px)] overflow-hidden shadow-2xl bg-white border-t border-slate-200">
-        
-        <!-- Left Sidebar: WhatsApp Conversation List -->
-        <div class="w-80 md:w-96 border-r border-slate-200 bg-white flex flex-col h-full shrink-0">
-            
-            <!-- Sidebar Header -->
-            <div class="px-4 py-3 bg-[#f0f2f5] border-b border-slate-200 flex items-center justify-between shrink-0">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-[#075e54] text-white flex items-center justify-center font-bold text-lg shadow-sm">
-                        <i class="fa-solid fa-whatsapp text-xl"></i>
-                    </div>
-                    <div>
-                        <h2 class="font-bold text-slate-800 text-base leading-tight">Inquiries & Emails</h2>
-                        <p class="text-[11px] text-slate-500 font-medium">WhatsApp PC Interface</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="bg-[#25d366] text-white text-xs px-2.5 py-0.5 rounded-full font-extrabold shadow-sm" id="enqCount">0</span>
-                    <button onclick="loadEnquiries()" class="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-200/60 rounded-full transition-all" title="Refresh Inbox">
-                        <i class="fa-solid fa-rotate text-sm"></i>
-                    </button>
-                </div>
+    <!-- Top Corporate Header -->
+    <div class="bg-slate-900 text-white p-5 rounded-2xl shadow-md mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-xl bg-[#25d366] text-slate-950 flex items-center justify-center font-black text-2xl shadow-sm">
+                <i class="fa-solid fa-comments"></i>
             </div>
+            <div>
+                <h1 class="text-2xl font-black tracking-tight text-white">Customer Inquiries & Communications</h1>
+                <p class="text-xs text-slate-300 font-medium mt-0.5">Corporate WhatsApp Workspace • Direct Email Integration</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <span class="bg-[#25d366] text-slate-950 font-black text-xs px-3.5 py-1.5 rounded-full shadow-sm uppercase tracking-wider" id="enqCount">0 Inquiries</span>
+            <button onclick="loadEnquiries()" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold px-4 py-2 rounded-xl border border-slate-700 transition-all flex items-center gap-2">
+                <i class="fa-solid fa-rotate"></i> Refresh
+            </button>
+        </div>
+    </div>
 
-            <!-- Search & Filters -->
-            <div class="p-3 bg-white border-b border-slate-100 space-y-2 shrink-0">
+    <!-- Corporate 2-Panel Outer Container -->
+    <div class="bg-white rounded-2xl shadow-lg border-2 border-slate-200 overflow-hidden flex flex-col lg:flex-row min-h-[650px]">
+        
+        <!-- Left Panel: Conversations List -->
+        <div class="w-full lg:w-96 border-b lg:border-b-0 lg:border-r-2 border-slate-200 bg-slate-50 flex flex-col shrink-0">
+            
+            <!-- Search & Filter Controls -->
+            <div class="p-4 bg-white border-b-2 border-slate-200 space-y-3">
                 <div class="relative">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
                     <input 
                         type="text" 
                         id="enqSearchInput" 
-                        placeholder="Search or start new response..." 
-                        class="w-full pl-10 pr-4 py-2 bg-[#f0f2f5] border border-transparent rounded-lg text-xs font-medium focus:bg-white focus:border-[#00a884] focus:outline-none transition-all text-slate-800 placeholder-slate-400"
+                        placeholder="Search by customer name or email..." 
+                        class="w-full pl-10 pr-4 py-2.5 bg-slate-100 border-2 border-slate-300 rounded-xl text-xs font-bold text-slate-900 placeholder-slate-500 focus:bg-white focus:border-[#075e54] focus:outline-none transition-all"
                         onkeyup="filterEnquiriesList()"
                     />
                 </div>
+                
                 <!-- Filter Pills -->
-                <div class="flex items-center gap-1.5 pt-1 overflow-x-auto no-scrollbar">
-                    <button onclick="setEnqFilter('all')" class="enq-filter-btn active text-[11px] font-bold px-3 py-1 rounded-full bg-[#e7fce3] text-[#075e54] border border-[#25d366]/30 transition-all" data-filter="all">All</button>
-                    <button onclick="setEnqFilter('new')" class="enq-filter-btn text-[11px] font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all" data-filter="new">New</button>
-                    <button onclick="setEnqFilter('in progress')" class="enq-filter-btn text-[11px] font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all" data-filter="in progress">In Progress</button>
-                    <button onclick="setEnqFilter('responded')" class="enq-filter-btn text-[11px] font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all" data-filter="responded">Responded</button>
+                <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
+                    <button onclick="setEnqFilter('all')" class="enq-filter-btn active text-xs font-extrabold px-3 py-1.5 rounded-lg bg-[#075e54] text-white border border-[#075e54] transition-all shadow-sm" data-filter="all">ALL</button>
+                    <button onclick="setEnqFilter('new')" class="enq-filter-btn text-xs font-extrabold px-3 py-1.5 rounded-lg bg-slate-200 text-slate-800 hover:bg-slate-300 border border-slate-300 transition-all" data-filter="new">NEW</button>
+                    <button onclick="setEnqFilter('in progress')" class="enq-filter-btn text-xs font-extrabold px-3 py-1.5 rounded-lg bg-slate-200 text-slate-800 hover:bg-slate-300 border border-slate-300 transition-all" data-filter="in progress">IN PROGRESS</button>
+                    <button onclick="setEnqFilter('responded')" class="enq-filter-btn text-xs font-extrabold px-3 py-1.5 rounded-lg bg-slate-200 text-slate-800 hover:bg-slate-300 border border-slate-300 transition-all" data-filter="responded">RESPONDED</button>
                 </div>
             </div>
 
-            <!-- Conversation List Items -->
-            <div class="flex-1 overflow-y-auto divide-y divide-slate-100" id="enqSidebarList">
-                <!-- Sidebar items injected via JS -->
+            <!-- Conversation Items Sidebar Container -->
+            <div class="flex-1 overflow-y-auto divide-y-2 divide-slate-100 max-h-[560px]" id="enqSidebarList">
+                <!-- Injected via JS -->
             </div>
         </div>
 
-        <!-- Right Main: WhatsApp Chat Window -->
-        <div class="flex-1 bg-[#efeae2] flex flex-col h-full overflow-hidden relative" style="background-image: radial-gradient(#cbd5e1 0.75px, transparent 0.75px); background-size: 16px 16px;">
+        <!-- Right Panel: Conversation Details & Reply Composer -->
+        <div class="flex-1 bg-slate-100 flex flex-col min-h-[600px] relative">
             
-            <!-- Empty Selection State -->
-            <div id="enqEmptyState" class="absolute inset-0 flex flex-col items-center justify-center text-slate-500 bg-[#f0f2f5] z-20 p-8 text-center">
-                <div class="w-24 h-24 rounded-full bg-[#e7fce3] text-[#075e54] flex items-center justify-center mb-6 shadow-md border-4 border-white animate-pulse">
-                    <i class="fa-solid fa-comments text-5xl"></i>
+            <!-- Empty State -->
+            <div id="enqEmptyState" class="absolute inset-0 flex flex-col items-center justify-center text-slate-500 bg-white z-20 p-8 text-center">
+                <div class="w-20 h-20 rounded-2xl bg-emerald-100 text-[#075e54] flex items-center justify-center mb-4 shadow-sm border-2 border-emerald-200">
+                    <i class="fa-solid fa-comments text-4xl"></i>
                 </div>
-                <h3 class="text-2xl font-bold text-slate-800 mb-2">WhatsApp Inquiry Workspace</h3>
-                <p class="text-sm text-slate-500 max-w-md leading-relaxed">Select a customer inquiry from the left panel to open the conversation, review booking details, and reply directly via email.</p>
-                <div class="mt-6 flex items-center gap-2 text-xs font-semibold text-slate-400 bg-white px-4 py-2 rounded-full border border-slate-200 shadow-sm">
-                    <i class="fa-solid fa-lock text-[#00a884]"></i> End-to-end synced with Email Engine
-                </div>
+                <h3 class="text-2xl font-black text-slate-900 mb-2">No Inquiry Selected</h3>
+                <p class="text-sm font-semibold text-slate-600 max-w-md">Click any customer inquiry from the left panel to review message history and reply directly via email.</p>
             </div>
 
-            <!-- Active Chat Interface -->
-            <div id="enqDetailView" class="hidden flex-1 flex flex-col h-full relative z-10">
+            <!-- Active Inquiry View -->
+            <div id="enqDetailView" class="hidden flex-1 flex flex-col h-full bg-slate-100">
                 
-                <!-- WhatsApp Chat Header -->
-                <div class="px-6 py-3 bg-[#f0f2f5] border-b border-slate-200 flex items-center justify-between shrink-0 shadow-sm">
-                    <div class="flex items-center gap-3 min-w-0">
-                        <div class="w-11 h-11 rounded-full bg-[#075e54] text-white flex items-center justify-center font-bold text-lg shrink-0 shadow-inner uppercase" id="enqDetailAvatar">
+                <!-- Detail Header -->
+                <div class="p-4 bg-white border-b-2 border-slate-200 flex flex-wrap items-center justify-between gap-4 shrink-0 shadow-sm">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-12 h-12 rounded-xl bg-[#075e54] text-white flex items-center justify-center font-black text-xl uppercase shadow-md shrink-0" id="enqDetailAvatar">
                             A
                         </div>
-                        <div class="min-w-0">
+                        <div>
                             <div class="flex items-center gap-2">
-                                <h3 class="font-bold text-slate-900 text-base truncate" id="enqDetailName">Customer Name</h3>
-                                <span id="enqDetailStatus" class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-emerald-100 text-emerald-800">New</span>
+                                <h3 class="font-black text-slate-900 text-lg" id="enqDetailName">Customer Name</h3>
+                                <span id="enqDetailStatus" class="px-3 py-1 rounded-md text-xs font-black uppercase tracking-wider bg-emerald-600 text-white shadow-sm">New</span>
                             </div>
-                            <div class="flex items-center gap-3 text-xs text-slate-500 font-medium truncate mt-0.5">
-                                <a href="#" id="enqDetailEmail" class="hover:text-[#00a884] hover:underline flex items-center gap-1"><i class="fa-regular fa-envelope"></i> email@example.com</a>
-                                <span class="hidden sm:inline">•</span>
-                                <span id="enqDetailPhone" class="hidden sm:inline font-mono"><i class="fa-solid fa-phone text-[10px]"></i> +123456789</span>
+                            <div class="flex items-center gap-4 text-xs font-bold text-slate-600 mt-1">
+                                <a href="#" id="enqDetailEmail" class="text-blue-700 hover:underline flex items-center gap-1 font-bold"><i class="fa-regular fa-envelope"></i> email@example.com</a>
+                                <span id="enqDetailPhone" class="font-mono text-slate-700"><i class="fa-solid fa-phone"></i> +123456789</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Header Actions -->
-                    <div class="flex items-center gap-3 shrink-0">
-                        <div class="flex items-center gap-2 bg-white px-3 py-1 rounded-lg border border-slate-200 shadow-sm">
-                            <span class="text-xs font-bold text-slate-600">Status:</span>
-                            <select id="enqUpdateStatus" class="text-xs font-bold bg-transparent text-slate-800 focus:outline-none cursor-pointer">
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-xl border-2 border-slate-300">
+                            <span class="text-xs font-black text-slate-700 uppercase">Status:</span>
+                            <select id="enqUpdateStatus" class="text-xs font-black bg-transparent text-slate-900 focus:outline-none cursor-pointer">
                                 <option value="New">New</option>
                                 <option value="In Progress">In Progress</option>
                                 <option value="Responded">Responded</option>
                                 <option value="Closed">Closed</option>
                             </select>
                         </div>
-                        <button id="btnDeleteEnquiry" class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-all" title="Delete Inquiry">
-                            <i class="fa-solid fa-trash text-sm"></i>
+                        <button id="btnDeleteEnquiry" class="bg-red-600 hover:bg-red-700 text-white px-3.5 py-2 rounded-xl font-extrabold text-xs shadow flex items-center gap-1.5 transition-all" title="Delete Inquiry">
+                            <i class="fa-solid fa-trash"></i> DELETE
                         </button>
                     </div>
                 </div>
 
-                <!-- Chat Messages Scrollable Canvas -->
-                <div id="enqMessagesCanvas" class="flex-1 overflow-y-auto p-6 space-y-4 flex flex-col">
-                    <!-- Date Separator -->
-                    <div class="flex justify-center my-2">
-                        <span class="bg-white/90 text-slate-500 font-bold text-[11px] px-3.5 py-1 rounded-full shadow-sm border border-slate-200/60 uppercase tracking-wider" id="enqDateDivider">TODAY</span>
+                <!-- Messages Canvas (Solid Background) -->
+                <div id="enqMessagesCanvas" class="flex-1 p-6 space-y-5 overflow-y-auto max-h-[420px]">
+                    <!-- Date Divider -->
+                    <div class="flex justify-center">
+                        <span class="bg-slate-800 text-white font-extrabold text-xs px-4 py-1 rounded-full shadow border border-slate-700 uppercase" id="enqDateDivider">TODAY</span>
                     </div>
 
-                    <!-- Incoming Customer Message Bubble -->
+                    <!-- Customer Incoming Message Card -->
                     <div class="flex justify-start">
-                        <div class="bg-white rounded-2xl rounded-tl-none p-5 shadow-sm border border-slate-200/80 max-w-[85%] sm:max-w-[75%] relative group">
-                            <div class="flex items-center justify-between gap-4 pb-2 mb-3 border-b border-slate-100">
+                        <div class="bg-white text-slate-900 rounded-2xl p-5 shadow-md border-2 border-slate-300 max-w-[85%] sm:max-w-[75%] space-y-3">
+                            <div class="flex items-center justify-between gap-4 pb-2 border-b-2 border-slate-100">
                                 <div>
-                                    <span class="text-xs font-bold text-[#075e54] uppercase tracking-wider block" id="enqDetailType">GENERAL INQUIRY</span>
-                                    <span class="text-[11px] text-slate-400 font-medium" id="enqDetailMeta">Travelers: 2 | Date: Flexible</span>
+                                    <span class="text-xs font-black text-[#075e54] uppercase tracking-wider block" id="enqDetailType">GENERAL INQUIRY</span>
+                                    <span class="text-xs font-bold text-slate-600" id="enqDetailMeta">Travelers: 2 | Date: Flexible</span>
                                 </div>
-                                <span class="text-[10px] text-slate-400 font-medium" id="enqDetailDate">10:45 AM</span>
+                                <span class="text-xs font-bold text-slate-500" id="enqDetailDate">10:45 AM</span>
                             </div>
-                            <p class="text-slate-800 text-sm leading-relaxed whitespace-pre-wrap font-sans" id="enqDetailMessage">Customer message content...</p>
-                            <div class="flex items-center justify-end gap-1 mt-2 text-[10px] text-slate-400">
-                                <span>Received</span>
-                                <i class="fa-solid fa-check text-slate-400 text-xs"></i>
-                            </div>
+                            <p class="text-slate-900 text-sm font-semibold leading-relaxed whitespace-pre-wrap" id="enqDetailMessage">Customer inquiry message content...</p>
                         </div>
                     </div>
 
-                    <!-- Outgoing Admin Response Bubbles Thread Container -->
+                    <!-- Admin Outgoing Response Threads -->
                     <div id="enqResponseThread" class="space-y-4">
-                        <!-- Dynamic Outgoing Response Bubbles injected via JS -->
+                        <!-- Injected via JS -->
                     </div>
                 </div>
 
-                <!-- WhatsApp Sticky Bottom Reply Composer -->
-                <div class="p-3 bg-[#f0f2f5] border-t border-slate-200 shrink-0">
-                    <form id="enqReplyForm" onsubmit="event.preventDefault(); handleSendEnquiryReply();" class="flex items-center gap-3 max-w-6xl mx-auto">
-                        <div class="flex items-center gap-2 text-slate-500 px-1">
-                            <button type="button" class="p-2 hover:text-[#075e54] hover:bg-slate-200/70 rounded-full transition-all" title="Add Emoji">
-                                <i class="fa-regular fa-face-smile text-xl"></i>
-                            </button>
-                            <button type="button" class="p-2 hover:text-[#075e54] hover:bg-slate-200/70 rounded-full transition-all" title="Attach Document/Media">
-                                <i class="fa-solid fa-paperclip text-xl"></i>
-                            </button>
-                        </div>
-                        
-                        <div class="flex-1 relative">
+                <!-- Bottom Reply Composer Bar -->
+                <div class="p-4 bg-white border-t-2 border-slate-300 shrink-0">
+                    <form id="enqReplyForm" onsubmit="event.preventDefault(); handleSendEnquiryReply();" class="flex flex-col sm:flex-row items-center gap-3 max-w-5xl mx-auto">
+                        <div class="flex-1 w-full">
                             <textarea 
                                 id="enqResponseText" 
-                                rows="1" 
-                                class="w-full bg-white border border-slate-200 rounded-2xl px-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#00a884]/30 focus:border-[#00a884] transition-all resize-none shadow-sm font-sans"
-                                placeholder="Type an email response to customer... (Press Enter to send)"
-                                onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); handleSendEnquiryReply(); }"
+                                rows="2" 
+                                class="w-full bg-slate-50 border-2 border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-900 placeholder-slate-500 focus:bg-white focus:border-[#075e54] focus:outline-none transition-all resize-none shadow-inner"
+                                placeholder="Type your email response to the customer here... (Click SEND REPLY button to deliver)"
                             ></textarea>
                         </div>
 
                         <button 
                             type="submit" 
                             id="btnSendEnquiryResponse" 
-                            class="w-11 h-11 bg-[#00a884] hover:bg-[#008f6f] text-white rounded-full flex items-center justify-center shadow-md active:scale-95 transition-all shrink-0" 
+                            class="w-full sm:w-auto bg-[#25d366] hover:bg-[#1ebd59] text-slate-950 font-black px-6 py-3 rounded-xl shadow-md text-xs flex items-center justify-center gap-2 active:scale-95 transition-all uppercase tracking-wide cursor-pointer shrink-0 border-2 border-[#1ebd59]" 
                             title="Send Email Reply"
                         >
-                            <i class="fa-solid fa-paper-plane text-base"></i>
+                            <i class="fa-solid fa-paper-plane text-sm"></i>
+                            <span>SEND REPLY</span>
                         </button>
                     </form>
                 </div>

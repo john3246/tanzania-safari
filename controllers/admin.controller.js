@@ -110,7 +110,7 @@ class AdminController {
 
             await db.query(
                 `UPDATE contact_enquiries 
-                 SET enquiry_status = $1, response_notes = $2, responded_at = NOW(), responses = $3, updated_at = NOW() 
+                 SET enquiry_status = $1, response_notes = $2, responded_at = NOW(), responses = $3::jsonb, updated_at = NOW() 
                  WHERE enquiry_id = $4`,
                 ['Responded', response.trim(), JSON.stringify(existingResponses), req.params.id]
             );
