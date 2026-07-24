@@ -183,3 +183,5 @@
 {"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-07-21 22:36:39"}
 {"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-07-21 22:36:39"}
 {"level":"info","message":{"environment":"development","event":"server_started","port":"3000","smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-07-21 22:36:39"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-07-24 16:32:22"}
+{"level":"error","message":{"errors":["Invalid recipient email"],"event":"email_validation_failed"},"service":"tanzania-safari","timestamp":"2026-07-24 16:32:25"}

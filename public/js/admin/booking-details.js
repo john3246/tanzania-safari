@@ -153,158 +153,161 @@ function renderTimeline() {
     });
 }
 
-// Actions
-document.addEventListener('DOMContentLoaded', () => {
+// Actions via Event Delegation
+document.body.addEventListener('click', async (e) => {
     // Note vs Email Tabs
-    document.body.addEventListener('click', (e) => {
-        const tab = e.target.closest('.comm-tab');
-        if (tab) {
-            document.querySelectorAll('.comm-tab').forEach(t => {
-                t.className = 'comm-tab px-3 py-1 text-xs font-medium rounded text-gray-500 hover:text-gray-700 hover:bg-gray-50';
-            });
-            tab.className = 'comm-tab active px-3 py-1 text-xs font-medium rounded bg-white text-gray-900 shadow-sm';
-            
-            if (tab.dataset.type === 'email') {
-                document.getElementById('commEmailBox').classList.remove('hidden');
-                document.getElementById('commNoteBox').classList.add('hidden');
+    const tab = e.target.closest('.comm-tab');
+    if (tab) {
+        document.querySelectorAll('.comm-tab').forEach(t => {
+            t.className = 'comm-tab px-3 py-1 text-xs font-medium rounded text-gray-500 hover:text-gray-700 hover:bg-gray-50';
+        });
+        tab.className = 'comm-tab active px-3 py-1 text-xs font-medium rounded bg-white text-gray-900 shadow-sm';
+        
+        if (tab.dataset.type === 'email') {
+            document.getElementById('commEmailBox').classList.remove('hidden');
+            document.getElementById('commNoteBox').classList.add('hidden');
+        } else {
+            document.getElementById('commNoteBox').classList.remove('hidden');
+            document.getElementById('commEmailBox').classList.add('hidden');
+        }
+    }
+
+    // Approve Booking
+    const btnApprove = e.target.closest('#btnApproveBooking');
+    if (btnApprove) {
+        if(!confirm('Are you sure you want to approve this booking? The customer will be notified.')) return;
+        
+        const originalText = btnApprove.innerHTML;
+        btnApprove.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Approving...';
+        btnApprove.disabled = true;
+
+        const res = await apiRequest('PUT', `/bookings/${window.currentBookingId}/status`, { status: 'confirmed' });
+
+        if(res.success) {
+            showToast('Booking approved successfully', 'success');
+            loadBookingDetails();
+        } else {
+            showToast(res.message || 'Failed to approve booking', 'error');
+        }
+        
+        btnApprove.innerHTML = originalText;
+        btnApprove.disabled = false;
+    }
+
+    // Reject Booking
+    const btnReject = e.target.closest('#btnRejectBooking');
+    if (btnReject) {
+        if(!confirm('Are you sure you want to reject this booking? The customer will be notified.')) return;
+        
+        const originalText = btnReject.innerHTML;
+        btnReject.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Rejecting...';
+        btnReject.disabled = true;
+
+        const res = await apiRequest('PUT', `/bookings/${window.currentBookingId}/status`, { status: 'rejected' });
+
+        if(res.success) {
+            showToast('Booking rejected successfully', 'success');
+            loadBookingDetails();
+        } else {
+            showToast(res.message || 'Failed to reject booking', 'error');
+        }
+        
+        btnReject.innerHTML = originalText;
+        btnReject.disabled = false;
+    }
+
+    // Send Reply
+    const btnSendReply = e.target.closest('#btnSendReply');
+    if (btnSendReply) {
+        const subject = document.getElementById('commSubject').value;
+        const message = document.getElementById('commMessage').value;
+
+        if(!message) {
+            showToast('Message cannot be empty', 'warning');
+            return;
+        }
+
+        btnSendReply.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+        btnSendReply.disabled = true;
+
+        const res = await apiRequest('POST', `/bookings/${window.currentBookingId}/reply`, { subject, message });
+
+        if(res.success) {
+            showToast('Email sent successfully', 'success');
+            document.getElementById('commSubject').value = '';
+            document.getElementById('commMessage').value = '';
+            loadBookingDetails();
+        } else {
+            showToast(res.message || 'Failed to send email', 'error');
+        }
+
+        btnSendReply.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Email';
+        btnSendReply.disabled = false;
+    }
+
+    // Add Note
+    const btnAddNote = e.target.closest('#btnAddNote');
+    if (btnAddNote) {
+        const note = document.getElementById('commNoteContent').value;
+
+        if(!note) {
+            showToast('Note cannot be empty', 'warning');
+            return;
+        }
+
+        btnAddNote.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+        btnAddNote.disabled = true;
+
+        const res = await apiRequest('POST', `/bookings/${window.currentBookingId}/notes`, { note });
+
+        if(res.success) {
+            showToast('Note saved successfully', 'success');
+            document.getElementById('commNoteContent').value = '';
+            loadBookingDetails();
+        } else {
+            showToast(res.message || 'Failed to save note', 'error');
+        }
+
+        btnAddNote.innerHTML = '<i class="fa-solid fa-thumbtack"></i> Save Note';
+        btnAddNote.disabled = false;
+    }
+
+    // Record Payment
+    const btnRecordPayment = e.target.closest('#btnRecordPayment');
+    if (btnRecordPayment) {
+        const amountStr = prompt('Enter payment amount to record (e.g. 500.00):');
+        if(!amountStr) return;
+        const amount = parseFloat(amountStr);
+        if(isNaN(amount) || amount <= 0) {
+            showToast('Invalid amount', 'error');
+            return;
+        }
+
+        const method = prompt('Enter payment method (e.g. credit_card, bank_transfer):', 'credit_card');
+        if(!method) return;
+
+        const res = await apiRequest('POST', `/bookings/${window.currentBookingId}/payments`, { amount, payment_method: method });
+
+        if(res.success) {
+            showToast('Payment recorded successfully', 'success');
+            loadBookingDetails();
+        } else {
+            showToast(res.message || 'Failed to record payment', 'error');
+        }
+    }
+
+    // Delete Booking
+    const btnDeleteBooking = e.target.closest('#btnDeleteBooking');
+    if (btnDeleteBooking) {
+        if (confirm('Are you sure you want to permanently delete this booking? This action cannot be undone.')) {
+            const res = await apiRequest('DELETE', `/bookings/${window.currentBookingId}`);
+            if (res.success) {
+                showToast('Booking deleted', 'success');
+                setTimeout(() => { navigate('bookings'); }, 1000);
             } else {
-                document.getElementById('commNoteBox').classList.remove('hidden');
-                document.getElementById('commEmailBox').classList.add('hidden');
+                showToast(res.message || 'Failed to delete booking', 'error');
             }
         }
-    });
-
-    const btnApprove = document.getElementById('btnApproveBooking');
-    if (btnApprove) {
-        btnApprove.onclick = async () => {
-            if(!confirm('Are you sure you want to approve this booking? The customer will be notified.')) return;
-            
-            const btn = btnApprove;
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Approving...';
-            btn.disabled = true;
-
-            const res = await apiRequest('PUT', `/bookings/${window.currentBookingId}/status`, { status: 'confirmed' });
-
-            if(res.success) {
-                showToast('Booking approved successfully', 'success');
-                loadBookingDetails();
-            } else {
-                showToast(res.message || 'Failed to approve booking', 'error');
-            }
-            
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-        };
-    }
-
-    const btnReject = document.getElementById('btnRejectBooking');
-    if (btnReject) {
-        btnReject.onclick = async () => {
-            if(!confirm('Are you sure you want to reject this booking? The customer will be notified.')) return;
-            
-            const btn = btnReject;
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Rejecting...';
-            btn.disabled = true;
-
-            const res = await apiRequest('PUT', `/bookings/${window.currentBookingId}/status`, { status: 'rejected' });
-
-            if(res.success) {
-                showToast('Booking rejected successfully', 'success');
-                loadBookingDetails();
-            } else {
-                showToast(res.message || 'Failed to reject booking', 'error');
-            }
-            
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-        };
-    }
-
-
-
-    const btnSendReply = document.getElementById('btnSendReply');
-    if (btnSendReply) {
-        btnSendReply.onclick = async () => {
-            const subject = document.getElementById('commSubject').value;
-            const message = document.getElementById('commMessage').value;
-
-            if(!message) {
-                showToast('Message cannot be empty', 'warning');
-                return;
-            }
-
-            btnSendReply.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
-            btnSendReply.disabled = true;
-
-            const res = await apiRequest('POST', `/bookings/${window.currentBookingId}/reply`, { subject, message });
-
-            if(res.success) {
-                showToast('Email sent successfully', 'success');
-                document.getElementById('commSubject').value = '';
-                document.getElementById('commMessage').value = '';
-                loadBookingDetails();
-            } else {
-                showToast(res.message || 'Failed to send email', 'error');
-            }
-
-            btnSendReply.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Email';
-            btnSendReply.disabled = false;
-        };
-    }
-
-    const btnAddNote = document.getElementById('btnAddNote');
-    if (btnAddNote) {
-        btnAddNote.onclick = async () => {
-            const note = document.getElementById('commNoteContent').value;
-
-            if(!note) {
-                showToast('Note cannot be empty', 'warning');
-                return;
-            }
-
-            btnAddNote.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
-            btnAddNote.disabled = true;
-
-            const res = await apiRequest('POST', `/bookings/${window.currentBookingId}/notes`, { note });
-
-            if(res.success) {
-                showToast('Note saved successfully', 'success');
-                document.getElementById('commNoteContent').value = '';
-                loadBookingDetails();
-            } else {
-                showToast(res.message || 'Failed to save note', 'error');
-            }
-
-            btnAddNote.innerHTML = '<i class="fa-solid fa-thumbtack"></i> Save Note';
-            btnAddNote.disabled = false;
-        };
-    }
-
-    const btnRecordPayment = document.getElementById('btnRecordPayment');
-    if (btnRecordPayment) {
-        btnRecordPayment.onclick = async () => {
-            const amountStr = prompt('Enter payment amount to record (e.g. 500.00):');
-            if(!amountStr) return;
-            const amount = parseFloat(amountStr);
-            if(isNaN(amount) || amount <= 0) {
-                showToast('Invalid amount', 'error');
-                return;
-            }
-
-            const method = prompt('Enter payment method (e.g. credit_card, bank_transfer):', 'credit_card');
-            if(!method) return;
-
-            const res = await apiRequest('POST', `/bookings/${window.currentBookingId}/payments`, { amount, payment_method: method });
-
-            if(res.success) {
-                showToast('Payment recorded successfully', 'success');
-                loadBookingDetails();
-            } else {
-                showToast(res.message || 'Failed to record payment', 'error');
-            }
-        };
     }
 });
 
@@ -358,40 +361,29 @@ window.closeEditBookingModal = function() {
     }, 300);
 };
 
-// Form submit
-document.getElementById('editBookingForm')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const formData = {
-        package_id: document.getElementById('editPackageId').value,
-        start_date: document.getElementById('editStartDate').value,
-        end_date: document.getElementById('editEndDate').value,
-        number_of_adults: parseInt(document.getElementById('editAdults').value),
-        number_of_children: parseInt(document.getElementById('editChildren').value || 0),
-        total_amount: parseFloat(document.getElementById('editTotalAmount').value),
-        discount_amount: parseFloat(document.getElementById('editDiscountAmount').value || 0),
-        special_requests: document.getElementById('editSpecialRequests').value
-    };
+// Form submit (via event delegation)
+document.body.addEventListener('submit', async (e) => {
+    if (e.target.id === 'editBookingForm') {
+        e.preventDefault();
+        
+        const formData = {
+            package_id: document.getElementById('editPackageId').value,
+            start_date: document.getElementById('editStartDate').value,
+            end_date: document.getElementById('editEndDate').value,
+            number_of_adults: parseInt(document.getElementById('editAdults').value),
+            number_of_children: parseInt(document.getElementById('editChildren').value || 0),
+            total_amount: parseFloat(document.getElementById('editTotalAmount').value),
+            discount_amount: parseFloat(document.getElementById('editDiscountAmount').value || 0),
+            special_requests: document.getElementById('editSpecialRequests').value
+        };
 
-    const res = await apiRequest('PUT', `/bookings/${window.currentBookingId}`, formData);
-    if (res.success) {
-        showToast('Booking updated successfully', 'success');
-        closeEditBookingModal();
-        loadBookingDetails(); // refresh details
-    } else {
-        showToast(res.message || 'Failed to update booking', 'error');
-    }
-});
-
-// Delete Booking
-document.getElementById('btnDeleteBooking')?.addEventListener('click', async () => {
-    if (confirm('Are you sure you want to permanently delete this booking? This action cannot be undone.')) {
-        const res = await apiRequest('DELETE', `/bookings/${window.currentBookingId}`);
+        const res = await apiRequest('PUT', `/bookings/${window.currentBookingId}`, formData);
         if (res.success) {
-            showToast('Booking deleted', 'success');
-            setTimeout(() => { navigate('bookings'); }, 1000);
+            showToast('Booking updated successfully', 'success');
+            closeEditBookingModal();
+            loadBookingDetails(); // refresh details
         } else {
-            showToast(res.message || 'Failed to delete booking', 'error');
+            showToast(res.message || 'Failed to update booking', 'error');
         }
     }
 });
