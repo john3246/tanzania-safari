@@ -1,4 +1,4 @@
-// ── Executive Corporate Media Manager (PATH COPY FIRST + Edit Name + Delete) ──
+// ── Executive Corporate Media Manager (No Text Wrapping or Overflows) ──
 
 window.MediaManager = {
     files: [],
@@ -218,35 +218,36 @@ window.MediaManager = {
                             </div>
                         </div>
 
-                        <!-- Solid Corporate Action Buttons Bar -->
-                        <div class="grid grid-cols-3 gap-1.5 pt-2 border-t-2 border-slate-200">
-                            <!-- Button 1: Copy Path -->
+                        <!-- Solid Corporate Action Buttons Bar (Clean 2-Tier Stacked Layout - No Text Overflows) -->
+                        <div class="space-y-2 pt-2 border-t-2 border-slate-200">
+                            <!-- Row 1: Copy Path (Full Width) -->
                             <button 
-                                onclick="MediaManager.copyText('${mediaPath}', 'Image Path copied!', event)" 
-                                class="bg-blue-700 hover:bg-blue-800 text-white font-black text-[11px] py-2 rounded-xl flex items-center justify-center gap-1 shadow transition-all active:scale-95 cursor-pointer uppercase tracking-wider"
+                                onclick="MediaManager.copyText('${mediaPath}', 'Media Path copied to clipboard!', event)" 
+                                class="w-full bg-blue-700 hover:bg-blue-800 text-white font-black text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 shadow transition-all active:scale-98 cursor-pointer uppercase tracking-wider border border-blue-900 shrink-0 whitespace-nowrap"
                                 title="Copy media path: ${mediaPath}"
                             >
-                                <i class="fa-solid fa-link text-[10px]"></i> COPY PATH
+                                <i class="fa-solid fa-copy text-xs"></i> COPY MEDIA PATH
                             </button>
                             
-                            <!-- Button 2: Edit Details -->
-                            <button 
-                                onclick="MediaManager.editMedia('${file.id}', '${encodedUrl}', '${file.filename.replace(/'/g, "\\'")}', '${fileSlug}', '${(file.alt_text || '').replace(/'/g, "\\'")}', event)"
-                                class="bg-emerald-700 hover:bg-emerald-800 text-white font-black text-[11px] py-2 rounded-xl flex items-center justify-center gap-1 shadow transition-all active:scale-95 cursor-pointer uppercase tracking-wider"
-                                title="Edit Filename & Slug"
-                            >
-                                <i class="fa-solid fa-pen-to-square text-[10px]"></i> EDIT
-                            </button>
+                            <!-- Row 2: Edit & Delete (2 Equal Columns) -->
+                            <div class="grid grid-cols-2 gap-2">
+                                <button 
+                                    onclick="MediaManager.editMedia('${file.id}', '${encodedUrl}', '${file.filename.replace(/'/g, "\\'")}', '${fileSlug}', '${(file.alt_text || '').replace(/'/g, "\\'")}', event)"
+                                    class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-black text-xs py-2 px-2 rounded-xl flex items-center justify-center gap-1.5 shadow transition-all active:scale-95 cursor-pointer uppercase tracking-wider border border-emerald-900 shrink-0 whitespace-nowrap"
+                                    title="Edit Filename & Slug"
+                                >
+                                    <i class="fa-solid fa-pen-to-square text-xs"></i> EDIT
+                                </button>
 
-                            <!-- Button 3: Delete File -->
-                            <button 
-                                data-id="${file.id}" 
-                                onclick="MediaManager.deleteFile(this.dataset.id, event)" 
-                                class="bg-red-600 hover:bg-red-700 text-white font-black text-[11px] py-2 rounded-xl flex items-center justify-center gap-1 shadow transition-all active:scale-95 cursor-pointer uppercase tracking-wider"
-                                title="Delete media asset"
-                            >
-                                <i class="fa-solid fa-trash text-[10px]"></i> DELETE
-                            </button>
+                                <button 
+                                    data-id="${file.id}" 
+                                    onclick="MediaManager.deleteFile(this.dataset.id, event)" 
+                                    class="w-full bg-red-600 hover:bg-red-700 text-white font-black text-xs py-2 px-2 rounded-xl flex items-center justify-center gap-1.5 shadow transition-all active:scale-95 cursor-pointer uppercase tracking-wider border border-red-900 shrink-0 whitespace-nowrap"
+                                    title="Delete media asset"
+                                >
+                                    <i class="fa-solid fa-trash text-xs"></i> DELETE
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
