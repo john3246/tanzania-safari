@@ -1,61 +1,96 @@
-<div id="page-enquiries" class="page">
-<div class="page bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden" id="page-enquiries">
-                <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between"><h3 class="font-semibold text-slate-800">Customer Inquiries</h3></div>
-                <div class="overflow-x-auto">
-                    <div class="table-responsive">
-<table class="w-full text-left text-sm text-slate-600">
-                        <thead class="bg-slate-50 text-slate-400 text-xs font-semibold uppercase border-b border-slate-100"><tr class="h-11"><th class="px-6">Sender</th><th class="px-6">Subject</th><th class="px-6">Date</th><th class="px-6">Status</th><th class="px-6">Actions</th></tr></thead>
-                        <tbody id="enqBody" class="divide-y divide-slate-100"></tbody>
-                    </table>
-</div>
+<div id="page-enquiries" class="page bg-slate-50 min-h-screen">
+    <!-- Header -->
+    <div class="px-8 py-6 bg-white border-b border-slate-200">
+        <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Customer Inquiries</h1>
+        <p class="text-sm text-slate-500 mt-1">Manage and respond to all customer questions and leads.</p>
+    </div>
+
+    <!-- 2-Panel Corporate Layout -->
+    <div class="flex h-[calc(100vh-130px)]">
+        
+        <!-- Left Panel: Inquiries Inbox -->
+        <div class="w-1/3 min-w-[320px] max-w-[400px] border-r border-slate-200 bg-white flex flex-col h-full">
+            <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+                <h3 class="font-bold text-slate-700 text-sm tracking-wide uppercase"><i class="fa-solid fa-inbox mr-2"></i> Inbox</h3>
+                <span class="text-xs bg-white border border-slate-200 px-2 py-0.5 rounded-full text-slate-500 font-medium" id="enqCount">0</span>
+            </div>
+            <div class="flex-1 overflow-y-auto divide-y divide-slate-100 p-2" id="enqSidebarList">
+                <!-- Sidebar items injected via JS -->
+            </div>
+        </div>
+
+        <!-- Right Panel: Inquiry Details & Responder -->
+        <div class="flex-1 bg-slate-50 flex flex-col h-full overflow-hidden relative">
+            <div id="enqEmptyState" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400 bg-slate-50 z-10">
+                <i class="fa-regular fa-envelope-open text-6xl mb-4 text-slate-300"></i>
+                <p class="text-lg font-medium text-slate-500">Select an inquiry to view details</p>
+            </div>
+
+            <!-- Details Content -->
+            <div id="enqDetailView" class="hidden flex-1 overflow-y-auto">
+                <div class="p-8 max-w-4xl mx-auto">
+                    <!-- Actions Header -->
+                    <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-200">
+                        <div class="flex items-center gap-3">
+                            <span id="enqDetailStatus" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">New</span>
+                            <span class="text-sm text-slate-500 font-medium" id="enqDetailDate">Date</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button id="btnDeleteEnquiry" class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete Inquiry">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Sender Info -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 mb-6">
+                        <div class="flex items-center gap-4 mb-6 pb-6 border-b border-slate-100">
+                            <div class="w-14 h-14 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-2xl font-bold uppercase shadow-inner" id="enqDetailAvatar">A</div>
+                            <div class="flex-1">
+                                <h2 class="text-xl font-bold text-slate-900" id="enqDetailName">Sender Name</h2>
+                                <a href="#" class="text-sm text-blue-600 hover:underline flex items-center gap-1 mt-0.5" id="enqDetailEmail"><i class="fa-regular fa-envelope"></i> email@example.com</a>
+                            </div>
+                            <div class="text-right">
+                                <span class="block text-xs text-slate-400 font-medium uppercase">Type</span>
+                                <span class="font-bold text-slate-700" id="enqDetailType">General</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Message Content -->
+                        <div class="prose prose-sm prose-slate max-w-none">
+                            <p class="text-slate-800 text-base leading-relaxed whitespace-pre-wrap" id="enqDetailMessage">Message content goes here...</p>
+                        </div>
+                    </div>
+
+                    <!-- Response Form & Thread -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                        <div class="px-6 py-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+                            <h3 class="font-bold text-slate-800"><i class="fa-solid fa-reply text-slate-400 mr-2"></i> Respond</h3>
+                            
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-medium text-slate-500">Update Status:</span>
+                                <select id="enqUpdateStatus" class="text-sm border-slate-300 rounded-lg py-1 pl-2 pr-8 focus:ring-blue-500 focus:border-blue-500 font-medium">
+                                    <option value="New">New</option>
+                                    <option value="In Progress">In Progress</option>
+                                    <option value="Responded">Responded</option>
+                                    <option value="Closed">Closed</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="p-6">
+                            <textarea id="enqResponseText" rows="4" class="w-full border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-slate-700 p-4 transition-shadow mb-4 resize-none" placeholder="Draft your response here... This will be sent as an email to the customer."></textarea>
+                            
+                            <div class="flex justify-end">
+                                <button id="btnSendEnquiryResponse" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-semibold shadow-sm shadow-blue-200 transition-all active:scale-95 flex items-center gap-2">
+                                    <i class="fa-solid fa-paper-plane"></i> Send Reply
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
-</div>
-<!-- Enquiry Response Modal -->
-<!-- Enquiry Response Modal -->
-<div class="modal-backdrop" id="enqModal">
-    <div class="modal">
-        <div class="modal-header">
-            <h3 class="modal-title">Respond to Inquiry</h3>
-            <button class="modal-close" data-close="enqModal">&times;</button>
-        </div>
-        <div class="modal-body">
-            <div id="enqDetails" class="mb-4"></div>
-            <input type="hidden" id="enqRespondId">
-            <div class="form-group">
-                <label class="form-label">Your Response</label>
-                <textarea id="enqResponse" class="form-control" rows="5" placeholder="Type your response here..."></textarea>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-outline" data-close="enqModal">Cancel</button>
-            <button class="btn btn-primary" id="btnSendEnquiryResponse">Send Response</button>
-        </div>
-    </div>
-</div>
-
-<!-- Enquiry Edit Modal -->
-<div class="modal-backdrop" id="editEnqModal">
-    <div class="modal">
-        <div class="modal-header">
-            <h3 class="modal-title">Edit Inquiry</h3>
-            <button class="modal-close" data-close="editEnqModal">&times;</button>
-        </div>
-        <div class="modal-body">
-            <input type="hidden" id="editEnqId">
-            <div class="form-group">
-                <label class="form-label">Status</label>
-                <select id="editEnqStatus" class="form-control">
-                    <option value="New">New</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Responded">Responded</option>
-                    <option value="Closed">Closed</option>
-                </select>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-outline" data-close="editEnqModal">Cancel</button>
-            <button class="btn btn-primary" id="btnSaveEnquiry">Save Changes</button>
         </div>
     </div>
 </div>
