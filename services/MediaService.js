@@ -51,54 +51,35 @@ class MediaService extends BaseService {
     }
 
     async getAll(conditions = {}, options = {}) {
-        // Fetch all from DB (ignore limit temporarily to merge properly)
-        const dbOptions = { ...options, limit: null, offset: null };
-        const dbRecords = await this.repository.findAllWithDetails(conditions, dbOptions);
-        
-        // Fetch from file system
-        const fsRecords = await this.scanLocalDirectories();
-        
-        // Merge and deduplicate (prefer DB records)
-        const mergedMap = new Map();
-        
-        for (const record of dbRecords) {
-            const url = record.url || `/uploads/${record.folder}/${record.filename}`;
-            mergedMap.set(url, record);
-        }
-        
-        for (const record of fsRecords) {
-            if (!mergedMap.has(record.url)) {
-                mergedMap.set(record.url, record);
+        try {
+            // Simplified: Just scan local directories as requested by user
+            const localFiles = await this.scanLocalDirectories();
+            
+            let filteredFiles = localFiles;
+            if (options.search) {
+                const term = options.search.toLowerCase();
+                filteredFiles = filteredFiles.filter(f => 
+                    (f.filename || '').toLowerCase().includes(term) || 
+                    (f.original_name || '').toLowerCase().includes(term) ||
+                    (f.url || '').toLowerCase().includes(term)
+                );
             }
+
+            // Apply pagination manually
+            const page = options.page || 1;
+            const limit = options.limit || 50;
+            const offset = (page - 1) * limit;
+            
+            const paginatedFiles = filteredFiles.slice(offset, offset + limit);
+
+            return {
+                data: paginatedFiles,
+                total: filteredFiles.length
+            };
+        } catch (error) {
+            console.error('Error fetching media:', error);
+            throw error;
         }
-        
-        let mergedList = Array.from(mergedMap.values());
-        
-        // Search filter
-        if (options.search) {
-            const term = options.search.toLowerCase();
-            mergedList = mergedList.filter(f => 
-                (f.filename || '').toLowerCase().includes(term) || 
-                (f.original_name || '').toLowerCase().includes(term) ||
-                (f.alt_text || '').toLowerCase().includes(term)
-            );
-        }
-        
-        // Sorting
-        mergedList.sort((a, b) => {
-            const dateA = new Date(a.created_at || 0).getTime();
-            const dateB = new Date(b.created_at || 0).getTime();
-            return dateB - dateA; // default DESC
-        });
-        
-        // Pagination
-        const total = mergedList.length;
-        if (options.limit) {
-            const offset = options.offset || 0;
-            mergedList = mergedList.slice(offset, offset + options.limit);
-        }
-        
-        return { data: mergedList, total };
     }
 
     async getById(id) {
