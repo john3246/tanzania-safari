@@ -307,3 +307,91 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 });
+
+// --- Modal & Edit Logic ---
+let packagesLoaded = false;
+
+async function loadPackagesForEdit() {
+    if (packagesLoaded) return;
+    const res = await apiRequest('GET', '/packages');
+    if (res.success && res.data) {
+        const select = document.getElementById('editPackageId');
+        res.data.forEach(pkg => {
+            const opt = document.createElement('option');
+            opt.value = pkg.package_id;
+            opt.textContent = pkg.package_name;
+            select.appendChild(opt);
+        });
+        packagesLoaded = true;
+    }
+}
+
+window.openEditBookingModal = async function() {
+    if (!currentBookingData) return;
+    await loadPackagesForEdit();
+    const b = currentBookingData;
+    
+    document.getElementById('editPackageId').value = b.package_id || '';
+    document.getElementById('editStartDate').value = b.start_date ? b.start_date.split('T')[0] : '';
+    document.getElementById('editEndDate').value = b.end_date ? b.end_date.split('T')[0] : '';
+    document.getElementById('editAdults').value = b.number_of_adults || 1;
+    document.getElementById('editChildren').value = b.number_of_children || 0;
+    document.getElementById('editTotalAmount').value = b.total_amount || 0;
+    document.getElementById('editDiscountAmount').value = b.discount_amount || 0;
+    document.getElementById('editSpecialRequests').value = b.special_requests || '';
+    
+    const modal = document.getElementById('editBookingModal');
+    modal.classList.remove('hidden');
+    // slight delay for transition
+    setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        modal.querySelector('div').classList.remove('scale-95');
+    }, 10);
+};
+
+window.closeEditBookingModal = function() {
+    const modal = document.getElementById('editBookingModal');
+    modal.classList.add('opacity-0');
+    modal.querySelector('div').classList.add('scale-95');
+    setTimeout(() => {
+        modal.classList.add('hidden');
+    }, 300);
+};
+
+// Form submit
+document.getElementById('editBookingForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = {
+        package_id: document.getElementById('editPackageId').value,
+        start_date: document.getElementById('editStartDate').value,
+        end_date: document.getElementById('editEndDate').value,
+        number_of_adults: parseInt(document.getElementById('editAdults').value),
+        number_of_children: parseInt(document.getElementById('editChildren').value || 0),
+        total_amount: parseFloat(document.getElementById('editTotalAmount').value),
+        discount_amount: parseFloat(document.getElementById('editDiscountAmount').value || 0),
+        special_requests: document.getElementById('editSpecialRequests').value
+    };
+
+    const res = await apiRequest('PUT', `/bookings/${window.currentBookingId}`, formData);
+    if (res.success) {
+        showToast('Booking updated successfully', 'success');
+        closeEditBookingModal();
+        loadBookingDetails(); // refresh details
+    } else {
+        showToast(res.message || 'Failed to update booking', 'error');
+    }
+});
+
+// Delete Booking
+document.getElementById('btnDeleteBooking')?.addEventListener('click', async () => {
+    if (confirm('Are you sure you want to permanently delete this booking? This action cannot be undone.')) {
+        const res = await apiRequest('DELETE', `/bookings/${window.currentBookingId}`);
+        if (res.success) {
+            showToast('Booking deleted', 'success');
+            setTimeout(() => { navigate('bookings'); }, 1000);
+        } else {
+            showToast(res.message || 'Failed to delete booking', 'error');
+        }
+    }
+});

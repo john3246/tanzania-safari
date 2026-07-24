@@ -304,6 +304,40 @@ async function sendBookingCompleted(booking) {
   return sendEmailQueued('booking-completed', data);
 }
 
+async function sendBookingUpdated(booking) {
+  const data = {
+    to: booking.email,
+    subject: `Booking Updated — ${booking.package_name || 'Safari Package'}`,
+    templateName: 'booking-updated',
+    templateData: {
+      ...booking,
+      header: {
+        title: 'Booking Updated',
+        subtitle: 'Tanzania Safari Magic'
+      }
+    }
+  };
+  return sendEmailQueued('booking-updated', data);
+}
+
+async function sendPaymentReceipt(booking, amount) {
+  const data = {
+    to: booking.email,
+    subject: `Payment Receipt — $${amount}`,
+    templateName: 'payment-receipt',
+    templateData: {
+      ...booking,
+      payment_amount: amount,
+      balance_due: Math.max(0, (parseFloat(booking.total_amount || 0) - parseFloat(booking.discount_amount || 0) - parseFloat(booking.paid_amount || 0))),
+      header: {
+        title: 'Payment Receipt',
+        subtitle: 'Tanzania Safari Magic'
+      }
+    }
+  };
+  return sendEmailQueued('payment-receipt', data);
+}
+
 // Payment emails
 async function sendPaymentSuccess(payment) {
   const data = {
@@ -627,6 +661,8 @@ module.exports = {
   sendBookingCancelled,
   sendBookingReminder,
   sendBookingCompleted,
+  sendBookingUpdated,
+  sendPaymentReceipt,
   
   // Payment emails
   sendPaymentSuccess,

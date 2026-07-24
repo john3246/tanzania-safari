@@ -119,7 +119,62 @@ class BookingController {
             // Log communication
             await bookingService.logCommunication(req.params.id, 'system', 'Payment Recorded', `A payment of $${amount} was recorded via ${payment_method || 'manual'}.`, 'internal', req.user?.id);
 
+            // Fetch booking and send receipt
+            const booking = await bookingService.repository.getBookingDetails(req.params.id);
+            if (booking && booking.email) {
+                const emailService = require('../../services/email');
+                await emailService.sendPaymentReceipt(booking, amount).catch(e => console.error('Failed to send payment receipt:', e));
+                await bookingService.logCommunication(req.params.id, 'system', 'Payment Receipt Sent', `Automated payment receipt for $${amount} dispatched.`, 'outbound', req.user?.id);
+            }
+
             res.json({ success: true, data: comm, message: 'Payment recorded successfully' });
+        } catch (error) {
+            res.status(500).json({ success: false, message: error.message });
+        }
+    }
+
+    async updateBooking(req, res) {
+        try {
+            const {
+                package_id, start_date, end_date, 
+                number_of_adults, number_of_children,
+                total_amount, discount_amount, special_requests
+            } = req.body;
+
+            const updateData = {
+                package_id: package_id || null,
+                start_date,
+                end_date,
+                number_of_adults,
+                number_of_children,
+                total_amount,
+                discount_amount,
+                special_requests
+            };
+
+            await bookingService.repository.update(req.params.id, updateData);
+            
+            // Log communication
+            await bookingService.logCommunication(req.params.id, 'system', 'Booking Updated', 'The booking itinerary or financials were manually updated by an admin.', 'internal', req.user?.id);
+
+            // Fetch the updated booking to send correct email info
+            const updatedBooking = await bookingService.repository.getBookingDetails(req.params.id);
+            if (updatedBooking && updatedBooking.email) {
+                const emailService = require('../../services/email');
+                await emailService.sendBookingUpdated(updatedBooking).catch(e => console.error('Failed to send booking updated email:', e));
+                await bookingService.logCommunication(req.params.id, 'system', 'Booking Update Notification Sent', 'Automated email notifying customer of itinerary updates dispatched.', 'outbound', req.user?.id);
+            }
+
+            res.json({ success: true, message: 'Booking updated successfully' });
+        } catch (error) {
+            res.status(500).json({ success: false, message: error.message });
+        }
+    }
+
+    async deleteBooking(req, res) {
+        try {
+            await bookingService.repository.delete(req.params.id);
+            res.json({ success: true, message: 'Booking deleted successfully' });
         } catch (error) {
             res.status(500).json({ success: false, message: error.message });
         }
