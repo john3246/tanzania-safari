@@ -20,17 +20,16 @@ class MediaController {
                 orderDirection
             };
 
-            const media = await mediaService.getAll({}, options);
-            const total = await mediaService.count({});
-
+            const result = await mediaService.getAll({}, options);
+            
             res.json({
                 success: true,
-                data: media,
+                data: result.data,
                 pagination: {
                     page: parseInt(page),
                     limit: parseInt(limit),
-                    total,
-                    pages: Math.ceil(total / limit)
+                    total: result.total,
+                    pages: Math.ceil(result.total / limit)
                 }
             });
         } catch (error) {

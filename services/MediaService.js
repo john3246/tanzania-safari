@@ -10,8 +10,95 @@ class MediaService extends BaseService {
         super(mediaRepository);
     }
 
+    async scanLocalDirectories() {
+        const publicImagesPath = path.join(__dirname, '../../public/images');
+        const uploadsPath = path.join(__dirname, '../../uploads');
+        let allFiles = [];
+
+        const walkDir = (dir, basePath, isPublic) => {
+            if (!fs.existsSync(dir)) return;
+            const files = fs.readdirSync(dir);
+            for (const file of files) {
+                const fullPath = path.join(dir, file);
+                const stat = fs.statSync(fullPath);
+                if (stat.isDirectory()) {
+                    walkDir(fullPath, basePath, isPublic);
+                } else {
+                    const ext = path.extname(file).toLowerCase();
+                    if (['.jpg', '.jpeg', '.png', '.webp', '.svg', '.gif'].includes(ext)) {
+                        const relPath = fullPath.substring(basePath.length).replace(/\\/g, '/');
+                        const finalUrl = (isPublic ? '/images' : '/uploads') + relPath;
+
+                        allFiles.push({
+                            id: crypto.randomUUID(), // fake id for UI compatibility
+                            filename: file,
+                            original_name: file,
+                            url: finalUrl,
+                            file_size: stat.size,
+                            created_at: stat.birthtime,
+                            mime_type: 'image/' + ext.replace('.', ''),
+                            folder: isPublic ? 'public/images' : 'uploads',
+                            is_scanned: true
+                        });
+                    }
+                }
+            }
+        };
+
+        walkDir(publicImagesPath, publicImagesPath, true);
+        walkDir(uploadsPath, uploadsPath, false);
+        return allFiles;
+    }
+
     async getAll(conditions = {}, options = {}) {
-        return await this.repository.findAllWithDetails(conditions, options);
+        // Fetch all from DB (ignore limit temporarily to merge properly)
+        const dbOptions = { ...options, limit: null, offset: null };
+        const dbRecords = await this.repository.findAllWithDetails(conditions, dbOptions);
+        
+        // Fetch from file system
+        const fsRecords = await this.scanLocalDirectories();
+        
+        // Merge and deduplicate (prefer DB records)
+        const mergedMap = new Map();
+        
+        for (const record of dbRecords) {
+            const url = record.url || `/uploads/${record.folder}/${record.filename}`;
+            mergedMap.set(url, record);
+        }
+        
+        for (const record of fsRecords) {
+            if (!mergedMap.has(record.url)) {
+                mergedMap.set(record.url, record);
+            }
+        }
+        
+        let mergedList = Array.from(mergedMap.values());
+        
+        // Search filter
+        if (options.search) {
+            const term = options.search.toLowerCase();
+            mergedList = mergedList.filter(f => 
+                (f.filename || '').toLowerCase().includes(term) || 
+                (f.original_name || '').toLowerCase().includes(term) ||
+                (f.alt_text || '').toLowerCase().includes(term)
+            );
+        }
+        
+        // Sorting
+        mergedList.sort((a, b) => {
+            const dateA = new Date(a.created_at || 0).getTime();
+            const dateB = new Date(b.created_at || 0).getTime();
+            return dateB - dateA; // default DESC
+        });
+        
+        // Pagination
+        const total = mergedList.length;
+        if (options.limit) {
+            const offset = options.offset || 0;
+            mergedList = mergedList.slice(offset, offset + options.limit);
+        }
+        
+        return { data: mergedList, total };
     }
 
     async getById(id) {
