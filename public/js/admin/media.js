@@ -1,4 +1,4 @@
-// ── Unified Corporate Media Management (Images & Videos + Slugs + Paths + Editable Names) ──
+// ── Executive Corporate Media Manager (Direct Copy Path + Copy Slug + Edit Name + Delete) ──
 
 window.MediaManager = {
     files: [],
@@ -66,7 +66,7 @@ window.MediaManager = {
             grid.innerHTML = `
                 <div class="col-span-full py-20 flex flex-col items-center justify-center text-slate-800 font-extrabold">
                     <i class="fa-solid fa-circle-notch fa-spin text-4xl mb-4 text-[#075e54]"></i>
-                    <p class="text-base font-black tracking-wide">LOADING ALL MEDIA ASSETS & SLUGS...</p>
+                    <p class="text-base font-black tracking-wide">LOADING ALL MEDIA ASSETS...</p>
                 </div>`;
         }
 
@@ -188,59 +188,65 @@ window.MediaManager = {
                         ${typeBadge}
                     </div>
                     
-                    <!-- Card Details & Actions (Solid High Visibility) -->
+                    <!-- Card Details & Corporate Actions Bar -->
                     <div class="p-4 bg-white space-y-3 flex-1 flex flex-col justify-between border-t-2 border-slate-200">
                         <div>
-                            <div class="flex items-center justify-between gap-2 mb-1">
+                            <div class="flex items-center justify-between gap-2 mb-1.5">
                                 <p class="text-slate-900 text-xs font-black truncate" title="${file.filename}">${file.filename}</p>
-                                <button 
-                                    onclick="MediaManager.editMedia('${file.id}', '${encodedUrl}', '${file.filename.replace(/'/g, "\\'")}', '${fileSlug}', '${(file.alt_text || '').replace(/'/g, "\\'")}', event)"
-                                    class="text-xs font-bold text-emerald-800 hover:text-emerald-900 bg-emerald-100 hover:bg-emerald-200 px-2 py-0.5 rounded border border-emerald-300 transition-all shrink-0 cursor-pointer"
-                                    title="Edit Name, Slug & Alt Text"
-                                >
-                                    <i class="fa-solid fa-pen-to-square"></i> EDIT
-                                </button>
+                                <span class="bg-slate-200 text-slate-900 text-[10px] font-black px-2 py-0.5 rounded">${sizeMB}</span>
                             </div>
                             
-                            <!-- Slug Badge Button -->
+                            <!-- Copyable Path Banner (PROMINENT) -->
                             <div class="my-2">
                                 <button 
-                                    onclick="MediaManager.copyText('${fileSlug}', 'Slug copied to clipboard!', event)"
-                                    class="w-full bg-purple-100 hover:bg-purple-200 border-2 border-purple-300 text-purple-950 font-mono font-black text-[11px] px-2.5 py-1.5 rounded-lg text-left truncate flex items-center justify-between gap-1 transition-all shadow-sm cursor-pointer"
-                                    title="Click to copy slug: ${fileSlug}"
+                                    onclick="MediaManager.copyText('${encodedUrl}', 'Media Path copied to clipboard!', event)"
+                                    class="w-full bg-blue-50 hover:bg-blue-100 border-2 border-blue-400 text-blue-950 font-mono font-black text-[11px] px-3 py-2 rounded-xl text-left flex items-center justify-between gap-1.5 transition-all shadow-sm cursor-pointer group"
+                                    title="Click to copy image path: ${mediaPath}"
                                 >
-                                    <span class="truncate">slug: ${fileSlug}</span>
-                                    <i class="fa-solid fa-copy text-xs text-purple-800"></i>
+                                    <div class="truncate">
+                                        <span class="text-[9px] text-blue-700 font-extrabold uppercase block tracking-wider">Path (Click to Copy):</span>
+                                        <span class="truncate block text-slate-900 font-bold">${mediaPath}</span>
+                                    </div>
+                                    <i class="fa-solid fa-copy text-sm text-blue-700 group-hover:scale-110 transition-transform"></i>
                                 </button>
                             </div>
 
-                            <!-- Path Info -->
-                            <div class="my-1.5">
-                                <span class="text-[10px] font-bold text-slate-500 block">Path:</span>
-                                <span class="text-[11px] font-bold text-slate-800 truncate block font-mono bg-slate-100 p-1 rounded border border-slate-200" title="${mediaPath}">${mediaPath}</span>
-                            </div>
-
-                            <div class="flex items-center justify-between text-[11px] font-bold text-slate-600 mt-2">
-                                <span>Size:</span>
-                                <span class="bg-slate-200 text-slate-900 px-2 py-0.5 rounded font-black">${sizeMB}</span>
+                            <!-- Slug Badge Info -->
+                            <div class="my-1.5 flex items-center justify-between text-[11px] bg-slate-100 p-2 rounded-lg border border-slate-200">
+                                <span class="font-bold text-slate-600">Slug:</span>
+                                <span class="font-mono font-black text-purple-900 truncate max-w-[150px]">${fileSlug}</span>
                             </div>
                         </div>
 
-                        <!-- Solid Action Buttons Bar -->
-                        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200">
+                        <!-- Solid High Visibility Corporate Action Buttons -->
+                        <div class="grid grid-cols-3 gap-1.5 pt-2 border-t-2 border-slate-200">
+                            <!-- Button 1: Copy Path -->
                             <button 
                                 data-url="${encodedUrl}" 
-                                onclick="MediaManager.copyText(this.dataset.url, 'Path URL copied!', event)" 
-                                class="bg-blue-700 hover:bg-blue-800 text-white font-black text-xs py-2 rounded-xl flex items-center justify-center gap-1.5 shadow transition-all active:scale-95 cursor-pointer"
+                                onclick="MediaManager.copyText(this.dataset.url, 'Image Path copied!', event)" 
+                                class="bg-blue-700 hover:bg-blue-800 text-white font-black text-[11px] py-2 rounded-xl flex items-center justify-center gap-1 shadow transition-all active:scale-95 cursor-pointer uppercase tracking-wider"
+                                title="Copy relative media path"
                             >
-                                <i class="fa-solid fa-link text-xs"></i> COPY PATH
+                                <i class="fa-solid fa-link text-[10px]"></i> PATH
                             </button>
+                            
+                            <!-- Button 2: Edit Name & Slug -->
+                            <button 
+                                onclick="MediaManager.editMedia('${file.id}', '${encodedUrl}', '${file.filename.replace(/'/g, "\\'")}', '${fileSlug}', '${(file.alt_text || '').replace(/'/g, "\\'")}', event)"
+                                class="bg-emerald-700 hover:bg-emerald-800 text-white font-black text-[11px] py-2 rounded-xl flex items-center justify-center gap-1 shadow transition-all active:scale-95 cursor-pointer uppercase tracking-wider"
+                                title="Edit Filename & Unique Slug"
+                            >
+                                <i class="fa-solid fa-pen-to-square text-[10px]"></i> EDIT
+                            </button>
+
+                            <!-- Button 3: Delete File -->
                             <button 
                                 data-id="${file.id}" 
                                 onclick="MediaManager.deleteFile(this.dataset.id, event)" 
-                                class="bg-red-600 hover:bg-red-700 text-white font-black text-xs py-2 rounded-xl flex items-center justify-center gap-1.5 shadow transition-all active:scale-95 cursor-pointer"
+                                class="bg-red-600 hover:bg-red-700 text-white font-black text-[11px] py-2 rounded-xl flex items-center justify-center gap-1 shadow transition-all active:scale-95 cursor-pointer uppercase tracking-wider"
+                                title="Delete media asset"
                             >
-                                <i class="fa-solid fa-trash text-xs"></i> DELETE
+                                <i class="fa-solid fa-trash text-[10px]"></i> DELETE
                             </button>
                         </div>
                     </div>
@@ -259,7 +265,7 @@ window.MediaManager = {
         if (e) e.stopPropagation();
         
         const newName = prompt('Edit Filename / Display Title:', currentName);
-        if (newName === null) return; // User cancelled
+        if (newName === null) return;
         
         const newSlug = prompt('Edit Unique Slug:', currentSlug || this.generateSlug(newName));
         if (newSlug === null) return;
@@ -286,7 +292,7 @@ window.MediaManager = {
         if (e) e.stopPropagation();
         const absoluteText = (text.startsWith('/') && !text.startsWith('http')) ? window.location.origin + text : text;
         navigator.clipboard.writeText(absoluteText).then(() => {
-            if (typeof showToast === 'function') showToast(successMsg || 'Copied to clipboard!', 'success');
+            if (typeof showToast === 'function') showToast(successMsg || 'Path copied to clipboard!', 'success');
         }).catch(err => {
             console.error('Failed to copy: ', err);
         });

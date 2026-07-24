@@ -1,127 +1,178 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-slate-900">
+<html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tanzania Safari Magic | CMS Login</title>
+    <title>Tanzania Safari Magic | Corporate CMS Portal</title>
     <link rel="icon" type="image/png" href="/images/logo.png">
     
     <!-- Tailwind CSS -->
-    <link rel="stylesheet" href="/css/tailwind-output.css">
-    <!-- FontAwesome -->
+    <link rel="stylesheet" href="/css/tailwind-output.css?v=3">
+    <!-- FontAwesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
-<body class="h-full flex items-center justify-center font-sans bg-slate-950 relative overflow-hidden">
-    <!-- Background Accents -->
-    <div class="absolute -top-40 -left-40 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl"></div>
-    <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl"></div>
+<body class="h-full font-sans antialiased bg-slate-950 text-white flex items-center justify-center relative overflow-x-hidden selection:bg-emerald-500 selection:text-white">
 
-    <div class="w-full max-w-md px-6 py-12 relative z-10">
-        <!-- Logo and Heading -->
-        <div class="flex flex-col items-center mb-8">
-            <img src="/images/logo.png" alt="Tanzania Safari Magic Logo" class="h-16 w-auto mb-4 object-contain">
-            <h1 class="text-2xl font-bold text-white tracking-tight text-center">Tanzania Safari Magic</h1>
-            <p class="text-xs text-slate-400 mt-1 uppercase tracking-widest font-semibold">Corporate CMS Admin Portal</p>
+    <!-- Hero Background Image (Balloon WebP) with Dark Overlay -->
+    <div class="fixed inset-0 z-0">
+        <img 
+            src="/images/optimized/balloon.webp" 
+            alt="Tanzania Safari Hot Air Balloon" 
+            class="w-full h-full object-cover object-center scale-105 filter brightness-75 contrast-125 transition-transform duration-1000"
+            onerror="this.onerror=null; this.src='/images/hero.jpg'"
+        >
+        <!-- Dark Solid Gradient Overlay for 100% Text Readability -->
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-slate-900/60 backdrop-blur-sm"></div>
+    </div>
+
+    <!-- Main Corporate Login Box -->
+    <div class="w-full max-w-lg px-4 py-8 relative z-10 mx-auto">
+        
+        <!-- Header Branding Badge -->
+        <div class="text-center mb-8 space-y-3">
+            <div class="inline-flex p-3 bg-slate-900/90 border-2 border-emerald-500/40 rounded-3xl shadow-2xl backdrop-blur-md mb-2 group transition-all hover:border-emerald-500">
+                <img src="/images/logo.png" alt="Tanzania Safari Magic Logo" class="h-16 w-16 object-contain group-hover:scale-105 transition-transform">
+            </div>
+            <h1 class="text-3xl font-black tracking-tight text-white drop-shadow-md">Tanzania Safari Magic</h1>
+            <div class="flex items-center justify-center gap-2">
+                <span class="h-0.5 w-8 bg-emerald-500 rounded-full"></span>
+                <p class="text-xs font-black uppercase tracking-widest text-emerald-400">Corporate Management System</p>
+                <span class="h-0.5 w-8 bg-emerald-500 rounded-full"></span>
+            </div>
         </div>
 
         <!-- Login Card -->
-        <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-8 shadow-2xl backdrop-blur-md">
-            <div id="errorMsg" class="hidden mb-6 bg-red-950/50 border border-red-500/50 text-red-200 text-xs px-4 py-3 rounded-lg flex items-center gap-2">
-                <i class="fa-solid fa-circle-exclamation text-red-500"></i>
-                <span id="errorText">Invalid email or password</span>
+        <div class="bg-slate-900/90 border-2 border-slate-700/80 rounded-3xl p-8 sm:p-10 shadow-2xl backdrop-blur-xl relative overflow-hidden space-y-6">
+            
+            <!-- Alert Banner for Errors -->
+            <div id="errorMsg" class="hidden bg-red-900/90 border-2 border-red-500 text-white text-xs font-black p-4 rounded-2xl flex items-start gap-3 shadow-md animate-shake">
+                <i class="fa-solid fa-triangle-exclamation text-red-300 text-base shrink-0 mt-0.5"></i>
+                <div class="flex-1">
+                    <p class="font-black uppercase tracking-wider text-red-200">Authentication Failed</p>
+                    <p id="errorText" class="font-semibold text-white mt-0.5">Invalid email address or password provided.</p>
+                </div>
             </div>
 
-            <form id="loginForm" class="space-y-5">
-                <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Email Address</label>
+            <!-- Login Form -->
+            <form id="loginForm" class="space-y-6">
+                
+                <!-- Email Field -->
+                <div class="space-y-2">
+                    <label class="block text-xs font-black text-slate-200 uppercase tracking-wider">
+                        <i class="fa-solid fa-envelope text-emerald-400 mr-1.5"></i> Admin Email Address
+                    </label>
                     <div class="relative">
-                        <i class="fa-regular fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                            <i class="fa-solid fa-at text-sm"></i>
+                        </div>
                         <input 
                             type="email" 
                             name="email" 
                             id="emailInput" 
                             required 
                             placeholder="admin@tsmagic.com" 
-                            class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-11 pr-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 transition-all placeholder:text-slate-600"
+                            class="w-full bg-slate-950 border-2 border-slate-700 rounded-2xl pl-11 pr-4 py-3.5 text-sm font-extrabold text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 transition-all"
                         >
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Password</label>
+                <!-- Password Field -->
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <label class="block text-xs font-black text-slate-200 uppercase tracking-wider">
+                            <i class="fa-solid fa-lock text-emerald-400 mr-1.5"></i> Secret Password
+                        </label>
+                        <a href="#" id="forgotPwLink" class="text-xs font-black text-emerald-400 hover:text-emerald-300 transition-colors uppercase tracking-wider">
+                            Forgot?
+                        </a>
+                    </div>
                     <div class="relative">
-                        <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                            <i class="fa-solid fa-key text-sm"></i>
+                        </div>
                         <input 
                             type="password" 
                             name="password" 
                             id="passwordInput" 
                             required 
-                            placeholder="••••••••" 
-                            class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-11 pr-12 py-3 text-sm text-white focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 transition-all placeholder:text-slate-600"
+                            placeholder="••••••••••••" 
+                            class="w-full bg-slate-950 border-2 border-slate-700 rounded-2xl pl-11 pr-12 py-3.5 text-sm font-extrabold text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 transition-all"
                         >
-                        <button type="button" id="togglePw" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300">
-                            <i class="fa-regular fa-eye"></i>
+                        <button 
+                            type="button" 
+                            id="togglePw" 
+                            class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-white transition-colors cursor-pointer"
+                        >
+                            <i class="fa-regular fa-eye text-base"></i>
                         </button>
-                    </div>
-                    <div class="text-right mt-2">
-                        <a href="#" id="forgotPwLink" class="text-xs text-emerald-500 hover:text-emerald-400 font-semibold transition-colors">Forgot Password?</a>
                     </div>
                 </div>
 
+                <!-- Remember Me & Security Notice -->
+                <div class="flex items-center justify-between text-xs font-extrabold text-slate-300">
+                    <label class="flex items-center gap-2 cursor-pointer select-none">
+                        <input type="checkbox" id="rememberMe" checked class="w-4 h-4 rounded border-slate-700 text-emerald-600 focus:ring-emerald-500 bg-slate-950">
+                        <span>Remember Session</span>
+                    </label>
+                    <span class="text-slate-400 text-[11px] font-bold"><i class="fa-solid fa-shield-halved text-emerald-400"></i> SSL 256-bit</span>
+                </div>
+
+                <!-- Submit Button -->
                 <button 
                     type="submit" 
                     id="loginBtn" 
-                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl text-sm transition-all shadow-lg shadow-emerald-950/20 flex items-center justify-center gap-2 mt-2"
+                    class="w-full bg-[#075e54] hover:bg-[#064e46] text-white font-black text-sm uppercase tracking-wider py-4 px-6 rounded-2xl shadow-xl transition-all active:scale-98 flex items-center justify-center gap-2 cursor-pointer border border-emerald-600"
                 >
-                    <i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In to CMS
+                    <i class="fa-solid fa-right-to-bracket text-base"></i> SIGN IN TO CMS
                 </button>
             </form>
         </div>
 
+        <!-- Footer Link -->
         <div class="text-center mt-8">
-            <a href="/" class="text-xs text-slate-500 hover:text-slate-400 transition-colors inline-flex items-center gap-2">
-                <i class="fa-solid fa-arrow-left"></i> Back to Live Website
+            <a href="/" class="text-xs font-black text-slate-300 hover:text-white transition-colors inline-flex items-center gap-2 bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700/80 shadow-md">
+                <i class="fa-solid fa-arrow-left text-emerald-400"></i> Back to Public Safari Platform
             </a>
         </div>
     </div>
 
-    <!-- Forgot Password Modal -->
-    <div id="forgotPwModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-8 mx-4 shadow-2xl relative">
-            <button id="closeModal" class="absolute top-4 right-4 text-slate-500 hover:text-slate-350">
+    <!-- Password Reset Modal Overlay -->
+    <div id="forgotPwModal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border-2 border-slate-700 rounded-3xl max-w-md w-full p-8 shadow-2xl relative space-y-4">
+            <button id="closeModal" class="absolute top-5 right-5 text-slate-400 hover:text-white p-2 rounded-xl bg-slate-800 hover:bg-slate-700 transition-all cursor-pointer">
                 <i class="fa-solid fa-xmark text-lg"></i>
             </button>
-            <h3 class="text-lg font-bold text-white mb-2">Reset Password</h3>
-            <p class="text-xs text-slate-400 mb-6">Enter your email address and we'll send you link instructions to reset your password.</p>
+            <h3 class="text-xl font-black text-white flex items-center gap-2">
+                <i class="fa-solid fa-lock-open text-emerald-400"></i> Reset Password
+            </h3>
+            <p class="text-xs font-bold text-slate-300">Enter your email address to receive password reset instructions.</p>
             
-            <div id="forgotErrorMsg" class="hidden mb-4 bg-red-950/50 border border-red-500/50 text-red-200 text-xs px-4 py-3 rounded-lg flex items-center gap-2">
-                <i class="fa-solid fa-circle-exclamation text-red-500"></i>
+            <div id="forgotErrorMsg" class="hidden bg-red-950 border border-red-500 text-red-200 text-xs font-black p-3.5 rounded-xl">
                 <span id="forgotErrorText">Email not found</span>
             </div>
             
-            <div id="forgotSuccessMsg" class="hidden mb-4 bg-emerald-950/50 border border-emerald-500/50 text-emerald-200 text-xs px-4 py-3 rounded-lg flex items-center gap-2">
-                <i class="fa-solid fa-circle-check text-emerald-500"></i>
-                <span id="forgotSuccessText">Reset link has been dispatched!</span>
+            <div id="forgotSuccessMsg" class="hidden bg-emerald-950 border border-emerald-500 text-emerald-200 text-xs font-black p-3.5 rounded-xl">
+                <span id="forgotSuccessText">Reset link has been sent!</span>
             </div>
 
             <form id="forgotPwForm" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Email Address</label>
+                    <label class="block text-xs font-black text-slate-300 uppercase tracking-wider mb-2">Email Address</label>
                     <input 
                         type="email" 
                         name="email" 
                         id="forgotEmailInput" 
                         required 
                         placeholder="admin@tsmagic.com" 
-                        class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 transition-all placeholder:text-slate-600"
+                        class="w-full bg-slate-950 border-2 border-slate-700 rounded-2xl px-4 py-3 text-sm font-black text-white focus:outline-none focus:border-emerald-500"
                     >
                 </div>
                 <button 
                     type="submit" 
                     id="forgotBtn" 
-                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl text-sm transition-all flex items-center justify-center gap-2"
+                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs uppercase tracking-wider py-3.5 rounded-2xl transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
                 >
                     Send Reset Link
                 </button>
@@ -129,20 +180,20 @@
         </div>
     </div>
 
-    <!-- Login scripts -->
+    <!-- Login Auth Script -->
     <script>
         const API_BASE = '/api';
 
-        // Toggle Password visibility
+        // Toggle Password Visibility
         const togglePw = document.getElementById('togglePw');
         const pwInput = document.getElementById('passwordInput');
         togglePw.addEventListener('click', () => {
             const isPw = pwInput.type === 'password';
             pwInput.type = isPw ? 'text' : 'password';
-            togglePw.innerHTML = isPw ? '<i class="fa-regular fa-eye-slash"></i>' : '<i class="fa-regular fa-eye"></i>';
+            togglePw.innerHTML = isPw ? '<i class="fa-regular fa-eye-slash text-base"></i>' : '<i class="fa-regular fa-eye text-base"></i>';
         });
 
-        // Handle Login submission
+        // Handle Login Submission
         const loginForm = document.getElementById('loginForm');
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -150,7 +201,7 @@
             const errorMsg = document.getElementById('errorMsg');
             
             btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-base"></i> SIGNING IN...';
             errorMsg.classList.add('hidden');
 
             try {
@@ -161,23 +212,24 @@
                 });
                 
                 const result = await res.json();
-                if (!res.ok) throw new Error(result.message || 'Login failed');
+                if (!res.ok) throw new Error(result.message || 'Authentication failed');
 
                 if (result.token) {
                     localStorage.setItem('adminToken', result.token);
+                    localStorage.setItem('token', result.token);
                     window.location.href = '/admin/dashboard';
                 }
             } catch (err) {
                 console.error(err);
-                document.getElementById('errorText').textContent = err.message;
+                document.getElementById('errorText').textContent = err.message || 'Login failed';
                 errorMsg.classList.remove('hidden');
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = '<i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In to CMS';
+                btn.innerHTML = '<i class="fa-solid fa-right-to-bracket text-base"></i> SIGN IN TO CMS';
             }
         });
 
-        // Forgot password modal triggers
+        // Forgot Password Modal Triggers
         const forgotModal = document.getElementById('forgotPwModal');
         document.getElementById('forgotPwLink').addEventListener('click', (e) => {
             e.preventDefault();
@@ -187,7 +239,7 @@
             forgotModal.classList.add('hidden');
         });
 
-        // Handle Forgot password submission
+        // Handle Forgot Password Submission
         const forgotForm = document.getElementById('forgotPwForm');
         forgotForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -196,7 +248,7 @@
             const successDiv = document.getElementById('forgotSuccessMsg');
 
             btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Sending...';
             errDiv.classList.add('hidden');
             successDiv.classList.add('hidden');
 
