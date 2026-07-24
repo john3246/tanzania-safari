@@ -52,32 +52,16 @@ class MediaService extends BaseService {
 
     async getAll(conditions = {}, options = {}) {
         try {
-            // Simplified: Just scan local directories as requested by user
-            const localFiles = await this.scanLocalDirectories();
+            // Use repository to fetch media from the database since all images are now synced
+            const paginatedFiles = await this.repository.findAllWithDetails(conditions, options);
+            const total = await this.repository.count(conditions);
             
-            let filteredFiles = localFiles;
-            if (options.search) {
-                const term = options.search.toLowerCase();
-                filteredFiles = filteredFiles.filter(f => 
-                    (f.filename || '').toLowerCase().includes(term) || 
-                    (f.original_name || '').toLowerCase().includes(term) ||
-                    (f.url || '').toLowerCase().includes(term)
-                );
-            }
-
-            // Apply pagination manually
-            const page = options.page || 1;
-            const limit = options.limit || 50;
-            const offset = (page - 1) * limit;
-            
-            const paginatedFiles = filteredFiles.slice(offset, offset + limit);
-
             return {
                 data: paginatedFiles,
-                total: filteredFiles.length
+                total: total
             };
         } catch (error) {
-            console.error('Error fetching media:', error);
+            console.error('Error fetching media from DB:', error);
             throw error;
         }
     }
