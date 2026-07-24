@@ -87,13 +87,19 @@ class BookingCMSService extends BaseService {
         // Status IDs: 1=Pending, 2=Confirmed, 3=Cancelled, 4=Completed
         if (statusId === 2) {
             // Confirmed
-            await emailService.sendAdminBookingConfirmed(bookingDetails);
+            if (emailService.sendBookingApproved) {
+                await emailService.sendBookingApproved(bookingDetails);
+            }
         } else if (statusId === 3) {
             // Cancelled
-            await emailService.sendAdminBookingCancelled(bookingDetails);
+            if (emailService.sendBookingCancelled) {
+                await emailService.sendBookingCancelled(bookingDetails);
+            }
         } else if (statusId === 4) {
             // Completed
-            await emailService.sendAdminBookingCompleted(bookingDetails);
+            if (emailService.sendBookingCompleted) {
+                await emailService.sendBookingCompleted(bookingDetails);
+            }
         }
 
         return updatedBooking;
