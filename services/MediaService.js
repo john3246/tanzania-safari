@@ -65,8 +65,38 @@ class MediaService extends BaseService {
         return allFiles;
     }
 
+    async syncDiskFilesToDatabase() {
+        try {
+            const scannedFiles = await this.scanLocalDirectories();
+            const db = require('../config/db');
+            
+            const existingRes = await db.query('SELECT url, slug FROM media_library WHERE deleted_at IS NULL');
+            const existingUrls = new Set(existingRes.rows.map(r => r.url));
+            const urlToSlug = new Map(existingRes.rows.map(r => [r.url, r.slug]));
+
+            for (const file of scannedFiles) {
+                if (!existingUrls.has(file.url)) {
+                    await db.query(
+                        `INSERT INTO media_library (id, filename, original_name, url, slug, file_size, mime_type, folder, created_at)
+                         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW())
+                         ON CONFLICT DO NOTHING`,
+                        [file.id, file.filename, file.original_name, file.url, file.slug, file.file_size, file.mime_type, file.folder]
+                    );
+                } else if (!urlToSlug.get(file.url)) {
+                    await db.query(
+                        `UPDATE media_library SET slug = $1 WHERE url = $2 AND (slug IS NULL OR slug = '')`,
+                        [file.slug, file.url]
+                    );
+                }
+            }
+        } catch (err) {
+            console.error('Error syncing disk files to database:', err.message);
+        }
+    }
+
     async getAll(conditions = {}, options = {}) {
         try {
+            await this.syncDiskFilesToDatabase();
             const paginatedFiles = await this.repository.findAllWithDetails(conditions, options);
             const total = await this.repository.count(conditions);
             
