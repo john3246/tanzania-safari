@@ -220,9 +220,7 @@ app.get('/admin/register', (req, res) =>
     res.sendFile(path.join(__dirname, 'views/admin/register.html')));
 app.get('/admin/reset-password', (req, res) =>
     res.sendFile(path.join(__dirname, 'views/admin/reset-password.html')));
-app.get('/admin', (req, res) =>
-    res.sendFile(path.join(__dirname, 'views/admin/index.html')));
-app.get('/admin/:page', (req, res) =>
+app.get(['/admin', '/admin/*'], (req, res) =>
     res.sendFile(path.join(__dirname, 'views/admin/index.html')));
 
 // ── Frontend Routes ───────────────────────────────────────────
