@@ -185,17 +185,16 @@ async function sendEmailQueued(jobName, data) {
   }
 
   try {
-    const job = await queueEmail(jobName, data, {
-      priority: priority === 'high' ? 10 : 5
-    });
-    
-    return { success: true, jobId: job.id };
+    // Redis queue disabled to prevent hanging if Redis is not running locally.
+    // Falling back to direct email sending immediately.
+    logger.info({ jobName }, 'Bypassing Redis queue, using direct email sending');
+    return await sendEmailDirect(data);
   } catch (error) {
     logger.error({
-      event: 'email_queue_failed',
+      event: 'email_direct_failed',
       jobName,
       error: error.message
-    }, 'Failed to queue email');
+    }, 'Failed to send email directly');
     
     throw error;
   }
