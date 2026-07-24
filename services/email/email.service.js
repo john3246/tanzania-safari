@@ -104,7 +104,30 @@ function generatePlaintext(html) {
  * Send email directly (synchronous, for critical emails)
  */
 async function sendEmailDirect(options) {
-  const { to, subject, html, text } = options;
+  let { to, subject, html, text, templateName, templateData } = options;
+
+  if (!html && templateName) {
+    try {
+      html = await renderTemplate(templateName, templateData || {});
+    } catch (err) {
+      logger.warn({ event: 'template_render_warning', templateName, error: err.message }, 'Using inline HTML fallback for direct email');
+      const bodyContent = templateData?.response_notes || templateData?.enquiry_message || templateData?.message || subject || '';
+      html = `
+        <div style="font-family: 'Segoe UI', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff;">
+          <div style="background: #0f172a; padding: 20px; border-radius: 8px 8px 0 0; text-align: center;">
+            <h2 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 700;">Tanzania Safari Magic</h2>
+          </div>
+          <div style="padding: 24px; color: #334155; font-size: 15px; line-height: 1.6;">
+            <h3 style="color: #0f172a; margin-top: 0;">${subject}</h3>
+            <div style="margin-top: 16px; white-space: pre-wrap;">${bodyContent}</div>
+          </div>
+          <div style="border-top: 1px solid #e2e8f0; padding: 16px; font-size: 12px; color: #94a3b8; text-align: center; background: #f8fafc; border-radius: 0 0 8px 8px;">
+            &copy; ${new Date().getFullYear()} Tanzania Safari Magic. All rights reserved.
+          </div>
+        </div>
+      `;
+    }
+  }
 
   // Validate environment
   const envValidation = validateEnvironment();
@@ -171,8 +194,32 @@ async function sendEmailQueued(jobName, data) {
     return { success: false, error: 'Invalid environment' };
   }
 
+  // Pre-render HTML template if templateName is provided
+  if (!data.html && templateName) {
+    try {
+      data.html = await renderTemplate(templateName, templateData || {});
+    } catch (renderErr) {
+      logger.warn({ event: 'template_render_warning', templateName, error: renderErr.message }, 'Falling back to inline HTML rendering');
+      const bodyContent = templateData?.response_notes || templateData?.enquiry_message || templateData?.message || subject || '';
+      data.html = `
+        <div style="font-family: 'Segoe UI', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff;">
+          <div style="background: #0f172a; padding: 20px; border-radius: 8px 8px 0 0; text-align: center;">
+            <h2 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 700;">Tanzania Safari Magic</h2>
+          </div>
+          <div style="padding: 24px; color: #334155; font-size: 15px; line-height: 1.6;">
+            <h3 style="color: #0f172a; margin-top: 0;">${subject}</h3>
+            <div style="margin-top: 16px; white-space: pre-wrap;">${bodyContent}</div>
+          </div>
+          <div style="border-top: 1px solid #e2e8f0; padding: 16px; font-size: 12px; color: #94a3b8; text-align: center; background: #f8fafc; border-radius: 0 0 8px 8px;">
+            &copy; ${new Date().getFullYear()} Tanzania Safari Magic. All rights reserved.
+          </div>
+        </div>
+      `;
+    }
+  }
+
   // Validate email data
-  const validation = validateEmailData(to, subject, templateName);
+  const validation = validateEmailData(to, subject, data.html || templateName);
   if (!validation.valid) {
     throw new Error(`Validation failed: ${validation.errors.join(', ')}`);
   }
@@ -185,8 +232,6 @@ async function sendEmailQueued(jobName, data) {
   }
 
   try {
-    // Redis queue disabled to prevent hanging if Redis is not running locally.
-    // Falling back to direct email sending immediately.
     logger.info({ jobName }, 'Bypassing Redis queue, using direct email sending');
     return await sendEmailDirect(data);
   } catch (error) {

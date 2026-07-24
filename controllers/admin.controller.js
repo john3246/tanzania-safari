@@ -80,6 +80,10 @@ class AdminController {
             const db = require('../config/db');
             const { response } = req.body;
             
+            if (!response || !response.trim()) {
+                return res.status(400).json({ success: false, message: 'Response text is required' });
+            }
+
             // Get enquiry details before updating
             const enquiryResult = await db.query('SELECT * FROM contact_enquiries WHERE enquiry_id = $1', [req.params.id]);
             
@@ -88,18 +92,41 @@ class AdminController {
             }
             
             const enquiry = enquiryResult.rows[0];
+            let existingResponses = [];
+            try {
+                existingResponses = typeof enquiry.responses === 'string' ? JSON.parse(enquiry.responses) : (enquiry.responses || []);
+            } catch (e) { 
+                existingResponses = []; 
+            }
             
-            await db.query('UPDATE contact_enquiries SET enquiry_status = $1, updated_at = NOW() WHERE enquiry_id = $2', ['Responded', req.params.id]);
+            const newResponseObj = {
+                id: Date.now().toString(),
+                sender: 'Admin',
+                text: response.trim(),
+                created_at: new Date().toISOString()
+            };
+            
+            existingResponses.push(newResponseObj);
+
+            await db.query(
+                `UPDATE contact_enquiries 
+                 SET enquiry_status = $1, response_notes = $2, responded_at = NOW(), responses = $3, updated_at = NOW() 
+                 WHERE enquiry_id = $4`,
+                ['Responded', response.trim(), JSON.stringify(existingResponses), req.params.id]
+            );
             
             // Send response email to user
+            let emailSent = false;
             try {
-                await emailService.sendEnquiryResponse(enquiry, response);
+                await emailService.sendEnquiryResponse(enquiry, response.trim());
+                emailSent = true;
             } catch (emailError) {
                 console.error('Failed to send enquiry response email:', emailError.message);
             }
             
-            res.json({ success: true });
+            res.json({ success: true, emailSent, responses: existingResponses });
         } catch (error) {
+            console.error('Error responding to enquiry:', error);
             res.status(500).json({ success: false, message: 'Error responding to enquiry' });
         }
     }

@@ -10,10 +10,22 @@ class MediaService extends BaseService {
         super(mediaRepository);
     }
 
+    generateSlug(filename) {
+        const nameWithoutExt = path.parse(filename).name;
+        return nameWithoutExt
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+    }
+
     async scanLocalDirectories() {
         const publicImagesPath = path.join(__dirname, '../public/images');
         const uploadsPath = path.join(__dirname, '../uploads');
         let allFiles = [];
+
+        const imageExts = ['.jpg', '.jpeg', '.png', '.webp', '.svg', '.gif', '.bmp'];
+        const videoExts = ['.mp4', '.webm', '.ogg', '.mov', '.avi', '.mkv', '.m4v'];
+        const allowedExts = [...imageExts, ...videoExts];
 
         const walkDir = (dir, basePath, isPublic) => {
             if (!fs.existsSync(dir)) return;
@@ -25,18 +37,21 @@ class MediaService extends BaseService {
                     walkDir(fullPath, basePath, isPublic);
                 } else {
                     const ext = path.extname(file).toLowerCase();
-                    if (['.jpg', '.jpeg', '.png', '.webp', '.svg', '.gif'].includes(ext)) {
+                    if (allowedExts.includes(ext)) {
                         const relPath = fullPath.substring(basePath.length).replace(/\\/g, '/');
                         const finalUrl = (isPublic ? '/images' : '/uploads') + relPath;
+                        const isVideo = videoExts.includes(ext);
+                        const mimeType = isVideo ? (ext === '.mov' ? 'video/quicktime' : `video/${ext.replace('.', '')}`) : (ext === '.svg' ? 'image/svg+xml' : `image/${ext.replace('.', '')}`);
 
                         allFiles.push({
-                            id: crypto.randomUUID(), // fake id for UI compatibility
+                            id: crypto.randomUUID(),
                             filename: file,
                             original_name: file,
                             url: finalUrl,
+                            slug: this.generateSlug(file),
                             file_size: stat.size,
                             created_at: stat.birthtime,
-                            mime_type: 'image/' + ext.replace('.', ''),
+                            mime_type: mimeType,
                             folder: isPublic ? 'public/images' : 'uploads',
                             is_scanned: true
                         });
@@ -52,12 +67,19 @@ class MediaService extends BaseService {
 
     async getAll(conditions = {}, options = {}) {
         try {
-            // Use repository to fetch media from the database since all images are now synced
             const paginatedFiles = await this.repository.findAllWithDetails(conditions, options);
             const total = await this.repository.count(conditions);
             
+            // Ensure every file object has a slug
+            const processed = paginatedFiles.map(f => {
+                if (!f.slug && f.filename) {
+                    f.slug = this.generateSlug(f.filename);
+                }
+                return f;
+            });
+
             return {
-                data: paginatedFiles,
+                data: processed,
                 total: total
             };
         } catch (error) {
@@ -70,6 +92,9 @@ class MediaService extends BaseService {
         const media = await this.repository.findById(id);
         if (!media || media.deleted_at) {
             throw new Error('Media not found');
+        }
+        if (!media.slug && media.filename) {
+            media.slug = this.generateSlug(media.filename);
         }
         return media;
     }
@@ -92,6 +117,7 @@ class MediaService extends BaseService {
         const baseName = path.parse(file.originalname).name;
         const uniqueName = `${baseName}-${crypto.randomBytes(8).toString('hex')}${ext}`;
         const outputPath = path.join(folderPath, uniqueName);
+        const fileSlug = this.generateSlug(file.originalname);
 
         // Process image if it's an image
         let processedPath = outputPath;
@@ -116,7 +142,7 @@ class MediaService extends BaseService {
                 .webp({ quality: 70 })
                 .toFile(thumbnailPath);
         } else {
-            // For non-images, just copy the file
+            // For non-images (videos, etc), just copy the file
             fs.writeFileSync(outputPath, fs.readFileSync(file.path));
         }
 
@@ -135,6 +161,7 @@ class MediaService extends BaseService {
             file_size: file.size,
             path: `/uploads/${targetFolder}/${uniqueName}`,
             url: `/uploads/${targetFolder}/${uniqueName}`,
+            slug: fileSlug,
             thumbnail_url: thumbnailPath ? `/uploads/${targetFolder}/${path.basename(thumbnailPath)}` : null,
             webp_url: webpPath ? `/uploads/${targetFolder}/${path.basename(webpPath)}` : null,
             alt_text: alt_text || null,
