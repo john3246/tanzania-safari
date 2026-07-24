@@ -6,6 +6,33 @@ window.MediaManager = {
 
     init: async function() {
         await this.loadFiles();
+        this.setupEventListeners();
+    },
+
+    setupEventListeners: function() {
+        const dropZone = document.getElementById('dropZone');
+        const fileUploadInput = document.getElementById('fileUploadInput');
+
+        if (dropZone && !dropZone.dataset.bound) {
+            dropZone.dataset.bound = 'true';
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, (e) => { e.preventDefault(); e.stopPropagation(); }, false);
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                let dt = e.dataTransfer;
+                let files = dt.files;
+                this.handleFiles(files);
+            }, false);
+        }
+
+        if (fileUploadInput && !fileUploadInput.dataset.bound) {
+            fileUploadInput.dataset.bound = 'true';
+            fileUploadInput.addEventListener('change', (e) => {
+                this.handleFiles(e.target.files);
+                e.target.value = null;
+            });
+        }
     },
 
     generateSlug: function(filename) {
@@ -24,7 +51,17 @@ window.MediaManager = {
     },
 
     loadFiles: async function() {
-        const grid = document.getElementById('mediaGrid');
+        let grid = document.getElementById('mediaGrid');
+        
+        // Wait for DOM insertion if not yet ready
+        if (!grid) {
+            for (let i = 0; i < 10; i++) {
+                await new Promise(r => setTimeout(r, 50));
+                grid = document.getElementById('mediaGrid');
+                if (grid) break;
+            }
+        }
+
         if (grid) {
             grid.innerHTML = `
                 <div class="col-span-full py-20 flex flex-col items-center justify-center text-slate-800 font-extrabold">
@@ -38,7 +75,7 @@ window.MediaManager = {
             const res = await apiRequest('GET', '/media?limit=1000');
             this.files = (res && res.data) ? res.data : (Array.isArray(res) ? res : []);
             
-            // If empty, try fallback endpoint /api/images
+            // Fallback endpoint if empty
             if (this.files.length === 0) {
                 try {
                     const fallbackRes = await apiRequest('GET', '/api/images');
@@ -61,6 +98,7 @@ window.MediaManager = {
             this.renderGrid();
         } catch (e) {
             console.error('Error fetching media assets:', e);
+            grid = document.getElementById('mediaGrid');
             if (grid) {
                 grid.innerHTML = `
                     <div class="col-span-full py-16 flex flex-col items-center justify-center text-red-600 font-black">
@@ -132,10 +170,7 @@ window.MediaManager = {
             if (isVid) {
                 previewHtml = `
                     <div class="relative w-full h-44 bg-slate-950 flex items-center justify-center overflow-hidden">
-                        <video src="${encodedUrl}" muted preload="metadata" class="w-full h-full object-cover"></video>
-                        <div class="absolute w-12 h-12 rounded-full bg-purple-600 text-white flex items-center justify-center shadow-lg">
-                            <i class="fa-solid fa-play text-base ml-0.5"></i>
-                        </div>
+                        <video src="${encodedUrl}" controls preload="metadata" class="w-full h-full object-cover"></video>
                     </div>
                 `;
             } else {
@@ -150,7 +185,7 @@ window.MediaManager = {
                         ${typeBadge}
                     </div>
                     
-                    <!-- Card Details & Actions (Solid Solid High Visibility) -->
+                    <!-- Card Details & Actions (Solid High Visibility) -->
                     <div class="p-4 bg-white space-y-3 flex-1 flex flex-col justify-between border-t-2 border-slate-200">
                         <div>
                             <p class="text-slate-900 text-xs font-black truncate mb-1" title="${file.filename}">${file.filename}</p>
@@ -159,7 +194,7 @@ window.MediaManager = {
                             <div class="my-2">
                                 <button 
                                     onclick="MediaManager.copyText('${fileSlug}', 'Slug copied to clipboard!', event)"
-                                    class="w-full bg-purple-100 hover:bg-purple-200 border-2 border-purple-300 text-purple-950 font-mono font-black text-[11px] px-2.5 py-1.5 rounded-lg text-left truncate flex items-center justify-between gap-1 transition-all shadow-sm"
+                                    class="w-full bg-purple-100 hover:bg-purple-200 border-2 border-purple-300 text-purple-950 font-mono font-black text-[11px] px-2.5 py-1.5 rounded-lg text-left truncate flex items-center justify-between gap-1 transition-all shadow-sm cursor-pointer"
                                     title="Click to copy slug: ${fileSlug}"
                                 >
                                     <span class="truncate">slug: ${fileSlug}</span>
@@ -256,7 +291,14 @@ window.MediaManager = {
 
 // Global entry point called by core.js navigate('images')
 async function loadImages() {
-    await window.MediaManager.init();
+    const run = async () => {
+        if (window.MediaManager) {
+            await window.MediaManager.init();
+        }
+    };
+    run();
+    // Second trigger after 100ms to guarantee rendering after SPA DOM insertion
+    setTimeout(run, 100);
 }
 
 window.loadImages = loadImages;
