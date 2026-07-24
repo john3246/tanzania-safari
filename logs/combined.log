@@ -218,3 +218,27 @@
 {"level":"error","message":{"error":"Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to\n535 5.7.8  https://support.google.com/mail/?p=BadCredentials 5b1f17b1804b1-4957b5ed646sm66079815e9.0 - gsmtp","event":"smtp_verify_failed","host":"smtp.gmail.com","port":587},"service":"tanzania-safari","timestamp":"2026-07-24 22:46:46"}
 {"level":"warn","message":{"event":"smtp_startup_failed"},"service":"tanzania-safari","timestamp":"2026-07-24 22:46:46"}
 {"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-07-24 22:46:46"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-07-24 22:50:16"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-07-24 22:50:24"}
+{"level":"error","message":{"error":"Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to\n535 5.7.8  https://support.google.com/mail/?p=BadCredentials ffacd0b85a97d-47f85c52fc0sm26358582f8f.23 - gsmtp","event":"smtp_verify_failed","host":"smtp.gmail.com","port":587},"service":"tanzania-safari","timestamp":"2026-07-24 22:50:26"}
+{"level":"warn","message":{"event":"smtp_startup_failed"},"service":"tanzania-safari","timestamp":"2026-07-24 22:50:26"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-07-24 22:50:26"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":"3000","smtp":"disconnected"},"service":"tanzania-safari","timestamp":"2026-07-24 22:50:26"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-07-24 23:00:52"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-07-24 23:00:55"}
+{"level":"error","message":{"error":"Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to\n535 5.7.8  https://support.google.com/mail/?p=BadCredentials 5b1f17b1804b1-4957d41ed1bsm58158125e9.2 - gsmtp","event":"smtp_verify_failed","host":"smtp.gmail.com","port":587},"service":"tanzania-safari","timestamp":"2026-07-24 23:00:58"}
+{"level":"warn","message":{"event":"smtp_startup_failed"},"service":"tanzania-safari","timestamp":"2026-07-24 23:00:58"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-07-24 23:00:58"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":"3000","smtp":"disconnected"},"service":"tanzania-safari","timestamp":"2026-07-24 23:00:58"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-07-24 23:01:08"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-07-24 23:01:09"}
+{"level":"error","message":{"error":"Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to\n535 5.7.8  https://support.google.com/mail/?p=BadCredentials ffacd0b85a97d-47f85c7880dsm27233838f8f.37 - gsmtp","event":"smtp_verify_failed","host":"smtp.gmail.com","port":587},"service":"tanzania-safari","timestamp":"2026-07-24 23:01:11"}
+{"level":"warn","message":{"event":"smtp_startup_failed"},"service":"tanzania-safari","timestamp":"2026-07-24 23:01:11"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-07-24 23:01:11"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":"3000","smtp":"disconnected"},"service":"tanzania-safari","timestamp":"2026-07-24 23:01:11"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-07-24 23:06:17"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-07-24 23:06:19"}
+{"level":"error","message":{"error":"Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to\n535 5.7.8  https://support.google.com/mail/?p=BadCredentials 5b1f17b1804b1-4957b5ed646sm66826675e9.0 - gsmtp","event":"smtp_verify_failed","host":"smtp.gmail.com","port":587},"service":"tanzania-safari","timestamp":"2026-07-24 23:06:21"}
+{"level":"warn","message":{"event":"smtp_startup_failed"},"service":"tanzania-safari","timestamp":"2026-07-24 23:06:21"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-07-24 23:06:21"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":"3000","smtp":"disconnected"},"service":"tanzania-safari","timestamp":"2026-07-24 23:06:21"}

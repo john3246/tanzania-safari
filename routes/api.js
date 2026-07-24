@@ -68,19 +68,24 @@ router.get('/categories', safariController.getCategories || (async (req, res) =>
 }));
 
 // ── Testimonials ──────────────────────────────────────────
-router.get('/testimonials', async (req, res) => {
+router.get(['/testimonials', '/reviews'], async (req, res) => {
     try {
         const db = require('../config/db');
         const limit = parseInt(req.query.limit) || 6;
         const result = await db.query(`
-            SELECT r.*, u.first_name, u.last_name, sp.package_name AS safari_name
+            SELECT r.*, 
+                   COALESCE(u.first_name, 'Safari Guest') AS first_name, 
+                   COALESCE(u.last_name, '') AS last_name, 
+                   COALESCE(r.review_comment, '') AS comment,
+                   sp.package_name AS safari_name
             FROM reviews r
-            JOIN users u ON r.user_id = u.user_id
+            LEFT JOIN users u ON r.user_id = u.user_id
             LEFT JOIN safari_packages sp ON r.package_id = sp.package_id
-            WHERE r.is_approved = true AND r.rating >= 4
+            WHERE r.is_approved = true OR r.is_approved IS NULL
             ORDER BY r.created_at DESC LIMIT $1`, [limit]);
         res.json({ success: true, data: result.rows });
     } catch (err) {
+        console.error('Error fetching testimonials:', err);
         res.status(500).json({ success: false, message: 'Error fetching testimonials' });
     }
 });

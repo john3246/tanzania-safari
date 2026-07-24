@@ -1,4 +1,4 @@
-// ── Unified Media Management (Images & Videos + Slugs + Paths) ──────────────────
+// ── Unified Corporate Media Management (Images & Videos + Slugs + Paths + Editable Names) ──
 
 window.MediaManager = {
     files: [],
@@ -157,7 +157,10 @@ window.MediaManager = {
 
         const html = filtered.map(file => {
             const sizeMB = file.file_size ? (file.file_size / (1024 * 1024)).toFixed(2) + ' MB' : '—';
-            const mediaPath = file.url || file.path || `/uploads/${file.filename}`;
+            let mediaPath = file.url || file.path || `/uploads/${file.filename}`;
+            mediaPath = mediaPath.replace(/\\/g, '/');
+            if (!mediaPath.startsWith('/') && !mediaPath.startsWith('http')) mediaPath = '/' + mediaPath;
+            
             const encodedUrl = encodeURI(mediaPath);
             const fileSlug = file.slug || this.generateSlug(file.filename);
             const isVid = this.isVideo(file);
@@ -188,7 +191,16 @@ window.MediaManager = {
                     <!-- Card Details & Actions (Solid High Visibility) -->
                     <div class="p-4 bg-white space-y-3 flex-1 flex flex-col justify-between border-t-2 border-slate-200">
                         <div>
-                            <p class="text-slate-900 text-xs font-black truncate mb-1" title="${file.filename}">${file.filename}</p>
+                            <div class="flex items-center justify-between gap-2 mb-1">
+                                <p class="text-slate-900 text-xs font-black truncate" title="${file.filename}">${file.filename}</p>
+                                <button 
+                                    onclick="MediaManager.editMedia('${file.id}', '${encodedUrl}', '${file.filename.replace(/'/g, "\\'")}', '${fileSlug}', '${(file.alt_text || '').replace(/'/g, "\\'")}', event)"
+                                    class="text-xs font-bold text-emerald-800 hover:text-emerald-900 bg-emerald-100 hover:bg-emerald-200 px-2 py-0.5 rounded border border-emerald-300 transition-all shrink-0 cursor-pointer"
+                                    title="Edit Name, Slug & Alt Text"
+                                >
+                                    <i class="fa-solid fa-pen-to-square"></i> EDIT
+                                </button>
+                            </div>
                             
                             <!-- Slug Badge Button -->
                             <div class="my-2">
@@ -241,6 +253,33 @@ window.MediaManager = {
 
     filterFiles: function() {
         this.renderGrid();
+    },
+
+    editMedia: async function(id, url, currentName, currentSlug, currentAlt, e) {
+        if (e) e.stopPropagation();
+        
+        const newName = prompt('Edit Filename / Display Title:', currentName);
+        if (newName === null) return; // User cancelled
+        
+        const newSlug = prompt('Edit Unique Slug:', currentSlug || this.generateSlug(newName));
+        if (newSlug === null) return;
+
+        const newAlt = prompt('Edit Alt Text:', currentAlt || newName);
+
+        try {
+            if (typeof showToast === 'function') showToast('Saving changes...', 'info');
+            await apiRequest('PUT', `/media/${id}`, {
+                filename: newName,
+                slug: newSlug,
+                alt_text: newAlt,
+                url: url
+            });
+            if (typeof showToast === 'function') showToast('Media updated successfully!', 'success');
+            await this.loadFiles();
+        } catch (err) {
+            console.error('Failed to update media:', err);
+            if (typeof showToast === 'function') showToast(err.message || 'Failed to update media', 'error');
+        }
     },
 
     copyText: function(text, successMsg, e) {
@@ -297,7 +336,6 @@ async function loadImages() {
         }
     };
     run();
-    // Second trigger after 100ms to guarantee rendering after SPA DOM insertion
     setTimeout(run, 100);
 }
 

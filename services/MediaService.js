@@ -268,37 +268,69 @@ class MediaService extends BaseService {
     }
 
     async update(id, data) {
-        await super.update(id, data);
-        return this.repository.findById(id);
+        const { filename, slug, alt_text, url, file_size, mime_type, folder } = data;
+        const db = require('../config/db');
+        
+        const check = await db.query('SELECT * FROM media_library WHERE id = $1 OR url = $2', [id, url]);
+        if (check.rows.length === 0) {
+            await db.query(
+                `INSERT INTO media_library (id, filename, original_name, url, slug, file_size, mime_type, folder, alt_text, created_at, updated_at)
+                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW(), NOW())`,
+                [id, filename || 'file', filename || 'file', url || `/uploads/${filename}`, slug || 'slug', file_size || 0, mime_type || 'image/jpeg', folder || 'public/images', alt_text || '']
+            );
+        } else {
+            const rowId = check.rows[0].id;
+            await db.query(
+                `UPDATE media_library 
+                 SET filename = COALESCE($1, filename), 
+                     slug = COALESCE($2, slug), 
+                     alt_text = COALESCE($3, alt_text), 
+                     updated_at = NOW() 
+                 WHERE id = $4`,
+                [filename, slug, alt_text, rowId]
+            );
+        }
+        const updated = await db.query('SELECT * FROM media_library WHERE id = $1 OR url = $2', [id, url]);
+        return updated.rows[0];
     }
 
     async deleteMedia(id) {
-        const media = await this.repository.findById(id);
-        if (!media) throw new Error('Media not found');
+        const db = require('../config/db');
+        
+        let media = null;
+        try {
+            const res = await db.query('SELECT * FROM media_library WHERE id = $1', [id]);
+            if (res.rows.length > 0) media = res.rows[0];
+        } catch (e) {}
 
-        const uploadDir = path.join(__dirname, '../../uploads');
-        const filePath = path.join(uploadDir, media.path.replace('/uploads/', ''));
+        const targetUrl = media ? (media.url || media.path || '') : '';
 
-        // Delete all related files
-        const filesToDelete = [filePath];
-        if (media.webp_url) {
-            filesToDelete.push(path.join(uploadDir, media.webp_url.replace('/uploads/', '')));
-        }
-        if (media.thumbnail_url) {
-            filesToDelete.push(path.join(uploadDir, media.thumbnail_url.replace('/uploads/', '')));
+        const projectRoot = path.join(__dirname, '..');
+        let filesToDelete = [];
+
+        if (targetUrl.startsWith('/images/')) {
+            filesToDelete.push(path.join(projectRoot, 'public', targetUrl));
+        } else if (targetUrl.startsWith('/uploads/')) {
+            filesToDelete.push(path.join(projectRoot, targetUrl));
         }
 
         for (const file of filesToDelete) {
             try {
-                if (fs.existsSync(file)) {
+                if (file && fs.existsSync(file)) {
                     fs.unlinkSync(file);
                 }
             } catch (err) {
-                console.error('Failed to delete file:', file, err);
+                console.error('Failed to unlink file:', file, err.message);
             }
         }
 
-        return await this.repository.delete(id);
+        try {
+            await db.query('DELETE FROM media_library WHERE id = $1 OR url = $2', [id, targetUrl]);
+        } catch (dbErr) {
+            console.error('Failed DB delete row:', dbErr.message);
+        }
+
+        return { success: true };
     }
 
     async softDelete(id) {
