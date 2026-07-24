@@ -11,8 +11,8 @@ class MediaService extends BaseService {
     }
 
     async scanLocalDirectories() {
-        const publicImagesPath = path.join(__dirname, '../../public/images');
-        const uploadsPath = path.join(__dirname, '../../uploads');
+        const publicImagesPath = path.join(__dirname, '../public/images');
+        const uploadsPath = path.join(__dirname, '../uploads');
         let allFiles = [];
 
         const walkDir = (dir, basePath, isPublic) => {

@@ -9,11 +9,10 @@ class MediaRepository extends BaseRepository {
     async findAllWithDetails(conditions = {}, options = {}) {
         let query = `
             SELECT m.*, 
-                   u.username as uploaded_by_username,
                    u.first_name as uploaded_by_first_name,
                    u.last_name as uploaded_by_last_name
             FROM media_library m
-            LEFT JOIN users u ON m.uploaded_by = u.id
+            LEFT JOIN users u ON m.uploaded_by = u.user_id
             WHERE m.deleted_at IS NULL
         `;
         let values = [];
