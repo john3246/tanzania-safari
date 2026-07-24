@@ -96,25 +96,69 @@ class MediaService extends BaseService {
 
     async getAll(conditions = {}, options = {}) {
         try {
-            await this.syncDiskFilesToDatabase();
-            const paginatedFiles = await this.repository.findAllWithDetails(conditions, options);
-            const total = await this.repository.count(conditions);
+            // 1. Scan disk files (public/images and uploads)
+            const diskFiles = await this.scanLocalDirectories();
+
+            // 2. Auto-sync missing disk files to database asynchronously
+            this.syncDiskFilesToDatabase().catch(err => console.error('Background sync warning:', err.message));
+
+            // 3. Query PostgreSQL database
+            let dbFiles = [];
+            try {
+                dbFiles = await this.repository.findAllWithDetails(conditions, options);
+            } catch (dbErr) {
+                console.warn('Database query fallback to disk files:', dbErr.message);
+            }
+
+            // 4. Merge disk files & DB records by URL (disk files guarantee images on Render)
+            const map = new Map();
             
-            // Ensure every file object has a slug
-            const processed = paginatedFiles.map(f => {
-                if (!f.slug && f.filename) {
-                    f.slug = this.generateSlug(f.filename);
-                }
-                return f;
+            // Add disk files first
+            diskFiles.forEach(f => {
+                map.set(f.url, f);
             });
 
+            // Add/override with DB files
+            dbFiles.forEach(f => {
+                if (f.url) {
+                    map.set(f.url, {
+                        id: f.id,
+                        filename: f.filename || path.basename(f.url),
+                        original_name: f.original_name || f.filename,
+                        url: f.url,
+                        slug: f.slug || this.generateSlug(f.filename || f.url),
+                        file_size: f.file_size || 0,
+                        mime_type: f.mime_type || 'image/jpeg',
+                        folder: f.folder || 'public/images',
+                        created_at: f.created_at || new Date()
+                    });
+                }
+            });
+
+            const allMerged = Array.from(map.values());
+            
+            // Apply search filtering if provided
+            let filtered = allMerged;
+            if (options.search) {
+                const searchLower = options.search.toLowerCase();
+                filtered = filtered.filter(f => 
+                    (f.filename || '').toLowerCase().includes(searchLower) ||
+                    (f.slug || '').toLowerCase().includes(searchLower) ||
+                    (f.url || '').toLowerCase().includes(searchLower)
+                );
+            }
+
             return {
-                data: processed,
-                total: total
+                data: filtered,
+                total: filtered.length
             };
         } catch (error) {
-            console.error('Error fetching media from DB:', error);
-            throw error;
+            console.error('Error fetching media assets:', error);
+            const fallbackDiskFiles = await this.scanLocalDirectories();
+            return {
+                data: fallbackDiskFiles,
+                total: fallbackDiskFiles.length
+            };
         }
     }
 

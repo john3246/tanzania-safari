@@ -28,9 +28,8 @@ if (redisUrl) {
     });
 
     redis.on('error', (err) => {
-      if (!redisAvailable) {
-        logger.warn({ event: 'redis_error', error: err.message }, 'Redis connection error - running without queue');
-      }
+      redisAvailable = false;
+      logger.warn({ event: 'redis_error', error: err.message }, 'Redis connection error - running without queue');
     });
 
     redis.on('connect', () => {
