@@ -104,6 +104,30 @@ class AdminController {
         }
     }
 
+    async updateEnquiry(req, res) {
+        try {
+            const db = require('../config/db');
+            const { enquiry_status } = req.body;
+            await db.query(
+                'UPDATE contact_enquiries SET enquiry_status = $1, updated_at = NOW() WHERE enquiry_id = $2',
+                [enquiry_status, req.params.id]
+            );
+            res.json({ success: true });
+        } catch (error) {
+            res.status(500).json({ success: false, message: 'Error updating enquiry' });
+        }
+    }
+
+    async deleteEnquiry(req, res) {
+        try {
+            const db = require('../config/db');
+            await db.query('DELETE FROM contact_enquiries WHERE enquiry_id = $1', [req.params.id]);
+            res.json({ success: true });
+        } catch (error) {
+            res.status(500).json({ success: false, message: 'Error deleting enquiry' });
+        }
+    }
+
     async getReviews(req, res) {
         try {
             const db = require('../config/db');

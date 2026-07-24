@@ -40,8 +40,10 @@ router.get('/stats', verifyAdmin, adminController.getStats);
 
 // ── Shared Management ─────────────────────────────────────────
 router.put('/profile', verifyAdmin, adminController.updateProfile);
-router.get('/enquiries', verifyAdmin, adminController.getEnquiries);
-router.put('/enquiries/:id/respond', verifyAdmin, adminController.respondEnquiry);
+    router.get('/enquiries', verifyAdmin, adminController.getEnquiries);
+    router.put('/enquiries/:id/respond', verifyAdmin, adminController.respondEnquiry);
+    router.put('/enquiries/:id', verifyAdmin, adminController.updateEnquiry);
+    router.delete('/enquiries/:id', verifyAdmin, adminController.deleteEnquiry);
 router.get('/reviews', verifyAdmin, adminController.getReviews);
 router.put('/reviews/:id/approve', verifyAdmin, adminController.approveReview);
 

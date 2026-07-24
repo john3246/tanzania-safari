@@ -153,7 +153,45 @@ function renderTimeline() {
     });
 }
 
-// Actions via Event Delegation
+function showStatusNotification(status, customerName, emailSent) {
+    const overlay = document.createElement('div');
+    overlay.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300';
+    
+    let iconClass = status === 'Confirmed' ? 'text-emerald-500 fa-check-circle' : 'text-red-500 fa-times-circle';
+    let bgClass = status === 'Confirmed' ? 'bg-emerald-50' : 'bg-red-50';
+    let title = status === 'Confirmed' ? 'Booking Approved!' : 'Booking Rejected!';
+    
+    overlay.innerHTML = `
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full mx-4 transform scale-95 transition-transform duration-300 text-center relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-2 ${status === 'Confirmed' ? 'bg-emerald-500' : 'bg-red-500'}"></div>
+            
+            <div class="w-20 h-20 mx-auto rounded-full ${bgClass} flex items-center justify-center mb-6 shadow-inner ring-4 ring-white">
+                <i class="fa-solid ${iconClass} text-5xl drop-shadow-sm"></i>
+            </div>
+            
+            <h2 class="text-2xl font-bold text-slate-800 mb-2">${title}</h2>
+            <p class="text-slate-600 mb-6 leading-relaxed">
+                The booking status has been successfully updated to <span class="font-bold text-slate-800">${status}</span>. 
+                ${emailSent ? `<br><br><span class="text-sm bg-slate-50 px-3 py-2 rounded-lg inline-block border border-slate-100"><i class="fa-solid fa-envelope text-slate-400 mr-2"></i> An automated email notification has been dispatched to <strong>${customerName}</strong>.</span>` : ''}
+            </p>
+            
+            <button class="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-3 px-4 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-[0.98]" onclick="this.closest('.fixed').remove()">
+                Continue
+            </button>
+        </div>
+    `;
+    
+    document.body.appendChild(overlay);
+    
+    // Trigger animation
+    requestAnimationFrame(() => {
+        overlay.classList.remove('opacity-0');
+        overlay.firstElementChild.classList.remove('scale-95');
+        overlay.firstElementChild.classList.add('scale-100');
+    });
+}
+
+// Event Delegation
 document.body.addEventListener('click', async (e) => {
     // Note vs Email Tabs
     const tab = e.target.closest('.comm-tab');
@@ -184,7 +222,8 @@ document.body.addEventListener('click', async (e) => {
         const res = await apiRequest('PUT', `/bookings/${window.currentBookingId}/status`, { status: 'confirmed' });
 
         if(res.success) {
-            showToast('Booking approved successfully', 'success');
+            const customerName = document.getElementById('bookingCustomerName')?.textContent || 'the customer';
+            showStatusNotification('Confirmed', customerName, true);
             loadBookingDetails();
         } else {
             showToast(res.message || 'Failed to approve booking', 'error');
@@ -206,7 +245,8 @@ document.body.addEventListener('click', async (e) => {
         const res = await apiRequest('PUT', `/bookings/${window.currentBookingId}/status`, { status: 'rejected' });
 
         if(res.success) {
-            showToast('Booking rejected successfully', 'success');
+            const customerName = document.getElementById('bookingCustomerName')?.textContent || 'the customer';
+            showStatusNotification('Rejected', customerName, true);
             loadBookingDetails();
         } else {
             showToast(res.message || 'Failed to reject booking', 'error');

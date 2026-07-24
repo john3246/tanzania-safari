@@ -32,35 +32,115 @@ async function loadEnquiries() {
                     </span>
                 </td>
                 <td class="px-6 py-4">
-                    <button class="bg-primary-50 hover:bg-primary-100 text-primary-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors flex items-center gap-2" onclick="openEnqModal('${e.enquiry_id}')">
-                        <i class="fa-solid fa-reply"></i> Respond
-                    </button>
+                    <div class="flex items-center gap-2">
+                        <button class="bg-primary-50 hover:bg-primary-100 text-primary-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors flex items-center gap-2 btn-respond" data-id="${e.enquiry_id}">
+                            <i class="fa-solid fa-reply"></i> Respond
+                        </button>
+                        <button class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors btn-edit" data-id="${e.enquiry_id}">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button class="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors btn-delete" data-id="${e.enquiry_id}">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
                 </td>
             </tr>`;
         }).join('') || '<tr><td colspan="5" class="px-6 py-12 text-center text-slate-500">No enquiries found.</td></tr>';
     } catch (e) {}
 }
 
-function openEnqModal(id) {
-    const e = enquiriesList.find(x => x.enquiry_id == id);
-    if (!e) return;
-    document.getElementById('enqRespondId').value = id;
-    document.getElementById('enqResponse').value = '';
-    document.getElementById('enqDetails').innerHTML = `<div class="font-medium text-slate-900">${e.full_name}</div><div class="text-xs text-slate-500 mb-3">${e.email}</div><div class="bg-slate-50 p-3 rounded-lg text-sm text-slate-700 italic border border-slate-100">"${e.enquiry_message}"</div>`;
-    
-    // Show Modal
-    const modal = document.getElementById('enqModal');
-    if (modal) modal.classList.add('active');
-}
+// Event Delegation
+document.body.addEventListener('click', async (e) => {
+    // Close Modal buttons
+    const btnClose = e.target.closest('[data-close]');
+    if (btnClose) {
+        closeModal(btnClose.dataset.close);
+    }
 
-async function sendEnquiryResponse() {
-    const id = document.getElementById('enqRespondId').value;
-    const response = document.getElementById('enqResponse').value;
-    if (!response.trim()) return;
-    try {
-        await apiRequest('PUT', `/enquiries/${id}/respond`, { response });
-        showToast('Response Sent');
-        closeModal('enqModal');
-        loadEnquiries();
-    } catch (e) {}
-}
+    // Respond Modal
+    const btnRespond = e.target.closest('.btn-respond');
+    if (btnRespond) {
+        const id = btnRespond.dataset.id;
+        const enq = enquiriesList.find(x => x.enquiry_id == id);
+        if (enq) {
+            document.getElementById('enqRespondId').value = id;
+            document.getElementById('enqResponse').value = '';
+            document.getElementById('enqDetails').innerHTML = `<div class="font-medium text-slate-900">${enq.full_name}</div><div class="text-xs text-slate-500 mb-3">${enq.email}</div><div class="bg-slate-50 p-3 rounded-lg text-sm text-slate-700 italic border border-slate-100">"${enq.enquiry_message}"</div>`;
+            const modal = document.getElementById('enqModal');
+            if (modal) modal.classList.add('active');
+        }
+    }
+
+    // Send Response
+    const btnSendEnquiryResponse = e.target.closest('#btnSendEnquiryResponse');
+    if (btnSendEnquiryResponse) {
+        const id = document.getElementById('enqRespondId').value;
+        const response = document.getElementById('enqResponse').value;
+        if (!response.trim()) return;
+        
+        btnSendEnquiryResponse.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+        btnSendEnquiryResponse.disabled = true;
+
+        try {
+            await apiRequest('PUT', `/enquiries/${id}/respond`, { response });
+            showToast('Response Sent', 'success');
+            closeModal('enqModal');
+            loadEnquiries();
+        } catch (err) {
+            showToast('Error sending response', 'error');
+        }
+
+        btnSendEnquiryResponse.innerHTML = 'Send Response';
+        btnSendEnquiryResponse.disabled = false;
+    }
+
+    // Edit Modal
+    const btnEdit = e.target.closest('.btn-edit');
+    if (btnEdit) {
+        const id = btnEdit.dataset.id;
+        const enq = enquiriesList.find(x => x.enquiry_id == id);
+        if (enq) {
+            document.getElementById('editEnqId').value = id;
+            document.getElementById('editEnqStatus').value = enq.enquiry_status || 'New';
+            const modal = document.getElementById('editEnqModal');
+            if (modal) modal.classList.add('active');
+        }
+    }
+
+    // Save Edit
+    const btnSaveEnquiry = e.target.closest('#btnSaveEnquiry');
+    if (btnSaveEnquiry) {
+        const id = document.getElementById('editEnqId').value;
+        const status = document.getElementById('editEnqStatus').value;
+        
+        btnSaveEnquiry.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+        btnSaveEnquiry.disabled = true;
+
+        try {
+            await apiRequest('PUT', `/enquiries/${id}`, { enquiry_status: status });
+            showToast('Enquiry updated successfully', 'success');
+            closeModal('editEnqModal');
+            loadEnquiries();
+        } catch (err) {
+            showToast('Error updating enquiry', 'error');
+        }
+
+        btnSaveEnquiry.innerHTML = 'Save Changes';
+        btnSaveEnquiry.disabled = false;
+    }
+
+    // Delete
+    const btnDelete = e.target.closest('.btn-delete');
+    if (btnDelete) {
+        if (confirm('Are you sure you want to permanently delete this inquiry?')) {
+            const id = btnDelete.dataset.id;
+            try {
+                await apiRequest('DELETE', `/enquiries/${id}`);
+                showToast('Inquiry deleted successfully', 'success');
+                loadEnquiries();
+            } catch (err) {
+                showToast('Error deleting inquiry', 'error');
+            }
+        }
+    }
+});

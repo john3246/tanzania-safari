@@ -17,7 +17,7 @@
     <div class="modal">
         <div class="modal-header">
             <h3 class="modal-title">Respond to Inquiry</h3>
-            <button class="modal-close" onclick="document.getElementById('enqModal').classList.remove('active')">&times;</button>
+            <button class="modal-close" data-close="enqModal">&times;</button>
         </div>
         <div class="modal-body">
             <div id="enqDetails" class="mb-4"></div>
@@ -28,8 +28,34 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-outline" onclick="document.getElementById('enqModal').classList.remove('active')">Cancel</button>
-            <button class="btn btn-primary" onclick="sendEnquiryResponse()">Send Response</button>
+            <button class="btn btn-outline" data-close="enqModal">Cancel</button>
+            <button class="btn btn-primary" id="btnSendEnquiryResponse">Send Response</button>
+        </div>
+    </div>
+</div>
+
+<!-- Enquiry Edit Modal -->
+<div class="modal-backdrop" id="editEnqModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title">Edit Inquiry</h3>
+            <button class="modal-close" data-close="editEnqModal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="editEnqId">
+            <div class="form-group">
+                <label class="form-label">Status</label>
+                <select id="editEnqStatus" class="form-control">
+                    <option value="New">New</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Responded">Responded</option>
+                    <option value="Closed">Closed</option>
+                </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" data-close="editEnqModal">Cancel</button>
+            <button class="btn btn-primary" id="btnSaveEnquiry">Save Changes</button>
         </div>
     </div>
 </div>
