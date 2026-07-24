@@ -41,7 +41,7 @@ window.MediaManager = {
             // If empty, try fallback endpoint /api/images
             if (this.files.length === 0) {
                 try {
-                    const fallbackRes = await apiRequest('GET', '/images');
+                    const fallbackRes = await apiRequest('GET', '/api/images');
                     this.files = (fallbackRes && fallbackRes.data) ? fallbackRes.data : (fallbackRes.images || []);
                 } catch(e) {}
             }
