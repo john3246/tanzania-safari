@@ -129,7 +129,7 @@ async function navigate(page, pushState = true) {
     
     if (!targetPage) {
         try {
-            const res = await fetch(`/admin-partials/pages/${page}.html`);
+            const res = await fetch(`/admin-partials/pages/${page}.html?v=${new Date().getTime()}`);
             if (res.ok) {
                 const html = await res.text();
                 // Find where to inject it. We should inject it into the main container
