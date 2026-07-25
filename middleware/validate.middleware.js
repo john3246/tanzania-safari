@@ -16,16 +16,16 @@ const validate = (schema, source = 'body') => {
             req[source] = validatedData;
             next();
         } catch (error) {
-            if (error instanceof ZodError) {
-                // Format Zod errors into a cleaner response
-                const formattedErrors = error.errors.map(err => ({
-                    field: err.path.join('.'),
-                    message: err.message
+            if (error && (error instanceof ZodError || Array.isArray(error.errors))) {
+                const errList = Array.isArray(error.errors) ? error.errors : [];
+                const formattedErrors = errList.map(err => ({
+                    field: Array.isArray(err.path) ? err.path.join('.') : (err.path || 'field'),
+                    message: err.message || 'Invalid input value'
                 }));
 
                 return res.status(400).json({
                     success: false,
-                    message: 'Validation failed',
+                    message: error.message || 'Validation failed',
                     errors: formattedErrors
                 });
             }

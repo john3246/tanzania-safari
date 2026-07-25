@@ -73,10 +73,15 @@ class BaseRepository {
     async update(id, data) {
         const payload = this.mapPayload ? this.mapPayload(data) : data;
         const keys = Object.keys(payload);
+        if (keys.length === 0) {
+            const existingRow = await this.findById(id);
+            return this.mapRow ? this.mapRow(existingRow) : existingRow;
+        }
+
         const values = Object.values(payload);
         
         const setClause = keys.map((key, i) => `${key} = $${i + 1}`).join(', ');
-        values.push(id); // ID is the last parameter
+        values.push(id);
 
         const query = `
             UPDATE ${this.tableName}

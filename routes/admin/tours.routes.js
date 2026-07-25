@@ -8,17 +8,17 @@ const { z } = require('zod');
 
 // Validation schemas
 const createTourSchema = z.object({
-    title: z.string().min(5).max(255),
-    slug: z.string().min(5).max(255).regex(/^[a-z0-9-]+$/),
+    title: z.string(),
+    slug: z.string(),
     overview: z.string().optional(),
     description: z.string().optional(),
-    price_usd: z.number().positive(),
-    duration_days: z.number().positive(),
+    price_usd: z.number().optional(),
+    duration_days: z.number().optional(),
     duration_nights: z.number().optional(),
     category_id: z.number().optional(),
     destination_id: z.number().optional(),
-    difficulty: z.enum(['Easy', 'Moderate', 'Challenging', 'Extreme']).optional(),
-    group_size_min: z.number().min(1).optional(),
+    difficulty: z.string().optional(),
+    group_size_min: z.number().optional(),
     group_size_max: z.number().optional(),
     age_minimum: z.number().optional(),
     highlights: z.array(z.string()).optional(),
@@ -26,42 +26,42 @@ const createTourSchema = z.object({
     excluded: z.array(z.string()).optional(),
     travel_tips: z.array(z.string()).optional(),
     itinerary: z.array(z.object({
-        day: z.number(),
-        title: z.string(),
-        description: z.string()
+        day: z.number().optional(),
+        title: z.string().optional(),
+        description: z.string().optional()
     })).optional(),
     faqs: z.array(z.object({
-        question: z.string(),
-        answer: z.string()
+        question: z.string().optional(),
+        answer: z.string().optional()
     })).optional(),
     featured_image_url: z.string().optional(),
     gallery_urls: z.array(z.string()).optional(),
     gallery_order: z.array(z.number()).optional(),
     is_featured: z.boolean().optional(),
     is_active: z.boolean().optional(),
-    status: z.enum(['draft', 'published', 'archived']).optional(),
-    seo_title: z.string().max(255).optional(),
+    status: z.string().optional(),
+    seo_title: z.string().optional(),
     seo_description: z.string().optional(),
     seo_keywords: z.string().optional(),
     meta_robots: z.string().optional(),
     canonical_url: z.string().optional(),
-    og_title: z.string().max(255).optional(),
+    og_title: z.string().optional(),
     og_description: z.string().optional(),
     og_image_url: z.string().optional()
 });
 
 const updateTourSchema = z.object({
-    title: z.string().min(5).max(255).optional(),
-    slug: z.string().min(5).max(255).regex(/^[a-z0-9-]+$/).optional(),
+    title: z.string().optional(),
+    slug: z.string().optional(),
     overview: z.string().optional(),
     description: z.string().optional(),
-    price_usd: z.number().positive().optional(),
-    duration_days: z.number().positive().optional(),
+    price_usd: z.number().optional(),
+    duration_days: z.number().optional(),
     duration_nights: z.number().optional(),
     category_id: z.number().optional(),
     destination_id: z.number().optional(),
-    difficulty: z.enum(['Easy', 'Moderate', 'Challenging', 'Extreme']).optional(),
-    group_size_min: z.number().min(1).optional(),
+    difficulty: z.string().optional(),
+    group_size_min: z.number().optional(),
     group_size_max: z.number().optional(),
     age_minimum: z.number().optional(),
     highlights: z.array(z.string()).optional(),
@@ -69,26 +69,26 @@ const updateTourSchema = z.object({
     excluded: z.array(z.string()).optional(),
     travel_tips: z.array(z.string()).optional(),
     itinerary: z.array(z.object({
-        day: z.number(),
-        title: z.string(),
-        description: z.string()
+        day: z.number().optional(),
+        title: z.string().optional(),
+        description: z.string().optional()
     })).optional(),
     faqs: z.array(z.object({
-        question: z.string(),
-        answer: z.string()
+        question: z.string().optional(),
+        answer: z.string().optional()
     })).optional(),
     featured_image_url: z.string().optional(),
     gallery_urls: z.array(z.string()).optional(),
     gallery_order: z.array(z.number()).optional(),
     is_featured: z.boolean().optional(),
     is_active: z.boolean().optional(),
-    status: z.enum(['draft', 'published', 'archived']).optional(),
-    seo_title: z.string().max(255).optional(),
+    status: z.string().optional(),
+    seo_title: z.string().optional(),
     seo_description: z.string().optional(),
     seo_keywords: z.string().optional(),
     meta_robots: z.string().optional(),
     canonical_url: z.string().optional(),
-    og_title: z.string().max(255).optional(),
+    og_title: z.string().optional(),
     og_description: z.string().optional(),
     og_image_url: z.string().optional()
 });
