@@ -216,29 +216,32 @@ async function initEditTourPage() {
 }
 
 async function saveEditTour(btn) {
-    const id = document.getElementById('editTourId').value;
+    const idEl = document.getElementById('editTourId');
+    const id = idEl ? idEl.value : null;
     
-    // Gather and structure form payloads
-    const editData = Object.fromEntries(new FormData(document.getElementById('editTourForm')));
-    const detailsData = Object.fromEntries(new FormData(document.getElementById('editTourDetailsForm')));
-    const seoData = Object.fromEntries(new FormData(document.getElementById('editTourSEOForm')));
-    const pricingData = Object.fromEntries(new FormData(document.getElementById('editTourPricingForm')));
-    const classificationData = Object.fromEntries(new FormData(document.getElementById('editTourClassificationForm')));
-    const mediaData = Object.fromEntries(new FormData(document.getElementById('editTourMediaForm')));
+    // Safely gather form data if form elements exist
+    const getFormData = (formId) => {
+        const el = document.getElementById(formId);
+        return el ? Object.fromEntries(new FormData(el)) : {};
+    };
 
     const data = {
-        ...editData,
-        ...detailsData,
-        ...seoData,
-        ...pricingData,
-        ...classificationData,
-        ...mediaData
+        ...getFormData('editTourForm'),
+        ...getFormData('editTourDetailsForm'),
+        ...getFormData('editTourSEOForm'),
+        ...getFormData('editTourPricingForm'),
+        ...getFormData('editTourClassificationForm'),
+        ...getFormData('editTourMediaForm')
     };
 
     // Parse status and boolean checkboxes
-    data.status = document.getElementById('editTourStatus').value;
-    data.is_active = !!document.getElementById('editTourActive').checked;
-    data.is_featured = !!document.getElementById('editTourFeatured').checked;
+    const statusEl = document.getElementById('editTourStatus');
+    const activeEl = document.getElementById('editTourActive');
+    const featuredEl = document.getElementById('editTourFeatured');
+
+    if (statusEl) data.status = statusEl.value;
+    if (activeEl) data.is_active = !!activeEl.checked;
+    if (featuredEl) data.is_featured = !!featuredEl.checked;
 
     // Parse numeric fields
     if (data.price_usd) data.price_usd = parseFloat(data.price_usd);
@@ -252,25 +255,25 @@ async function saveEditTour(btn) {
 
     // Process lists and arrays
     if (data.gallery_urls_csv) data.gallery_urls = data.gallery_urls_csv.split(',').map(s => s.trim()).filter(Boolean);
-    else data.gallery_urls = [];
+    else if (!Array.isArray(data.gallery_urls)) data.gallery_urls = [];
 
     if (data.highlights_text) data.highlights = data.highlights_text.split('\n').map(s => s.trim()).filter(Boolean);
-    else data.highlights = [];
+    else if (!Array.isArray(data.highlights)) data.highlights = [];
 
     if (data.travel_tips_text) data.travel_tips = data.travel_tips_text.split('\n').map(s => s.trim()).filter(Boolean);
-    else data.travel_tips = [];
+    else if (!Array.isArray(data.travel_tips)) data.travel_tips = [];
 
     if (data.included_text) data.included = data.included_text.split('\n').map(s => s.trim()).filter(Boolean);
-    else data.included = [];
+    else if (!Array.isArray(data.included)) data.included = [];
 
     if (data.excluded_text) data.excluded = data.excluded_text.split('\n').map(s => s.trim()).filter(Boolean);
-    else data.excluded = [];
+    else if (!Array.isArray(data.excluded)) data.excluded = [];
 
     // Parse daily itinerary items
     data.itinerary = Array.from(document.querySelectorAll('.itinerary-day')).map(el => ({
-        day: parseInt(el.querySelector('.day-num').value),
-        title: el.querySelector('.day-title').value,
-        description: el.querySelector('.day-desc').value
+        day: parseInt(el.querySelector('.day-num')?.value || 1),
+        title: el.querySelector('.day-title')?.value || '',
+        description: el.querySelector('.day-desc')?.value || ''
     }));
 
     // Prune temp form values
@@ -280,28 +283,28 @@ async function saveEditTour(btn) {
     delete data.included_text;
     delete data.excluded_text;
 
-    // Clean empty values, empty strings, and NaN values so they match Zod optional schema
+    // Clean empty values, empty strings, and NaN values
     Object.keys(data).forEach(key => {
         if (data[key] === '' || data[key] === null || data[key] === undefined || (typeof data[key] === 'number' && isNaN(data[key]))) {
             delete data[key];
         }
     });
 
-    setLoading(btn, true);
+    if (btn && typeof setLoading === 'function') setLoading(btn, true);
     try {
         if (id) {
             await apiRequest('PUT', `/tours/${id}`, data);
-            showToast('Tour updated successfully');
+            if (typeof showToast === 'function') showToast('Tour updated successfully');
         } else {
             await apiRequest('POST', '/tours', data);
-            showToast('Tour created successfully');
+            if (typeof showToast === 'function') showToast('Tour created successfully');
         }
-        navigate('packages');
+        if (typeof navigate === 'function') navigate('packages');
     } catch (e) {
-        console.error(e);
-        showToast(e.message || 'Failed to save tour details', 'error');
+        console.error('Error saving tour:', e);
+        if (typeof showToast === 'function') showToast(e.message || 'Failed to save tour details', 'error');
     } finally {
-        setLoading(btn, false);
+        if (btn && typeof setLoading === 'function') setLoading(btn, false);
     }
 }
 
