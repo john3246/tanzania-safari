@@ -322,8 +322,18 @@ class TourCMSRepository extends BaseRepository {
             values.push(conditions.is_active);
         }
 
-        const result = await db.query(query, values);
-        return parseInt(result.rows[0].count);
+    async delete(id) {
+        try {
+            await db.query('DELETE FROM package_destinations WHERE package_id = $1', [id]);
+        } catch (e) {}
+        try {
+            await db.query('DELETE FROM itineraries WHERE package_id = $1', [id]);
+        } catch (e) {}
+        try {
+            await db.query('DELETE FROM reviews WHERE package_id = $1', [id]);
+        } catch (e) {}
+        const result = await db.query('DELETE FROM safari_packages WHERE package_id = $1 RETURNING *', [id]);
+        return result.rows[0];
     }
 }
 

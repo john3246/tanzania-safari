@@ -34,8 +34,8 @@ const createTourSchema = z.object({
         question: z.string(),
         answer: z.string()
     })).optional(),
-    featured_image_url: z.string().url().optional(),
-    gallery_urls: z.array(z.string().url()).optional(),
+    featured_image_url: z.string().optional(),
+    gallery_urls: z.array(z.string()).optional(),
     gallery_order: z.array(z.number()).optional(),
     is_featured: z.boolean().optional(),
     is_active: z.boolean().optional(),
@@ -44,10 +44,10 @@ const createTourSchema = z.object({
     seo_description: z.string().optional(),
     seo_keywords: z.string().optional(),
     meta_robots: z.string().optional(),
-    canonical_url: z.string().url().optional(),
+    canonical_url: z.string().optional(),
     og_title: z.string().max(255).optional(),
     og_description: z.string().optional(),
-    og_image_url: z.string().url().optional()
+    og_image_url: z.string().optional()
 });
 
 const updateTourSchema = z.object({
@@ -77,8 +77,8 @@ const updateTourSchema = z.object({
         question: z.string(),
         answer: z.string()
     })).optional(),
-    featured_image_url: z.string().url().optional(),
-    gallery_urls: z.array(z.string().url()).optional(),
+    featured_image_url: z.string().optional(),
+    gallery_urls: z.array(z.string()).optional(),
     gallery_order: z.array(z.number()).optional(),
     is_featured: z.boolean().optional(),
     is_active: z.boolean().optional(),
@@ -87,10 +87,10 @@ const updateTourSchema = z.object({
     seo_description: z.string().optional(),
     seo_keywords: z.string().optional(),
     meta_robots: z.string().optional(),
-    canonical_url: z.string().url().optional(),
+    canonical_url: z.string().optional(),
     og_title: z.string().max(255).optional(),
     og_description: z.string().optional(),
-    og_image_url: z.string().url().optional()
+    og_image_url: z.string().optional()
 });
 
 const addRelatedTourSchema = z.object({

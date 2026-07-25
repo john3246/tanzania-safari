@@ -77,6 +77,10 @@ class TourCMSService extends BaseService {
         return await this.repository.setRelatedTours(tourId, relatedTourIds);
     }
 
+    async delete(id) {
+        return await this.repository.delete(id);
+    }
+
     async softDelete(id) {
         return await this.repository.softDelete(id);
     }

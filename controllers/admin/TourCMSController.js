@@ -101,8 +101,8 @@ class TourCMSController {
 
     async delete(req, res) {
         try {
-            await tourCMSService.softDelete(req.params.id);
-            res.json({ success: true, message: 'Tour deleted' });
+            await tourCMSService.delete(req.params.id);
+            res.json({ success: true, message: 'Tour permanently removed from database' });
         } catch (error) {
             res.status(400).json({ success: false, message: error.message });
         }
