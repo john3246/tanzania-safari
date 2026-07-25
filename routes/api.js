@@ -32,15 +32,20 @@ router.get('/stats', safariController.getGlobalStats || (async (req, res) => {
 // ── Submit Review ─────────────────────────────────────────────
 router.post('/reviews', async (req, res) => {
     try {
-        const { package_id, first_name, rating, comment } = req.body;
+        const { package_id, first_name, last_name, rating, comment, review_comment } = req.body;
         const db = require('../config/db');
+        const revComment = comment || review_comment || '';
+        const fName = first_name || 'Safari Guest';
+        const lName = last_name || '';
+        const numRating = parseInt(rating) || 5;
+
         const query = `
-            INSERT INTO reviews (package_id, first_name, last_name, rating, comment, is_approved)
-            VALUES ($1, $2, '', $3, $4, false)
+            INSERT INTO reviews (package_id, first_name, last_name, rating, review_comment, comment, is_approved)
+            VALUES ($1, $2, $3, $4, $5, $5, true)
             RETURNING review_id
         `;
-        const result = await db.query(query, [package_id, first_name, rating, comment]);
-        res.json({ success: true, message: 'Review submitted successfully and is pending approval.' });
+        await db.query(query, [package_id || null, fName, lName, numRating, revComment]);
+        res.json({ success: true, message: 'Thank you! Your review has been published.' });
     } catch (error) {
         console.error('Error submitting review:', error);
         res.status(500).json({ success: false, message: 'Error submitting review' });
@@ -67,17 +72,17 @@ router.get('/categories', safariController.getCategories || (async (req, res) =>
     }
 }));
 
-// ── Testimonials ──────────────────────────────────────────
+// ── Testimonials / Reviews ───────────────────────────────────
 router.get(['/testimonials', '/reviews'], async (req, res) => {
     try {
         const db = require('../config/db');
         const limit = parseInt(req.query.limit) || 6;
         const result = await db.query(`
             SELECT r.*, 
-                   COALESCE(u.first_name, 'Safari Guest') AS first_name, 
-                   COALESCE(u.last_name, '') AS last_name, 
-                   COALESCE(r.review_comment, '') AS comment,
-                   sp.package_name AS safari_name
+                   COALESCE(NULLIF(r.first_name, ''), NULLIF(u.first_name, ''), 'Safari Guest') AS first_name, 
+                   COALESCE(NULLIF(r.last_name, ''), NULLIF(u.last_name, ''), '') AS last_name, 
+                   COALESCE(NULLIF(r.comment, ''), NULLIF(r.review_comment, ''), 'Wonderful safari experience!') AS comment,
+                   COALESCE(sp.package_name, 'Tanzania Safari Magic') AS safari_name
             FROM reviews r
             LEFT JOIN users u ON r.user_id = u.user_id
             LEFT JOIN safari_packages sp ON r.package_id = sp.package_id

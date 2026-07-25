@@ -196,9 +196,24 @@ class PackageRepository {
     }
 
     async getItinerary(packageId) {
-        const query = 'SELECT * FROM package_itinerary WHERE package_id = $1 ORDER BY day_number ASC';
-        const result = await db.query(query, [packageId]);
-        return result.rows;
+        try {
+            const query = 'SELECT day_number as day, title, description FROM package_itinerary WHERE package_id = $1 ORDER BY day_number ASC';
+            const result = await db.query(query, [packageId]);
+            if (result.rows && result.rows.length > 0) return result.rows;
+        } catch (e) {}
+
+        try {
+            const pkgRes = await db.query('SELECT itinerary FROM safari_packages WHERE package_id = $1', [packageId]);
+            if (pkgRes.rows[0] && Array.isArray(pkgRes.rows[0].itinerary)) {
+                return pkgRes.rows[0].itinerary.map((item, idx) => ({
+                    day: item.day || item.day_number || (idx + 1),
+                    title: item.title || item.day_title || `Day ${idx + 1}`,
+                    description: item.description || item.day_description || ''
+                }));
+            }
+        } catch (e) {}
+
+        return [];
     }
 
     async getDestinations(packageId) {

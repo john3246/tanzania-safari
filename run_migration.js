@@ -21,6 +21,9 @@ async function migrate() {
             ALTER TABLE contact_enquiries ADD COLUMN IF NOT EXISTS responses JSONB DEFAULT '[]'::jsonb;
             ALTER TABLE contact_enquiries ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
             ALTER TABLE media_library ADD COLUMN IF NOT EXISTS slug VARCHAR(255);
+            ALTER TABLE reviews ADD COLUMN IF NOT EXISTS first_name VARCHAR(100);
+            ALTER TABLE reviews ADD COLUMN IF NOT EXISTS last_name VARCHAR(100);
+            ALTER TABLE reviews ADD COLUMN IF NOT EXISTS comment TEXT;
         `);
         console.log("Database migrations applied successfully!");
     } catch (err) {
