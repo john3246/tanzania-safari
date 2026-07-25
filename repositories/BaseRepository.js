@@ -53,8 +53,9 @@ class BaseRepository {
     }
 
     async create(data) {
-        const keys = Object.keys(data);
-        const values = Object.values(data);
+        const payload = this.mapPayload ? this.mapPayload(data) : data;
+        const keys = Object.keys(payload);
+        const values = Object.values(payload);
         
         const placeholders = keys.map((_, i) => `$${i + 1}`).join(', ');
         const columns = keys.join(', ');
@@ -66,12 +67,13 @@ class BaseRepository {
         `;
 
         const result = await db.query(query, values);
-        return result.rows[0];
+        return this.mapRow ? this.mapRow(result.rows[0]) : result.rows[0];
     }
 
     async update(id, data) {
-        const keys = Object.keys(data);
-        const values = Object.values(data);
+        const payload = this.mapPayload ? this.mapPayload(data) : data;
+        const keys = Object.keys(payload);
+        const values = Object.values(payload);
         
         const setClause = keys.map((key, i) => `${key} = $${i + 1}`).join(', ');
         values.push(id); // ID is the last parameter
@@ -84,7 +86,7 @@ class BaseRepository {
         `;
 
         const result = await db.query(query, values);
-        return result.rows[0];
+        return this.mapRow ? this.mapRow(result.rows[0]) : result.rows[0];
     }
 
     async delete(id) {
