@@ -93,6 +93,10 @@ class TourCMSService extends BaseService {
         return await this.repository.publish(id);
     }
 
+    async togglePublish(id, is_active) {
+        return await this.repository.togglePublish(id, is_active);
+    }
+
     async archive(id) {
         return await this.repository.archive(id);
     }

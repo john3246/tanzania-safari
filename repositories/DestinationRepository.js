@@ -92,11 +92,19 @@ class DestinationRepository extends BaseRepository {
     }
 
     async delete(id) {
-        return this.update(id, { is_active: false });
+        try {
+            await db.query('DELETE FROM package_destinations WHERE park_id = $1', [id]);
+        } catch (e) {}
+        const result = await db.query('DELETE FROM national_parks WHERE park_id = $1 RETURNING *', [id]);
+        return result.rows ? result.rows[0] : null;
     }
 
     async softDelete(id) {
-        return this.update(id, { is_active: false });
+        return this.delete(id);
+    }
+
+    async togglePublish(id, is_active) {
+        return this.update(id, { is_active: Boolean(is_active) });
     }
 
     async restore(id) {

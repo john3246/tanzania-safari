@@ -6,41 +6,41 @@ const { requirePermission } = require('../../middleware/rbacMiddleware');
 const { validate } = require('../../middleware/validate.middleware');
 const { z } = require('zod');
 
-// Validation schemas
+// Flexible Validation schemas
 const createDestinationSchema = z.object({
-    name: z.string().min(2).max(255),
-    slug: z.string().min(2).max(255).regex(/^[a-z0-9-]+$/),
+    name: z.string(),
+    slug: z.string().optional(),
     short_description: z.string().optional(),
     description: z.string().optional(),
-    country: z.string().max(100).optional(),
-    region: z.string().max(100).optional(),
+    country: z.string().optional(),
+    region: z.string().optional(),
     latitude: z.number().optional(),
     longitude: z.number().optional(),
-    featured_image_url: z.string().url().optional(),
-    gallery_urls: z.array(z.string().url()).optional(),
+    featured_image_url: z.string().optional(),
+    gallery_urls: z.array(z.string()).optional(),
     is_featured: z.boolean().optional(),
     is_active: z.boolean().optional(),
     display_order: z.number().optional(),
-    seo_title: z.string().max(255).optional(),
+    seo_title: z.string().optional(),
     seo_description: z.string().optional(),
     seo_keywords: z.string().optional()
 });
 
 const updateDestinationSchema = z.object({
-    name: z.string().min(2).max(255).optional(),
-    slug: z.string().min(2).max(255).regex(/^[a-z0-9-]+$/).optional(),
+    name: z.string().optional(),
+    slug: z.string().optional(),
     short_description: z.string().optional(),
     description: z.string().optional(),
-    country: z.string().max(100).optional(),
-    region: z.string().max(100).optional(),
+    country: z.string().optional(),
+    region: z.string().optional(),
     latitude: z.number().optional(),
     longitude: z.number().optional(),
-    featured_image_url: z.string().url().optional(),
-    gallery_urls: z.array(z.string().url()).optional(),
+    featured_image_url: z.string().optional(),
+    gallery_urls: z.array(z.string()).optional(),
     is_featured: z.boolean().optional(),
     is_active: z.boolean().optional(),
     display_order: z.number().optional(),
-    seo_title: z.string().max(255).optional(),
+    seo_title: z.string().optional(),
     seo_description: z.string().optional(),
     seo_keywords: z.string().optional()
 });
@@ -75,7 +75,10 @@ router.get('/slug/:slug', requirePermission('destinations.view'), destinationCon
 // PUT /api/admin/destinations/:id - Update destination
 router.put('/:id', requirePermission('destinations.edit'), validate(updateDestinationSchema), destinationController.update);
 
-// DELETE /api/admin/destinations/:id - Soft delete destination
+// PATCH /api/admin/destinations/:id/publish - Quick publish toggle
+router.patch('/:id/publish', requirePermission('destinations.edit'), destinationController.togglePublish);
+
+// DELETE /api/admin/destinations/:id - Permanent delete destination
 router.delete('/:id', requirePermission('destinations.delete'), destinationController.delete);
 
 // POST /api/admin/destinations/:id/restore - Restore deleted destination

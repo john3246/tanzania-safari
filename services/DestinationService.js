@@ -61,8 +61,16 @@ class DestinationService extends BaseService {
         return await this.repository.getRegions();
     }
 
+    async delete(id) {
+        return await this.repository.delete(id);
+    }
+
     async softDelete(id) {
-        return await this.repository.softDelete(id);
+        return await this.repository.delete(id);
+    }
+
+    async togglePublish(id, is_active) {
+        return await this.repository.togglePublish(id, is_active);
     }
 
     async restore(id) {

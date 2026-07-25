@@ -22,13 +22,13 @@ function renderDestinations() {
     if (!body) return;
     
     body.innerHTML = destinationsList.map(d => {
-        const statusClass = d.is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500';
-        const statusText = d.is_active ? 'Active' : 'Inactive';
+        const statusClass = d.is_active ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 'bg-slate-100 text-slate-500 hover:bg-slate-200';
+        const statusText = d.is_active ? 'Published' : 'Draft';
         const featuredBadge = d.is_featured 
             ? '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-amber-100 text-amber-800"><i class="fa-solid fa-star mr-1"></i> Featured</span>'
             : '<span class="text-slate-400">—</span>';
         
-        const locString = [d.region, d.country].filter(Boolean).join(', ') || '—';
+        const locString = [d.region, d.country].filter(Boolean).join(', ') || 'Tanzania';
         
         return `
         <tr class="hover:bg-slate-50/50 transition-colors border-b border-slate-100 dest-row">
@@ -45,9 +45,9 @@ function renderDestinations() {
             <td class="px-6 py-4 text-slate-600 font-semibold">${d.tour_count || 0}</td>
             <td class="px-6 py-4">${featuredBadge}</td>
             <td class="px-6 py-4">
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider ${statusClass}">
-                    ${statusText}
-                </span>
+                <button onclick="toggleDestPublish('${d.id}', ${!!d.is_active})" title="Click to toggle publish status" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer ${statusClass}">
+                    <i class="fa-solid ${d.is_active ? 'fa-check-circle' : 'fa-circle-dot'} mr-1.5"></i> ${statusText}
+                </button>
             </td>
             <td class="px-6 py-4 text-right">
                 <div class="flex gap-2 justify-end">
@@ -77,23 +77,25 @@ async function initEditDestPage() {
     if (!editForm) return;
 
     // Reset Forms
-    editForm.reset();
-    mediaForm.reset();
-    geoForm.reset();
+    if (editForm) editForm.reset();
+    if (mediaForm) mediaForm.reset();
+    if (geoForm) geoForm.reset();
 
-    document.getElementById('editDestId').value = '';
+    const idEl = document.getElementById('editDestId');
+    if (idEl) idEl.value = '';
 
     const id = window.currentEditDestId;
-    document.getElementById('editDestTitle').textContent = id ? 'Edit Destination' : 'Create New Destination';
+    const titleEl = document.getElementById('editDestTitle');
+    if (titleEl) titleEl.textContent = id ? 'Edit Destination' : 'Create New Destination';
 
     if (id) {
         const d = destinationsList.find(x => x.id == id);
         if (d) {
-            document.getElementById('editDestId').value = d.id;
+            if (idEl) idEl.value = d.id;
             
             // Populate fields
             Object.entries(d).forEach(([k, v]) => {
-                [editForm, mediaForm, geoForm].forEach(f => {
+                [editForm, mediaForm, geoForm].filter(Boolean).forEach(f => {
                     const el = f.querySelector(`[name="${k}"]`);
                     if (el) {
                         if (el.type === 'checkbox') el.checked = !!v;
@@ -103,71 +105,95 @@ async function initEditDestPage() {
             });
 
             // Set checkboxes
-            document.getElementById('editDestActive').checked = !!d.is_active;
-            document.getElementById('editDestFeatured').checked = !!d.is_featured;
+            const activeEl = document.getElementById('editDestActive');
+            const featuredEl = document.getElementById('editDestFeatured');
+            if (activeEl) activeEl.checked = !!d.is_active;
+            if (featuredEl) featuredEl.checked = !!d.is_featured;
 
             // Populate CSV Gallery
-            if (d.gallery_urls) {
-                mediaForm.querySelector('[name="gallery_urls_csv"]').value = d.gallery_urls.join(', ');
+            if (d.gallery_urls && mediaForm) {
+                const csvEl = mediaForm.querySelector('[name="gallery_urls_csv"]');
+                if (csvEl) csvEl.value = d.gallery_urls.join(', ');
             }
         }
     }
 }
 
 async function saveEditDest(btn) {
-    const id = document.getElementById('editDestId').value;
-    const editData = Object.fromEntries(new FormData(document.getElementById('editDestForm')));
-    const mediaData = Object.fromEntries(new FormData(document.getElementById('editDestMediaForm')));
-    const geoData = Object.fromEntries(new FormData(document.getElementById('editDestGeoForm')));
+    const idEl = document.getElementById('editDestId');
+    const id = idEl ? idEl.value : null;
 
-    const data = {
-        ...editData,
-        ...mediaData,
-        ...geoData
+    const getFormData = (formId) => {
+        const el = document.getElementById(formId);
+        return el ? Object.fromEntries(new FormData(el)) : {};
     };
 
-    // Parse status and boolean checkboxes
-    data.is_active = !!document.getElementById('editDestActive').checked;
-    data.is_featured = !!document.getElementById('editDestFeatured').checked;
+    const data = {
+        ...getFormData('editDestForm'),
+        ...getFormData('editDestMediaForm'),
+        ...getFormData('editDestGeoForm')
+    };
+
+    const activeEl = document.getElementById('editDestActive');
+    const featuredEl = document.getElementById('editDestFeatured');
+
+    if (activeEl) data.is_active = !!activeEl.checked;
+    if (featuredEl) data.is_featured = !!featuredEl.checked;
 
     // Process Gallery CSV
     if (data.gallery_urls_csv) {
         data.gallery_urls = data.gallery_urls_csv.split(',').map(s => s.trim()).filter(Boolean);
         delete data.gallery_urls_csv;
-    } else {
+    } else if (!Array.isArray(data.gallery_urls)) {
         data.gallery_urls = [];
     }
 
-    // Clean empty values to make sure Zod optional schema parses them correctly
+    // Auto generate slug if missing
+    if (!data.slug && data.name) {
+        data.slug = data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+    }
+
+    // Clean empty values
     Object.keys(data).forEach(key => {
         if (data[key] === '' || data[key] === null || data[key] === undefined || (typeof data[key] === 'number' && isNaN(data[key]))) {
             delete data[key];
         }
     });
 
-    setLoading(btn, true);
+    if (btn && typeof setLoading === 'function') setLoading(btn, true);
     try {
         if (id) {
             await apiRequest('PUT', `/destinations/${id}`, data);
-            showToast('Destination updated successfully');
+            if (typeof showToast === 'function') showToast('Destination updated successfully');
         } else {
             await apiRequest('POST', '/destinations', data);
-            showToast('Destination created successfully');
+            if (typeof showToast === 'function') showToast('Destination created successfully');
         }
-        navigate('destinations');
+        if (typeof navigate === 'function') navigate('destinations');
     } catch (e) {
-        console.error(e);
-        showToast(e.message || 'Error saving destination', 'error');
+        console.error('Error saving destination:', e);
+        if (typeof showToast === 'function') showToast(e.message || 'Error saving destination', 'error');
     } finally {
-        setLoading(btn, false);
+        if (btn && typeof setLoading === 'function') setLoading(btn, false);
+    }
+}
+
+async function toggleDestPublish(id, currentState) {
+    const newState = !currentState;
+    try {
+        await apiRequest('PATCH', `/destinations/${id}/publish`, { is_active: newState });
+        showToast(`Destination ${newState ? 'published' : 'unpublished'} successfully`);
+        await loadDestinations();
+    } catch (e) {
+        showToast(e.message || 'Failed to toggle destination status', 'error');
     }
 }
 
 async function deleteDestination(id) {
-    if (!confirm('Are you sure you want to delete this destination?')) return;
+    if (!confirm('Are you sure you want to delete this destination? This action is permanent.')) return;
     try {
         await apiRequest('DELETE', `/destinations/${id}`);
-        showToast('Destination deleted successfully');
+        showToast('Destination permanently deleted');
         await loadDestinations();
     } catch (e) {
         showToast(e.message || 'Error deleting destination', 'error');
@@ -183,7 +209,9 @@ window.filterDestinations = function() {
     }); 
 };
 
+window.loadDestinations = loadDestinations;
 window.openDestModal = openDestModal; 
+window.toggleDestPublish = toggleDestPublish;
 window.deleteDestination = deleteDestination;
 window.initEditDestPage = initEditDestPage;
 window.saveEditDest = saveEditDest;

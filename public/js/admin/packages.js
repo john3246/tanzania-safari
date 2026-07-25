@@ -93,9 +93,9 @@ function renderPackages() {
                 <td class="px-6 py-4 font-medium text-slate-700">$${Number(t.price_usd).toLocaleString()}</td>
                 <td class="px-6 py-4 text-slate-600">${t.duration_days} Days / ${t.duration_nights || 0} Nights</td>
                 <td class="px-6 py-4">
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider ${statusClass}">
-                        ${t.status}
-                    </span>
+                    <button onclick="toggleTourPublish('${t.id}', ${!!t.is_active})" title="Click to toggle publish status" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer ${statusClass}">
+                        <i class="fa-solid ${t.is_active ? 'fa-check-circle' : 'fa-circle-dot'} mr-1.5"></i> ${t.status || (t.is_active ? 'published' : 'draft')}
+                    </button>
                 </td>
                 <td class="px-6 py-4">
                     <span class="inline-block w-2.5 h-2.5 rounded-full ${activeClass}"></span>
@@ -405,6 +405,17 @@ async function deletePackage(id) {
     }
 }
 
+async function toggleTourPublish(id, currentState) {
+    const newState = !currentState;
+    try {
+        await apiRequest('PATCH', `/tours/${id}/publish`, { is_active: newState });
+        if (typeof showToast === 'function') showToast(`Tour ${newState ? 'published' : 'unpublished'} successfully`);
+        await fetchToursList();
+    } catch (e) {
+        if (typeof showToast === 'function') showToast(e.message || 'Failed to toggle tour publish status', 'error');
+    }
+}
+
 window.filterPackages = function() {
     fetchToursList();
 };
@@ -412,6 +423,8 @@ window.filterPackages = function() {
 window.openPackageModal = openPackageModal;
 window.initEditTourPage = initEditTourPage;
 window.saveEditTour = saveEditTour;
+window.deletePackage = deletePackage;
+window.toggleTourPublish = toggleTourPublish;
 window.addItineraryDay = addItineraryDay;
 window.addPkgLocation = addPkgLocation;
 window.moveItineraryDay = moveItineraryDay;

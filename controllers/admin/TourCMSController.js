@@ -126,6 +126,16 @@ class TourCMSController {
         }
     }
 
+    async togglePublish(req, res) {
+        try {
+            const { is_active } = req.body;
+            const tour = await tourCMSService.togglePublish(req.params.id, is_active);
+            res.json({ success: true, data: tour, message: `Tour ${is_active ? 'published' : 'unpublished'} successfully` });
+        } catch (error) {
+            res.status(400).json({ success: false, message: error.message });
+        }
+    }
+
     async archive(req, res) {
         try {
             const tour = await tourCMSService.archive(req.params.id);

@@ -215,6 +215,22 @@ class TourCMSRepository extends BaseRepository {
         return this.update(id, { is_active: false });
     }
 
+    async publish(id) {
+        return this.update(id, { is_active: true });
+    }
+
+    async archive(id) {
+        return this.update(id, { is_active: false });
+    }
+
+    async restore(id) {
+        return this.update(id, { is_active: true });
+    }
+
+    async togglePublish(id, is_active) {
+        return this.update(id, { is_active: Boolean(is_active) });
+    }
+
     async getRelatedToursList(id) {
         return [];
     }
@@ -243,16 +259,35 @@ class TourCMSRepository extends BaseRepository {
 
     async delete(id) {
         try {
-            await db.query('DELETE FROM package_destinations WHERE package_id = $1', [id]);
+            await db.query('DELETE FROM public.booking_travelers WHERE booking_id IN (SELECT booking_id FROM public.bookings WHERE package_id = $1)', [id]);
         } catch (e) {}
         try {
-            await db.query('DELETE FROM package_itinerary WHERE package_id = $1', [id]);
+            await db.query('DELETE FROM public.booking_communications WHERE booking_id IN (SELECT booking_id FROM public.bookings WHERE package_id = $1)', [id]);
         } catch (e) {}
         try {
-            await db.query('DELETE FROM reviews WHERE package_id = $1', [id]);
+            await db.query('DELETE FROM public.guide_assignments WHERE booking_id IN (SELECT booking_id FROM public.bookings WHERE package_id = $1)', [id]);
         } catch (e) {}
-        const result = await db.query('DELETE FROM safari_packages WHERE package_id = $1 RETURNING *', [id]);
-        return result.rows[0];
+        try {
+            await db.query('DELETE FROM public.bookings WHERE package_id = $1', [id]);
+        } catch (e) {}
+        try {
+            await db.query('DELETE FROM public.contact_enquiries WHERE package_id = $1', [id]);
+        } catch (e) {}
+        try {
+            await db.query('DELETE FROM public.package_destinations WHERE package_id = $1', [id]);
+        } catch (e) {}
+        try {
+            await db.query('DELETE FROM public.package_itinerary WHERE package_id = $1', [id]);
+        } catch (e) {}
+        try {
+            await db.query('DELETE FROM public.package_accommodations WHERE package_id = $1', [id]);
+        } catch (e) {}
+        try {
+            await db.query('DELETE FROM public.reviews WHERE package_id = $1', [id]);
+        } catch (e) {}
+        
+        const result = await db.query('DELETE FROM public.safari_packages WHERE package_id = $1 RETURNING *', [id]);
+        return result.rows ? result.rows[0] : null;
     }
 }
 

@@ -133,6 +133,7 @@ router.post('/:id/restore', requirePermission('tours.archive'), tourCMSControlle
 
 // POST /api/admin/tours/:id/publish - Publish tour
 router.post('/:id/publish', requirePermission('tours.publish'), tourCMSController.publish);
+router.patch('/:id/publish', requirePermission('tours.publish'), tourCMSController.togglePublish);
 
 // POST /api/admin/tours/:id/archive - Archive tour
 router.post('/:id/archive', requirePermission('tours.archive'), tourCMSController.archive);

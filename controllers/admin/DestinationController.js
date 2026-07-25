@@ -77,8 +77,18 @@ class DestinationController {
 
     async delete(req, res) {
         try {
-            await destinationService.softDelete(req.params.id);
-            res.json({ success: true, message: 'Destination deleted' });
+            await destinationService.delete(req.params.id);
+            res.json({ success: true, message: 'Destination permanently deleted' });
+        } catch (error) {
+            res.status(400).json({ success: false, message: error.message });
+        }
+    }
+
+    async togglePublish(req, res) {
+        try {
+            const { is_active } = req.body;
+            const destination = await destinationService.togglePublish(req.params.id, is_active);
+            res.json({ success: true, data: destination, message: `Destination ${is_active ? 'published' : 'unpublished'} successfully` });
         } catch (error) {
             res.status(400).json({ success: false, message: error.message });
         }
