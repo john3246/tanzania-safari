@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /health
 
 Sitemap: https://tanzaniasafarimagic.com/sitemap.xml

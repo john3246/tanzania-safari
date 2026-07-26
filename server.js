@@ -25,7 +25,7 @@ const PORT = process.env.PORT || 3000;
 // ── Performance Optimization ──────────────────────────────────
 app.use(compression({
     level: 6,
-    threshold: 100 * 1024,
+    threshold: 1024, // Compress responses >1KB (important on Render bandwidth)
     filter: (req, res) => {
         if (req.headers['x-no-compression']) return false;
         return compression.filter(req, res);
@@ -55,15 +55,18 @@ app.use(helmet({
             styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com", "https://unpkg.com", "https://cdn.tailwindcss.com", "https://cdn.jsdelivr.net"],
             imgSrc: ["'self'", "data:", "blob:", "https:", "http:"], 
             connectSrc: [
-                "'self'", 
+                "'self'",
                 "https://cdn.jsdelivr.net",
-                "https://tanzaniasafarimagic.com", 
+                "https://tanzaniasafarimagic.com",
                 "https://www.tanzaniasafarimagic.com",
                 "https://tanzania-safari.onrender.com",
                 "http://localhost:3000",
                 "http://localhost:5173",
                 "ws://localhost:3000",
-                "wss://tanzania-safari.onrender.com"
+                "wss://localhost:3000",
+                "wss://tanzania-safari.onrender.com",
+                "wss://tanzaniasafarimagic.com",
+                "wss://www.tanzaniasafarimagic.com"
             ],
             fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com", "https://unpkg.com", "https://fonts.googleapis.com", "https://cdn.jsdelivr.net", "data:", "https://ka-f.fontawesome.com"],
             objectSrc: ["'none'"],
@@ -76,12 +79,13 @@ app.use(helmet({
 
 // Dynamic CORS configuration supporting multiple environments
 const allowedOrigins = process.env.ALLOWED_ORIGIN 
-    ? process.env.ALLOWED_ORIGIN.split(',') 
+    ? process.env.ALLOWED_ORIGIN.split(',').map((s) => s.trim()).filter(Boolean)
     : [
-        //'http://localhost:3000',
-        //'http://localhost:5173',
+        'http://localhost:3000',
+        'http://localhost:5173',
         'https://tanzaniasafarimagic.com',
-        'https://www.tanzaniasafarimagic.com'
+        'https://www.tanzaniasafarimagic.com',
+        'https://tanzania-safari.onrender.com'
       ];
 
 app.use(cors({
@@ -111,12 +115,28 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // ── Static files with Aggressive Caching ──────────────────────────────────────────────
-const cacheOptions = {
+// Long-cache hashed/static assets; HTML fragments stay revalidatable for layout updates.
+app.use(express.static(path.join(__dirname, 'public'), {
+    etag: true,
+    lastModified: true,
+    maxAge: '7d',
+    setHeaders: (res, filePath) => {
+        if (/\.(html)$/i.test(filePath)) {
+            res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+        } else if (/\.(js|css|woff2?|ttf|otf)$/i.test(filePath)) {
+            res.setHeader('Cache-Control', 'public, max-age=604800, stale-while-revalidate=86400');
+        } else if (/\.(png|jpe?g|webp|gif|svg|ico|mp4)$/i.test(filePath)) {
+            res.setHeader('Cache-Control', 'public, max-age=2592000, immutable');
+        }
+    }
+}));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
+    etag: true,
     maxAge: '30d',
-    etag: true
-};
-app.use(express.static(path.join(__dirname, 'public'), cacheOptions));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads'), cacheOptions));
+    setHeaders: (res) => {
+        res.setHeader('Cache-Control', 'public, max-age=2592000, immutable');
+    }
+}));
 
 // ── Crawler Fallbacks (Prevent 404 Pollution) ───────────────────
 app.get(['/favicon.ico', '/ads.txt', '/app-ads.txt', '/sellers.json'], (req, res) => {
@@ -249,46 +269,83 @@ app.use((err, req, res, next) => {
 });
 
 // ── Live Chat (Socket.io) ─────────────────────────────────────
+// Tuned for Render (single instance): websocket preferred, polling fallback.
 const io = socketIo(server, {
     cors: {
-        origin: '*', // For dev, or use allowedOrigins
-        methods: ['GET', 'POST']
-    }
+        origin: allowedOrigins.concat([
+            'https://tanzania-safari.onrender.com',
+            'http://localhost:3000'
+        ]),
+        methods: ['GET', 'POST'],
+        credentials: true
+    },
+    transports: ['websocket', 'polling'],
+    pingTimeout: 60000,
+    pingInterval: 25000,
+    allowUpgrades: true
 });
 
-const activeChats = {}; // Memory store for MVP live chat
+const activeChats = {}; // Memory store for MVP live chat (single Render instance)
 
 io.on('connection', (socket) => {
     console.log('New chat client connected:', socket.id);
 
-    // Client joins/starts a chat
     socket.on('join_chat', (data) => {
-        const chatId = (data && data.chatId) ? data.chatId : socket.id;
+        const chatId = (data && data.chatId) ? String(data.chatId) : socket.id;
         socket.join(chatId);
         if (!activeChats[chatId]) {
-            activeChats[chatId] = { id: chatId, status: 'open', messages: [] };
+            activeChats[chatId] = {
+                id: chatId,
+                status: 'open',
+                messages: [],
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
         }
-        // Notify admin
         io.to('admin_room').emit('chat_updated', activeChats[chatId]);
         socket.emit('chat_joined', { chatId, chat: activeChats[chatId] });
     });
 
-    // Admin joins admin room
     socket.on('admin_join', () => {
         socket.join('admin_room');
         socket.emit('all_chats', activeChats);
     });
 
-    // Send message
     socket.on('send_message', (data) => {
-        const { chatId, sender, message } = data;
-        const msg = { id: Date.now(), sender, message, timestamp: new Date() };
-        
-        if (activeChats[chatId]) {
-            activeChats[chatId].messages.push(msg);
-            io.to(chatId).emit('new_message', { chatId, msg });
-            io.to('admin_room').emit('chat_updated', activeChats[chatId]);
+        if (!data || !data.message) return;
+        const chatId = data.chatId ? String(data.chatId) : socket.id;
+        const sender = data.sender || 'user';
+        const message = String(data.message).trim().slice(0, 2000);
+        if (!message) return;
+
+        if (!activeChats[chatId]) {
+            activeChats[chatId] = {
+                id: chatId,
+                status: 'open',
+                messages: [],
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            socket.join(chatId);
         }
+
+        const msg = {
+            id: Date.now(),
+            sender,
+            message,
+            timestamp: new Date().toISOString()
+        };
+
+        activeChats[chatId].messages.push(msg);
+        // Cap history to keep Render memory stable
+        if (activeChats[chatId].messages.length > 200) {
+            activeChats[chatId].messages = activeChats[chatId].messages.slice(-200);
+        }
+        activeChats[chatId].updatedAt = msg.timestamp;
+
+        io.to(chatId).emit('new_message', { chatId, msg });
+        io.to('admin_room').emit('new_message', { chatId, msg });
+        io.to('admin_room').emit('chat_updated', activeChats[chatId]);
     });
 
     socket.on('disconnect', () => {

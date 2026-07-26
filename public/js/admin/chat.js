@@ -52,6 +52,19 @@ function initAdminChat() {
             renderMessages(chat);
         }
     });
+
+    adminSocket.on('new_message', (data) => {
+        if (!data || !data.chatId || !data.msg) return;
+        if (!allChats[data.chatId]) {
+            allChats[data.chatId] = { id: data.chatId, status: 'open', messages: [] };
+        }
+        const exists = allChats[data.chatId].messages.some((m) => m.id === data.msg.id);
+        if (!exists) allChats[data.chatId].messages.push(data.msg);
+        renderChatList();
+        if (currentAdminChatId === data.chatId) {
+            renderMessages(allChats[data.chatId]);
+        }
+    });
 }
 
 function renderChatList() {

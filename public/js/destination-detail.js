@@ -107,8 +107,8 @@ async function loadDestinationDetails(slug) {
             currentDestination = result.data;
             
             renderDestinationDetails(currentDestination);
-            updatePageTitle(currentDestination.park_name);
-            updateMetaDescription(currentDestination.park_description);
+            updatePageTitle(currentDestination.park_name, currentDestination);
+            updateMetaDescription(currentDestination.park_description, currentDestination);
             injectDestinationSchema(currentDestination);
             await loadSafariPackagesForDestination(currentDestination.park_name);
             await loadRelatedDestinations(currentDestination.park_id, currentDestination.park_slug);
@@ -627,17 +627,34 @@ function getClimate(name) {
     return 'Tropical savanna, warm days, cool nights';
 }
 
-function updatePageTitle(title) {
-    document.title = `${title} | Tanzania Safari Tours`;
+function updatePageTitle(title, destination) {
+    const fullTitle = `${title} | Tanzania Safari Magic`;
+    const desc = (destination && (destination.short_description || destination.description || destination.seo_description))
+        || `Explore ${title} with Tanzania Safari Magic — guided wildlife and nature experiences in Tanzania.`;
+    const image = destination && (destination.featured_image_url || destination.image_url || destination.hero_image);
+
+    if (window.SafariSEO) {
+        window.SafariSEO.apply({
+            title: fullTitle,
+            description: String(desc).replace(/<[^>]+>/g, '').slice(0, 160),
+            image: image || '/images/hero.jpg',
+            type: 'place',
+            jsonLd: window.SafariSEO.placeSchema({
+                ...destination,
+                name: title,
+                description: desc,
+                image
+            })
+        });
+    } else {
+        document.title = fullTitle;
+    }
 }
 
-function updateMetaDescription(description) {
-    if (!description) return;
-    let metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-        const truncated = description.length > 155 ? description.substring(0, 152) + '...' : description;
-        metaDesc.setAttribute('content', truncated);
-    }
+function updateMetaDescription(description, destination) {
+    if (!description && !destination) return;
+    const title = (destination && (destination.park_name || destination.name)) || document.title;
+    updatePageTitle(title, { ...(destination || {}), short_description: description || (destination && destination.short_description) });
 }
 
 function showError(message) {

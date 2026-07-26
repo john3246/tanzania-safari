@@ -126,7 +126,7 @@ async function loadSafariDetails(slug) {
             document.getElementById('loadingState').style.display = 'none';
             document.getElementById('detailContent').style.display = 'block';
             renderSafariDetails(result.data);
-            updatePageTitle(result.data.package_name);
+            updatePageTitle(result.data.package_name, result.data);
             await loadRelatedSafaris(result.data.category_slug, result.data.package_id);
             
             // Setup polling for real-time updates
@@ -334,8 +334,31 @@ function getCategoryIcon(categorySlug) {
     return icons[categorySlug] || 'fa-tree';
 }
 
-function updatePageTitle(title) {
-    document.title = `${title} | Tanzania Safari Tours`;
+function updatePageTitle(title, safari) {
+    const fullTitle = `${title} | Tanzania Safari Magic`;
+    const desc = (safari && (safari.short_description || safari.package_description || safari.meta_description))
+        || `Book the ${title} safari with Tanzania Safari Magic — expert local guides and authentic wildlife adventures.`;
+    const image = safari && (safari.featured_image_url || safari.image_url || (safari.image_urls && safari.image_urls[0]));
+    const cleanDesc = String(desc).replace(/<[^>]+>/g, '').slice(0, 160);
+
+    if (window.SafariSEO) {
+        window.SafariSEO.apply({
+            title: fullTitle,
+            description: cleanDesc,
+            image: image || '/images/hero.jpg',
+            type: 'product',
+            jsonLd: window.SafariSEO.tourProductSchema({
+                ...safari,
+                name: title,
+                description: cleanDesc,
+                image
+            })
+        });
+    } else {
+        document.title = fullTitle;
+        const metaDesc = document.getElementById('metaDesc') || document.querySelector('meta[name="description"]');
+        if (metaDesc) metaDesc.setAttribute('content', cleanDesc);
+    }
 }
 
 function showError(message) {
@@ -529,8 +552,31 @@ function getCategoryIcon(categorySlug) {
     return icons[categorySlug] || 'fa-tree';
 }
 
-function updatePageTitle(title) {
-    document.title = `${title} | Tanzania Safari Tours`;
+function updatePageTitle(title, safari) {
+    const fullTitle = `${title} | Tanzania Safari Magic`;
+    const desc = (safari && (safari.short_description || safari.package_description || safari.meta_description))
+        || `Book the ${title} safari with Tanzania Safari Magic — expert local guides and authentic wildlife adventures.`;
+    const image = safari && (safari.featured_image_url || safari.image_url || (safari.image_urls && safari.image_urls[0]));
+    const cleanDesc = String(desc).replace(/<[^>]+>/g, '').slice(0, 160);
+
+    if (window.SafariSEO) {
+        window.SafariSEO.apply({
+            title: fullTitle,
+            description: cleanDesc,
+            image: image || '/images/hero.jpg',
+            type: 'product',
+            jsonLd: window.SafariSEO.tourProductSchema({
+                ...safari,
+                name: title,
+                description: cleanDesc,
+                image
+            })
+        });
+    } else {
+        document.title = fullTitle;
+        const metaDesc = document.getElementById('metaDesc') || document.querySelector('meta[name="description"]');
+        if (metaDesc) metaDesc.setAttribute('content', cleanDesc);
+    }
 }
 
 function showError(message) {
