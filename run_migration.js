@@ -24,6 +24,7 @@ async function migrate() {
             ALTER TABLE reviews ADD COLUMN IF NOT EXISTS first_name VARCHAR(100);
             ALTER TABLE reviews ADD COLUMN IF NOT EXISTS last_name VARCHAR(100);
             ALTER TABLE reviews ADD COLUMN IF NOT EXISTS comment TEXT;
+            ALTER TABLE safari_packages ADD COLUMN IF NOT EXISTS itinerary JSONB DEFAULT '[]'::jsonb;
         `);
         console.log("Database migrations applied successfully!");
     } catch (err) {

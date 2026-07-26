@@ -86,6 +86,9 @@ class TourCMSRepository extends BaseRepository {
         if (data.gallery_urls !== undefined) payload.image_urls = Array.isArray(data.gallery_urls) ? data.gallery_urls : [];
         if (data.is_featured !== undefined) payload.is_featured = Boolean(data.is_featured);
         if (data.is_active !== undefined) payload.is_active = Boolean(data.is_active);
+        if (data.itinerary !== undefined) {
+            payload.itinerary = JSON.stringify(Array.isArray(data.itinerary) ? data.itinerary : []);
+        }
         if (data.seo_title !== undefined) payload.meta_title = data.seo_title;
         if (data.seo_description !== undefined) payload.meta_description = data.seo_description;
         if (data.seo_keywords !== undefined) {
@@ -94,6 +97,37 @@ class TourCMSRepository extends BaseRepository {
                 : (Array.isArray(data.seo_keywords) ? data.seo_keywords : []);
         }
         return payload;
+    }
+
+    async syncPackageItinerary(packageId, itineraryArray) {
+        if (!Array.isArray(itineraryArray)) return;
+        try {
+            await db.query('DELETE FROM package_itinerary WHERE package_id = $1', [packageId]);
+            for (let i = 0; i < itineraryArray.length; i++) {
+                const item = itineraryArray[i];
+                await db.query(
+                    `INSERT INTO package_itinerary (package_id, day_number, title, description)
+                     VALUES ($1, $2, $3, $4)`,
+                    [packageId, item.day || item.day_number || (i + 1), item.title || '', item.description || '']
+                );
+            }
+        } catch (e) {}
+    }
+
+    async create(data) {
+        const result = await super.create(data);
+        if (data.itinerary && Array.isArray(data.itinerary)) {
+            await this.syncPackageItinerary(result.id || data.id, data.itinerary);
+        }
+        return result;
+    }
+
+    async update(id, data) {
+        const result = await super.update(id, data);
+        if (data.itinerary && Array.isArray(data.itinerary)) {
+            await this.syncPackageItinerary(id, data.itinerary);
+        }
+        return result;
     }
 
     async findAllWithDetails(conditions = {}, options = {}) {
