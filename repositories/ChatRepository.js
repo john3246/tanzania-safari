@@ -29,6 +29,27 @@ class ChatRepository {
             [externalId]
         );
         if (existing.rows.length > 0) {
+            // Update visitor info if provided
+            if (metadata.visitorName || metadata.visitorEmail || metadata.pageUrl) {
+                const result = await db.query(
+                    `UPDATE chats SET
+                        visitor_name = COALESCE($2, visitor_name),
+                        visitor_email = COALESCE($3, visitor_email),
+                        page_url = COALESCE($4, page_url),
+                        user_agent = COALESCE($5, user_agent),
+                        updated_at = CURRENT_TIMESTAMP
+                     WHERE external_id = $1
+                     RETURNING *`,
+                    [
+                        externalId,
+                        metadata.visitorName || null,
+                        metadata.visitorEmail || null,
+                        metadata.pageUrl || null,
+                        metadata.userAgent || null
+                    ]
+                );
+                return result.rows[0];
+            }
             return existing.rows[0];
         }
 

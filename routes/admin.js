@@ -25,6 +25,8 @@ router.use('/audit-logs',      require('./admin/audit-logs.routes'));
 router.use('/email-templates', require('./admin/email-templates.routes'));
 router.use('/communications',  require('./admin/communications.routes'));
 router.use('/chats',           require('./admin/chat.routes'));
+router.use('/customers',       require('./admin/customers.routes'));
+router.use('/notifications',   require('./admin/notifications.routes'));
 // router.use('/bookings-cms',    require('./admin/bookings-cms.routes'));
 router.use('/reports',         require('./admin/reports.routes'));
 

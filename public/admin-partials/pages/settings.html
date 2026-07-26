@@ -34,7 +34,7 @@
             </form>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-3xl">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-5xl">
             <!-- System Settings -->
             <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
                 <h3 class="font-bold text-slate-800 text-base mb-4 border-b border-gray-100 pb-2">System Configuration</h3>
@@ -54,6 +54,41 @@
                         <input type="password" name="confirm_password" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20" required>
                     </div>
                     <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-lg text-sm font-semibold transition-all shadow-sm">Update Password</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-5xl">
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                <h3 class="font-bold text-slate-800 text-base mb-4 border-b border-gray-100 pb-2">Public Site Contact & Social</h3>
+                <p class="text-xs text-gray-500 mb-4">These values power the website header, footer, and WhatsApp button.</p>
+                <form id="siteContactForm" class="space-y-3">
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Company Name</label><input name="company_name" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm"></div>
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Public Email</label><input name="email" type="email" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm"></div>
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Phone / WhatsApp</label><input name="phone" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm" placeholder="+255..."></div>
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Address</label><input name="address" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm"></div>
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Facebook URL</label><input name="facebook" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm"></div>
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Instagram URL</label><input name="instagram" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm"></div>
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Twitter / X URL</label><input name="twitter" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm"></div>
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">YouTube URL</label><input name="youtube" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm"></div>
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-semibold">Save Site Contact</button>
+                </form>
+            </div>
+
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                <h3 class="font-bold text-slate-800 text-base mb-4 border-b border-gray-100 pb-2">Email / SMTP Settings</h3>
+                <p class="text-xs text-gray-500 mb-4">Used for booking confirmations, enquiry alerts, and admin mail. Falls back to environment variables if empty.</p>
+                <form id="smtpForm" class="space-y-3">
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">SMTP Host</label><input name="host" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm" placeholder="mail.privateemail.com"></div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Port</label><input name="port" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm" placeholder="587"></div>
+                        <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Secure (true/false)</label><input name="secure" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm" placeholder="false"></div>
+                    </div>
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">SMTP User</label><input name="user" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm"></div>
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">SMTP Password</label><input name="pass" type="password" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm" autocomplete="new-password"></div>
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">From Email</label><input name="from" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm" placeholder="Tanzania Safari Magic &lt;info@...&gt;"></div>
+                    <div class="space-y-1"><label class="text-xs font-medium text-slate-500">Admin Notification Email</label><input name="admin_email" type="email" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm"></div>
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-semibold">Save SMTP Settings</button>
                 </form>
             </div>
         </div>

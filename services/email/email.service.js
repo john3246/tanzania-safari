@@ -1,7 +1,7 @@
 const Handlebars = require('handlebars');
 const fs = require('fs').promises;
 const path = require('path');
-const { transporter, verifyConnection } = require('./transporter');
+const { getTransporter, verifyConnection } = require('./transporter');
 const { queueEmail } = require('./queue');
 const { 
   validateEmailData, 
@@ -160,6 +160,10 @@ async function sendEmailDirect(options) {
   };
 
   try {
+    const transporter = await getTransporter();
+    if (transporter.__smtpMeta?.from) {
+      mailOptions.from = transporter.__smtpMeta.from;
+    }
     const info = await transporter.sendMail(mailOptions);
     logger.info({
       event: 'email_sent',

@@ -189,6 +189,9 @@ function initFooter() {
     // Popular Safaris in Footer
     loadFooterSafaris();
 
+    // Apply CMS site settings to header/footer/WhatsApp
+    applySiteSettings();
+
     // Newsletter form
     const newsletterForm = document.getElementById('newsletterForm');
     if (newsletterForm) {
@@ -238,6 +241,83 @@ function initFooter() {
                 quickBookModal.classList.remove('active');
             }
         });
+    }
+}
+
+/**
+ * Loads public CMS settings and applies them to contact/social/WhatsApp UI.
+ */
+async function applySiteSettings() {
+    try {
+        const response = await fetch('/api/public/settings');
+        if (!response.ok) return;
+        const { data } = await response.json();
+        if (!data) return;
+
+        const get = (...keys) => {
+            for (const k of keys) {
+                if (data[k] != null && data[k] !== '') return data[k];
+            }
+            return null;
+        };
+
+        const email = get('contact.email', 'contact_email', 'email');
+        const phone = get('contact.phone', 'contact.whatsapp', 'contact_phone', 'phone');
+        const address = get('contact.address', 'company.address', 'address');
+        const company = get('company.name', 'company_name');
+        const facebook = get('social.facebook', 'facebook');
+        const instagram = get('social.instagram', 'instagram');
+        const twitter = get('social.twitter', 'twitter');
+        const youtube = get('social.youtube', 'youtube');
+
+        const digits = phone ? String(phone).replace(/[^\d]/g, '') : null;
+
+        // Footer / header mailto & tel
+        document.querySelectorAll('a[href^="mailto:"]').forEach(a => {
+            if (email) {
+                a.href = `mailto:${email}`;
+                if (a.textContent.includes('@') || a.closest('.footer-contact-item')) a.textContent = email;
+            }
+        });
+
+        document.querySelectorAll('a[href*="wa.me"], a.social-float-whatsapp').forEach(a => {
+            if (digits) {
+                a.href = `https://wa.me/${digits}`;
+                if (a.closest('.footer-contact-item') && phone) a.textContent = phone;
+            }
+        });
+
+        if (address) {
+            document.querySelectorAll('.footer-contact-item').forEach(item => {
+                if (item.querySelector('.fa-map-marker-alt, .fa-location-dot')) {
+                    const span = item.querySelector('span');
+                    if (span) span.textContent = address;
+                }
+            });
+        }
+
+        if (company) {
+            document.querySelectorAll('.footer-logo img, .logo img').forEach(img => {
+                img.alt = company;
+            });
+        }
+
+        const setSocial = (network, url) => {
+            if (!url) return;
+            document.querySelectorAll(`.social-link .fa-${network}, .social-link .fab.fa-${network}`).forEach(icon => {
+                const a = icon.closest('a');
+                if (a) a.href = url;
+            });
+        };
+        setSocial('facebook-f', facebook);
+        setSocial('facebook', facebook);
+        setSocial('instagram', instagram);
+        setSocial('twitter', twitter);
+        setSocial('youtube', youtube);
+
+        window.__siteSettings = data;
+    } catch (err) {
+        console.warn('Could not apply site settings:', err.message);
     }
 }
 

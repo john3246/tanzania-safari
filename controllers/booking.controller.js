@@ -14,6 +14,36 @@ class BookingController {
             };
             
             const result = await bookingService.createBooking(bookingData);
+
+            // CRM + in-app notification (non-blocking)
+            Promise.resolve().then(async () => {
+                try {
+                    const CustomerRepository = require('../repositories/CustomerRepository');
+                    const NotificationRepository = require('../repositories/NotificationRepository');
+                    await CustomerRepository.upsertFromBooking({
+                        name: bookingData.customer_name || bookingData.full_name,
+                        email: bookingData.email,
+                        phone: bookingData.phone
+                    });
+                    const bookingId = result?.booking_id || result?.id || result?.data?.booking_id;
+                    await NotificationRepository.create({
+                        type: 'booking',
+                        title: 'New booking',
+                        message: `${bookingData.customer_name || bookingData.full_name || 'Guest'} submitted a booking`,
+                        relatedId: bookingId ? String(bookingId) : null,
+                        actionUrl: '/admin/bookings'
+                    });
+                    if (global.__chatIo) {
+                        global.__chatIo.to('admin_room').emit('admin_notification', {
+                            type: 'booking',
+                            title: 'New booking',
+                            message: `${bookingData.customer_name || 'Guest'} submitted a booking`
+                        });
+                    }
+                } catch (e) {
+                    console.error('Booking CRM/notification error:', e.message);
+                }
+            });
             
             // Background email tasks (do not block the response)
             Promise.all([

@@ -5,9 +5,34 @@ const { JWT_SECRET } = require('../middleware/auth.middleware');
 const db = require('../config/db');
 const logger = require('../utils/logger');
 
+// Map chatId -> Set of visitor socket ids for reliable delivery across reconnects
+const visitorSockets = new Map();
+
 function sanitizeMessage(text) {
     if (!text || typeof text !== 'string') return '';
     return xss(text.trim()).slice(0, 2000);
+}
+
+function trackVisitor(chatId, socketId) {
+    if (!visitorSockets.has(chatId)) visitorSockets.set(chatId, new Set());
+    visitorSockets.get(chatId).add(socketId);
+}
+
+function untrackVisitor(chatId, socketId) {
+    const set = visitorSockets.get(chatId);
+    if (!set) return;
+    set.delete(socketId);
+    if (set.size === 0) visitorSockets.delete(chatId);
+}
+
+function emitToVisitors(io, chatId, event, payload) {
+    io.to(chatId).emit(event, payload);
+    const sockets = visitorSockets.get(chatId);
+    if (sockets) {
+        for (const sid of sockets) {
+            io.to(sid).emit(event, payload);
+        }
+    }
 }
 
 async function verifyAdminToken(token) {
@@ -25,14 +50,10 @@ async function verifyAdminToken(token) {
                 [targetId]
             );
             if (userQuery.rows.length > 0) {
-                const role = userQuery.rows[0].role_name || tokenRole;
-                if (['Admin', 'Super Admin'].includes(role) || tokenRole) {
-                    return userQuery.rows[0];
-                }
+                return userQuery.rows[0];
             }
         }
 
-        // Fallback for valid JWT admin sessions (matches verifyAdmin middleware)
         if (tokenRole || targetId) {
             return {
                 user_id: targetId || 'admin',
@@ -47,7 +68,20 @@ async function verifyAdminToken(token) {
     }
 }
 
+async function createNotification(payload) {
+    try {
+        const NotificationRepository = require('../repositories/NotificationRepository');
+        return await NotificationRepository.create(payload);
+    } catch (err) {
+        logger.warn({ event: 'notification_insert_failed', error: err.message }, 'Could not insert notification');
+        return null;
+    }
+}
+
 function initChatSocket(io) {
+    // Expose for booking/enquiry notifications
+    global.__chatIo = io;
+
     io.use(async (socket, next) => {
         if (socket.handshake.auth?.role === 'admin') {
             const admin = await verifyAdminToken(socket.handshake.auth.token);
@@ -63,19 +97,50 @@ function initChatSocket(io) {
 
         socket.on('join_chat', async (data) => {
             try {
-                const chatId = (data && data.chatId) ? data.chatId : socket.id;
+                const chatId = (data && data.chatId) ? String(data.chatId) : socket.id;
+                socket.chatId = chatId;
                 socket.join(chatId);
+                trackVisitor(chatId, socket.id);
 
-                await ChatRepository.getOrCreate(chatId, {
+                const chat = await ChatRepository.getOrCreate(chatId, {
                     visitorName: data?.visitorName,
                     visitorEmail: data?.visitorEmail,
                     pageUrl: data?.pageUrl,
                     userAgent: data?.userAgent
                 });
 
-                const chat = await ChatRepository.getChatWithMessages(chatId);
-                io.to('admin_room').emit('chat_updated', chat);
-                socket.emit('chat_joined', { chatId, chat });
+                // Upsert customer from chat visitor info
+                if (data?.visitorEmail) {
+                    try {
+                        const CustomerRepository = require('../repositories/CustomerRepository');
+                        await CustomerRepository.upsertFromChat({
+                            name: data.visitorName,
+                            email: data.visitorEmail
+                        });
+                    } catch (e) {
+                        logger.warn({ event: 'chat_customer_upsert_failed', error: e.message });
+                    }
+                }
+
+                const fullChat = await ChatRepository.getChatWithMessages(chatId);
+                io.to('admin_room').emit('chat_updated', fullChat);
+                socket.emit('chat_joined', { chatId, chat: fullChat });
+
+                // Notify admins of new chat only when first created / no messages yet
+                if (fullChat && (!fullChat.messages || fullChat.messages.length === 0)) {
+                    await createNotification({
+                        type: 'chat',
+                        title: 'New live chat',
+                        message: `${data?.visitorName || 'Visitor'} started a chat`,
+                        relatedId: chatId,
+                        actionUrl: '/admin/chat'
+                    });
+                    io.to('admin_room').emit('admin_notification', {
+                        type: 'chat',
+                        title: 'New live chat',
+                        message: `${data?.visitorName || 'Visitor'} started a chat`
+                    });
+                }
             } catch (err) {
                 logger.error({ event: 'join_chat_error', error: err.message }, 'join_chat failed');
                 socket.emit('chat_error', { message: 'Failed to join chat' });
@@ -98,9 +163,20 @@ function initChatSocket(io) {
             }
         });
 
+        // Admin opens a specific conversation — join that room so broadcasts reach both sides
+        socket.on('admin_open_chat', (data) => {
+            if (!socket.isAdmin) return;
+            const chatId = data?.chatId ? String(data.chatId) : null;
+            if (!chatId) return;
+            if (socket.activeChatId) socket.leave(socket.activeChatId);
+            socket.activeChatId = chatId;
+            socket.join(chatId);
+        });
+
         socket.on('send_message', async (data) => {
             try {
-                const { chatId, sender } = data || {};
+                const chatId = data?.chatId ? String(data.chatId) : null;
+                const sender = data?.sender;
                 const message = sanitizeMessage(data?.message);
 
                 if (!chatId || !sender || !message) return;
@@ -111,10 +187,13 @@ function initChatSocket(io) {
                     return;
                 }
 
-                const chat = await ChatRepository.getByExternalId(chatId);
+                // Ensure sender is in the room
+                socket.join(chatId);
+                if (!isAdminSender) trackVisitor(chatId, socket.id);
+
+                let chat = await ChatRepository.getByExternalId(chatId);
                 if (!chat) {
-                    socket.emit('chat_error', { message: 'Chat not found' });
-                    return;
+                    chat = await ChatRepository.getOrCreate(chatId);
                 }
 
                 if (chat.status !== 'open') {
@@ -125,8 +204,24 @@ function initChatSocket(io) {
                 const msg = await ChatRepository.addMessage(chatId, sender, message);
                 const updatedChat = await ChatRepository.getChatWithMessages(chatId);
 
-                io.to(chatId).emit('new_message', { chatId, msg });
+                // Deliver to everyone in the chat room + tracked visitor sockets
+                emitToVisitors(io, chatId, 'new_message', { chatId, msg });
                 io.to('admin_room').emit('chat_updated', updatedChat);
+
+                if (!isAdminSender) {
+                    await createNotification({
+                        type: 'chat',
+                        title: 'New chat message',
+                        message: message.slice(0, 120),
+                        relatedId: chatId,
+                        actionUrl: '/admin/chat'
+                    });
+                    io.to('admin_room').emit('admin_notification', {
+                        type: 'chat',
+                        title: 'New chat message',
+                        message: message.slice(0, 120)
+                    });
+                }
             } catch (err) {
                 logger.error({ event: 'send_message_error', error: err.message }, 'send_message failed');
                 socket.emit('chat_error', { message: 'Failed to send message' });
@@ -140,13 +235,13 @@ function initChatSocket(io) {
             }
 
             try {
-                const { chatId } = data || {};
+                const chatId = data?.chatId ? String(data.chatId) : null;
                 if (!chatId) return;
 
                 await ChatRepository.updateStatus(chatId, 'closed');
                 const updatedChat = await ChatRepository.getChatWithMessages(chatId);
                 io.to('admin_room').emit('chat_updated', updatedChat);
-                io.to(chatId).emit('chat_closed', { chatId });
+                emitToVisitors(io, chatId, 'chat_closed', { chatId });
             } catch (err) {
                 logger.error({ event: 'close_chat_error', error: err.message }, 'close_chat failed');
                 socket.emit('chat_error', { message: 'Failed to close chat' });
@@ -154,6 +249,7 @@ function initChatSocket(io) {
         });
 
         socket.on('disconnect', () => {
+            if (socket.chatId) untrackVisitor(socket.chatId, socket.id);
             logger.info({ event: 'chat_disconnected', socketId: socket.id }, 'Chat client disconnected');
         });
     });
@@ -165,9 +261,17 @@ async function setupRedisAdapter(io) {
     try {
         const { createAdapter } = require('@socket.io/redis-adapter');
         const Redis = require('ioredis');
-        const pubClient = new Redis(process.env.REDIS_URL, { maxRetriesPerRequest: null });
+        const pubClient = new Redis(process.env.REDIS_URL, {
+            maxRetriesPerRequest: null,
+            lazyConnect: true
+        });
         const subClient = pubClient.duplicate();
 
+        pubClient.on('error', (err) => {
+            logger.warn({ event: 'redis_pub_error', error: err.message }, 'Redis pub client error');
+        });
+
+        await Promise.all([pubClient.connect(), subClient.connect()]);
         io.adapter(createAdapter(pubClient, subClient));
         logger.info({ event: 'socket_redis_adapter_ok' }, 'Socket.io Redis adapter connected');
     } catch (err) {
@@ -175,4 +279,4 @@ async function setupRedisAdapter(io) {
     }
 }
 
-module.exports = { initChatSocket, setupRedisAdapter };
+module.exports = { initChatSocket, setupRedisAdapter, createNotification };

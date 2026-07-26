@@ -171,9 +171,14 @@ function selectChat(chatId) {
     const chat = allChats[chatId];
     if (!chat) return;
 
+    // Join the visitor room so admin replies are delivered reliably
+    if (adminSocket && adminSocket.connected) {
+        adminSocket.emit('admin_open_chat', { chatId });
+    }
+
     if (currentChatTitle) {
         currentChatTitle.textContent = chat.visitorName
-            ? chat.visitorName
+            ? `${chat.visitorName}${chat.visitorEmail ? ' · ' + chat.visitorEmail : ''}`
             : `Visitor ID: ${String(chatId).substring(0, 10).toUpperCase()}`;
     }
     if (chatActiveDot) chatActiveDot.style.display = 'block';

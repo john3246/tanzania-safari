@@ -68,6 +68,34 @@ async function migrate() {
         CREATE INDEX IF NOT EXISTS idx_chat_messages_chat_id ON chat_messages(chat_id);
     `);
 
+    await runStep('customers table', `
+        CREATE TABLE IF NOT EXISTS customers (
+            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            name VARCHAR(200),
+            email VARCHAR(255) NOT NULL,
+            phone VARCHAR(50),
+            source VARCHAR(50) DEFAULT 'website',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        CREATE UNIQUE INDEX IF NOT EXISTS idx_customers_email_lower ON customers (LOWER(email));
+    `);
+
+    await runStep('notifications table', `
+        CREATE TABLE IF NOT EXISTS notifications (
+            notification_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            user_id UUID,
+            notification_type VARCHAR(50),
+            notification_title VARCHAR(200) NOT NULL,
+            notification_message TEXT NOT NULL,
+            is_read BOOLEAN DEFAULT false,
+            related_entity_id VARCHAR(100),
+            action_url TEXT,
+            sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        CREATE INDEX IF NOT EXISTS idx_notifications_unread ON notifications (is_read, sent_at DESC);
+    `);
+
     console.log('Database migrations completed.');
 }
 

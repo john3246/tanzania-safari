@@ -112,11 +112,37 @@ router.post(['/enquiry', '/contact'], validate(contactSchema), async (req, res) 
              VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,'New',NOW()) RETURNING enquiry_id`,
             [full_name, email, phone || null, country || null, type, package_id || null, travel_date || null, travelers || null, msg]
         );
+
+        try {
+            const CustomerRepository = require('../repositories/CustomerRepository');
+            const NotificationRepository = require('../repositories/NotificationRepository');
+            await CustomerRepository.upsertFromEnquiry({ name: full_name, email, phone });
+            await NotificationRepository.create({
+                type: 'enquiry',
+                title: 'New enquiry',
+                message: `${full_name}: ${(msg || '').slice(0, 100)}`,
+                relatedId: String(result.rows[0].enquiry_id),
+                actionUrl: '/admin/enquiries'
+            });
+            if (global.__chatIo) {
+                global.__chatIo.to('admin_room').emit('admin_notification', {
+                    type: 'enquiry',
+                    title: 'New enquiry',
+                    message: `${full_name} submitted an enquiry`
+                });
+            }
+        } catch (crmErr) {
+            console.error('CRM/notification error:', crmErr.message);
+        }
         
         try {
             const data = { ...req.body, enquiry_id: result.rows[0].enquiry_id, enquiry_message: msg };
             await emailService.sendContactAcknowledgment(data);
-            await emailService.sendAdminNotification('enquiry', data);
+            if (typeof emailService.sendAdminContactNotification === 'function') {
+                await emailService.sendAdminContactNotification(data);
+            } else if (typeof emailService.sendAdminAlert === 'function') {
+                await emailService.sendAdminAlert('enquiry', data);
+            }
         } catch (mailError) {
             console.error('Mail error:', mailError.message);
         }
@@ -128,17 +154,27 @@ router.post(['/enquiry', '/contact'], validate(contactSchema), async (req, res) 
 });
 
 // ── Newsletter ────────────────────────────────────────────────
-router.post('/newsletter', validate(newsletterSchema), async (req, res) => {
+async function handleNewsletterSubscribe(req, res) {
     try {
         const db = require('../config/db');
+        const CustomerRepository = require('../repositories/CustomerRepository');
         const { email } = req.body;
         if (!email) return res.status(400).json({ success: false, message: 'Email is required' });
-        
-        await db.query('INSERT INTO newsletter_subscribers (email, subscribed_at) VALUES ($1, NOW()) ON CONFLICT (email) DO NOTHING', [email]);
+
+        await db.query(
+            'INSERT INTO newsletter_subscribers (email, subscribed_at) VALUES ($1, NOW()) ON CONFLICT (email) DO NOTHING',
+            [email]
+        );
+        await CustomerRepository.upsertFromNewsletter(email);
+
         res.json({ success: true, message: 'Subscribed successfully' });
     } catch (error) {
+        console.error('Newsletter error:', error.message);
         res.status(500).json({ success: false, message: 'Error subscribing' });
     }
-});
+}
+
+router.post('/newsletter', validate(newsletterSchema), handleNewsletterSubscribe);
+router.post('/newsletter/subscribe', validate(newsletterSchema), handleNewsletterSubscribe);
 
 module.exports = router;

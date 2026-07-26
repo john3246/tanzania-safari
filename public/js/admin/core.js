@@ -191,9 +191,17 @@ async function navigate(page, pushState = true) {
         case 'settings': loadProfile(); loadSettings(); break;
         case 'customers': if (window.loadCustomers) { window.loadCustomers(); } else { setTimeout(() => window.loadCustomers?.(), 100); } break;
         case 'chat': if (window.initChatPage) { window.initChatPage(); } else { setTimeout(() => window.initChatPage?.(), 100); } break;
-        case 'edit-tour': if (window.initEditTourPage) { window.initEditTourPage(); } else { setTimeout(() => window.initEditTourPage?.(), 100); } break;
-        case 'edit-destination': if (window.initEditDestPage) { window.initEditDestPage(); } else { setTimeout(() => window.initEditDestPage?.(), 100); } break;
+        case 'edit-tour': if (window.initEditTourPage) { window.initEditTourPage(); } else { setTimeout(() => window.initEditTourPage?.(), 100); } setTimeout(() => window.MediaPicker?.enhanceAll(), 200); break;
+        case 'edit-destination': if (window.initEditDestPage) { window.initEditDestPage(); } else { setTimeout(() => window.initEditDestPage?.(), 100); } setTimeout(() => window.MediaPicker?.enhanceAll(), 200); break;
+        case 'packages':
+        case 'destinations':
+        case 'blog':
+            setTimeout(() => window.MediaPicker?.enhanceAll(), 300);
+            break;
     }
+
+    // Enhance any visible image URL fields (modals + pages)
+    setTimeout(() => window.MediaPicker?.enhanceAll(), 150);
 }
 
 // ── Breadcrumb Logic ──────────────────────────────────────────

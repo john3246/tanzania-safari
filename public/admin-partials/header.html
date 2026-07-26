@@ -1,6 +1,5 @@
 <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 sm:px-6 z-10 flex-shrink-0 w-full" id="adminHeader">
     <div class="flex items-center flex-1 gap-4">
-        <!-- Mobile menu toggle -->
         <button id="mobileMenuBtn" class="md:hidden text-gray-500 hover:text-gray-700 focus:outline-none">
             <i class="fa-solid fa-bars text-xl"></i>
         </button>
@@ -19,18 +18,21 @@
         <a href="/" target="_blank" class="text-gray-500 hover:text-gray-700 hidden sm:block" title="View Site">
             <i class="fa-solid fa-globe text-lg"></i>
         </a>
-        <button class="text-gray-500 hover:text-gray-700 relative" title="Notifications">
-            <i class="fa-regular fa-bell text-lg"></i>
-            <span class="absolute -top-1 -right-1 bg-forest-500 text-white text-[9px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center">
-                5
-            </span>
-        </button>
-        <button class="text-gray-500 hover:text-gray-700 relative" title="Messages">
-            <i class="fa-regular fa-envelope text-lg"></i>
-            <span class="absolute -top-1 -right-1 bg-safari-500 text-white text-[9px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center">
-                3
-            </span>
-        </button>
+        <div class="relative">
+            <button id="notifBellBtn" class="text-gray-500 hover:text-gray-700 relative" title="Notifications" type="button">
+                <i class="fa-regular fa-bell text-lg"></i>
+                <span id="notifBadge" class="absolute -top-1 -right-1 bg-forest-500 text-white text-[9px] font-bold min-w-[14px] h-3.5 px-0.5 rounded-full flex items-center justify-center" style="display:none">0</span>
+            </button>
+            <div id="notifDropdown" class="hidden absolute right-0 mt-3 w-80 bg-white rounded-md shadow-lg border border-gray-100 z-50 max-h-96 overflow-hidden flex flex-col">
+                <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
+                    <span class="text-sm font-semibold text-gray-800">Notifications</span>
+                    <button type="button" id="notifMarkAll" class="text-xs text-emerald-600 hover:underline">Mark all read</button>
+                </div>
+                <div id="notifList" class="overflow-y-auto flex-1 text-sm">
+                    <div class="p-4 text-center text-gray-400 text-xs">Loading...</div>
+                </div>
+            </div>
+        </div>
         
         <div class="relative pl-2 sm:pl-6 sm:border-l border-gray-200">
             <button id="profileDropdownBtn" class="flex items-center gap-3 focus:outline-none">
@@ -41,7 +43,6 @@
                 <i class="fa-solid fa-chevron-down text-xs text-gray-400 hidden sm:block"></i>
             </button>
             
-            <!-- Dropdown -->
             <div id="profileDropdown" class="hidden absolute right-0 mt-3 w-48 bg-white rounded-md shadow-lg border border-gray-100 py-1 z-50">
                 <a href="/admin/settings" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 nav-link" data-page="settings">
                     <i class="fa-solid fa-user mr-2 text-gray-400"></i> Profile
@@ -56,31 +57,106 @@
 </header>
 
 <script>
-    // Profile Dropdown Toggle
+(function () {
     document.getElementById('profileDropdownBtn')?.addEventListener('click', (e) => {
         e.stopPropagation();
         document.getElementById('profileDropdown')?.classList.toggle('hidden');
+        document.getElementById('notifDropdown')?.classList.add('hidden');
     });
 
-    document.addEventListener('click', () => {
-        document.getElementById('profileDropdown')?.classList.add('hidden');
-    });
-
-    // Mobile Sidebar Toggle
     document.getElementById('mobileMenuBtn')?.addEventListener('click', () => {
         const sidebar = document.getElementById('sidebar');
         const backdrop = document.getElementById('sidebarBackdrop');
-        
         sidebar.classList.toggle('hidden');
         sidebar.classList.toggle('absolute');
         sidebar.classList.toggle('z-50');
         sidebar.classList.toggle('left-0');
-        
         backdrop.classList.toggle('hidden');
         setTimeout(() => backdrop.classList.toggle('opacity-0'), 10);
     });
 
-    document.getElementById('sidebarBackdrop')?.addEventListener('click', () => {
-        document.getElementById('mobileMenuBtn').click();
+    async function refreshNotifications() {
+        try {
+            const res = await apiRequest('GET', '/notifications');
+            const list = res.data || [];
+            const unread = res.unread || 0;
+            const badge = document.getElementById('notifBadge');
+            if (badge) {
+                badge.textContent = unread > 99 ? '99+' : String(unread);
+                badge.style.display = unread > 0 ? 'flex' : 'none';
+            }
+            const el = document.getElementById('notifList');
+            if (!el) return;
+            if (!list.length) {
+                el.innerHTML = '<div class="p-4 text-center text-gray-400 text-xs">No notifications yet.</div>';
+                return;
+            }
+            el.innerHTML = list.map(n => `
+                <a href="${n.actionUrl || '#'}" class="block px-4 py-3 border-b border-gray-50 hover:bg-gray-50 ${n.isRead ? '' : 'bg-emerald-50/40'}" data-notif-id="${n.id}" data-page="${(n.actionUrl || '').replace('/admin/', '')}">
+                    <div class="font-semibold text-gray-800 text-xs">${escapeHtml(n.title)}</div>
+                    <div class="text-gray-500 text-xs mt-0.5 line-clamp-2">${escapeHtml(n.message)}</div>
+                    <div class="text-[10px] text-gray-400 mt-1">${n.createdAt ? new Date(n.createdAt).toLocaleString() : ''}</div>
+                </a>
+            `).join('');
+
+            el.querySelectorAll('[data-notif-id]').forEach(a => {
+                a.addEventListener('click', async (e) => {
+                    const page = a.getAttribute('data-page');
+                    if (page && typeof navigate === 'function') {
+                        e.preventDefault();
+                        navigate(page);
+                    }
+                    try { await apiRequest('POST', `/notifications/${a.getAttribute('data-notif-id')}/read`); } catch (_) {}
+                    refreshNotifications();
+                });
+            });
+        } catch (e) {
+            console.warn('Notifications load failed', e);
+        }
+    }
+
+    document.getElementById('notifBellBtn')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.getElementById('profileDropdown')?.classList.add('hidden');
+        document.getElementById('notifDropdown')?.classList.toggle('hidden');
+        refreshNotifications();
     });
+
+    document.getElementById('notifMarkAll')?.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        try {
+            await apiRequest('POST', '/notifications/read-all');
+            refreshNotifications();
+        } catch (_) {}
+    });
+
+    document.addEventListener('click', () => {
+        document.getElementById('profileDropdown')?.classList.add('hidden');
+        document.getElementById('notifDropdown')?.classList.add('hidden');
+    });
+
+    // Poll + live socket updates
+    refreshNotifications();
+    setInterval(refreshNotifications, 60000);
+
+    // Hook into admin chat socket when available
+    const waitSocket = setInterval(() => {
+        if (typeof io === 'undefined') return;
+        if (window.__adminNotifSocket) { clearInterval(waitSocket); return; }
+        const token = localStorage.getItem('adminToken') || localStorage.getItem('token');
+        if (!token) return;
+        window.__adminNotifSocket = io({ auth: { role: 'admin', token }, transports: ['websocket', 'polling'] });
+        window.__adminNotifSocket.on('connect', () => window.__adminNotifSocket.emit('admin_join'));
+        window.__adminNotifSocket.on('admin_notification', (n) => {
+            if (typeof showToast === 'function') showToast(n.message || n.title, 'success', n.title);
+            refreshNotifications();
+        });
+        clearInterval(waitSocket);
+    }, 1500);
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+})();
 </script>

@@ -1,6 +1,6 @@
 const { Worker } = require('bullmq');
 const { emailQueue, deadLetterQueue, redis, CONCURRENCY, RETRY_ATTEMPTS, BACKOFF_MS } = require('./queue');
-const { transporter, verifyConnection } = require('./transporter');
+const { getTransporter, verifyConnection } = require('./transporter');
 const { renderTemplate } = require('./email.service');
 const logger = require('../../utils/logger');
 
@@ -71,6 +71,10 @@ async function processEmailJob(job) {
       html
     };
 
+    const transporter = await getTransporter();
+    if (transporter.__smtpMeta?.from) {
+      mailOptions.from = transporter.__smtpMeta.from;
+    }
     const info = await transporter.sendMail(mailOptions);
 
     logger.info({
