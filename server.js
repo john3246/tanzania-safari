@@ -45,6 +45,15 @@ if (!fs.existsSync(uploadsDir)) {
 }
 
 // ── Security ──────────────────────────────────────────────────
+// Render assigns its own external hostname; the chat widget needs it whitelisted
+// for WebSocket upgrades in addition to the fixed production domains.
+const renderExternalHost = process.env.RENDER_EXTERNAL_URL
+    ? process.env.RENDER_EXTERNAL_URL.replace(/\/$/, '')
+    : null;
+const renderConnectSrc = renderExternalHost
+    ? [renderExternalHost, renderExternalHost.replace(/^https:/, 'wss:')]
+    : [];
+
 // Robust Helmet configuration with expanded Content Security Policy
 app.use(helmet({
     contentSecurityPolicy: {
@@ -66,7 +75,8 @@ app.use(helmet({
                 "wss://localhost:3000",
                 "wss://tanzania-safari.onrender.com",
                 "wss://tanzaniasafarimagic.com",
-                "wss://www.tanzaniasafarimagic.com"
+                "wss://www.tanzaniasafarimagic.com",
+                ...renderConnectSrc
             ],
             fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com", "https://unpkg.com", "https://fonts.googleapis.com", "https://cdn.jsdelivr.net", "data:", "https://ka-f.fontawesome.com"],
             objectSrc: ["'none'"],
@@ -254,10 +264,25 @@ app.use((err, req, res, next) => {
 // ── Live Chat (Socket.io) ─────────────────────────────────────
 const { initChatSocket, setupRedisAdapter } = require('./socket/chatHandler');
 
+// The chat widget is always served from the same origin as this server, so the
+// socket allowlist must cover every host the site is reachable on, independent
+// of ALLOWED_ORIGIN (which may be narrowed for the REST API).
+const socketAllowedOrigins = new Set([
+    ...allowedOrigins,
+    'https://tanzaniasafarimagic.com',
+    'https://www.tanzaniasafarimagic.com',
+    'https://tanzania-safari.onrender.com',
+    'http://localhost:3000'
+]);
+
+if (process.env.RENDER_EXTERNAL_URL) {
+    socketAllowedOrigins.add(process.env.RENDER_EXTERNAL_URL.replace(/\/$/, ''));
+}
+
 const io = socketIo(server, {
     cors: {
         origin: (origin, callback) => {
-            if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production') {
+            if (!origin || socketAllowedOrigins.has(origin) || process.env.NODE_ENV !== 'production') {
                 return callback(null, true);
             }
             callback(new Error('Not allowed by CORS'));
