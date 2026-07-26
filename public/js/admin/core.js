@@ -153,7 +153,7 @@ async function navigate(page, pushState = true) {
 
     // UI Updates
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('.nav-item, .nav-link[data-page]').forEach(n => n.classList.remove('active'));
     
     // Show target page
     if (targetPage) {
@@ -162,7 +162,7 @@ async function navigate(page, pushState = true) {
         setTimeout(() => targetPage.classList.remove('animate-fade-in'), 300);
     }
     
-    const targetNav = document.querySelector(`.nav-item[data-page="${page}"]`);
+    const targetNav = document.querySelector(`.nav-item[data-page="${page}"], .nav-link[data-page="${page}"]`);
     if (targetNav) targetNav.classList.add('active');
     
     const pageTitle = document.getElementById('pageTitle');
@@ -213,7 +213,10 @@ function updateBreadcrumb(page) {
         'reviews': 'Reviews',
         'images': 'Media Library',
         'users': 'Team Accounts',
-        'settings': 'Settings'
+        'settings': 'Settings',
+        'customers': 'Customers',
+        'chat': 'Live Chat',
+        'communications': 'Communications'
     };
     
     const categoryMap = {
@@ -224,6 +227,9 @@ function updateBreadcrumb(page) {
         'bookings': 'Overview',
         'booking-details': 'Overview',
         'enquiries': 'Overview',
+        'customers': 'Overview',
+        'chat': 'Overview',
+        'communications': 'Overview',
         'blog': 'Content',
         'reviews': 'Content',
         'images': 'Content',
@@ -558,7 +564,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', handleKeyboardShortcuts);
     
     // Navigation event listeners
-    document.querySelectorAll('.nav-item[data-page]').forEach(item => {
+    document.querySelectorAll('.nav-item[data-page], .nav-link[data-page]').forEach(item => {
         item.addEventListener('click', e => { e.preventDefault(); navigate(item.getAttribute('data-page')); });
     });
     
@@ -583,7 +589,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('darkModeToggle')?.addEventListener('click', toggleDarkMode);
 
     // Close sidebar on mobile after navigation
-    document.querySelectorAll('.nav-item').forEach(item => {
+    document.querySelectorAll('.nav-item[data-page], .nav-link[data-page]').forEach(item => {
         item.addEventListener('click', () => {
             if (window.innerWidth <= 1024) {
                 document.getElementById('sidebar')?.classList.remove('open');

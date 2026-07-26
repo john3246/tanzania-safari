@@ -24,6 +24,7 @@ router.use('/site-settings',   require('./admin/site-settings.routes'));
 router.use('/audit-logs',      require('./admin/audit-logs.routes'));
 router.use('/email-templates', require('./admin/email-templates.routes'));
 router.use('/communications',  require('./admin/communications.routes'));
+router.use('/chats',           require('./admin/chat.routes'));
 // router.use('/bookings-cms',    require('./admin/bookings-cms.routes'));
 router.use('/reports',         require('./admin/reports.routes'));
 

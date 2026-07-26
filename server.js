@@ -63,7 +63,10 @@ app.use(helmet({
                 "http://localhost:3000",
                 "http://localhost:5173",
                 "ws://localhost:3000",
-                "wss://tanzania-safari.onrender.com"
+                "wss://localhost:3000",
+                "wss://tanzania-safari.onrender.com",
+                "wss://tanzaniasafarimagic.com",
+                "wss://www.tanzaniasafarimagic.com"
             ],
             fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com", "https://unpkg.com", "https://fonts.googleapis.com", "https://cdn.jsdelivr.net", "data:", "https://ka-f.fontawesome.com"],
             objectSrc: ["'none'"],
@@ -249,52 +252,22 @@ app.use((err, req, res, next) => {
 });
 
 // ── Live Chat (Socket.io) ─────────────────────────────────────
+const { initChatSocket, setupRedisAdapter } = require('./socket/chatHandler');
+
 const io = socketIo(server, {
     cors: {
-        origin: '*', // For dev, or use allowedOrigins
-        methods: ['GET', 'POST']
+        origin: (origin, callback) => {
+            if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production') {
+                return callback(null, true);
+            }
+            callback(new Error('Not allowed by CORS'));
+        },
+        methods: ['GET', 'POST'],
+        credentials: true
     }
 });
 
-const activeChats = {}; // Memory store for MVP live chat
-
-io.on('connection', (socket) => {
-    console.log('New chat client connected:', socket.id);
-
-    // Client joins/starts a chat
-    socket.on('join_chat', (data) => {
-        const chatId = (data && data.chatId) ? data.chatId : socket.id;
-        socket.join(chatId);
-        if (!activeChats[chatId]) {
-            activeChats[chatId] = { id: chatId, status: 'open', messages: [] };
-        }
-        // Notify admin
-        io.to('admin_room').emit('chat_updated', activeChats[chatId]);
-        socket.emit('chat_joined', { chatId, chat: activeChats[chatId] });
-    });
-
-    // Admin joins admin room
-    socket.on('admin_join', () => {
-        socket.join('admin_room');
-        socket.emit('all_chats', activeChats);
-    });
-
-    // Send message
-    socket.on('send_message', (data) => {
-        const { chatId, sender, message } = data;
-        const msg = { id: Date.now(), sender, message, timestamp: new Date() };
-        
-        if (activeChats[chatId]) {
-            activeChats[chatId].messages.push(msg);
-            io.to(chatId).emit('new_message', { chatId, msg });
-            io.to('admin_room').emit('chat_updated', activeChats[chatId]);
-        }
-    });
-
-    socket.on('disconnect', () => {
-        console.log('Chat client disconnected:', socket.id);
-    });
-});
+initChatSocket(io);
 
 // ── Server Startup with SMTP Verification ───────────────────────
 async function startServer() {
@@ -350,6 +323,9 @@ async function startServer() {
     } catch (migErr) {
       logger.warn({ event: 'migration_warning', error: migErr.message }, 'Migration skipped or failed');
     }
+
+    // Socket.io Redis adapter for multi-instance (optional)
+    await setupRedisAdapter(io);
 
     // Validate environment
     const envValidation = emailService.validateEnvironment();
