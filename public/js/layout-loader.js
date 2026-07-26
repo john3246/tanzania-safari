@@ -3,40 +3,79 @@
  * and handles global UI interactions like navbar scrolling and social float.
  */
 
+const ASSET_VERSION = '4';
+
 document.addEventListener('DOMContentLoaded', () => {
-    const cb = '?v=' + Date.now();
-    loadComponent('header', '/includes/header.html' + cb, initHeader);
-    loadComponent('footer', '/includes/footer.html' + cb, () => {
+    ensureStylesheet('/css/whatsapp.css?v=' + ASSET_VERSION);
+    ensureStylesheet('/css/chat.css?v=' + ASSET_VERSION);
+
+    loadComponent('header', '/includes/header.html?v=' + ASSET_VERSION, initHeader);
+    loadComponent('footer', '/includes/footer.html?v=' + ASSET_VERSION, () => {
         initFooter();
-        loadChatScripts();
+        // Defer chat until after first paint for better LCP on Render
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(() => loadChatScripts(), { timeout: 2500 });
+        } else {
+            setTimeout(loadChatScripts, 1200);
+        }
     });
-    initSEO();
+
+    loadSeoScript().then(() => initSEO());
 });
 
+function ensureStylesheet(href) {
+    const bare = href.split('?')[0];
+    if (document.querySelector(`link[href*="${bare}"]`)) return;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = href;
+    document.head.appendChild(link);
+}
+
+function loadSeoScript() {
+    return new Promise((resolve) => {
+        if (window.SafariSEO) return resolve();
+        if (document.querySelector('script[src^="/js/seo.js"]')) {
+            const check = setInterval(() => {
+                if (window.SafariSEO) {
+                    clearInterval(check);
+                    resolve();
+                }
+            }, 50);
+            setTimeout(() => { clearInterval(check); resolve(); }, 2000);
+            return;
+        }
+        const script = document.createElement('script');
+        script.src = '/js/seo.js?v=' + ASSET_VERSION;
+        script.onload = () => resolve();
+        script.onerror = () => resolve();
+        document.head.appendChild(script);
+    });
+}
+
 function loadChatScripts() {
+    if (window.liveChat || document.querySelector('script[data-chat-loader="1"]')) return;
+
+    const loadChat = () => {
+        if (document.querySelector('script[src^="/js/chat.js"]')) return;
+        const chatScript = document.createElement('script');
+        chatScript.src = '/js/chat.js?v=' + ASSET_VERSION;
+        chatScript.defer = true;
+        document.body.appendChild(chatScript);
+    };
+
     if (typeof io === 'undefined') {
         const ioScript = document.createElement('script');
         ioScript.src = '/socket.io/socket.io.js';
-        
-        const loadChat = () => {
-            if (!document.querySelector('script[src^="/js/chat.js"]')) {
-                const chatScript = document.createElement('script');
-                chatScript.src = '/js/chat.js?v=' + Date.now();
-                document.body.appendChild(chatScript);
-            }
-        };
-        
+        ioScript.setAttribute('data-chat-loader', '1');
         ioScript.onload = loadChat;
         ioScript.onerror = () => {
             console.error('Socket.io failed to load. Chat will run in offline mode.');
             loadChat();
         };
-        
         document.body.appendChild(ioScript);
     } else {
-        const chatScript = document.createElement('script');
-        chatScript.src = '/js/chat.js?v=' + Date.now();
-        document.body.appendChild(chatScript);
+        loadChat();
     }
 }
 
@@ -299,39 +338,57 @@ function showToast(title, message, type = 'info') {
 }
 
 /**
- * Initializes and injects Open Graph and Twitter SEO tags dynamically based on the page content.
+ * Initializes SEO tags, canonical URL, Open Graph, Twitter cards, and JSON-LD.
  */
 function initSEO() {
-    // Basic OG Tags
-    const ogTitle = document.createElement('meta');
-    ogTitle.setAttribute('property', 'og:title');
-    ogTitle.setAttribute('content', document.title);
-    
-    const ogDesc = document.createElement('meta');
-    ogDesc.setAttribute('property', 'og:description');
+    const path = window.location.pathname.replace(/\/$/, '') || '/';
+    const pageMap = {
+        '/': {
+            title: 'Tanzania Safari Magic | Authentic African Safari Tours',
+            description: 'Book authentic Tanzania safari tours with local experts. Great Migration, Kilimanjaro, Ngorongoro Crater, and Zanzibar beach escapes.',
+            keywords: 'Tanzania safari, Serengeti safari, Kilimanjaro trek, Ngorongoro crater, Zanzibar holiday, African wildlife tours'
+        },
+        '/safaris': {
+            title: 'Safari Packages & Tours in Tanzania | Tanzania Safari Magic',
+            description: 'Browse Tanzania safari packages by destination, duration, and budget. Custom wildlife adventures across Serengeti, Tarangire, and more.'
+        },
+        '/destinations': {
+            title: 'Tanzania Destinations & National Parks | Tanzania Safari Magic',
+            description: 'Explore Tanzania iconic destinations — Serengeti, Ngorongoro, Kilimanjaro, Tarangire, and Zanzibar — with expert local guides.'
+        },
+        '/about': {
+            title: 'About Us | Tanzania Safari Magic',
+            description: 'Meet the local Tanzania safari specialists crafting eco-conscious, luxury wildlife adventures from Arusha.'
+        },
+        '/contact': {
+            title: 'Contact & Book a Safari | Tanzania Safari Magic',
+            description: 'Talk to our safari experts in Arusha. Call, WhatsApp, or email to plan your Tanzania adventure.'
+        },
+        '/blog': {
+            title: 'Safari Travel Blog & Wildlife Guides | Tanzania Safari Magic',
+            description: 'Tanzania safari guides, migration updates, packing tips, and travel advice from local experts.'
+        },
+        '/booking': {
+            title: 'Book Your Tanzania Safari Online | Tanzania Safari Magic',
+            description: 'Secure your Tanzania safari booking online with expert guidance and flexible itineraries.'
+        }
+    };
+
+    const defaults = pageMap[path] || {};
     const descMeta = document.querySelector('meta[name="description"]');
-    ogDesc.setAttribute('content', descMeta ? descMeta.getAttribute('content') : 'Experience authentic Tanzania safari tours with expert local guides.');
 
-    const ogUrl = document.createElement('meta');
-    ogUrl.setAttribute('property', 'og:url');
-    ogUrl.setAttribute('content', window.location.href);
-
-    const ogType = document.createElement('meta');
-    ogType.setAttribute('property', 'og:type');
-    ogType.setAttribute('content', 'website');
-
-    // Twitter Card Tags
-    const twCard = document.createElement('meta');
-    twCard.setAttribute('name', 'twitter:card');
-    twCard.setAttribute('content', 'summary_large_image');
-
-    const twTitle = document.createElement('meta');
-    twTitle.setAttribute('name', 'twitter:title');
-    twTitle.setAttribute('content', document.title);
-
-    const twDesc = document.createElement('meta');
-    twDesc.setAttribute('name', 'twitter:description');
-    twDesc.setAttribute('content', descMeta ? descMeta.getAttribute('content') : 'Experience authentic Tanzania safari tours.');
-
-    document.head.append(ogTitle, ogDesc, ogUrl, ogType, twCard, twTitle, twDesc);
+    if (window.SafariSEO) {
+        window.SafariSEO.apply({
+            title: defaults.title || document.title,
+            description: defaults.description || (descMeta && descMeta.content) || window.SafariSEO.DEFAULT_DESC,
+            keywords: defaults.keywords,
+            image: '/images/hero.jpg',
+            type: 'website'
+        });
+        window.SafariSEO.injectOrganizationSchema();
+    } else {
+        // Fallback if seo.js failed to load
+        if (defaults.title) document.title = defaults.title;
+        if (defaults.description && descMeta) descMeta.setAttribute('content', defaults.description);
+    }
 }

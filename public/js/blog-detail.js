@@ -9,8 +9,20 @@ async function loadPost() {
             return;
         }
 
-        document.title = `${data.post_title} | Tanzania Safari Blog`;
-        
+        const fullTitle = `${data.post_title} | Tanzania Safari Magic Blog`;
+        const description = data.meta_description || data.post_excerpt || `Read ${data.post_title} on the Tanzania Safari Magic travel blog.`;
+        if (window.SafariSEO) {
+            window.SafariSEO.apply({
+                title: fullTitle,
+                description: String(description).replace(/<[^>]+>/g, '').slice(0, 160),
+                image: data.featured_image_url || '/images/hero.jpg',
+                type: 'article',
+                jsonLd: window.SafariSEO.articleSchema(data)
+            });
+        } else {
+            document.title = fullTitle;
+        }
+
         container.innerHTML = `
             <div class="post-header">
                 <span class="post-category">${data.category_name || 'Safari Guide'}</span>
