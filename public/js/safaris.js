@@ -125,7 +125,7 @@ async function loadFilters() {
         const destEl = document.getElementById('destinationSelect');
         if (destEl && dests?.length) {
             destEl.innerHTML = `<option value="all">All Destinations</option>` +
-                dests.map(d => `<option value="${d.park_slug}">${d.park_name}</option>`).join('');
+                dests.map(d => `<option value="${d.park_slug || d.slug}">${d.park_name || d.name}</option>`).join('');
         }
     } catch {}
     // Read URL params

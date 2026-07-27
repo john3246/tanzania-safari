@@ -49,15 +49,24 @@ function buildSafariCard(p) {
 
 // ── Destination card builder ───────────────────────────────
 function buildDestCard(d) {
-    const img = d.featured_image_url || d.image_url || `/images/destinations/${d.park_slug}/main.jpg`;
+    const slug = d.park_slug || d.slug || '';
+    const name = d.park_name || d.name || 'Destination';
+    const img = d.featured_image_url || d.image_url
+        || (d.gallery_urls && d.gallery_urls[0])
+        || (d.image_urls && d.image_urls[0])
+        || (slug ? `/images/optimized/${slug}.webp` : '/images/optimized/balloon.webp');
+    const fb = slug ? `/images/destinations/${slug}/main.jpg` : '/images/optimized/balloon.webp';
+    const count = d.safari_count || d.tour_count || 0;
+    const href = slug ? `/destinations/${slug}` : '/destinations';
     return `
-    <a href="/destinations/${d.park_slug}" class="corp-dest-card fade-up">
+    <a href="${href}" class="corp-dest-card fade-up">
       <div class="corp-dest-img">
-        <img src="${img}" alt="${d.park_name}" loading="lazy" decoding="async" onerror="this.src='/images/optimized/balloon.webp'">
-        <div class="corp-dest-badge">${d.safari_count > 0 ? `${d.safari_count} Tours` : 'Custom Safaris'}</div>
+        <img src="${typeof imgSrc === 'function' ? imgSrc(img) : img}" alt="${name}" loading="lazy" decoding="async"
+             onerror="this.onerror=null;this.src='${fb}';this.onerror=function(){this.src='/images/optimized/balloon.webp'}">
+        <div class="corp-dest-badge">${count > 0 ? `${count} Tours` : 'Custom Safaris'}</div>
       </div>
       <div class="corp-dest-content">
-        <h3 class="corp-dest-title">${d.park_name}</h3>
+        <h3 class="corp-dest-title">${name}</h3>
         <div class="corp-dest-footer">
           <span class="corp-dest-explore">Explore Region <i class="fas fa-arrow-right"></i></span>
         </div>

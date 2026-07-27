@@ -107,12 +107,13 @@ async function loadDestinationDetails(slug) {
             currentDestination = result.data;
             
             renderDestinationDetails(currentDestination);
-            updatePageTitle(currentDestination.park_name);
-            updateMetaDescription(currentDestination.park_description);
+            const displayName = currentDestination.park_name || currentDestination.name;
+            updatePageTitle(displayName);
+            updateMetaDescription(currentDestination.park_description || currentDestination.description);
             applyDestinationSeo(currentDestination);
             injectDestinationSchema(currentDestination);
-            await loadSafariPackagesForDestination(currentDestination.park_name);
-            await loadRelatedDestinations(currentDestination.park_id, currentDestination.park_slug);
+            await loadSafariPackagesForDestination(displayName);
+            await loadRelatedDestinations(currentDestination.park_id || currentDestination.id, currentDestination.park_slug || currentDestination.slug);
         } else {
             showError('Destination not found');
         }
@@ -126,11 +127,12 @@ function renderDestinationDetails(destination) {
     const mainContent = document.getElementById('destinationDetailContent');
     if (!mainContent) return;
     
-    const name = destination.park_name;
-    const description = destination.park_description || `Experience the breathtaking beauty of ${name}. This amazing destination offers incredible wildlife viewing opportunities and stunning landscapes that will leave you in awe.`;
+    const name = destination.park_name || destination.name;
+    const description = destination.park_description || destination.description || `Experience the breathtaking beauty of ${name}. This amazing destination offers incredible wildlife viewing opportunities and stunning landscapes that will leave you in awe.`;
+    const slug = destination.park_slug || destination.slug || '';
     
     // Determine destination type and features
-    const isUnesco = name.toLowerCase().includes('ngorongoro') || 
+    const isUnesco = destination.is_unesco_heritage || name.toLowerCase().includes('ngorongoro') || 
                      name.toLowerCase().includes('serengeti') ||
                      name.toLowerCase().includes('kilimanjaro');
     
@@ -153,10 +155,13 @@ function renderDestinationDetails(destination) {
         { icon: 'fa-ruler', label: 'Size', value: destination.size_sq_km ? `${Number(destination.size_sq_km).toLocaleString()} sq km` : 'Varies' },
         { icon: 'fa-calendar', label: 'Established', value: destination.established_year || 'Various' },
         { icon: 'fa-users', label: 'Annual Visitors', value: '350,000+' },
-        { icon: 'fa-star', label: 'Status', value: destination.is_unesco_heritage ? 'UNESCO Site' : 'National Park' }
+        { icon: 'fa-star', label: 'Status', value: isUnesco ? 'UNESCO Site' : 'National Park' }
     ];
     
-    const heroImg = imgSrc(destination.image_url || (destination.image_urls && destination.image_urls[0]), '/images/hero.jpg');
+    const heroImg = imgSrc(
+        destination.featured_image_url || destination.image_url || (destination.image_urls && destination.image_urls[0]) || (destination.gallery_urls && destination.gallery_urls[0]),
+        slug ? `/images/optimized/${slug}.webp` : '/images/optimized/serengeti-national-park.webp'
+    );
     
     const html = `
         <section class="corp-page-hero">
@@ -175,7 +180,7 @@ function renderDestinationDetails(destination) {
                     <div style="display:flex;flex-wrap:wrap;gap:0.6rem;margin-top:1rem">
                         <span class="badge" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;padding:0.4rem 0.85rem;border-radius:999px;font-size:0.8rem;font-weight:600"><i class="fas fa-map-marker-alt"></i> East Africa</span>
                         ${isUnesco ? '<span class="badge" style="background:var(--accent);color:#fff;padding:0.4rem 0.85rem;border-radius:999px;font-size:0.8rem;font-weight:600"><i class="fas fa-award"></i> UNESCO Site</span>' : ''}
-                        <span class="badge" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;padding:0.4rem 0.85rem;border-radius:999px;font-size:0.8rem;font-weight:600"><i class="fas fa-binoculars"></i> ${destination.safari_count > 0 ? `${destination.safari_count} Packages` : 'Custom Safaris'}</span>
+                        <span class="badge" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;padding:0.4rem 0.85rem;border-radius:999px;font-size:0.8rem;font-weight:600"><i class="fas fa-binoculars"></i> ${(destination.safari_count || destination.tour_count || 0) > 0 ? `${destination.safari_count || destination.tour_count} Packages` : 'Custom Safaris'}</span>
                     </div>
                 </div>
             </div>
@@ -194,8 +199,14 @@ function renderDestinationDetails(destination) {
                             <h2>Photo Gallery</h2>
                             ${(() => {
                                 const images = [];
-                                if (Array.isArray(destination.image_urls)) images.push(...destination.image_urls);
+                                if (Array.isArray(destination.gallery_urls)) images.push(...destination.gallery_urls);
+                                if (Array.isArray(destination.image_urls)) {
+                                    destination.image_urls.forEach(u => { if (u && !images.includes(u)) images.push(u); });
+                                }
+                                if (destination.featured_image_url && !images.includes(destination.featured_image_url)) images.unshift(destination.featured_image_url);
                                 if (destination.image_url && !images.includes(destination.image_url)) images.unshift(destination.image_url);
+                                if (!images.length && slug) images.push(`/images/destinations/${slug}/main.jpg`, `/images/optimized/${slug}.webp`);
+                                if (!images.length) images.push(heroImg);
                                 if (images.length > 0) {
                                     return `
                                         <div class="gallery corp-gallery">
@@ -418,7 +429,7 @@ async function loadRelatedDestinations(currentId, currentSlug) {
     try {
         const result = await API.getDestinations();
         if (result && result.success && result.data) {
-            const related = result.data.filter(dest => dest.park_slug !== currentSlug).slice(0, 3);
+            const related = result.data.filter(dest => (dest.park_slug || dest.slug) !== currentSlug).slice(0, 3);
             
             if (related.length > 0) {
                 const html = `
@@ -430,24 +441,26 @@ async function loadRelatedDestinations(currentId, currentSlug) {
                             </div>
                             <div class="related-grid">
                                 ${related.map(dest => {
+                                    const rName = dest.park_name || dest.name || 'Destination';
+                                    const rSlug = dest.park_slug || dest.slug || '';
                                     let iconClass = 'fa-tree';
-                                    if (dest.park_name.toLowerCase().includes('serengeti')) iconClass = 'fa-paw';
-                                    else if (dest.park_name.toLowerCase().includes('kilimanjaro')) iconClass = 'fa-mountain';
-                                    else if (dest.park_name.toLowerCase().includes('zanzibar')) iconClass = 'fa-umbrella-beach';
+                                    if (rName.toLowerCase().includes('serengeti')) iconClass = 'fa-paw';
+                                    else if (rName.toLowerCase().includes('kilimanjaro')) iconClass = 'fa-mountain';
+                                    else if (rName.toLowerCase().includes('zanzibar')) iconClass = 'fa-umbrella-beach';
                                     
                                     return `
-                                        <div class="related-card" onclick="window.location.href='/destinations/${dest.park_slug}'">
+                                        <a class="related-card" href="/destinations/${rSlug}" style="text-decoration:none;color:inherit">
                                             <div class="related-card-image">
                                                 <i class="fas ${iconClass}"></i>
                                             </div>
                                             <div class="related-card-content">
-                                                <h3>${escapeHtml(dest.park_name)}</h3>
-                                                <p>${escapeHtml(dest.park_description || 'Discover this amazing destination')}</p>
+                                                <h3>${escapeHtml(rName)}</h3>
+                                                <p>${escapeHtml(dest.park_description || dest.description || dest.short_description || 'Discover this amazing destination')}</p>
                                                 <div class="related-stats">
-                                                    <span><i class="fas fa-safari"></i> ${dest.safari_count || 0} safaris</span>
+                                                    <span><i class="fas fa-binoculars"></i> ${dest.safari_count || dest.tour_count || 0} safaris</span>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </a>
                                     `;
                                 }).join('')}
                             </div>

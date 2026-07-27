@@ -81,21 +81,74 @@ h3 { font-size: clamp(1.1rem, 1rem + 0.4vw, 1.35rem); }
 }
 .corp-page-hero .hero-slideshow,
 .corp-page-hero .hero-bg {
-  position: absolute;
-  inset: 0;
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 0 !important;
+}
+.corp-page-hero .hero-slide {
+  position: absolute !important;
+  inset: 0 !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  opacity: 0;
+  animation: corpHeroFade 18s infinite;
+}
+.corp-page-hero .hero-slide:nth-child(1) { animation-delay: 0s; }
+.corp-page-hero .hero-slide:nth-child(2) { animation-delay: 6s; }
+.corp-page-hero .hero-slide:nth-child(3) { animation-delay: 12s; }
+.corp-page-hero .hero-slide.active { opacity: 1; }
+@keyframes corpHeroFade {
+  0% { opacity: 0; }
+  8% { opacity: 1; }
+  30% { opacity: 1; }
+  40% { opacity: 0; }
+  100% { opacity: 0; }
 }
 .corp-page-hero::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(15,26,14,0.25) 0%, rgba(15,26,14,0.78) 100%);
+  background: linear-gradient(180deg, rgba(15,26,14,0.2) 0%, rgba(15,26,14,0.72) 100%);
   z-index: 1;
+  pointer-events: none;
 }
 .corp-page-hero-inner {
   position: relative;
   z-index: 2;
   width: 100%;
   padding: clamp(2rem, 5vw, 3.5rem) 0;
+}
+
+/* Solid mobile nav drawer (never translucent over page) */
+@media (max-width: 1024px) {
+  .header.menu-open {
+    z-index: 1200 !important;
+  }
+  .menu-overlay.active {
+    z-index: 1190 !important;
+    background: rgba(0, 0, 0, 0.55) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  #mainNav.nav,
+  .nav {
+    background: #ffffff !important;
+    opacity: 1 !important;
+    z-index: 1210 !important;
+    box-shadow: -8px 0 32px rgba(0,0,0,0.18) !important;
+  }
+  #mainNav.nav .nav-link,
+  #mainNav.nav .drawer-header .brand {
+    color: #1a1a1a !important;
+    opacity: 1 !important;
+  }
+  #mainNav.nav .nav-cta {
+    background: var(--primary) !important;
+    color: #fff !important;
+  }
 }
 .corp-eyebrow {
   display: inline-block;
@@ -585,6 +638,184 @@ h3 { font-size: clamp(1.1rem, 1rem + 0.4vw, 1.35rem); }
 .corp-blog-article .post-featured-img img {
   width: 100%; height: 100%; object-fit: cover; display: block;
 }
+
+/* ── Zara-inspired About layout ────────────────────────────── */
+.zara-about { padding: clamp(2rem, 4vw, 3.5rem) 0 3rem; background: #fff; }
+.zara-crumb {
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-muted);
+}
+.zara-crumb a { color: var(--primary); text-decoration: none; font-weight: 600; }
+.zara-crumb span { margin: 0 0.35rem; }
+.zara-intro {
+  max-width: 920px;
+  margin: 0 auto 2.5rem;
+  text-align: center;
+  color: var(--text-secondary);
+  line-height: 1.85;
+  font-size: 1.05rem;
+}
+.zara-intro a { color: var(--primary); font-weight: 600; text-decoration: none; }
+.zara-intro a:hover { text-decoration: underline; }
+.zara-split {
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: start;
+  margin-bottom: 2.5rem;
+}
+@media (max-width: 900px) {
+  .zara-split { grid-template-columns: 1fr; }
+}
+.zara-gallery-main {
+  aspect-ratio: 4 / 3;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #eee;
+  box-shadow: 0 12px 36px rgba(38,62,34,0.1);
+}
+.zara-gallery-main img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.zara-gallery-thumbs {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
+  margin-top: 0.65rem;
+}
+.zara-thumb {
+  border: 2px solid transparent;
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 0;
+  cursor: pointer;
+  background: none;
+  aspect-ratio: 1;
+  min-height: 48px;
+}
+.zara-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.zara-thumb.active { border-color: var(--primary); }
+.zara-service {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.35rem;
+}
+.zara-service h2 {
+  font-size: 1.15rem;
+  margin: 0 0 0.4rem;
+  color: var(--earth-dark);
+}
+.zara-service p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+.zara-service a { color: var(--primary); font-weight: 600; text-decoration: none; }
+.zara-service a:hover { text-decoration: underline; }
+.zara-service-icon {
+  width: 44px; height: 44px; flex-shrink: 0;
+  border-radius: 50%;
+  background: rgba(230,126,34,0.12);
+  color: var(--primary);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+}
+.zara-sustain {
+  margin-top: 1rem;
+  padding: 1rem 1.15rem;
+  background: #f7faf7;
+  border-radius: 12px;
+  border-left: 4px solid var(--primary);
+  color: var(--text-secondary);
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+.zara-mv-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin: 2.5rem 0;
+}
+@media (max-width: 768px) {
+  .zara-mv-grid { grid-template-columns: 1fr; }
+}
+.zara-mv-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 16px;
+  padding: 1.75rem;
+  background: linear-gradient(145deg, #1a3a2a, #0f1a0e);
+  color: #fff;
+  min-height: 180px;
+  box-shadow: 0 14px 40px rgba(15,26,14,0.2);
+  transition: transform 0.25s ease;
+}
+.zara-mv-card:hover { transform: translateY(-4px); }
+.zara-mv-card.vision {
+  background: linear-gradient(145deg, #c45c16, #8a3a0a);
+}
+.zara-mv-label {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+  opacity: 0.9;
+}
+.zara-mv-card p { margin: 0; line-height: 1.7; font-size: 0.98rem; }
+.zara-hotels {
+  background: var(--bg-secondary, #f7f5f0);
+  border-radius: 16px;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  margin-bottom: 2.5rem;
+}
+.zara-hotels h2 { margin: 0 0 0.75rem; }
+.zara-hotels p { color: var(--text-secondary); line-height: 1.75; margin: 0 0 1.25rem; }
+.zara-cta-row { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+.zara-section-title {
+  text-align: center;
+  margin: 0 0 1.5rem;
+  font-size: clamp(1.4rem, 1.1rem + 1vw, 1.85rem);
+}
+.zara-roles-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+@media (max-width: 1024px) {
+  .zara-roles-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .zara-roles-grid { grid-template-columns: 1fr; }
+  .zara-gallery-thumbs { grid-template-columns: repeat(4, 1fr); }
+}
+.zara-role {
+  background: #fff;
+  border: 1px solid rgba(38,62,34,0.08);
+  border-radius: 14px;
+  padding: 1.25rem;
+  box-shadow: 0 6px 20px rgba(38,62,34,0.04);
+}
+.zara-role h3 {
+  font-size: 1rem;
+  margin: 0 0 0.5rem;
+  color: var(--earth-dark);
+}
+.zara-role h3 i { color: var(--primary); margin-right: 0.35rem; }
+.zara-role p { margin: 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.65; }
+.zara-people-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+.zara-person { text-align: center; }
+.zara-person-avatar { font-size: 3rem; color: var(--primary); margin-bottom: 0.5rem; }
+.zara-person h3 { margin: 0 0 0.25rem; font-size: 1rem; }
+.zara-person p { margin: 0; color: var(--text-muted); font-size: 0.85rem; }
 
 /* Prevent cut-off on small phones */
 @media (max-width: 380px) {

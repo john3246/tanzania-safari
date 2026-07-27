@@ -92,9 +92,11 @@ function initHeader() {
     const drawerClose = document.getElementById('drawerClose');
     
     function toggleDrawer() {
-        mainNav.classList.toggle('active');
-        menuOverlay.classList.toggle('active');
-        document.body.style.overflow = mainNav.classList.contains('active') ? 'hidden' : '';
+        const open = !mainNav.classList.contains('active');
+        mainNav.classList.toggle('active', open);
+        menuOverlay.classList.toggle('active', open);
+        header?.classList.toggle('menu-open', open);
+        document.body.style.overflow = open ? 'hidden' : '';
     }
 
     if (mobileToggle && mainNav && menuOverlay) {

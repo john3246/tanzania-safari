@@ -1,37 +1,63 @@
-// destinations.js - Corporate Revamp
+// destinations.js - Corporate Revamp + resilient image/slug mapping
 
 const header = document.getElementById('header');
-window.addEventListener('scroll', () => { 
-    header?.classList.toggle('scrolled', window.scrollY > 50); 
-    document.getElementById('backToTop')?.classList.toggle('visible', window.scrollY > 400); 
+window.addEventListener('scroll', () => {
+    header?.classList.toggle('scrolled', window.scrollY > 50);
+    document.getElementById('backToTop')?.classList.toggle('visible', window.scrollY > 400);
 }, { passive: true });
-document.getElementById('mobileToggle')?.addEventListener('click', () => { 
-    document.getElementById('mainNav')?.classList.toggle('active'); 
-    document.getElementById('menuOverlay')?.classList.toggle('active'); 
-});
-document.getElementById('menuOverlay')?.addEventListener('click', () => { 
-    document.getElementById('mainNav')?.classList.remove('active'); 
-    document.getElementById('menuOverlay')?.classList.remove('active'); 
-});
-document.getElementById('backToTop')?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-const yr = document.getElementById('year'); if (yr) yr.textContent = new Date().getFullYear();
+
+function destSlug(d) {
+    return d.park_slug || d.slug || '';
+}
+
+function destName(d) {
+    return d.park_name || d.name || 'Destination';
+}
+
+function destImage(d) {
+    const slug = destSlug(d);
+    const fromApi = d.featured_image_url || d.image_url
+        || (Array.isArray(d.gallery_urls) && d.gallery_urls[0])
+        || (Array.isArray(d.image_urls) && d.image_urls[0]);
+    if (fromApi) return (typeof imgSrc === 'function' ? imgSrc(fromApi) : fromApi);
+    if (slug) {
+        // Prefer optimized webp, then destinations folder
+        return `/images/optimized/${slug}.webp`;
+    }
+    return '/images/optimized/balloon.webp';
+}
+
+function destImageFallback(d) {
+    const slug = destSlug(d);
+    if (!slug) return '/images/optimized/balloon.webp';
+    return `/images/destinations/${slug}/main.jpg`;
+}
 
 function createCorporateCard(d) {
-    const imgUrl = (d.image_urls && d.image_urls.length > 0) ? d.image_urls[0] : (d.image_url || '/images/optimized/balloon.webp');
+    const slug = destSlug(d);
+    const name = destName(d);
+    const href = slug ? `/destinations/${slug}` : '/destinations';
+    const img = destImage(d);
+    const fb = destImageFallback(d);
+    const count = d.safari_count || d.tour_count || 0;
+    const desc = d.park_description || d.description || d.short_description || 'Experience the untamed wilderness of Tanzania.';
+
     return `
-    <a href="/destinations/${d.park_slug}" class="corp-dest-card">
+    <a href="${href}" class="corp-dest-card">
         <div class="corp-dest-img">
-            <img src="${imgUrl}" alt="${d.park_name}" loading="lazy" decoding="async">
-            ${d.image_urls && d.image_urls.length > 1 ? `<div class="corp-img-badge"><i class="fas fa-camera"></i> ${d.image_urls.length}</div>` : ''}
+            <img src="${img}" alt="${name}" width="640" height="400" loading="lazy" decoding="async"
+                 onerror="this.onerror=null;this.src='${fb}';this.onerror=function(){this.src='/images/optimized/balloon.webp'}">
+            ${(Array.isArray(d.image_urls) && d.image_urls.length > 1) || (Array.isArray(d.gallery_urls) && d.gallery_urls.length > 1)
+                ? `<div class="corp-img-badge"><i class="fas fa-camera"></i> ${(d.image_urls || d.gallery_urls).length}</div>` : ''}
         </div>
         <div class="corp-dest-content">
             <div class="corp-dest-header">
-                <h3>${d.park_name}</h3>
-                <span class="corp-dest-location"><i class="fas fa-map-marker-alt"></i> ${d.park_location || 'Tanzania'}</span>
+                <h3>${name}</h3>
+                <span class="corp-dest-location"><i class="fas fa-map-marker-alt"></i> ${d.park_location || d.region || 'Tanzania'}</span>
             </div>
-            <p class="corp-dest-desc">${d.park_description ? (d.park_description.substring(0, 80) + '...') : 'Experience the untamed wilderness of Tanzania.'}</p>
+            <p class="corp-dest-desc">${desc.substring(0, 90)}${desc.length > 90 ? '…' : ''}</p>
             <div class="corp-dest-footer">
-                <span class="corp-dest-safaris"><i class="fas fa-binoculars"></i> <strong>${d.safari_count > 0 ? d.safari_count : '—'}</strong> ${d.safari_count > 0 ? 'Safaris' : 'Inquire'}</span>
+                <span class="corp-dest-safaris"><i class="fas fa-binoculars"></i> <strong>${count > 0 ? count : '—'}</strong> ${count > 0 ? 'Safaris' : 'Inquire'}</span>
                 <span class="corp-dest-action">Explore <i class="fas fa-arrow-right"></i></span>
             </div>
         </div>
@@ -43,22 +69,18 @@ async function loadDestinations() {
         const { data } = await API.get('/destinations');
         if (!data?.length) return;
 
-        // Filter by region (rough string matching for demo purposes if backend doesn't provide exact region enum)
-        const northern = data.filter(d => ['serengeti', 'ngorongoro', 'tarangire', 'manyara', 'arusha', 'kilimanjaro'].some(r => d.park_name.toLowerCase().includes(r)));
-        const zanzibar = data.filter(d => ['zanzibar', 'pemba', 'mafia'].some(r => d.park_name.toLowerCase().includes(r)));
-        
-        // Everything else goes to southern/western
+        const northern = data.filter(d => ['serengeti', 'ngorongoro', 'tarangire', 'manyara', 'arusha', 'kilimanjaro', 'meru'].some(r => destName(d).toLowerCase().includes(r) || destSlug(d).toLowerCase().includes(r)));
+        const zanzibar = data.filter(d => ['zanzibar', 'pemba', 'mafia'].some(r => destName(d).toLowerCase().includes(r) || destSlug(d).toLowerCase().includes(r)));
         const southern = data.filter(d => !northern.includes(d) && !zanzibar.includes(d));
 
         const nGrid = document.getElementById('northernDestGrid');
-        if (nGrid && northern.length > 0) nGrid.innerHTML = northern.map(createCorporateCard).join('');
-        
-        const sGrid = document.getElementById('southernDestGrid');
-        if (sGrid && southern.length > 0) sGrid.innerHTML = southern.map(createCorporateCard).join('');
-        
-        const zGrid = document.getElementById('zanzibarDestGrid');
-        if (zGrid && zanzibar.length > 0) zGrid.innerHTML = zanzibar.map(createCorporateCard).join('');
+        if (nGrid) nGrid.innerHTML = northern.length ? northern.map(createCorporateCard).join('') : '<p class="text-muted">No northern circuit parks listed yet.</p>';
 
+        const sGrid = document.getElementById('southernDestGrid');
+        if (sGrid) sGrid.innerHTML = southern.length ? southern.map(createCorporateCard).join('') : '<p class="text-muted">No southern circuit parks listed yet.</p>';
+
+        const zGrid = document.getElementById('zanzibarDestGrid');
+        if (zGrid) zGrid.innerHTML = zanzibar.length ? zanzibar.map(createCorporateCard).join('') : '<p class="text-muted">Coastal destinations coming soon — <a href="/contact">inquire for Zanzibar</a>.</p>';
     } catch (e) {
         console.error('Failed to load destinations:', e);
     }
