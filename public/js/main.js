@@ -23,7 +23,7 @@ function buildSafariCard(p) {
     return `
     <a href="/safaris/${p.package_slug}" class="safari-card fade-up">
       <div class="safari-card-img">
-        <img src="${img}" alt="${p.package_name}" loading="lazy" decoding="async" onerror="this.src='/images/optimized/balloon.webp'">
+        <img src="${img}" alt="${p.package_name}" width="800" height="600" loading="lazy" decoding="async" onerror="this.src='/images/optimized/balloon.webp'">
         ${p.is_featured ? '<span class="safari-card-badge"><i class="fas fa-star"></i> Featured</span>' : ''}
         <span class="safari-card-duration"><i class="fas fa-clock"></i> ${p.duration_days} Days</span>
       </div>
@@ -54,7 +54,7 @@ function buildDestCard(d) {
     <a href="/destinations/${d.park_slug}" class="corp-dest-card fade-up">
       <div class="corp-dest-img">
         <img src="${img}" alt="${d.park_name}" loading="lazy" decoding="async" onerror="this.src='/images/optimized/balloon.webp'">
-        <div class="corp-dest-badge">${d.safari_count || 0} Tours</div>
+        <div class="corp-dest-badge">${d.safari_count > 0 ? `${d.safari_count} Tours` : 'Custom Safaris'}</div>
       </div>
       <div class="corp-dest-content">
         <h3 class="corp-dest-title">${d.park_name}</h3>
@@ -153,7 +153,7 @@ async function loadHomepage() {
             <a href="/safaris?category=${c.category_slug}" class="cat-card">
               <div class="cat-icon"><i class="fas ${getCatIcon(c.category_name, c.icon_class)}"></i></div>
               <div class="cat-name">${c.category_name}</div>
-              <div class="cat-count">${c.safari_count || 0} Safaris</div>
+              <div class="cat-count">${c.safari_count > 0 ? `${c.safari_count} Safaris` : 'View options'}</div>
             </a>`).join('');
         }
     } catch {}

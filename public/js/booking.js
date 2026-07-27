@@ -80,6 +80,17 @@ document.getElementById('bookingForm')?.addEventListener('submit', async e => {
         document.getElementById('bookingForm').style.display = 'none';
         const sb = document.getElementById('successBox');
         sb.style.display = 'block';
+        // Soft thank-you URL for analytics without leaving the page content
+        try {
+            window.history.replaceState({}, '', '/thank-you?from=booking');
+            if (window.SafariSEO) {
+                SafariSEO.applyPageSeo({
+                    title: 'Thank You | Tanzania Safari Magic',
+                    description: 'Your Tanzania safari booking request was received. Our Arusha team will contact you shortly.',
+                    noindex: true
+                });
+            }
+        } catch (_) {}
         document.getElementById('bookingRef').innerHTML = `
         <div class="summary-row"><span class="summary-label">Booking Ref</span><span class="summary-value">#${res.data?.booking_id || 'TZ-' + Date.now()}</span></div>
         <div class="summary-row"><span class="summary-label">Package</span><span class="summary-value">${selectedPkg?.package_name}</span></div>

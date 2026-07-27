@@ -1,0 +1,83 @@
+/* SEO FAQ accordion */
+.seo-faq-list { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 2rem; }
+.seo-faq-item {
+  background: #fff;
+  border: 1px solid var(--border-light, #e8e4dc);
+  border-radius: 10px;
+  padding: 0.25rem 1rem;
+}
+.seo-faq-item summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--earth-dark, #1a1a1a);
+  padding: 0.9rem 0;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.seo-faq-item summary::-webkit-details-marker { display: none; }
+.seo-faq-item summary::after {
+  content: '+';
+  font-size: 1.25rem;
+  color: var(--primary, #263E22);
+  flex-shrink: 0;
+}
+.seo-faq-item[open] summary::after { content: '−'; }
+.seo-faq-a {
+  padding: 0 0 1rem;
+  color: var(--text-secondary, #555);
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+/* Trust strip near booking CTAs */
+.seo-trust-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 0;
+  margin: 1rem 0;
+}
+.seo-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--earth-dark, #222);
+}
+.seo-trust-item i { font-size: 1.25rem; }
+
+/* Sticky WhatsApp — ensure above chat, mobile safe */
+.social-float-whatsapp {
+  position: fixed !important;
+  bottom: 30px !important;
+  right: 30px !important;
+  z-index: 1001 !important;
+}
+@media (max-width: 640px) {
+  .social-float-whatsapp {
+    bottom: 20px !important;
+    right: 16px !important;
+    width: 56px !important;
+    height: 56px !important;
+    font-size: 1.85rem !important;
+  }
+  .chat-widget { bottom: 5.5rem; right: 1rem; }
+}
+
+/* Google review CTA */
+.seo-review-box {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f8fafc, #ecfdf5);
+  border: 1px solid #d1fae5;
+  text-align: center;
+}
+.seo-review-box h3 { margin: 0 0 0.5rem; font-size: 1.05rem; }
+.seo-review-box p { margin: 0 0 1rem; font-size: 0.9rem; color: #555; }

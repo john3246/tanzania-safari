@@ -11,43 +11,115 @@ router.get('/', (req, res) => {
 router.get('/sitemap.xml', async (req, res) => {
     try {
         const db = require('../config/db');
-        const baseUrl = 'https://tanzaniasafarimagic.com';
-        
-        const packages = await db.query('SELECT slug FROM safari_packages WHERE is_active = true');
-        const destinations = await db.query('SELECT slug FROM national_parks');
-        const blogs = await db.query('SELECT slug FROM blog_posts WHERE status = $1', ['published']);
+        const baseUrl = process.env.SITE_URL || 'https://tanzaniasafarimagic.com';
 
-        let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
+        const urlEntry = (loc, { changefreq = 'weekly', priority = '0.8', lastmod } = {}) => {
+            let xml = `<url><loc>${baseUrl}${loc}</loc><changefreq>${changefreq}</changefreq><priority>${priority}</priority>`;
+            if (lastmod) xml += `<lastmod>${new Date(lastmod).toISOString().split('T')[0]}</lastmod>`;
+            xml += `</url>`;
+            return xml;
+        };
 
-        // Static Pages
-        const staticPages = ['', '/safaris', '/destinations', '/about', '/contact', '/blog'];
-        staticPages.forEach(page => {
-            xml += `<url><loc>${baseUrl}${page}</loc><changefreq>weekly</changefreq><priority>${page === '' ? '1.0' : '0.8'}</priority></url>`;
+        // Packages — try package_slug first, fall back to slug
+        let packages = { rows: [] };
+        try {
+            packages = await db.query(
+                `SELECT package_slug AS slug, updated_at
+                 FROM safari_packages
+                 WHERE is_active = true AND package_slug IS NOT NULL AND package_slug <> ''`
+            );
+        } catch (_) {
+            packages = await db.query(
+                `SELECT slug, updated_at FROM safari_packages WHERE is_active = true AND slug IS NOT NULL`
+            );
+        }
+
+        // Destinations with at least one package preferred; still list active parks
+        let destinations = { rows: [] };
+        try {
+            destinations = await db.query(
+                `SELECT park_slug AS slug, updated_at FROM national_parks
+                 WHERE is_active = true AND park_slug IS NOT NULL`
+            );
+        } catch (_) {
+            destinations = await db.query(
+                `SELECT slug, updated_at FROM national_parks WHERE slug IS NOT NULL`
+            );
+        }
+
+        // Blog posts — is_published is the live column
+        let blogs = { rows: [] };
+        try {
+            blogs = await db.query(
+                `SELECT post_slug AS slug, updated_at, published_at
+                 FROM blog_posts
+                 WHERE is_published = true AND post_slug IS NOT NULL`
+            );
+        } catch (_) {
+            try {
+                blogs = await db.query(
+                    `SELECT slug, updated_at FROM blog_posts WHERE status = 'published'`
+                );
+            } catch (__) {
+                blogs = { rows: [] };
+            }
+        }
+
+        let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+        xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
+
+        const staticPages = [
+            { path: '', priority: '1.0', changefreq: 'daily' },
+            { path: '/safaris', priority: '0.95', changefreq: 'daily' },
+            { path: '/destinations', priority: '0.9', changefreq: 'weekly' },
+            { path: '/booking', priority: '0.9', changefreq: 'monthly' },
+            { path: '/about', priority: '0.7', changefreq: 'monthly' },
+            { path: '/contact', priority: '0.85', changefreq: 'monthly' },
+            { path: '/blog', priority: '0.75', changefreq: 'weekly' }
+        ];
+        staticPages.forEach(p => {
+            xml += urlEntry(p.path, { priority: p.priority, changefreq: p.changefreq });
         });
 
-        // Dynamic Safaris
         packages.rows.forEach(pkg => {
-            xml += `<url><loc>${baseUrl}/safaris/${pkg.slug}</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>`;
+            if (!pkg.slug) return;
+            xml += urlEntry(`/safaris/${pkg.slug}`, {
+                priority: '0.9',
+                changefreq: 'weekly',
+                lastmod: pkg.updated_at
+            });
         });
 
-        // Dynamic Destinations
         destinations.rows.forEach(dest => {
-            xml += `<url><loc>${baseUrl}/destinations/${dest.slug}</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>`;
+            if (!dest.slug) return;
+            xml += urlEntry(`/destinations/${dest.slug}`, {
+                priority: '0.8',
+                changefreq: 'monthly',
+                lastmod: dest.updated_at
+            });
         });
 
-        // Dynamic Blogs
         blogs.rows.forEach(blog => {
-            xml += `<url><loc>${baseUrl}/blog/${blog.slug}</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>`;
+            if (!blog.slug) return;
+            xml += urlEntry(`/blog/${blog.slug}`, {
+                priority: '0.7',
+                changefreq: 'monthly',
+                lastmod: blog.updated_at || blog.published_at
+            });
         });
 
         xml += `</urlset>`;
-
         res.header('Content-Type', 'application/xml');
+        res.set('Cache-Control', 'public, max-age=3600');
         res.send(xml);
     } catch (err) {
         console.error('Error generating sitemap:', err);
         res.status(500).end();
     }
+});
+
+router.get('/thank-you', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views/thank-you.html'));
 });
 
 router.get('/safaris', (req, res) => {

@@ -109,6 +109,7 @@ async function loadDestinationDetails(slug) {
             renderDestinationDetails(currentDestination);
             updatePageTitle(currentDestination.park_name);
             updateMetaDescription(currentDestination.park_description);
+            applyDestinationSeo(currentDestination);
             injectDestinationSchema(currentDestination);
             await loadSafariPackagesForDestination(currentDestination.park_name);
             await loadRelatedDestinations(currentDestination.park_id, currentDestination.park_slug);
@@ -192,7 +193,7 @@ function renderDestinationDetails(destination) {
                         ${isUnesco ? '<div class="badge unesco" style="background: var(--accent); border-color: var(--accent); color: #fff; text-shadow: none;"><i class="fas fa-flag-checkered"></i> UNESCO Site</div>' : ''}
                         <div class="badge" style="background: var(--bg-secondary); border: 1px solid #e0e0e0; color: #333; text-shadow: none;">
                             <i class="fas fa-safari" style="color: var(--accent);"></i>
-                            <span>${destination.safari_count || 0} Packages</span>
+                            <span>${destination.safari_count > 0 ? `${destination.safari_count} Safari Packages` : 'Inquire for Safaris'}</span>
                         </div>
                     </div>
                 </div>
@@ -410,10 +411,12 @@ async function loadSafariPackagesForDestination(destinationName) {
                     `;
                 }).join('');
             } else {
-                packagesGrid.innerHTML = '<p>No safari packages available for this destination yet.</p>';
+                packagesGrid.innerHTML = '<p>No safari packages listed for this destination yet. <a href="/contact">Contact us</a> or <a href="https://wa.me/255695108009?text=Hi%20Tanzania%20Safari%20Magic%2C%20I%27m%20interested%20in%20a%20safari%20to%20this%20destination." target="_blank" rel="noopener">WhatsApp</a> for a custom itinerary.</p>';
+                if (window.SafariSEO) SafariSEO.setNoIndexFollow();
             }
         } else {
-            packagesGrid.innerHTML = '<p>No safari packages available for this destination yet.</p>';
+            packagesGrid.innerHTML = '<p>No safari packages listed for this destination yet. <a href="/contact">Contact us</a> for a custom itinerary.</p>';
+            if (window.SafariSEO) SafariSEO.setNoIndexFollow();
         }
     } catch (error) {
         console.error('Error loading packages:', error);
@@ -628,7 +631,7 @@ function getClimate(name) {
 }
 
 function updatePageTitle(title) {
-    document.title = `${title} | Tanzania Safari Tours`;
+    document.title = `${title} Safari Destination | Tanzania Safari Magic`;
 }
 
 function updateMetaDescription(description) {
@@ -638,6 +641,20 @@ function updateMetaDescription(description) {
         const truncated = description.length > 155 ? description.substring(0, 152) + '...' : description;
         metaDesc.setAttribute('content', truncated);
     }
+}
+
+function applyDestinationSeo(destination) {
+    if (!window.SafariSEO || !destination) return;
+    const name = destination.park_name || 'Tanzania Destination';
+    const count = Number(destination.safari_count || 0);
+    const desc = destination.park_description || destination.short_description ||
+        `Explore ${name} with Tanzania Safari Magic — private safari itineraries from Arusha. Inquire for a free quote.`;
+    SafariSEO.applyPageSeo({
+        title: `${name} | Tanzania Safari Destination from Arusha`.slice(0, 70),
+        description: String(desc).replace(/\s+/g, ' ').trim().slice(0, 160),
+        image: destination.featured_image_url || destination.image_urls?.[0],
+        noindex: count === 0
+    });
 }
 
 function showError(message) {

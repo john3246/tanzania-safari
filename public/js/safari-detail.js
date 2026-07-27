@@ -127,6 +127,7 @@ async function loadSafariDetails(slug) {
             document.getElementById('detailContent').style.display = 'block';
             renderSafariDetails(result.data);
             updatePageTitle(result.data.package_name);
+            applySafariSeo(result.data);
             await loadRelatedSafaris(result.data.category_slug, result.data.package_id);
             
             // Setup polling for real-time updates
@@ -219,19 +220,71 @@ function renderSafariDetails(safari) {
     
     renderCard(safari);
     injectJSONLDSchema(safari);
+    renderSafariFaq(safari);
+    applySafariSeo(safari);
+}
+
+function applySafariSeo(safari) {
+    if (!window.SafariSEO) return;
+    const days = safari.duration_days ? `${safari.duration_days}-Day ` : '';
+    const name = safari.package_name || 'Tanzania Safari';
+    const lower = name.toLowerCase();
+    let title = `${name} | Tanzania Safari Magic`;
+    let description = safari.short_description || safari.detailed_description || '';
+
+    // High-intent keyword overlays for known package themes
+    if (/migration|serengeti/i.test(lower)) {
+        title = `${name} | 9 Day Serengeti Migration Safari & Great Migration Tour`;
+        if (!description || description.length < 80) {
+            description = `Book a ${days || ''}Serengeti migration safari and great migration tour in Tanzania with private guides from Arusha. Inquire for a free quote.`;
+        }
+    } else if (/zanzibar|beach|bush.?to.?beach/i.test(lower)) {
+        title = `${name} | Tanzania Safari and Zanzibar Package`;
+        if (!description || description.length < 80) {
+            description = `Bush-to-beach Tanzania tour combining safari game drives with Zanzibar beaches. Custom Tanzania safari and Zanzibar packages from Arusha.`;
+        }
+    } else {
+        title = `${days}${name} | Private Tanzania Safari from Arusha`;
+        if (!description || description.length < 80) {
+            description = `Private ${name} with expert local guides. Mid-range to luxury Tanzania safari experiences from Arusha — WhatsApp for a free quote.`;
+        }
+    }
+
+    SafariSEO.applyPageSeo({
+        title: title.slice(0, 70),
+        description: String(description).replace(/\s+/g, ' ').trim().slice(0, 160),
+        image: safari.featured_image_url || safari.image_urls?.[0]
+    });
+
+    const wa = document.getElementById('waQuoteBtn');
+    if (wa) {
+        const msg = encodeURIComponent(`Hi Tanzania Safari Magic, I'm interested in booking "${name}". Please send me a free quote.`);
+        wa.href = `https://wa.me/255695108009?text=${msg}`;
+    }
+}
+
+function renderSafariFaq(safari) {
+    const el = document.getElementById('safariFaqSection');
+    if (!el || !window.SafariSEO) return;
+    const faqs = SafariSEO.defaultSafariFaqs(safari);
+    SafariSEO.renderFaqSection(el, faqs);
 }
 
 function injectJSONLDSchema(safari) {
+    if (window.SafariSEO) {
+        SafariSEO.injectJsonLd('touristtrip-jsonld', SafariSEO.touristTripSchema(safari));
+        return;
+    }
     const schema = {
         "@context": "https://schema.org",
-        "@type": "Product", // Or TouristTrip
+        "@type": "Product",
         "name": safari.package_name,
         "image": safari.image_urls && safari.image_urls.length > 0 ? safari.image_urls : [safari.featured_image_url || 'https://tanzaniasafarimagic.com/images/hero.jpg'],
         "description": safari.short_description || safari.detailed_description,
         "offers": {
             "@type": "Offer",
             "priceCurrency": "USD",
-            "price": safari.price,
+            "price": safari.price || safari.base_price_usd,
             "availability": "https://schema.org/InStock"
         }
     };
@@ -242,11 +295,16 @@ function injectJSONLDSchema(safari) {
             "reviewCount": safari.review_count || 1
         };
     }
-    const script = document.createElement('script');
-    script.type = "application/ld+json";
-    script.text = JSON.stringify(schema);
-    document.head.appendChild(script);
+    let script = document.getElementById('touristtrip-jsonld');
+    if (!script) {
+        script = document.createElement('script');
+        script.type = 'application/ld+json';
+        script.id = 'touristtrip-jsonld';
+        document.head.appendChild(script);
+    }
+    script.textContent = JSON.stringify(schema);
 }
+
 function renderItinerary(items) {
     if (!items || items.length === 0) {
         return '<p>Detailed itinerary coming soon.</p>';

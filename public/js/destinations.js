@@ -31,7 +31,7 @@ function createCorporateCard(d) {
             </div>
             <p class="corp-dest-desc">${d.park_description ? (d.park_description.substring(0, 80) + '...') : 'Experience the untamed wilderness of Tanzania.'}</p>
             <div class="corp-dest-footer">
-                <span class="corp-dest-safaris"><i class="fas fa-binoculars"></i> <strong>${d.safari_count || 0}</strong> Safaris</span>
+                <span class="corp-dest-safaris"><i class="fas fa-binoculars"></i> <strong>${d.safari_count > 0 ? d.safari_count : '—'}</strong> ${d.safari_count > 0 ? 'Safaris' : 'Inquire'}</span>
                 <span class="corp-dest-action">Explore <i class="fas fa-arrow-right"></i></span>
             </div>
         </div>

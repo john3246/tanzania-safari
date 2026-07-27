@@ -5,6 +5,13 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     const cb = '?v=' + Date.now();
+    // Load shared SEO helpers early
+    if (!document.querySelector('script[src^="/js/seo.js"]')) {
+        const seo = document.createElement('script');
+        seo.src = '/js/seo.js' + cb;
+        seo.onload = () => { if (typeof initSEO === 'function') initSEO(); };
+        document.head.appendChild(seo);
+    }
     loadComponent('header', '/includes/header.html' + cb, initHeader);
     loadComponent('footer', '/includes/footer.html' + cb, () => {
         initFooter();
@@ -282,7 +289,14 @@ async function applySiteSettings() {
 
         document.querySelectorAll('a[href*="wa.me"], a.social-float-whatsapp').forEach(a => {
             if (digits) {
-                a.href = `https://wa.me/${digits}`;
+                const existingText = (() => {
+                    try {
+                        const u = new URL(a.href);
+                        return u.searchParams.get('text') || '';
+                    } catch { return ''; }
+                })();
+                const defaultMsg = existingText || "Hi Tanzania Safari Magic, I'm interested in booking a custom safari. Please send me a free quote.";
+                a.href = `https://wa.me/${digits}?text=${encodeURIComponent(defaultMsg)}`;
                 if (a.closest('.footer-contact-item') && phone) a.textContent = phone;
             }
         });
@@ -382,36 +396,39 @@ function showToast(title, message, type = 'info') {
  * Initializes and injects Open Graph and Twitter SEO tags dynamically based on the page content.
  */
 function initSEO() {
-    // Basic OG Tags
-    const ogTitle = document.createElement('meta');
-    ogTitle.setAttribute('property', 'og:title');
-    ogTitle.setAttribute('content', document.title);
-    
-    const ogDesc = document.createElement('meta');
-    ogDesc.setAttribute('property', 'og:description');
+    // Ensure SEO stylesheet is present
+    if (!document.querySelector('link[href="/css/seo.css"]')) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = '/css/seo.css';
+        document.head.appendChild(link);
+    }
+
+    if (window.SafariSEO) {
+        SafariSEO.initGlobalSchemas();
+        SafariSEO.setCanonical();
+        SafariSEO.setOgImage(document.querySelector('meta[property="og:image"]')?.content);
+        return;
+    }
+
+    // Fallback OG Tags when seo.js is not loaded
+    const ensure = (attr, key, content) => {
+        if (!content) return;
+        if (document.querySelector(`meta[${attr}="${key}"]`)) return;
+        const el = document.createElement('meta');
+        el.setAttribute(attr, key);
+        el.setAttribute('content', content);
+        document.head.appendChild(el);
+    };
+
     const descMeta = document.querySelector('meta[name="description"]');
-    ogDesc.setAttribute('content', descMeta ? descMeta.getAttribute('content') : 'Experience authentic Tanzania safari tours with expert local guides.');
-
-    const ogUrl = document.createElement('meta');
-    ogUrl.setAttribute('property', 'og:url');
-    ogUrl.setAttribute('content', window.location.href);
-
-    const ogType = document.createElement('meta');
-    ogType.setAttribute('property', 'og:type');
-    ogType.setAttribute('content', 'website');
-
-    // Twitter Card Tags
-    const twCard = document.createElement('meta');
-    twCard.setAttribute('name', 'twitter:card');
-    twCard.setAttribute('content', 'summary_large_image');
-
-    const twTitle = document.createElement('meta');
-    twTitle.setAttribute('name', 'twitter:title');
-    twTitle.setAttribute('content', document.title);
-
-    const twDesc = document.createElement('meta');
-    twDesc.setAttribute('name', 'twitter:description');
-    twDesc.setAttribute('content', descMeta ? descMeta.getAttribute('content') : 'Experience authentic Tanzania safari tours.');
-
-    document.head.append(ogTitle, ogDesc, ogUrl, ogType, twCard, twTitle, twDesc);
+    ensure('property', 'og:title', document.title);
+    ensure('property', 'og:description', descMeta ? descMeta.getAttribute('content') : 'Experience authentic Tanzania safari tours with expert local guides.');
+    ensure('property', 'og:url', window.location.href.split('?')[0]);
+    ensure('property', 'og:type', 'website');
+    ensure('property', 'og:image', 'https://tanzaniasafarimagic.com/images/hero.jpg');
+    ensure('property', 'og:site_name', 'Tanzania Safari Magic');
+    ensure('name', 'twitter:card', 'summary_large_image');
+    ensure('name', 'twitter:title', document.title);
+    ensure('name', 'twitter:description', descMeta ? descMeta.getAttribute('content') : 'Experience authentic Tanzania safari tours.');
 }

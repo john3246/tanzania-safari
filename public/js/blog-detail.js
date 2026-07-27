@@ -10,7 +10,20 @@ async function loadPost() {
         }
 
         document.title = `${data.post_title} | Tanzania Safari Blog`;
-        
+        if (window.SafariSEO) {
+            SafariSEO.applyPageSeo({
+                title: `${data.post_title} | Tanzania Safari Magic Blog`.slice(0, 70),
+                description: (data.excerpt || data.meta_description || data.post_content || '')
+                    .replace(/<[^>]+>/g, ' ')
+                    .replace(/\s+/g, ' ')
+                    .trim()
+                    .slice(0, 160),
+                image: data.featured_image_url
+            });
+        } else {
+            let meta = document.querySelector('meta[name="description"]');
+            if (meta && data.excerpt) meta.setAttribute('content', data.excerpt.slice(0, 160));
+        }
         container.innerHTML = `
             <div class="post-header">
                 <span class="post-category">${data.category_name || 'Safari Guide'}</span>
