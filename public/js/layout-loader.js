@@ -396,13 +396,15 @@ function showToast(title, message, type = 'info') {
  * Initializes and injects Open Graph and Twitter SEO tags dynamically based on the page content.
  */
 function initSEO() {
-    // Ensure SEO stylesheet is present
-    if (!document.querySelector('link[href="/css/seo.css"]')) {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = '/css/seo.css';
-        document.head.appendChild(link);
-    }
+    // Ensure SEO + corporate UI stylesheets are present
+    ['/css/seo.css', '/css/corporate-ui.css'].forEach((href) => {
+        if (!document.querySelector(`link[href="${href}"]`)) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = href;
+            document.head.appendChild(link);
+        }
+    });
 
     if (window.SafariSEO) {
         SafariSEO.initGlobalSchemas();

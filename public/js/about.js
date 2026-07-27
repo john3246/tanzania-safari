@@ -94,77 +94,61 @@ async function loadAboutContent() {
             const content = result.data;
             
             const html = `
-                <div class="about-main">
+                <section class="corp-section">
                     <div class="container">
-                        <!-- Story Section -->
-                        <div class="story-section">
-                            <h2>Our Story</h2>
-                            <p>${escapeHtml(content.about_company || 'Tanzania Safari Tours was founded in 2014 with a simple mission: to share the incredible beauty and wildlife of Tanzania with the world. What started as a small family business has grown into one of Tanzania\'s most trusted safari operators, serving thousands of satisfied travelers each year.')}</p>
-                            <p>Our team of experienced guides and travel experts are passionate about creating unforgettable experiences that go beyond the typical tourist trail. We believe in responsible tourism that benefits local communities and preserves Tanzania\'s natural heritage for future generations.</p>
-                        </div>
-                        
-                        <!-- Stats Section -->
-                        <div class="stats-grid">
-                            <div class="stat-card">
-                                <div class="stat-number">10+</div>
-                                <div class="stat-label">Years Experience</div>
+                        <div class="corp-about-grid" style="margin-bottom:2.5rem">
+                            <div class="corp-panel">
+                                <span class="corp-eyebrow" style="color:var(--accent)">Our Story</span>
+                                <h2 style="margin:0.35rem 0 1rem">Crafting private Tanzania safaris from Arusha</h2>
+                                <p style="color:var(--text-secondary);line-height:1.8">${escapeHtml(content.about_company || 'Tanzania Safari Magic was founded in 2014 with a simple mission: to share the incredible beauty and wildlife of Tanzania with the world. What started as a small family business has grown into one of Tanzania\'s most trusted safari operators, serving thousands of satisfied travelers each year.')}</p>
+                                <p style="color:var(--text-secondary);line-height:1.8">Our team of experienced guides and travel experts are passionate about creating unforgettable experiences that go beyond the typical tourist trail. We believe in responsible tourism that benefits local communities and preserves Tanzania\'s natural heritage for future generations.</p>
                             </div>
-                            <div class="stat-card">
-                                <div class="stat-number">5,000+</div>
-                                <div class="stat-label">Guests Hosted</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-number">50+</div>
-                                <div class="stat-label">Expert Guides</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-number">100%</div>
-                                <div class="stat-label">Satisfaction Rate</div>
+                            <div class="corp-panel" style="background:linear-gradient(160deg,#0f1a0e,#1f3a1c);color:#fff">
+                                <h3 style="margin:0 0 1rem;color:#fff">Why travelers choose us</h3>
+                                <ul style="list-style:none;padding:0;margin:0;display:grid;gap:0.85rem">
+                                    <li><i class="fas fa-check-circle" style="color:var(--accent);margin-right:0.5rem"></i> Licensed Arusha-based operator</li>
+                                    <li><i class="fas fa-check-circle" style="color:var(--accent);margin-right:0.5rem"></i> TATO &amp; TripAdvisor trusted</li>
+                                    <li><i class="fas fa-check-circle" style="color:var(--accent);margin-right:0.5rem"></i> Private &amp; bespoke itineraries</li>
+                                    <li><i class="fas fa-check-circle" style="color:var(--accent);margin-right:0.5rem"></i> 24-hour WhatsApp planning support</li>
+                                </ul>
+                                <div style="margin-top:1.5rem;display:flex;flex-wrap:wrap;gap:0.75rem">
+                                    <a href="/booking" class="btn btn-primary" style="min-height:48px"><i class="fas fa-calendar-check"></i> Get a Free Quote</a>
+                                    <a href="https://wa.me/255695108009?text=Hi%20Tanzania%20Safari%20Magic%2C%20I%27m%20interested%20in%20booking%20a%20custom%20safari%20package..." class="btn btn-outline" style="min-height:48px;color:#fff;border-color:rgba(255,255,255,0.4)" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                                </div>
                             </div>
                         </div>
-                        
-                        <!-- Mission & Vision -->
-                        <div class="mission-vision-grid">
-                            <div class="mission-card">
-                                <i class="fas fa-bullseye"></i>
+
+                        <div class="corp-stat-row">
+                            <div class="corp-stat"><strong>10+</strong><span>Years Experience</span></div>
+                            <div class="corp-stat"><strong>5,000+</strong><span>Guests Hosted</span></div>
+                            <div class="corp-stat"><strong>50+</strong><span>Expert Guides</span></div>
+                            <div class="corp-stat"><strong>100%</strong><span>Satisfaction Focus</span></div>
+                        </div>
+
+                        <div class="corp-about-grid" style="margin-top:2.5rem">
+                            <div class="corp-panel">
+                                <i class="fas fa-bullseye" style="color:var(--primary);font-size:1.5rem;margin-bottom:0.75rem"></i>
                                 <h3>Our Mission</h3>
-                                <p>${escapeHtml(content.about_mission || 'To provide exceptional safari experiences that connect travelers with the authentic beauty of Tanzania while promoting sustainable tourism practices.')}</p>
+                                <p style="color:var(--text-secondary);line-height:1.75">${escapeHtml(content.about_mission || 'To provide exceptional safari experiences that connect travelers with the authentic beauty of Tanzania while promoting sustainable tourism practices.')}</p>
                             </div>
-                            <div class="vision-card">
-                                <i class="fas fa-eye"></i>
+                            <div class="corp-panel">
+                                <i class="fas fa-eye" style="color:var(--accent);font-size:1.5rem;margin-bottom:0.75rem"></i>
                                 <h3>Our Vision</h3>
-                                <p>${escapeHtml(content.about_vision || 'To be East Africa\'s leading safari operator, known for excellence in service, conservation, and community development.')}</p>
+                                <p style="color:var(--text-secondary);line-height:1.75">${escapeHtml(content.about_vision || 'To be East Africa\'s leading safari operator, known for excellence in service, conservation, and community development.')}</p>
                             </div>
                         </div>
-                        
-                        <!-- Our Values -->
-                        <div class="values-section">
-                            <h2>Our Values</h2>
-                            <div class="values-grid">
-                                <div class="value-card">
-                                    <div class="value-icon"><i class="fas fa-heart"></i></div>
-                                    <h3>Passion for Wildlife</h3>
-                                    <p>We are driven by a genuine love for Tanzania's incredible wildlife and landscapes.</p>
-                                </div>
-                                <div class="value-card">
-                                    <div class="value-icon"><i class="fas fa-handshake"></i></div>
-                                    <h3>Integrity</h3>
-                                    <p>We operate with honesty, transparency, and respect for our guests and partners.</p>
-                                </div>
-                                <div class="value-card">
-                                    <div class="value-icon"><i class="fas fa-leaf"></i></div>
-                                    <h3>Sustainability</h3>
-                                    <p>We commit to eco-friendly practices that protect Tanzania's natural heritage.</p>
-                                </div>
-                                <div class="value-card">
-                                    <div class="value-icon"><i class="fas fa-users"></i></div>
-                                    <h3>Community</h3>
-                                    <p>We support local communities through employment, education, and partnerships.</p>
-                                </div>
+
+                        <div style="margin-top:2.5rem">
+                            <h2 style="margin-bottom:1.25rem">Our Values</h2>
+                            <div class="corp-blog-grid">
+                                <div class="corp-panel"><div class="value-icon" style="color:var(--primary);margin-bottom:0.75rem"><i class="fas fa-heart"></i></div><h3>Passion for Wildlife</h3><p style="color:var(--text-secondary)">We are driven by a genuine love for Tanzania's wildlife and landscapes.</p></div>
+                                <div class="corp-panel"><div class="value-icon" style="color:var(--primary);margin-bottom:0.75rem"><i class="fas fa-handshake"></i></div><h3>Integrity</h3><p style="color:var(--text-secondary)">We operate with honesty, transparency, and respect for guests and partners.</p></div>
+                                <div class="corp-panel"><div class="value-icon" style="color:var(--primary);margin-bottom:0.75rem"><i class="fas fa-leaf"></i></div><h3>Sustainability</h3><p style="color:var(--text-secondary)">We commit to eco-friendly practices that protect Tanzania's heritage.</p></div>
+                                <div class="corp-panel"><div class="value-icon" style="color:var(--primary);margin-bottom:0.75rem"><i class="fas fa-users"></i></div><h3>Community</h3><p style="color:var(--text-secondary)">We support local communities through employment and partnerships.</p></div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </section>
             `;
             
             mainContent.innerHTML = html;
@@ -174,15 +158,15 @@ async function loadAboutContent() {
     } catch (error) {
         console.error('Error loading about content:', error);
         mainContent.innerHTML = `
-            <div class="about-main">
+            <section class="corp-section">
                 <div class="container">
-                    <div class="story-section">
-                        <h2>About Tanzania Safari Tours</h2>
-                        <p>Tanzania Safari Tours was founded in 2014 with a simple mission: to share the incredible beauty and wildlife of Tanzania with the world. Our team of experienced guides and travel experts are passionate about creating unforgettable experiences that go beyond the typical tourist trail.</p>
-                        <p>We believe in responsible tourism that benefits local communities and preserves Tanzania's natural heritage for future generations. Every safari is crafted with care, ensuring you get the most authentic and memorable experience possible.</p>
+                    <div class="corp-panel">
+                        <h2>About Tanzania Safari Magic</h2>
+                        <p>Tanzania Safari Magic was founded in 2014 with a simple mission: to share the incredible beauty and wildlife of Tanzania with the world. Our Arusha-based team crafts private safaris across Serengeti, Ngorongoro, Tarangire, and Zanzibar.</p>
+                        <a href="/booking" class="btn btn-primary" style="margin-top:1rem;min-height:48px">Get a Free Quote</a>
                     </div>
                 </div>
-            </div>
+            </section>
         `;
     }
 }

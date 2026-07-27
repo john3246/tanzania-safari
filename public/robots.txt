@@ -1,12 +1,13 @@
 User-agent: *
 Allow: /
+Allow: /images/
+Allow: /css/
+Allow: /js/
+Allow: /uploads/
 
-# Keep admin, API, and uploads out of the public index
+# Keep admin and API out of the public index
 Disallow: /admin
 Disallow: /api/
-Disallow: /uploads/
-
-# Soft 404 / utility
 Disallow: /health
 
 Sitemap: https://tanzaniasafarimagic.com/sitemap.xml

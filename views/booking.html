@@ -8,33 +8,20 @@
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://tanzaniasafarimagic.com/booking">
 <link rel="stylesheet" href="/css/seo.css">
+<link rel="stylesheet" href="/css/corporate-ui.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="/css/variables.css">
 <link rel="stylesheet" href="/css/main.css">
 <style>
-.booking-layout{display:grid;grid-template-columns:1fr 380px;gap:2.5rem;align-items:start}
-@media(max-width:1024px){.booking-layout{grid-template-columns:1fr}}
-.steps{display:flex;align-items:center;margin-bottom:2.5rem;gap:0}
-.step{display:flex;align-items:center;gap:.625rem;flex:1}
-.step-num{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.875rem;flex-shrink:0;border:2px solid var(--border);color:var(--text-muted);background:#fff;transition:var(--transition)}
-.step.active .step-num{background:var(--primary);border-color:var(--primary);color:#fff}
-.step.done .step-num{background:var(--success);border-color:var(--success);color:#fff}
-.step-label{font-size:.8125rem;font-weight:600;color:var(--text-muted)}
-.step.active .step-label{color:var(--primary)}
-.step.done .step-label{color:var(--success)}
-.step-line{flex:1;height:2px;background:var(--border);margin:0 .5rem}
-.step.done .step-line{background:var(--success)}
-.form-card{background:#fff;border-radius:12px;padding:2.5rem;box-shadow:0 4px 20px rgba(0,0,0,0.05);border:1px solid var(--border-light)}
-.form-step{display:none}.form-step.active{display:block}
-.booking-summary{background:#fff;border-radius:12px;padding:2rem;box-shadow:0 8px 30px rgba(0,0,0,0.08);border:1px solid var(--border-light);position:sticky;top:100px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:640px){.form-row{grid-template-columns:1fr}}
 .summary-row{display:flex;justify-content:space-between;padding:.625rem 0;border-bottom:1px solid var(--border-light);font-size:.9rem}
 .summary-row:last-child{border:none;font-weight:700;font-size:1rem}
 .summary-label{color:var(--text-muted)}
 .summary-value{font-weight:600;color:var(--earth-dark)}
-.step-nav{display:flex;justify-content:space-between;margin-top:1.75rem;gap:1rem}
-.success-box{text-align:center;padding:4rem 2.5rem;display:none;background:#fff;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.06);border:1px solid var(--border-light)}
+.success-box{text-align:center;padding:clamp(2rem,4vw,4rem) 1.5rem;display:none}
 .success-box .icon{width:80px;height:80px;background:rgba(16,185,129,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:2.5rem;color:var(--success)}
 </style>
 </head>
@@ -42,37 +29,27 @@
 <!-- Header -->
 <div id="header"></div>
 
-<section class="page-hero" style="position: relative; z-index: 1;">
+<section class="corp-page-hero">
   <div class="hero-slideshow">
-    <div class="hero-slide active" style="background-image: url('/images/optimized/mount-kilimanjaro-national-park.webp');">
-      <span class="hero-hook-word">Kilimanjaro</span>
-    </div>
-    <div class="hero-slide" style="background-image: url('/images/optimized/wamasai.webp');">
-      <span class="hero-hook-word">Culture</span>
-    </div>
-    <div class="hero-slide" style="background-image: url('/images/optimized/balloon.webp');">
-      <span class="hero-hook-word">Adventure</span>
-    </div>
-    <div class="hero-slide" style="background-image: url('/images/optimized/mbugani.webp');">
-      <span class="hero-hook-word">Wildlife</span>
-    </div>
+    <div class="hero-slide active" style="background-image: url('/images/optimized/balloon.webp');"></div>
+    <div class="hero-slide" style="background-image: url('/images/optimized/mbugani.webp');"></div>
   </div>
-<div class="page-hero-content" style="position: relative; z-index: 10;">
+  <div class="corp-page-hero-inner">
     <div class="container">
-      <h1 class="page-hero-title" style="text-shadow: 0 4px 20px rgba(0,0,0,0.8), 0 0 40px rgba(0,0,0,0.6)">Book Your Safari</h1>
-      <div class="page-hero-breadcrumb" style="text-shadow: 0 2px 10px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.6)">
-        <a href="/">Home</a><span>/</span><span>Booking</span>
-      </div>
+      <div class="corp-breadcrumb"><a href="/">Home</a><span>/</span><span>Book</span></div>
+      <span class="corp-eyebrow">Secure Inquiry</span>
+      <h1 class="page-hero-title" style="color:#fff;margin:0">Book Your Tanzania Safari</h1>
+      <p style="max-width:34rem;margin:0.75rem 0 0;color:rgba(255,255,255,0.92)">Tell us your dates and preferences — our Arusha team replies within 24 hours with a tailored quote.</p>
     </div>
   </div>
 </section>
 
-<section class="section bg-sand">
+<section class="corp-section">
   <div class="container">
-    <div class="booking-layout">
+    <div class="corp-booking-grid booking-layout">
       <div>
         <!-- Success -->
-        <div class="success-box" id="successBox">
+        <div class="success-box corp-panel" id="successBox">
           <div class="icon"><i class="fas fa-check"></i></div>
           <h2 style="color:var(--success);margin-bottom:.75rem">Booking Submitted!</h2>
           <p style="color:var(--text-muted);max-width:480px;margin:0 auto 2rem">Your booking request has been received. Check your email for confirmation. Our team will contact you within 24 hours.</p>
@@ -92,7 +69,7 @@
         </div>
 
         <form id="bookingForm">
-          <div class="form-card">
+          <div class="corp-form-card form-card">
             <h3 style="margin-bottom:1.5rem"><i class="fas fa-user" style="color:var(--primary);margin-right:.5rem"></i>Personal Information</h3>
             <div class="form-row">
               <div class="form-group"><label class="form-label">Full Name <span>*</span></label><input class="form-control" name="full_name" required placeholder="John Smith" id="fullName"></div>
@@ -151,7 +128,7 @@
       </div>
 
       <!-- Summary -->
-      <div class="booking-summary">
+      <div class="corp-summary-card booking-summary">
         <h3 style="margin-bottom:1.25rem;font-size:1rem"><i class="fas fa-receipt" style="color:var(--primary);margin-right:.5rem"></i>Booking Summary</h3>
         <div id="summaryContent">
           <p style="color:var(--text-muted);font-size:.875rem;text-align:center;padding:1rem 0">Select a package to see pricing</p>

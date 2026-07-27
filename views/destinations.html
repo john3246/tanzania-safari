@@ -8,6 +8,7 @@
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://tanzaniasafarimagic.com/destinations">
 <link rel="stylesheet" href="/css/seo.css">
+<link rel="stylesheet" href="/css/corporate-ui.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -19,9 +20,25 @@
 <!-- Header -->
 <div id="header"></div>
 
+<section class="corp-page-hero">
+  <div class="hero-slideshow">
+    <div class="hero-slide active" style="background-image: url('/images/optimized/mount-kilimanjaro-national-park.webp');"></div>
+    <div class="hero-slide" style="background-image: url('/images/optimized/balloon.webp');"></div>
+    <div class="hero-slide" style="background-image: url('/images/optimized/mbugani.webp');"></div>
+  </div>
+  <div class="corp-page-hero-inner">
+    <div class="container">
+      <div class="corp-breadcrumb"><a href="/">Home</a><span>/</span><span>Destinations</span></div>
+      <span class="corp-eyebrow">Parks &amp; Coasts</span>
+      <h1 class="page-hero-title" style="color:#fff;margin:0">Tanzania Safari Destinations</h1>
+      <p style="max-width:36rem;margin:0.75rem 0 0;color:rgba(255,255,255,0.92)">Serengeti, Ngorongoro, Tarangire, Lake Manyara, Kilimanjaro, Mikumi, and Zanzibar — planned from Arusha.</p>
+    </div>
+  </div>
+</section>
+
 <style>
 /* ── Destinations Page Custom ── */
-.destinations-hero{min-height:50vh;display:flex;align-items:center;justify-content:center;position:relative;background:#000;color:#fff;overflow:hidden}
+.destinations-hero{display:none}
 .destinations-hero::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,0.5);z-index:1}
 .dest-hero-content{position:relative;z-index:2;text-align:center;padding:0 1rem;max-width:800px;margin:0 auto}
 .dest-hero-title{font-size:clamp(2.5rem,5vw,4rem);font-weight:800;margin-bottom:1rem;font-family:var(--font-heading)}
@@ -158,31 +175,9 @@
     transition: transform 0.3s ease;
 }
 </style>
-<section class="page-hero" style="position: relative; z-index: 1;">
-  <div class="hero-slideshow">
-    <div class="hero-slide active" style="background-image: url('/images/optimized/mount-kilimanjaro-national-park.webp');">
-      <span class="hero-hook-word">Kilimanjaro</span>
-    </div>
-    <div class="hero-slide" style="background-image: url('/images/optimized/wamasai.webp');">
-      <span class="hero-hook-word">Culture</span>
-    </div>
-    <div class="hero-slide" style="background-image: url('/images/optimized/balloon.webp');">
-      <span class="hero-hook-word">Adventure</span>
-    </div>
-    <div class="hero-slide" style="background-image: url('/images/optimized/mbugani.webp');">
-      <span class="hero-hook-word">Wildlife</span>
-    </div>
-  </div>
-<div class="page-hero-content" style="position: relative; z-index: 10;"><div class="container">
-    <h1 class="page-hero-title" style="text-shadow: 0 4px 20px rgba(0,0,0,0.8), 0 0 40px rgba(0,0,0,0.6)">Tanzania Destinations</h1>
-    <div class="page-hero-breadcrumb" style="text-shadow: 0 2px 10px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.6)">
-        <a href="/">Home</a><span>/</span><span>Destinations</span>
-    </div>
-</div></div>
-</section>
 
 <!-- Main Regions -->
-<section class="section bg-light" id="northern-circuit">
+<section class="corp-section bg-light" id="northern-circuit">
   <div class="container">
     <div class="section-header text-center" style="max-width: 700px; margin: 0 auto 4rem;">
       <span class="section-eyebrow">The Classic Safari</span>

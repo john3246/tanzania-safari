@@ -13,24 +13,24 @@ async function loadBlog() {
         let html = `
         <div class="featured-post">
             <div class="featured-post-img">
-                <img src="${imgSrc(featured.featured_image_url, '/images/blog-placeholder.jpg')}" alt="${featured.post_title}" loading="lazy" decoding="async">
+                <img src="${imgSrc(featured.featured_image_url, '/images/blog-placeholder.jpg')}" alt="${featured.post_title}" width="1200" height="675" loading="eager" decoding="async">
             </div>
             <div class="featured-post-body">
                 <span class="featured-badge">Featured Post</span>
-                <h2 class="post-title" style="font-size:2rem;margin-bottom:1rem">${featured.post_title}</h2>
+                <h2 class="post-title" style="font-size:clamp(1.4rem,1.1rem + 1vw,2rem);margin-bottom:1rem">${featured.post_title}</h2>
                 <p class="blog-card-excerpt">${featured.post_excerpt}</p>
                 <div class="blog-card-meta">
                     <span><i class="far fa-calendar"></i> ${fmtDate(featured.published_at)}</span>
                     <span><i class="far fa-user"></i> ${featured.author_name || 'Admin'}</span>
                 </div>
-                <a href="/blog/${featured.post_slug}" class="btn btn-primary" style="margin-top:1.5rem">Read Full Story</a>
+                <a href="/blog/${featured.post_slug}" class="btn btn-primary" style="margin-top:1.5rem;min-height:48px">Read Full Story</a>
             </div>
         </div>
         <div class="blog-grid">
             ${rest.map(post => `
                 <div class="blog-card">
                     <div class="blog-card-img">
-                        <img src="${imgSrc(post.featured_image_url, '/images/blog-placeholder.jpg')}" alt="${post.post_title}" loading="lazy" decoding="async">
+                        <img src="${imgSrc(post.featured_image_url, '/images/blog-placeholder.jpg')}" alt="${post.post_title}" width="800" height="450" loading="lazy" decoding="async">
                     </div>
                     <div class="blog-card-body">
                         <div class="blog-card-meta">

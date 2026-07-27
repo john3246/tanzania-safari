@@ -36,7 +36,7 @@ async function loadPost() {
             </div>
             
             <div class="post-featured-img">
-                <img src="${imgSrc(data.featured_image_url, '/images/blog-placeholder.jpg')}" alt="${data.post_title}" loading="lazy" decoding="async">
+                <img src="${imgSrc(data.featured_image_url, '/images/blog-placeholder.jpg')}" alt="${data.post_title}" width="1200" height="675" loading="eager" decoding="async">
             </div>
             
             <div class="post-content">
@@ -44,13 +44,11 @@ async function loadPost() {
             </div>
             
             <div class="post-footer">
-                <div class="post-tags">
-                    <!-- Tags could go here -->
-                </div>
+                <div class="post-tags"></div>
                 <div class="post-share">
-                    <a href="#" class="share-btn"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="share-btn"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="share-btn"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}" class="share-btn" target="_blank" rel="noopener" aria-label="Share on Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://twitter.com/intent/tweet?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(data.post_title)}" class="share-btn" target="_blank" rel="noopener" aria-label="Share on X"><i class="fab fa-twitter"></i></a>
+                    <a href="https://wa.me/?text=${encodeURIComponent(data.post_title + ' ' + location.href)}" class="share-btn" target="_blank" rel="noopener" aria-label="Share on WhatsApp"><i class="fab fa-whatsapp"></i></a>
                 </div>
             </div>
         `;

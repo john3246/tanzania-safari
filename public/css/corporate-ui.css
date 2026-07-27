@@ -1,0 +1,595 @@
+/**
+ * Tanzania Safari Magic — Corporate UI + Responsive System
+ * Mobile-first, fluid type, touch targets, CLS-safe media.
+ */
+
+/* ── Fluid type & base ─────────────────────────────────────── */
+html { scroll-behavior: smooth; }
+body {
+  overflow-x: hidden;
+  font-size: clamp(0.9375rem, 0.9rem + 0.2vw, 1.05rem);
+  line-height: 1.65;
+}
+
+h1, .page-hero-title, .hero-title {
+  font-size: clamp(1.75rem, 1.2rem + 2.2vw, 3.25rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+h2 { font-size: clamp(1.35rem, 1.1rem + 1vw, 2rem); line-height: 1.25; }
+h3 { font-size: clamp(1.1rem, 1rem + 0.4vw, 1.35rem); }
+
+.container {
+  width: min(100% - 2rem, 1180px);
+  margin-inline: auto;
+}
+@media (min-width: 1440px) {
+  .container { width: min(100% - 3rem, 1280px); }
+}
+
+/* Touch-friendly targets */
+@media (max-width: 768px) {
+  .btn, .nav-link, .nav-cta, .tab-btn, .mobile-toggle,
+  .social-float-whatsapp, #headerLiveChatBtn,
+  .form-control, select, input[type="submit"], button {
+    min-height: 48px;
+  }
+  .btn { padding: 0.85rem 1.25rem; }
+  a.nav-link, a.nav-cta { display: flex; align-items: center; min-height: 48px; }
+}
+
+/* CLS-safe media */
+.media-frame, .gallery-main, .blog-card-img, .featured-post-img,
+.safari-card-img, .corp-dest-img {
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--bg-secondary, #f0f0f0);
+}
+.gallery-main { aspect-ratio: 16 / 9; height: auto !important; }
+.gallery-main img, .gallery-thumb img, .blog-card-img img,
+.safari-card-img img, .media-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── Header trust strip ────────────────────────────────────── */
+.header-trust {
+  display: none;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.header-trust span { display: inline-flex; align-items: center; gap: 0.35rem; }
+@media (min-width: 1100px) {
+  .header-trust { display: flex; }
+}
+
+/* ── Corporate page shell ──────────────────────────────────── */
+.corp-page-hero {
+  position: relative;
+  min-height: clamp(280px, 42vw, 420px);
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  background: #0f1a0e;
+  color: #fff;
+}
+.corp-page-hero .hero-slideshow,
+.corp-page-hero .hero-bg {
+  position: absolute;
+  inset: 0;
+}
+.corp-page-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(15,26,14,0.25) 0%, rgba(15,26,14,0.78) 100%);
+  z-index: 1;
+}
+.corp-page-hero-inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding: clamp(2rem, 5vw, 3.5rem) 0;
+}
+.corp-eyebrow {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent, #FF6F00);
+  margin-bottom: 0.75rem;
+}
+.corp-breadcrumb {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 1rem;
+  opacity: 0.9;
+}
+.corp-breadcrumb a { color: rgba(255,255,255,0.85); text-decoration: none; }
+.corp-breadcrumb a:hover { color: #fff; }
+.corp-breadcrumb span { margin: 0 0.4rem; opacity: 0.5; }
+
+.corp-section {
+  padding: clamp(2.5rem, 5vw, 4.5rem) 0;
+  background: var(--bg-primary, #fafafa);
+}
+.corp-section.alt { background: #fff; }
+
+/* ── Safari / Destination detail layout ────────────────────── */
+.corp-detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: start;
+}
+@media (max-width: 1024px) {
+  .corp-detail-grid { grid-template-columns: 1fr; }
+}
+
+.corp-panel {
+  background: #fff;
+  border: 1px solid rgba(38, 62, 34, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(38, 62, 34, 0.06);
+  padding: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+.corp-book-card {
+  position: sticky;
+  top: 96px;
+  background: #fff;
+  border-radius: 18px;
+  border: 1px solid rgba(38, 62, 34, 0.1);
+  box-shadow: 0 16px 48px rgba(38, 62, 34, 0.1);
+  padding: 1.75rem;
+  overflow: hidden;
+}
+.corp-book-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+}
+.corp-price-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.corp-price {
+  font-family: var(--font-heading, Poppins, sans-serif);
+  font-size: clamp(1.85rem, 1.5rem + 1vw, 2.4rem);
+  font-weight: 800;
+  color: var(--earth-dark);
+  line-height: 1.1;
+  margin: 0.25rem 0;
+}
+.corp-meta-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 0;
+  border-top: 1px dashed rgba(0,0,0,0.08);
+  border-bottom: 1px dashed rgba(0,0,0,0.08);
+}
+.corp-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  gap: 1rem;
+}
+.corp-meta-row span:first-child {
+  color: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.corp-meta-row span:first-child i { color: var(--primary); width: 1rem; text-align: center; }
+.corp-meta-row strong { color: var(--earth-dark); }
+
+.corp-tabs {
+  display: flex;
+  gap: 0.25rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  margin-bottom: 1.5rem;
+  scrollbar-width: none;
+}
+.corp-tabs::-webkit-scrollbar { display: none; }
+.corp-tab {
+  flex: 0 0 auto;
+  padding: 0.9rem 1.1rem;
+  min-height: 48px;
+  border: none;
+  background: transparent;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.corp-tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+.corp-gallery {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.corp-gallery .gallery-main {
+  grid-column: 1 / -1;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+}
+.corp-gallery .gallery-thumb {
+  aspect-ratio: 4 / 3;
+  height: auto;
+  border-radius: 10px;
+  opacity: 0.75;
+  border: 2px solid transparent;
+  overflow: hidden;
+  cursor: pointer;
+}
+.corp-gallery .gallery-thumb.active,
+.corp-gallery .gallery-thumb:hover {
+  opacity: 1;
+  border-color: var(--primary);
+}
+
+.corp-itinerary {
+  position: relative;
+  padding-left: 1.25rem;
+  border-left: 2px solid rgba(38,62,34,0.12);
+}
+.corp-itinerary-item {
+  position: relative;
+  padding: 0 0 1.75rem 0.75rem;
+}
+.corp-itinerary-item::before {
+  content: '';
+  position: absolute;
+  left: -1.45rem;
+  top: 0.35rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--primary);
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 2px rgba(38,62,34,0.15);
+}
+.corp-day-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.25rem;
+}
+
+/* ── Booking corporate ─────────────────────────────────────── */
+.corp-booking-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 2rem;
+  align-items: start;
+}
+@media (max-width: 1024px) {
+  .corp-booking-grid { grid-template-columns: 1fr; }
+}
+.corp-form-card {
+  background: #fff;
+  border-radius: 18px;
+  border: 1px solid rgba(38,62,34,0.08);
+  box-shadow: 0 12px 40px rgba(38,62,34,0.06);
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+}
+.corp-form-card .form-control,
+.corp-form-card select,
+.corp-form-card textarea,
+.corp-form-card input {
+  min-height: 48px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.12);
+  padding: 0.75rem 1rem;
+  width: 100%;
+  font-size: 1rem;
+}
+.corp-form-card textarea { min-height: 110px; }
+.corp-summary-card {
+  background: #fff;
+  border-radius: 18px;
+  border: 1px solid rgba(38,62,34,0.1);
+  box-shadow: 0 16px 40px rgba(38,62,34,0.08);
+  padding: 1.75rem;
+  position: sticky;
+  top: 96px;
+}
+
+/* ── About corporate ───────────────────────────────────────── */
+.corp-about-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+}
+@media (max-width: 900px) {
+  .corp-about-grid { grid-template-columns: 1fr; }
+}
+.corp-stat-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-top: 2rem;
+}
+@media (max-width: 768px) {
+  .corp-stat-row { grid-template-columns: repeat(2, 1fr); }
+}
+.corp-stat {
+  background: #fff;
+  border-radius: 14px;
+  padding: 1.25rem;
+  border: 1px solid rgba(38,62,34,0.08);
+  text-align: center;
+}
+.corp-stat strong {
+  display: block;
+  font-size: 1.75rem;
+  color: var(--primary);
+  font-weight: 800;
+}
+.corp-stat span {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* ── Blog corporate ────────────────────────────────────────── */
+.corp-blog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+@media (max-width: 1024px) {
+  .corp-blog-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .corp-blog-grid { grid-template-columns: 1fr; }
+}
+.corp-blog-card {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(38,62,34,0.08);
+  box-shadow: 0 8px 28px rgba(38,62,34,0.05);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  text-decoration: none;
+  color: inherit;
+}
+.corp-blog-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(38,62,34,0.1);
+}
+.corp-blog-card .body { padding: 1.35rem 1.35rem 1.5rem; flex: 1; display: flex; flex-direction: column; }
+.corp-blog-card h3 {
+  font-size: 1.15rem;
+  margin: 0.5rem 0 0.75rem;
+  color: var(--earth-dark);
+}
+.corp-blog-card .excerpt {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Mobile filter drawer (Safaris) ────────────────────────── */
+.mobile-filter-bar {
+  display: none;
+  position: sticky;
+  top: 64px;
+  z-index: 40;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(8px);
+  padding: 0.75rem 0;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+.mobile-filter-bar .btn {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.filter-drawer-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 90;
+}
+.filter-drawer-backdrop.open { display: block; }
+.filter-drawer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 88vh;
+  background: #fff;
+  border-radius: 18px 18px 0 0;
+  z-index: 95;
+  transform: translateY(110%);
+  transition: transform 0.3s ease;
+  overflow: auto;
+  padding: 1.25rem 1.25rem 2rem;
+  box-shadow: 0 -12px 40px rgba(0,0,0,0.15);
+}
+.filter-drawer.open { transform: translateY(0); }
+.filter-drawer-handle {
+  width: 42px;
+  height: 4px;
+  background: #ddd;
+  border-radius: 4px;
+  margin: 0 auto 1rem;
+}
+@media (max-width: 768px) {
+  .mobile-filter-bar { display: block; }
+  .search-filter-section.desktop-filters {
+    display: none !important;
+  }
+  .search-filter-section.in-drawer {
+    display: block !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}
+
+/* Keep filters visible on tablet+ */
+@media (min-width: 769px) {
+  .mobile-filter-bar,
+  .filter-drawer,
+  .filter-drawer-backdrop { display: none !important; }
+}
+
+/* ── Destination empty / inquire state ─────────────────────── */
+.corp-empty-cta {
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+  background: linear-gradient(135deg, #f8faf8, #fff7ed);
+  border-radius: 16px;
+  border: 1px dashed rgba(38,62,34,0.2);
+}
+.corp-empty-cta .actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-top: 1.25rem;
+}
+
+/* ── Ultra-wide rhythm ─────────────────────────────────────── */
+@media (min-width: 1440px) {
+  .corp-detail-grid { gap: 3rem; }
+  .corp-book-card { padding: 2rem; }
+}
+
+/* Mobile sticky booking vs WhatsApp FAB */
+.mobile-sticky-booking {
+  display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  background: #fff;
+  padding: 0.85rem 1rem;
+  padding-bottom: max(0.85rem, env(safe-area-inset-bottom));
+  box-shadow: 0 -8px 28px rgba(0,0,0,0.08);
+  border-top: 1px solid rgba(0,0,0,0.06);
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+@media (max-width: 768px) {
+  .desktop-only { display: none !important; }
+  .mobile-sticky-booking { display: flex; }
+  body.has-mobile-book-bar { padding-bottom: 88px; }
+  .social-float-whatsapp {
+    bottom: 92px !important;
+    right: 1rem !important;
+    left: auto !important;
+  }
+}
+
+/* Destination corporate polish */
+.corp-dest-sidebar .corp-book-card { margin-bottom: 1.25rem; }
+.corp-facts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+@media (max-width: 640px) { .corp-facts { grid-template-columns: 1fr; } }
+.corp-fact {
+  background: #fff;
+  border: 1px solid rgba(38,62,34,0.08);
+  border-radius: 14px;
+  padding: 1.15rem;
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+}
+.corp-fact i {
+  width: 42px; height: 42px;
+  border-radius: 10px;
+  background: rgba(230,126,34,0.12);
+  color: var(--primary);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.corp-wildlife {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.85rem;
+}
+@media (max-width: 640px) { .corp-wildlife { grid-template-columns: repeat(2, 1fr); } }
+.corp-wildlife-item {
+  background: #fff;
+  border: 1px solid rgba(38,62,34,0.08);
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.corp-wildlife-item i { display: block; font-size: 1.5rem; color: var(--primary); margin-bottom: 0.5rem; }
+
+.corp-blog-article {
+  max-width: 760px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 18px;
+  border: 1px solid rgba(38,62,34,0.08);
+  box-shadow: 0 12px 40px rgba(38,62,34,0.06);
+  padding: clamp(1.5rem, 4vw, 3rem);
+}
+.corp-blog-article .post-featured-img {
+  border-radius: 14px;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  margin: 1.5rem 0 2rem;
+}
+.corp-blog-article .post-featured-img img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+
+/* Prevent cut-off on small phones */
+@media (max-width: 380px) {
+  .hero-actions { flex-direction: column; width: 100%; }
+  .hero-actions .btn { width: 100%; }
+  #headerLiveChatBtn span { display: none; }
+  #headerLiveChatBtn { padding: 0.7rem; border-radius: 50%; width: 48px; height: 48px; justify-content: center; }
+}

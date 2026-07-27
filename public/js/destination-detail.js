@@ -159,188 +159,159 @@ function renderDestinationDetails(destination) {
     const heroImg = imgSrc(destination.image_url || (destination.image_urls && destination.image_urls[0]), '/images/hero.jpg');
     
     const html = `
-        <!-- Hero Section -->
-        <section class="destination-hero relative overflow-hidden page-hero" style="position: relative; z-index: 1;">
+        <section class="corp-page-hero">
             <div class="hero-slideshow">
-                <div class="hero-slide active" style="background-image: url('/images/optimized/mount-kilimanjaro-national-park.webp');">
-                  <span class="hero-hook-word">Kilimanjaro</span>
-                </div>
-                <div class="hero-slide" style="background-image: url('/images/optimized/wamasai.webp');">
-                  <span class="hero-hook-word">Culture</span>
-                </div>
-                <div class="hero-slide" style="background-image: url('/images/optimized/balloon.webp');">
-                  <span class="hero-hook-word">Adventure</span>
-                </div>
-                <div class="hero-slide" style="background-image: url('/images/optimized/mbugani.webp');">
-                  <span class="hero-hook-word">Wildlife</span>
-                </div>
+                <div class="hero-slide active" style="background-image: url('${heroImg}');"></div>
+                <div class="hero-slide" style="background-image: url('/images/optimized/balloon.webp');"></div>
+                <div class="hero-slide" style="background-image: url('/images/optimized/mbugani.webp');"></div>
             </div>
-            <div class="container" style="position: relative; z-index: 10; display: flex; align-items: center; height: 100%; min-height: 500px;">
-                <div class="corp-hero-box" style="background: rgba(255, 255, 255, 0.95); padding: 3.5rem; border-radius: 4px; max-width: 650px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border-left: 6px solid var(--accent); text-align: left;">
-                    <div class="breadcrumb" style="color: #666; margin-bottom: 1rem; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">
-                        <a href="/" style="color: var(--accent); text-decoration: none;">Home</a>
-                        <i class="fas fa-chevron-right" style="margin: 0 0.5rem; font-size: 0.75rem;"></i>
-                        <a href="/destinations" style="color: var(--accent); text-decoration: none;">Destinations</a>
-                        <i class="fas fa-chevron-right" style="margin: 0 0.5rem; font-size: 0.75rem;"></i>
-                        <span style="color: #333;">${escapeHtml(name)}</span>
+            <div class="corp-page-hero-inner">
+                <div class="container">
+                    <div class="corp-breadcrumb">
+                        <a href="/">Home</a><span>/</span><a href="/destinations">Destinations</a><span>/</span><span>${escapeHtml(name)}</span>
                     </div>
-                    <h1 class="destination-title" style="color: #1a1a1a; text-shadow: none; font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.1; margin-bottom: 1.5rem; margin-top: 0; text-align: left;">${escapeHtml(name)}</h1>
-                    <div class="destination-badges" style="justify-content: flex-start; gap: 0.75rem; flex-wrap: wrap; margin-top: 0;">
-                        <div class="badge" style="background: var(--bg-secondary); border: 1px solid #e0e0e0; color: #333; text-shadow: none;">
-                            <i class="fas fa-map-marker-alt" style="color: var(--accent);"></i>
-                            <span>Tanzania, East Africa</span>
-                        </div>
-                        ${isUnesco ? '<div class="badge unesco" style="background: var(--accent); border-color: var(--accent); color: #fff; text-shadow: none;"><i class="fas fa-flag-checkered"></i> UNESCO Site</div>' : ''}
-                        <div class="badge" style="background: var(--bg-secondary); border: 1px solid #e0e0e0; color: #333; text-shadow: none;">
-                            <i class="fas fa-safari" style="color: var(--accent);"></i>
-                            <span>${destination.safari_count > 0 ? `${destination.safari_count} Safari Packages` : 'Inquire for Safaris'}</span>
-                        </div>
+                    <span class="corp-eyebrow">Safari Destination · Tanzania</span>
+                    <h1 class="page-hero-title" style="color:#fff;margin:0">${escapeHtml(name)}</h1>
+                    <div style="display:flex;flex-wrap:wrap;gap:0.6rem;margin-top:1rem">
+                        <span class="badge" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;padding:0.4rem 0.85rem;border-radius:999px;font-size:0.8rem;font-weight:600"><i class="fas fa-map-marker-alt"></i> East Africa</span>
+                        ${isUnesco ? '<span class="badge" style="background:var(--accent);color:#fff;padding:0.4rem 0.85rem;border-radius:999px;font-size:0.8rem;font-weight:600"><i class="fas fa-award"></i> UNESCO Site</span>' : ''}
+                        <span class="badge" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;padding:0.4rem 0.85rem;border-radius:999px;font-size:0.8rem;font-weight:600"><i class="fas fa-binoculars"></i> ${destination.safari_count > 0 ? `${destination.safari_count} Packages` : 'Custom Safaris'}</span>
                     </div>
                 </div>
             </div>
         </section>
-        
-        <!-- Main Content -->
-        <div class="destination-main">
+
+        <section class="corp-section">
             <div class="container">
-                <div class="detail-layout">
-                    <!-- Left Column -->
-                    <div class="layout-main">
-                        <!-- Description -->
-                        <div class="content-section">
+                <div class="corp-detail-grid">
+                    <div>
+                        <div class="corp-panel content-section" style="margin-bottom:1.25rem">
                             <h2>About ${escapeHtml(name)}</h2>
-                            <p>${escapeHtml(description)}</p>
+                            <p style="font-size:1.05rem;line-height:1.8;color:var(--text-secondary);margin:0">${escapeHtml(description)}</p>
                         </div>
-                        
-                        <!-- Photo Gallery -->
-                        <div class="content-section">
+
+                        <div class="corp-panel content-section" style="margin-bottom:1.25rem">
                             <h2>Photo Gallery</h2>
                             ${(() => {
                                 const images = [];
                                 if (Array.isArray(destination.image_urls)) images.push(...destination.image_urls);
                                 if (destination.image_url && !images.includes(destination.image_url)) images.unshift(destination.image_url);
-                                
                                 if (images.length > 0) {
                                     return `
-                                        <div class="gallery">
-                                            <div class="gallery-main group" onclick="openLightbox('${imgSrc(images[0])}')">
-                                                <img src="${imgSrc(images[0])}" alt="${escapeHtml(name)} main view" class="group-hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async">
+                                        <div class="gallery corp-gallery">
+                                            <div class="gallery-main" onclick="openLightbox('${imgSrc(images[0])}')">
+                                                <img src="${imgSrc(images[0])}" alt="${escapeHtml(name)} safari landscape" width="1200" height="675" loading="eager" decoding="async">
                                             </div>
                                             ${images.length > 1 ? `
-                                            <div class="gallery-thumbs">
+                                            <div class="gallery-thumbs" style="display:contents">
                                                 ${images.slice(1, 5).map((url, i) => `
-                                                    <div class="gallery-thumb group" onclick="document.querySelector('.gallery-main img').src='${imgSrc(url)}'; document.querySelector('.gallery-main').setAttribute('onclick', 'openLightbox(\\'${imgSrc(url)}\\')')">
-                                                        <img src="${imgSrc(url)}" alt="${escapeHtml(name)} thumbnail ${i+1}" class="group-hover:scale-110 transition-transform duration-500" loading="lazy" decoding="async">
+                                                    <div class="gallery-thumb" onclick="document.querySelector('.gallery-main img').src='${imgSrc(url)}'; document.querySelector('.gallery-main').setAttribute('onclick', 'openLightbox(\\'${imgSrc(url)}\\')')">
+                                                        <img src="${imgSrc(url)}" alt="${escapeHtml(name)} gallery ${i+1}" width="400" height="300" loading="lazy" decoding="async">
                                                     </div>
                                                 `).join('')}
-                                            </div>
-                                            ` : ''}
-                                        </div>
-                                    `;
-                                } else {
-                                    return '<p style="color: var(--text-muted);"><i class="ph ph-image text-4xl mb-2 block"></i>Photos of this destination will be available soon.</p>';
+                                            </div>` : ''}
+                                        </div>`;
                                 }
+                                return '<p style="color:var(--text-muted)">Photos of this destination will be available soon.</p>';
                             })()}
                         </div>
 
-                        <!-- Lightbox -->
                         <div id="lightbox" class="lightbox" onclick="closeLightbox()">
-                            <button class="lightbox-close">&times;</button>
+                            <button class="lightbox-close" type="button">&times;</button>
                             <img id="lightboxImg" src="" alt="Enlarged view">
                         </div>
-                        
-                        <!-- Quick Facts -->
-                        <div class="content-section">
+
+                        <div class="corp-panel content-section" style="margin-bottom:1.25rem">
                             <h2>Quick Facts</h2>
-                            <div class="facts-grid">
+                            <div class="corp-facts">
                                 ${facts.map(fact => `
-                                    <div class="fact-item">
-                                        <div class="fact-icon">
-                                            <i class="fas ${fact.icon}"></i>
-                                        </div>
-                                        <div class="fact-content">
-                                            <h4>${fact.label}</h4>
-                                            <p>${fact.value}</p>
+                                    <div class="corp-fact">
+                                        <i class="fas ${fact.icon}"></i>
+                                        <div>
+                                            <h4 style="margin:0 0 0.25rem;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">${fact.label}</h4>
+                                            <p style="margin:0;font-weight:700;color:var(--earth-dark)">${fact.value}</p>
                                         </div>
                                     </div>
                                 `).join('')}
                             </div>
                         </div>
-                        
-                        <!-- Wildlife -->
-                        <div class="content-section">
+
+                        <div class="corp-panel content-section" style="margin-bottom:1.25rem">
                             <h2>Wildlife Highlights</h2>
-                            <div class="wildlife-grid">
+                            <div class="corp-wildlife">
                                 ${wildlife.map(animal => `
-                                    <div class="wildlife-card">
+                                    <div class="corp-wildlife-item">
                                         <i class="fas ${animal.icon}"></i>
                                         <span>${animal.name}</span>
                                     </div>
                                 `).join('')}
                             </div>
                         </div>
-                        
-                        <!-- Best Time to Visit -->
-                        <div class="content-section">
+
+                        <div class="corp-panel content-section" style="margin-bottom:1.25rem">
                             <h2>Best Time to Visit</h2>
-                            <div class="best-time">
-                                <div class="months-grid">
-                                    ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map((month, index) => `
-                                        <div class="month ${bestMonths[index]}">${month}</div>
-                                    `).join('')}
-                                </div>
-                                <div class="legend">
-                                    <div class="legend-item">
-                                        <div class="legend-color excellent"></div>
-                                        <span>Excellent</span>
-                                    </div>
-                                    <div class="legend-item">
-                                        <div class="legend-color good"></div>
-                                        <span>Good</span>
-                                    </div>
-                                    <div class="legend-item">
-                                        <div class="legend-color poor"></div>
-                                        <span>Poor</span>
-                                    </div>
-                                </div>
+                            <div class="months-grid">
+                                ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map((month, index) => `
+                                    <div class="month ${bestMonths[index]}">${month}</div>
+                                `).join('')}
+                            </div>
+                            <div class="legend">
+                                <div class="legend-item"><div class="legend-color excellent"></div><span>Excellent</span></div>
+                                <div class="legend-item"><div class="legend-color good"></div><span>Good</span></div>
+                                <div class="legend-item"><div class="legend-color poor"></div><span>Poor</span></div>
                             </div>
                         </div>
-                        
-                        <!-- Safari Packages -->
-                        <div class="content-section" id="safariPackagesSection">
+
+                        <div class="corp-panel content-section" id="safariPackagesSection">
                             <h2>Safari Packages in ${escapeHtml(name)}</h2>
                             <div class="packages-grid" id="packagesGrid">
                                 <div class="loading-card">Loading packages...</div>
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Right Column - Sidebar -->
-                    <div class="layout-sidebar">
-                        <div class="detail-card">
-                            <h3><i class="fas fa-info-circle"></i> At a Glance</h3>
-                            <ul>
-                                <li><i class="fas fa-map-pin"></i> Location: Tanzania</li>
-                                <li><i class="fas fa-calendar"></i> Best Time: ${getBestTimeText(bestMonths)}</li>
-                                <li><i class="fas fa-clock"></i> Recommended Stay: ${getRecommendedStay(name)} days</li>
-                                <li><i class="fas fa-temperature-high"></i> Climate: ${getClimate(name)}</li>
-                            </ul>
-                            <button class="btn btn-primary btn-block" style="margin-top: 1.5rem;" onclick="bookDestination('${escapeHtml(name)}')">
+
+                    <aside class="corp-dest-sidebar">
+                        <div class="corp-book-card desktop-only">
+                            <h3 style="margin:0 0 1rem;font-size:1.15rem"><i class="fas fa-info-circle" style="color:var(--primary)"></i> At a Glance</h3>
+                            <div class="corp-meta-list">
+                                <div class="corp-meta-row"><span><i class="fas fa-map-pin"></i> Location</span><strong>Tanzania</strong></div>
+                                <div class="corp-meta-row"><span><i class="fas fa-calendar"></i> Best Time</span><strong>${getBestTimeText(bestMonths)}</strong></div>
+                                <div class="corp-meta-row"><span><i class="fas fa-clock"></i> Stay</span><strong>${getRecommendedStay(name)} days</strong></div>
+                                <div class="corp-meta-row"><span><i class="fas fa-temperature-high"></i> Climate</span><strong>${getClimate(name)}</strong></div>
+                            </div>
+                            <button class="btn btn-primary btn-block" style="margin-bottom:0.75rem;min-height:48px" onclick="bookDestination('${escapeHtml(name)}')">
                                 <i class="fas fa-calendar-alt"></i> Plan Your Visit
                             </button>
+                            <a class="btn btn-outline btn-block" style="min-height:48px" target="_blank" rel="noopener"
+                               href="https://wa.me/255695108009?text=${encodeURIComponent("Hi Tanzania Safari Magic, I'm interested in booking a custom safari package to " + name + "...")}">
+                                <i class="fab fa-whatsapp" style="color:#25D366"></i> WhatsApp Quote
+                            </a>
+                            <div class="seo-trust-strip" style="justify-content:flex-start;margin-top:1rem">
+                                <div class="seo-trust-item"><i class="fab fa-tripadvisor" style="color:#00af87"></i> TripAdvisor</div>
+                                <div class="seo-trust-item"><i class="fas fa-certificate" style="color:#f59e0b"></i> TATO</div>
+                                <div class="seo-trust-item"><i class="fas fa-shield-alt" style="color:var(--primary)"></i> Licensed</div>
+                            </div>
                         </div>
-                        
-                        <div class="detail-card">
-                            <h3><i class="fas fa-lightbulb"></i> Travel Tips</h3>
-                            <ul id="travelTipsList">${getTravelTips(name)}</ul>
+                        <div class="corp-panel">
+                            <h3 style="margin:0 0 1rem;font-size:1.1rem"><i class="fas fa-lightbulb" style="color:var(--accent)"></i> Travel Tips</h3>
+                            <ul id="travelTipsList" style="margin:0;padding-left:1.1rem;color:var(--text-secondary);line-height:1.7">${getTravelTips(name)}</ul>
                         </div>
-                    </div>
+                    </aside>
                 </div>
             </div>
+        </section>
+
+        <div class="mobile-sticky-booking" id="mobileStickyBooking">
+            <div>
+                <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase">Plan visit</div>
+                <div class="price" style="font-size:1.05rem;font-weight:700">${escapeHtml(name)}</div>
+            </div>
+            <a href="/booking" class="btn btn-primary" style="min-height:48px">Inquire</a>
         </div>
     `;
     
     mainContent.innerHTML = html;
+    document.body.classList.add('has-mobile-book-bar');
     injectDestinationSchema(destination);
 }
 
@@ -411,11 +382,27 @@ async function loadSafariPackagesForDestination(destinationName) {
                     `;
                 }).join('');
             } else {
-                packagesGrid.innerHTML = '<p>No safari packages listed for this destination yet. <a href="/contact">Contact us</a> or <a href="https://wa.me/255695108009?text=Hi%20Tanzania%20Safari%20Magic%2C%20I%27m%20interested%20in%20a%20safari%20to%20this%20destination." target="_blank" rel="noopener">WhatsApp</a> for a custom itinerary.</p>';
+                packagesGrid.innerHTML = `
+                  <div class="corp-empty-cta">
+                    <h3 style="margin:0 0 0.5rem">No published packages for this park yet</h3>
+                    <p style="margin:0;color:var(--text-secondary)">Our Arusha team can craft a private itinerary for this destination.</p>
+                    <div class="actions">
+                      <a href="/contact" class="btn btn-outline" style="min-height:48px">Contact Us</a>
+                      <a href="https://wa.me/255695108009?text=Hi%20Tanzania%20Safari%20Magic%2C%20I%27m%20interested%20in%20a%20safari%20to%20this%20destination." class="btn btn-primary" target="_blank" rel="noopener" style="min-height:48px"><i class="fab fa-whatsapp"></i> WhatsApp Quote</a>
+                    </div>
+                  </div>`;
                 if (window.SafariSEO) SafariSEO.setNoIndexFollow();
             }
         } else {
-            packagesGrid.innerHTML = '<p>No safari packages listed for this destination yet. <a href="/contact">Contact us</a> for a custom itinerary.</p>';
+            packagesGrid.innerHTML = `
+              <div class="corp-empty-cta">
+                <h3 style="margin:0 0 0.5rem">Custom safaris available</h3>
+                <p style="margin:0;color:var(--text-secondary)">Ask for a tailored itinerary — park fees, lodges, and pacing matched to your dates.</p>
+                <div class="actions">
+                  <a href="/contact" class="btn btn-outline" style="min-height:48px">Contact Us</a>
+                  <a href="/booking" class="btn btn-primary" style="min-height:48px">Request Quote</a>
+                </div>
+              </div>`;
             if (window.SafariSEO) SafariSEO.setNoIndexFollow();
         }
     } catch (error) {
