@@ -8,7 +8,8 @@ const TEAM_WHATSAPP =
 
 const PILLAR_SLUGS = {
   'tanzania-safari': 'TanzaniaSafariGuide',
-  'tanzania-safari-cost': 'TanzaniaSafariCostGuide'
+  'tanzania-safari-cost': 'TanzaniaSafariCostGuide',
+  'great-wildebeest-migration': 'GreatWildebeestMigrationGuide'
 };
 
 function getGuide(slug) {

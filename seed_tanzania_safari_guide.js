@@ -25,6 +25,16 @@ const posts = [
     image: '/images/optimized/balloon.webp',
     tags: ['tanzania safari cost', 'safari prices 2026', 'budget safari tanzania', 'luxury safari cost'],
     content: `<p>Comprehensive Tanzania safari cost guide for 2026. <a href="/blog/tanzania-safari-cost">Open the full cost guide</a> for budget vs luxury rates and package links.</p><p>Plan itineraries with our <a href="/blog/tanzania-safari">ultimate safari guide</a> and <a href="/safaris">live packages</a>.</p>`
+  },
+  {
+    title: 'Great Wildebeest Migration Safari Guide | Serengeti Tanzania',
+    slug: 'great-wildebeest-migration',
+    excerpt: 'Plan a Serengeti Great Migration safari — month-by-month herd map, calving, Grumeti & Mara River crossings, costs, and private itineraries from Arusha.',
+    metaTitle: 'Great Wildebeest Migration Guide 2026 | Serengeti Safari from Arusha',
+    metaDesc: 'Plan a Serengeti Great Wildebeest Migration safari: best months, calving, Grumeti & Mara River crossings, costs, and private itineraries from Tanzania Safari Magic in Arusha.',
+    image: '/images/optimized/8-day-northern-serengeti-mara-river-crossing.webp',
+    tags: ['great wildebeest migration', 'serengeti migration', 'mara river crossing', 'ndutu calving'],
+    content: `<p>Serengeti-focused Great Wildebeest Migration guide by Tanzania Safari Magic. <a href="/blog/great-wildebeest-migration">Open the full migration guide</a> for timing, costs, and packages.</p><p>Also explore our <a href="/destinations/serengeti-national-park">Serengeti destination guide</a>.</p>`
   }
 ];
 
@@ -54,7 +64,7 @@ async function upsert(p) {
 
 async function main() {
   for (const p of posts) await upsert(p);
-  console.log('Done. /blog/tanzania-safari · /blog/tanzania-safari-cost');
+  console.log('Done. /blog/tanzania-safari · /blog/tanzania-safari-cost · /blog/great-wildebeest-migration');
   process.exit(0);
 }
 

@@ -396,3 +396,38 @@
 {"level":"warn","message":{"event":"smtp_startup_failed"},"service":"tanzania-safari","timestamp":"2026-07-29 01:45:48"}
 {"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-07-29 01:45:48"}
 {"level":"info","message":{"environment":"development","event":"server_started","port":"3000","smtp":"disconnected"},"service":"tanzania-safari","timestamp":"2026-07-29 01:45:48"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-07-29 02:14:09"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-07-29 02:14:12"}
+{"level":"warn","message":{"error":"relation \"site_settings\" does not exist","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-07-29 02:14:12"}
+{"level":"error","message":{"error":"Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to\n535 5.7.8  https://support.google.com/mail/?p=BadCredentials 5b1f17b1804b1-4975abdca42sm12907875e9.0 - gsmtp","event":"smtp_verify_failed"},"service":"tanzania-safari","timestamp":"2026-07-29 02:14:14"}
+{"level":"warn","message":{"event":"smtp_startup_failed"},"service":"tanzania-safari","timestamp":"2026-07-29 02:14:14"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-07-29 02:14:15"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":"3000","smtp":"disconnected"},"service":"tanzania-safari","timestamp":"2026-07-29 02:14:15"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-07-29 02:15:09"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-07-29 02:15:10"}
+{"level":"warn","message":{"error":"relation \"site_settings\" does not exist","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-07-29 02:15:10"}
+{"level":"error","message":{"error":"Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to\n535 5.7.8  https://support.google.com/mail/?p=BadCredentials 5b1f17b1804b1-496c44af19bsm105481805e9.3 - gsmtp","event":"smtp_verify_failed"},"service":"tanzania-safari","timestamp":"2026-07-29 02:15:12"}
+{"level":"warn","message":{"event":"smtp_startup_failed"},"service":"tanzania-safari","timestamp":"2026-07-29 02:15:12"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-07-29 02:15:12"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":"3000","smtp":"disconnected"},"service":"tanzania-safari","timestamp":"2026-07-29 02:15:12"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-07-29 02:15:37"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-07-29 02:15:39"}
+{"level":"warn","message":{"error":"relation \"site_settings\" does not exist","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-07-29 02:15:39"}
+{"level":"error","message":{"error":"Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to\n535 5.7.8  https://support.google.com/mail/?p=BadCredentials ffacd0b85a97d-47fb6b0ef25sm2840668f8f.24 - gsmtp","event":"smtp_verify_failed"},"service":"tanzania-safari","timestamp":"2026-07-29 02:15:41"}
+{"level":"warn","message":{"event":"smtp_startup_failed"},"service":"tanzania-safari","timestamp":"2026-07-29 02:15:41"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-07-29 02:15:41"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":"3000","smtp":"disconnected"},"service":"tanzania-safari","timestamp":"2026-07-29 02:15:41"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-07-29 02:16:01"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-07-29 02:16:02"}
+{"level":"warn","message":{"error":"relation \"site_settings\" does not exist","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-07-29 02:16:02"}
+{"level":"error","message":{"error":"Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to\n535 5.7.8  https://support.google.com/mail/?p=BadCredentials ffacd0b85a97d-47fb6acb6c9sm2736174f8f.13 - gsmtp","event":"smtp_verify_failed"},"service":"tanzania-safari","timestamp":"2026-07-29 02:16:09"}
+{"level":"warn","message":{"event":"smtp_startup_failed"},"service":"tanzania-safari","timestamp":"2026-07-29 02:16:09"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-07-29 02:16:09"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":"3000","smtp":"disconnected"},"service":"tanzania-safari","timestamp":"2026-07-29 02:16:09"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-07-29 02:17:04"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-07-29 02:17:06"}
+{"level":"warn","message":{"error":"relation \"site_settings\" does not exist","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-07-29 02:17:06"}
+{"level":"error","message":{"error":"Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to\n535 5.7.8  https://support.google.com/mail/?p=BadCredentials 5b1f17b1804b1-496fa42effasm14913825e9.2 - gsmtp","event":"smtp_verify_failed"},"service":"tanzania-safari","timestamp":"2026-07-29 02:17:09"}
+{"level":"warn","message":{"event":"smtp_startup_failed"},"service":"tanzania-safari","timestamp":"2026-07-29 02:17:09"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-07-29 02:17:09"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":"3000","smtp":"disconnected"},"service":"tanzania-safari","timestamp":"2026-07-29 02:17:09"}

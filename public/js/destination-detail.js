@@ -112,6 +112,9 @@ async function loadDestinationDetails(slug) {
             if (isNgorongoroDestination(slug, displayName)) {
                 applyNgorongoroSeo(currentDestination);
                 injectNgorongoroSchemas(currentDestination);
+            } else if (isSerengetiDestination(slug, displayName)) {
+                applySerengetiSeo(currentDestination);
+                injectSerengetiSchemas(currentDestination);
             } else {
                 updatePageTitle(displayName);
                 updateMetaDescription(currentDestination.park_description || currentDestination.description);
@@ -122,6 +125,8 @@ async function loadDestinationDetails(slug) {
             await loadRelatedDestinations(currentDestination.park_id || currentDestination.id, slug);
             if (isNgorongoroDestination(slug, displayName)) {
                 await enhanceNgorongoroPackageSection();
+            } else if (isSerengetiDestination(slug, displayName)) {
+                await enhanceSerengetiPackageSection();
             }
         } else {
             showError('Destination not found');
@@ -141,7 +146,11 @@ function renderDestinationDetails(destination) {
     const slug = destination.park_slug || destination.slug || '';
     
     const isNgorongoro = isNgorongoroDestination(slug, name);
-    const guide = (isNgorongoro && window.NgorongoroDestinationGuide) ? window.NgorongoroDestinationGuide : null;
+    const isSerengeti = isSerengetiDestination(slug, name);
+    const isGuideDest = isNgorongoro || isSerengeti;
+    const guide = isNgorongoro && window.NgorongoroDestinationGuide
+        ? window.NgorongoroDestinationGuide
+        : (isSerengeti && window.SerengetiDestinationGuide ? window.SerengetiDestinationGuide : null);
     
     // Determine destination type and features
     const isUnesco = destination.is_unesco_heritage || name.toLowerCase().includes('ngorongoro') || 
@@ -149,7 +158,7 @@ function renderDestinationDetails(destination) {
                      name.toLowerCase().includes('kilimanjaro');
     
     const heroTitle = guide ? guide.META.h1 : name;
-    const eyebrow = isNgorongoro ? 'UNESCO World Heritage · Northern Circuit' : 'Safari Destination · Tanzania';
+    const eyebrow = isGuideDest ? 'UNESCO World Heritage · Northern Circuit' : 'Safari Destination · Tanzania';
     
     // Get icon based on name
     let iconClass = 'fa-tree';
@@ -158,9 +167,6 @@ function renderDestinationDetails(destination) {
     else if (name.toLowerCase().includes('ngorongoro')) iconClass = 'fa-volcano';
     else if (name.toLowerCase().includes('zanzibar')) iconClass = 'fa-umbrella-beach';
     else if (name.toLowerCase().includes('tarangire')) iconClass = 'fa-elephant';
-    
-    // Generate wildlife based on destination
-    let wildlife = destination.wildlife_highlights ? destination.wildlife_highlights.split(',').map(n => ({ name: n.trim(), icon: 'fa-paw' })) : getWildlifeForDestination(name);
     
     // Generate best time to visit
     let bestMonths = getBestTimeForDestination(name, destination.best_season);
@@ -171,6 +177,11 @@ function renderDestinationDetails(destination) {
         { icon: 'fa-mountain', label: 'Depth', value: '~600 m' },
         { icon: 'fa-paw', label: 'Large Mammals', value: '25,000+' },
         { icon: 'fa-award', label: 'Status', value: 'UNESCO Site' }
+    ] : isSerengeti ? [
+        { icon: 'fa-ruler', label: 'Park Size', value: '~14,763 sq km' },
+        { icon: 'fa-paw', label: 'Wildebeest', value: '1.5M+' },
+        { icon: 'fa-calendar', label: 'UNESCO', value: '1981' },
+        { icon: 'fa-star', label: 'Famous For', value: 'Great Migration' }
     ] : [
         { icon: 'fa-ruler', label: 'Size', value: destination.size_sq_km ? `${Number(destination.size_sq_km).toLocaleString()} sq km` : 'Varies' },
         { icon: 'fa-calendar', label: 'Established', value: destination.established_year || 'Various' },
@@ -180,7 +191,9 @@ function renderDestinationDetails(destination) {
     
     const heroImg = imgSrc(
         destination.featured_image_url || destination.image_url || (destination.image_urls && destination.image_urls[0]) || (destination.gallery_urls && destination.gallery_urls[0]),
-        isNgorongoro ? '/images/optimized/mbugani.webp' : (slug ? `/images/optimized/${slug}.webp` : '/images/optimized/serengeti-national-park.webp')
+        isNgorongoro ? '/images/optimized/mbugani.webp'
+            : (isSerengeti ? '/images/optimized/serengeti-national-park.webp'
+                : (slug ? `/images/optimized/${slug}.webp` : '/images/optimized/serengeti-national-park.webp'))
     );
     
     const html = `
@@ -208,9 +221,9 @@ function renderDestinationDetails(destination) {
 
         <section class="corp-section">
             <div class="container">
-                <div class="corp-detail-grid${isNgorongoro ? ' dest-layout-ngoro' : ''}">
+                <div class="corp-detail-grid${isGuideDest ? ' dest-layout-ngoro' : ''}">
                     <div class="dest-main-col">
-                        ${!(isNgorongoro && guide) ? `
+                        ${!(isGuideDest && guide) ? `
                         <div class="corp-panel content-section" style="margin-bottom:1.25rem">
                             <h2>About ${escapeHtml(name)}</h2>
                             <p style="font-size:1.05rem;line-height:1.8;color:var(--text-secondary);margin:0">${escapeHtml(description)}</p>
@@ -226,6 +239,18 @@ function renderDestinationDetails(destination) {
                                 }
                                 if (destination.featured_image_url && !images.includes(destination.featured_image_url)) images.unshift(destination.featured_image_url);
                                 if (destination.image_url && !images.includes(destination.image_url)) images.unshift(destination.image_url);
+                                if (isSerengeti) {
+                                    const extras = [
+                                        '/images/optimized/serengeti-national-park.webp',
+                                        '/images/optimized/serengeti5.webp',
+                                        '/images/optimized/zebra%20serengeti.webp',
+                                        '/images/optimized/8-day-northern-serengeti-mara-river-crossing.webp',
+                                        '/images/destinations/serengeti-national-park/serengeti.jpg',
+                                        '/images/destinations/serengeti-national-park/serengeti2.jpeg',
+                                        'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Wildebeest_Migration_Masai_Mara.jpg/1280px-Wildebeest_Migration_Masai_Mara.jpg'
+                                    ];
+                                    extras.forEach(u => { if (u && !images.includes(u)) images.push(u); });
+                                }
                                 if (!images.length && slug) images.push(`/images/destinations/${slug}/main.jpg`, `/images/optimized/${slug}.webp`);
                                 if (!images.length) images.push(heroImg);
                                 if (images.length > 0) {
@@ -268,19 +293,7 @@ function renderDestinationDetails(destination) {
                             </div>
                         </div>
 
-                        <div class="corp-panel content-section" style="margin-bottom:1.25rem">
-                            <h2>Wildlife Highlights</h2>
-                            <div class="corp-wildlife">
-                                ${wildlife.map(animal => `
-                                    <div class="corp-wildlife-item">
-                                        <i class="fas ${animal.icon}"></i>
-                                        <span>${animal.name}</span>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-
-                        ${!(isNgorongoro && guide) ? `
+                        ${!(isGuideDest && guide) ? `
                         <div class="corp-panel content-section" style="margin-bottom:1.25rem">
                             <h2>Best Time to Visit</h2>
                             <div class="months-grid">
@@ -295,8 +308,8 @@ function renderDestinationDetails(destination) {
                             </div>
                         </div>` : ''}
 
-                        ${isNgorongoro && guide ? `
-                        <div class="dest-guide-panel blog-prose content-section" id="ngorongoroGuide" style="margin-bottom:1.25rem">
+                        ${isGuideDest && guide ? `
+                        <div class="dest-guide-panel blog-prose content-section" id="destinationGuidePanel" style="margin-bottom:1.25rem">
                             ${guide.contentHtml()}
                         </div>` : ''}
 
@@ -330,14 +343,15 @@ function renderDestinationDetails(destination) {
                                 <div class="seo-trust-item"><i class="fas fa-shield-alt" style="color:var(--primary)"></i> Licensed</div>
                             </div>
                         </div>
-                        ${isNgorongoro ? `<div id="ngoroSideTocMount"></div>
+                        ${isGuideDest ? `<div id="guideSideTocMount"></div>
                         <div class="corp-panel" style="margin-bottom:1rem">
                             <h3 style="margin:0 0 0.75rem;font-size:1rem">Plan This Trip</h3>
                             <ul style="margin:0;padding-left:1.1rem;line-height:1.85;font-size:0.92rem">
                               <li><a href="/safaris">All safari packages</a></li>
+                              <li><a href="/blog/great-wildebeest-migration">Great Migration guide</a></li>
                               <li><a href="/blog/tanzania-safari-cost">Safari cost guide</a></li>
                               <li><a href="/blog/tanzania-safari">Ultimate safari guide</a></li>
-                              <li><a href="/destinations/serengeti-national-park">Combine with Serengeti</a></li>
+                              ${isSerengeti ? '<li><a href="/destinations/ngorongoro-conservation-area">Combine with Ngorongoro</a></li>' : '<li><a href="/destinations/serengeti-national-park">Combine with Serengeti</a></li>'}
                               <li><a href="/booking">Inquire / free quote</a></li>
                               <li><a href="/contact">Contact Us Now</a></li>
                             </ul>
@@ -362,12 +376,12 @@ function renderDestinationDetails(destination) {
     
     mainContent.innerHTML = html;
     document.body.classList.add('has-mobile-book-bar');
-    if (isNgorongoro) mountNgorongoroSideToc();
+    if (isGuideDest) mountGuideSideToc(isNgorongoro ? 'ngoro-toc' : 'serengeti-toc');
 }
 
-function mountNgorongoroSideToc() {
-    const toc = document.getElementById('ngoro-toc');
-    const mount = document.getElementById('ngoroSideTocMount');
+function mountGuideSideToc(tocId) {
+    const toc = document.getElementById(tocId);
+    const mount = document.getElementById('guideSideTocMount') || document.getElementById('ngoroSideTocMount');
     if (!toc || !mount) return;
     const list = toc.querySelector('ol');
     if (!list) return;
@@ -379,10 +393,20 @@ function mountNgorongoroSideToc() {
       </div>`;
 }
 
+function mountNgorongoroSideToc() {
+    mountGuideSideToc('ngoro-toc');
+}
+
 function isNgorongoroDestination(slug, name) {
     if (window.NgorongoroDestinationGuide?.matchesSlug?.(slug)) return true;
     const s = `${slug || ''} ${name || ''}`.toLowerCase();
     return s.includes('ngorongoro');
+}
+
+function isSerengetiDestination(slug, name) {
+    if (window.SerengetiDestinationGuide?.matchesSlug?.(slug)) return true;
+    const s = `${slug || ''} ${name || ''}`.toLowerCase();
+    return s.includes('serengeti');
 }
 
 function applyNgorongoroSeo(destination) {
@@ -546,6 +570,130 @@ async function enhanceNgorongoroPackageSection() {
         `;
     } catch (e) {
         console.warn('Ngorongoro package enhance skipped', e);
+    }
+}
+
+function applySerengetiSeo(destination) {
+    const guide = window.SerengetiDestinationGuide;
+    const meta = guide?.META || {};
+    const name = destination.park_name || destination.name || 'Serengeti National Park';
+    const title = (meta.title || `${name} Safari Guide | Tanzania Safari Magic`).slice(0, 70);
+    const description = (meta.meta_description || destination.park_description || '').slice(0, 160);
+    const image = destination.featured_image_url || destination.image_urls?.[0] || meta.image;
+
+    if (window.SafariSEO) {
+        SafariSEO.applyPageSeo({ title, description, image, noindex: false });
+        SafariSEO.setRobots?.('index, follow');
+    } else {
+        document.title = title;
+        updateMetaDescription(description);
+    }
+
+    ensureDestMeta('name', 'keywords', meta.keywords || 'serengeti national park safari, great migration, tanzania safari magic');
+    ensureDestMeta('name', 'author', 'John Raphael Shayo');
+    ensureDestMeta('property', 'og:type', 'article');
+    const canonical = document.querySelector('link[rel="canonical"]') || (() => {
+        const l = document.createElement('link');
+        l.rel = 'canonical';
+        document.head.appendChild(l);
+        return l;
+    })();
+    canonical.href = `https://tanzaniasafarimagic.com/destinations/${destination.park_slug || destination.slug || 'serengeti-national-park'}`;
+}
+
+function injectSerengetiSchemas(destination) {
+    const guide = window.SerengetiDestinationGuide;
+    const name = destination.park_name || destination.name || 'Serengeti National Park';
+    const description = (guide?.META?.meta_description || destination.park_description || '').slice(0, 300);
+    const image = destination.featured_image_url || destination.image_urls?.[0] || guide?.META?.image || '/images/optimized/serengeti-national-park.webp';
+    const url = `https://tanzaniasafarimagic.com/destinations/${destination.park_slug || destination.slug || 'serengeti-national-park'}`;
+
+    const tourist = {
+        '@context': 'https://schema.org',
+        '@type': 'TouristDestination',
+        name,
+        description,
+        image: image.startsWith('http') ? image : `https://tanzaniasafarimagic.com${image}`,
+        url,
+        touristType: ['Safari', 'Wildlife', 'Great Migration'],
+        containedInPlace: { '@type': 'Country', name: 'Tanzania' },
+        provider: {
+            '@type': 'TravelAgency',
+            name: 'Tanzania Safari Magic',
+            telephone: '+255695108009',
+            url: 'https://tanzaniasafarimagic.com'
+        }
+    };
+
+    const faqSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: (guide?.FAQS || []).map((f) => ({
+            '@type': 'Question',
+            name: f.q,
+            acceptedAnswer: { '@type': 'Answer', text: f.a }
+        }))
+    };
+
+    const breadcrumb = {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://tanzaniasafarimagic.com/' },
+            { '@type': 'ListItem', position: 2, name: 'Destinations', item: 'https://tanzaniasafarimagic.com/destinations' },
+            { '@type': 'ListItem', position: 3, name, item: url }
+        ]
+    };
+
+    if (window.SafariSEO?.injectJsonLd) {
+        SafariSEO.injectJsonLd('serengeti-destination-jsonld', tourist);
+        SafariSEO.injectJsonLd('serengeti-faq-jsonld', faqSchema);
+        SafariSEO.injectJsonLd('serengeti-breadcrumb-jsonld', breadcrumb);
+    } else {
+        [tourist, faqSchema, breadcrumb].forEach((obj, i) => {
+            const el = document.createElement('script');
+            el.type = 'application/ld+json';
+            el.id = `serengeti-schema-${i}`;
+            el.textContent = JSON.stringify(obj);
+            document.head.appendChild(el);
+        });
+    }
+}
+
+async function enhanceSerengetiPackageSection() {
+    const anchor = document.getElementById('packages-serengeti');
+    if (!anchor) return;
+    try {
+        const result = await API.getPackages({ limit: 12 });
+        const pkgs = (result.data || []).filter((pkg) => {
+            const blob = JSON.stringify(pkg).toLowerCase();
+            return blob.includes('serengeti') || blob.includes('migration') || (pkg.destinations || []).some((d) =>
+                String(d.park_name || d.name || d.park_slug || d.slug || '').toLowerCase().includes('serengeti')
+            );
+        });
+        const list = (pkgs.length ? pkgs : (result.data || [])).slice(0, 6);
+        if (!list.length) return;
+
+        anchor.innerHTML = `
+          <h2>Our Serengeti Safari Packages</h2>
+          <p>Private itineraries featuring Serengeti plains and migration timing — compare days, then request a custom quote from Arusha.</p>
+          <div class="guide-pkg-grid">
+            ${list.map((p) => {
+                const slug = p.package_slug || p.slug;
+                const pname = p.package_name || p.name || 'Safari Package';
+                const img = imgSrc(p.featured_image_url || p.image_url || p.image_urls?.[0], '/images/optimized/serengeti-national-park.webp');
+                const days = p.duration_days ? `${p.duration_days} days` : '';
+                const price = p.base_price_usd ? `From $${Number(p.base_price_usd).toLocaleString()}` : 'Request quote';
+                return `<a class="guide-pkg-card" href="/safaris/${slug}">
+                  <img src="${img}" alt="${escapeHtml(pname)}" width="480" height="300" loading="lazy" onerror="this.src='/images/optimized/balloon.webp'">
+                  <div class="body"><div class="meta">${days}</div><h3>${escapeHtml(pname)}</h3><div class="price">${price}</div></div>
+                </a>`;
+            }).join('')}
+          </div>
+          <p><a href="/safaris">View all packages →</a> · <a href="/booking">Free Serengeti quote →</a> · <a href="/blog/great-wildebeest-migration">Migration guide →</a> · <a href="/blog/tanzania-safari-cost">Safari cost guide →</a></p>
+        `;
+    } catch (e) {
+        console.warn('Serengeti package enhance skipped', e);
     }
 }
 
@@ -882,6 +1030,10 @@ function applyDestinationSeo(destination) {
     const slug = destination.park_slug || destination.slug || '';
     if (isNgorongoroDestination(slug, name)) {
         applyNgorongoroSeo(destination);
+        return;
+    }
+    if (isSerengetiDestination(slug, name)) {
+        applySerengetiSeo(destination);
         return;
     }
     const count = Number(destination.safari_count || destination.tour_count || 0);
