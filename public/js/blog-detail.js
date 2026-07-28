@@ -148,7 +148,7 @@ async function loadPost() {
         <div class="author-social">
           <a class="btn btn-primary" href="${teamWa}" target="_blank" rel="noopener" style="min-height:48px;width:100%;justify-content:center"><i class="fab fa-whatsapp"></i> WhatsApp Our Team</a>
           <a class="btn btn-outline" href="/booking" style="min-height:48px;width:100%;justify-content:center">Free Safari Quote</a>
-          <a class="btn btn-ghost" href="/safaris" style="min-height:48px;width:100%;justify-content:center">All Packages</a>
+          <a class="btn btn-outline" href="/safaris" style="min-height:48px;width:100%;justify-content:center">All Packages</a>
         </div>
       </div>
       <div class="author-card" style="background:#fff">

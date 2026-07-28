@@ -208,12 +208,13 @@ function renderDestinationDetails(destination) {
 
         <section class="corp-section">
             <div class="container">
-                <div class="corp-detail-grid">
-                    <div>
+                <div class="corp-detail-grid${isNgorongoro ? ' dest-layout-ngoro' : ''}">
+                    <div class="dest-main-col">
+                        ${!(isNgorongoro && guide) ? `
                         <div class="corp-panel content-section" style="margin-bottom:1.25rem">
                             <h2>About ${escapeHtml(name)}</h2>
                             <p style="font-size:1.05rem;line-height:1.8;color:var(--text-secondary);margin:0">${escapeHtml(description)}</p>
-                        </div>
+                        </div>` : ''}
 
                         <div class="corp-panel content-section" style="margin-bottom:1.25rem">
                             <h2>Photo Gallery</h2>
@@ -279,6 +280,7 @@ function renderDestinationDetails(destination) {
                             </div>
                         </div>
 
+                        ${!(isNgorongoro && guide) ? `
                         <div class="corp-panel content-section" style="margin-bottom:1.25rem">
                             <h2>Best Time to Visit</h2>
                             <div class="months-grid">
@@ -291,7 +293,7 @@ function renderDestinationDetails(destination) {
                                 <div class="legend-item"><div class="legend-color good"></div><span>Good</span></div>
                                 <div class="legend-item"><div class="legend-color poor"></div><span>Poor</span></div>
                             </div>
-                        </div>
+                        </div>` : ''}
 
                         ${isNgorongoro && guide ? `
                         <div class="dest-guide-panel blog-prose content-section" id="ngorongoroGuide" style="margin-bottom:1.25rem">
@@ -319,7 +321,7 @@ function renderDestinationDetails(destination) {
                                 <i class="fas fa-calendar-alt"></i> Plan Your Visit
                             </button>
                             <a class="btn btn-outline btn-block" style="min-height:48px" target="_blank" rel="noopener"
-                               href="https://wa.me/255695108009?text=${encodeURIComponent("Hi Tanzania Safari Magic, I'm interested in booking a custom safari package to " + name + "...")}">
+                               href="https://wa.me/255695108009?text=${encodeURIComponent("Hi Tanzania Safari Magic team, I'm interested in booking a custom safari package to " + name + "...")}">
                                 <i class="fab fa-whatsapp" style="color:#25D366"></i> WhatsApp Our Team
                             </a>
                             <div class="seo-trust-strip" style="justify-content:flex-start;margin-top:1rem">
@@ -328,6 +330,18 @@ function renderDestinationDetails(destination) {
                                 <div class="seo-trust-item"><i class="fas fa-shield-alt" style="color:var(--primary)"></i> Licensed</div>
                             </div>
                         </div>
+                        ${isNgorongoro ? `<div id="ngoroSideTocMount"></div>
+                        <div class="corp-panel" style="margin-bottom:1rem">
+                            <h3 style="margin:0 0 0.75rem;font-size:1rem">Plan This Trip</h3>
+                            <ul style="margin:0;padding-left:1.1rem;line-height:1.85;font-size:0.92rem">
+                              <li><a href="/safaris">All safari packages</a></li>
+                              <li><a href="/blog/tanzania-safari-cost">Safari cost guide</a></li>
+                              <li><a href="/blog/tanzania-safari">Ultimate safari guide</a></li>
+                              <li><a href="/destinations/serengeti-national-park">Combine with Serengeti</a></li>
+                              <li><a href="/booking">Inquire / free quote</a></li>
+                              <li><a href="/contact">Contact Us Now</a></li>
+                            </ul>
+                        </div>` : ''}
                         <div class="corp-panel">
                             <h3 style="margin:0 0 1rem;font-size:1.1rem"><i class="fas fa-lightbulb" style="color:var(--accent)"></i> Travel Tips</h3>
                             <ul id="travelTipsList" style="margin:0;padding-left:1.1rem;color:var(--text-secondary);line-height:1.7">${getTravelTips(name)}</ul>
@@ -348,6 +362,21 @@ function renderDestinationDetails(destination) {
     
     mainContent.innerHTML = html;
     document.body.classList.add('has-mobile-book-bar');
+    if (isNgorongoro) mountNgorongoroSideToc();
+}
+
+function mountNgorongoroSideToc() {
+    const toc = document.getElementById('ngoro-toc');
+    const mount = document.getElementById('ngoroSideTocMount');
+    if (!toc || !mount) return;
+    const list = toc.querySelector('ol');
+    if (!list) return;
+    toc.classList.add('moved-to-sidebar');
+    mount.innerHTML = `
+      <div class="guide-toc-side">
+        <h3><i class="fas fa-list" style="color:var(--accent);margin-right:0.35rem"></i> Guide Contents</h3>
+        ${list.outerHTML}
+      </div>`;
 }
 
 function isNgorongoroDestination(slug, name) {

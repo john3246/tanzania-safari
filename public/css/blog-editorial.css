@@ -132,8 +132,14 @@
 .guide-cta-box p { color: rgba(255,255,255,0.9); margin: 0 0 0.85rem; }
 .guide-cta-actions { display: flex; flex-wrap: wrap; gap: 0.65rem; }
 .guide-cta-box .btn-outline {
-  border-color: rgba(255,255,255,0.45);
-  color: #fff;
+  border-color: rgba(255,255,255,0.9) !important;
+  color: #fff !important;
+  background: transparent !important;
+}
+.guide-cta-box .btn-primary {
+  background: var(--accent, #FF6F00) !important;
+  color: #fff !important;
+  border: none !important;
 }
 .guide-cta-note { font-size: 0.8rem; opacity: 0.8; margin: 0.85rem 0 0 !important; }
 
@@ -172,9 +178,9 @@
 /* Sticky author sidebar — uses empty right column */
 .blog-sidebar {
   position: sticky;
-  top: 78px;
+  top: calc(var(--site-header-offset, 92px) + 0.75rem);
   order: 2;
-  max-height: calc(100vh - 90px);
+  max-height: calc(100vh - var(--site-header-offset, 92px) - 1.5rem);
   overflow-y: auto;
   scrollbar-width: thin;
 }

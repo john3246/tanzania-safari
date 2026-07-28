@@ -7,6 +7,9 @@
     padding: 4rem 0;
     position: relative;
     overflow: hidden;
+    min-height: 70vh;
+    display: flex;
+    align-items: flex-end;
 }
 
 .safari-detail-hero::before {

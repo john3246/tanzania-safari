@@ -56,7 +56,7 @@
     <div class="guide-cta-actions">
       <a class="btn btn-primary" href="/booking" style="min-height:48px"><i class="fas fa-calendar-check"></i> Get a Free Quote</a>
       <a class="btn btn-outline" href="https://wa.me/255695108009?text=Hi%20Tanzania%20Safari%20Magic%20team%2C%20I%27m%20interested%20in%20a%20Ngorongoro%20Crater%20safari." target="_blank" rel="noopener" style="min-height:48px"><i class="fab fa-whatsapp"></i> WhatsApp Our Team</a>
-      <a class="btn btn-outline" href="/safaris" style="min-height:48px;border-color:rgba(255,255,255,0.45);color:#fff">View Packages</a>
+      <a class="btn btn-outline" href="/safaris" style="min-height:48px">View Packages</a>
     </div>
   </div>
 

@@ -72,7 +72,7 @@ h3 { font-size: clamp(1.1rem, 1rem + 0.4vw, 1.35rem); }
 /* ── Corporate page shell ──────────────────────────────────── */
 .corp-page-hero {
   position: relative;
-  min-height: clamp(280px, 42vw, 420px);
+  min-height: 70vh;
   display: flex;
   align-items: flex-end;
   overflow: hidden;
@@ -146,7 +146,11 @@ h3 { font-size: clamp(1.1rem, 1rem + 0.4vw, 1.35rem); }
     opacity: 1 !important;
   }
   #mainNav.nav .nav-cta {
-    background: var(--primary) !important;
+    background: var(--accent) !important;
+    color: #fff !important;
+  }
+  #mainNav.nav .nav-link-inquire {
+    background: var(--accent) !important;
     color: #fff !important;
   }
 }
@@ -197,7 +201,7 @@ h3 { font-size: clamp(1.1rem, 1rem + 0.4vw, 1.35rem); }
 
 .corp-book-card {
   position: sticky;
-  top: 96px;
+  top: calc(var(--site-header-offset, 92px) + 0.75rem);
   background: #fff;
   border-radius: 18px;
   border: 1px solid rgba(38, 62, 34, 0.1);
@@ -583,7 +587,11 @@ h3 { font-size: clamp(1.1rem, 1rem + 0.4vw, 1.35rem); }
 }
 
 /* Destination corporate polish */
-.corp-dest-sidebar .corp-book-card { margin-bottom: 1.25rem; }
+.corp-dest-sidebar .corp-book-card {
+  position: static !important;
+  top: auto !important;
+  margin-bottom: 1.25rem;
+}
 .corp-facts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
 @media (max-width: 640px) { .corp-facts { grid-template-columns: 1fr; } }
 .corp-fact {
@@ -846,10 +854,10 @@ h3 { font-size: clamp(1.1rem, 1rem + 0.4vw, 1.35rem); }
   min-height: 42px;
 }
 .corp-page-hero {
-  min-height: clamp(200px, 32vw, 320px) !important;
+  min-height: 70vh !important;
 }
 .corp-page-hero-inner {
-  padding: clamp(1.25rem, 3vw, 2.25rem) 0 !important;
+  padding: clamp(2rem, 5vw, 3.5rem) 0 !important;
 }
 .corp-section {
   padding: clamp(1.75rem, 3.5vw, 3rem) 0 !important;
@@ -888,11 +896,57 @@ h3 { font-size: clamp(1.1rem, 1rem + 0.4vw, 1.35rem); }
 .btn-primary, .nav-cta, a.btn-primary {
   opacity: 1 !important;
   font-weight: 700;
+  color: #fff !important;
+  background: var(--accent) !important;
+  border: none;
+}
+.btn-primary:hover, .nav-cta:hover, a.btn-primary:hover {
+  background: var(--accent-dark) !important;
+  color: #fff !important;
 }
 .btn-outline {
-  border-width: 2px;
+  border-width: 2px !important;
   font-weight: 700;
+  background: #fff !important;
+  color: var(--primary-dark) !important;
+  border-color: var(--primary) !important;
 }
+.btn-outline:hover {
+  background: var(--primary) !important;
+  color: #fff !important;
+}
+.btn-ghost {
+  background: #fff !important;
+  color: var(--primary-dark) !important;
+  border: 2px solid rgba(38,62,34,0.25) !important;
+}
+.btn-ghost:hover {
+  background: var(--bg-secondary) !important;
+  color: var(--primary-dark) !important;
+  border-color: var(--primary) !important;
+}
+
+/* Dark CTA bands — force readable button labels */
+.guide-cta-box .btn-primary,
+.guide-cta-box a.btn-primary {
+  background: var(--accent) !important;
+  color: #fff !important;
+  border: 2px solid var(--accent) !important;
+}
+.guide-cta-box .btn-outline,
+.guide-cta-box a.btn-outline,
+.guide-cta-box .btn-ghost,
+.guide-cta-box a.btn-ghost {
+  background: transparent !important;
+  color: #fff !important;
+  border: 2px solid rgba(255,255,255,0.9) !important;
+}
+.guide-cta-box .btn-outline:hover,
+.guide-cta-box a.btn-outline:hover {
+  background: rgba(255,255,255,0.15) !important;
+  color: #fff !important;
+}
+
 .dest-card .btn, .safari-card .btn, .blog-card-link {
   opacity: 1 !important;
   color: var(--primary);
@@ -904,23 +958,86 @@ h3 { font-size: clamp(1.1rem, 1rem + 0.4vw, 1.35rem); }
   font-weight: 700;
 }
 
-/* Reduce empty vertical gap under fixed header on inner pages */
-.blog-editorial,
-.corp-section:first-of-type,
-main.page-content {
-  scroll-margin-top: 0;
+/* Clearance under fixed header (top-bar + nav) */
+:root { --site-header-offset: 92px; }
+@media (max-width: 1024px) {
+  :root { --site-header-offset: 86px; }
+}
+.blog-editorial {
+  padding-top: calc(var(--site-header-offset) + 1.25rem) !important;
+}
+.corp-section {
+  scroll-margin-top: var(--site-header-offset);
 }
 body > .corp-page-hero,
 body > .safari-detail-hero,
-body > .page-hero {
+body > .page-hero,
+#destinationDetailContent > .corp-page-hero,
+#mainContent > .corp-page-hero,
+.destination-detail-root .corp-page-hero {
   margin-top: 0;
-  padding-top: calc(52px + 1.5rem);
+  min-height: 70vh !important;
+  padding-top: calc(var(--site-header-offset) + 1.5rem);
 }
 @media (max-width: 1024px) {
   body > .corp-page-hero,
   body > .safari-detail-hero,
-  body > .page-hero {
-    padding-top: calc(50px + 1.25rem);
+  body > .page-hero,
+  #destinationDetailContent > .corp-page-hero,
+  #mainContent > .corp-page-hero {
+    padding-top: calc(var(--site-header-offset) + 1.25rem);
   }
+}
+
+/* Ngorongoro / destination sticky right column */
+.corp-dest-sidebar {
+  position: sticky;
+  top: calc(var(--site-header-offset) + 0.75rem);
+  align-self: start;
+  max-height: calc(100vh - var(--site-header-offset) - 1.5rem);
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+@media (max-width: 768px) {
+  .corp-dest-sidebar {
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
+}
+.corp-dest-sidebar .guide-toc-side {
+  background: #f7f8f6;
+  border: 1px solid rgba(38,62,34,0.08);
+  border-radius: 14px;
+  padding: 1rem 1.15rem;
+  margin-bottom: 1rem;
+}
+.corp-dest-sidebar .guide-toc-side h3 {
+  margin: 0 0 0.65rem;
+  font-size: 0.95rem;
+}
+.corp-dest-sidebar .guide-toc-side ol {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.88rem;
+  line-height: 1.65;
+}
+.corp-dest-sidebar .guide-toc-side a {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+.dest-guide .guide-toc.moved-to-sidebar { display: none; }
+@media (max-width: 768px) {
+  .dest-guide .guide-toc.moved-to-sidebar { display: block; }
+  .corp-dest-sidebar .guide-toc-side { display: none; }
+}
+.dest-guide-panel.blog-prose p { margin-bottom: 0.85rem; }
+.dest-guide-panel.blog-prose h2 { margin-top: 1.5rem; margin-bottom: 0.65rem; }
+.dest-layout-ngoro {
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 340px) !important;
+}
+@media (max-width: 900px) {
+  .dest-layout-ngoro { grid-template-columns: 1fr !important; }
 }
 
