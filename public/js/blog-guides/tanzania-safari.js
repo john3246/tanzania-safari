@@ -9,21 +9,23 @@
     role: 'Safari Specialist & Founder',
     bio: 'Based in Arusha, Tanzania. I design private safaris across Serengeti, Ngorongoro, Tarangire, and Zanzibar with licensed local guides.',
     image: '/images/logo.png',
-    whatsapp: 'https://wa.me/255695108009?text=Hi%20John%20at%20Tanzania%20Safari%20Magic%2C%20I%20want%20help%20planning%20a%20Tanzania%20safari.'
+    whatsapp: 'https://wa.me/255695108009?text=Hi%20Tanzania%20Safari%20Magic%20team%2C%20I%20want%20help%20planning%20a%20Tanzania%20safari.',
+    displayName: 'Our Team'
   };
 
   const META = {
     slug: 'tanzania-safari',
     title: 'Tanzania Safari: The Ultimate Guide to Planning the Perfect Tour',
     meta_title: 'Tanzania Safari Guide 2026 | Plan the Perfect Tour from Arusha',
-    meta_description: 'Plan a Tanzania safari with a local Arusha expert: best time to visit, Great Migration, safari costs, Serengeti & Ngorongoro parks, itineraries, and private packages. Free quote from John Raphael Shayo.',
+    meta_description: 'Plan a Tanzania safari with a local Arusha expert: best time to visit, Great Migration, safari costs, Serengeti & Ngorongoro parks, itineraries, and private packages. Free quote from Tanzania Safari Magic.',
     excerpt: 'Everything you need to plan a Tanzania safari — migration timing, park fees mindset, how many days to book, and private itineraries from Arusha.',
     featured_image_url: '/images/optimized/serengeti-national-park.webp',
     published_at: '2026-07-01T10:00:00.000Z',
     updated_at: '2026-07-28T10:00:00.000Z',
     category_name: 'Safari Guides',
     author_name: AUTHOR.name,
-    post_tags: ['tanzania safari', 'serengeti', 'great migration', 'ngorongoro', 'safari cost', 'arusha']
+    post_tags: ['tanzania safari', 'serengeti', 'great migration', 'ngorongoro', 'safari cost', 'arusha'],
+    keywords: 'tanzania safari, tanzania safari guide, serengeti safari, great migration, ngorongoro crater, safari packages tanzania, arusha safari operator'
   };
 
   function contentHtml() {
@@ -44,7 +46,7 @@
   <p><strong>Save time</strong> and book with a licensed local operator. Tell us your dates and we send a tailored private quote — usually within 24 hours.</p>
   <div class="guide-cta-actions">
     <a class="btn btn-primary" href="/booking" style="min-height:48px"><i class="fas fa-calendar-check"></i> Get a Free Quote</a>
-    <a class="btn btn-outline" href="${AUTHOR.whatsapp}" target="_blank" rel="noopener" style="min-height:48px"><i class="fab fa-whatsapp"></i> WhatsApp John</a>
+    <a class="btn btn-outline" href="${AUTHOR.whatsapp}" target="_blank" rel="noopener" style="min-height:48px"><i class="fab fa-whatsapp"></i> WhatsApp Our Team</a>
   </div>
   <p class="guide-cta-note">Trusted TripAdvisor travellers · TATO-aligned operations · Based in Arusha</p>
 </div>
@@ -116,7 +118,7 @@
   <li><strong>Luxury:</strong> frequently USD 700–1,500+ per person per day</li>
 </ul>
 <p>Costs include park fees, lodging, guiding, and most meals on safari — always confirm inclusions. Flying between parks raises comfort and cost; driving the circuit is classic and scenic.</p>
-<p>Get a number for <em>your</em> dates via our <a href="/booking">online booking form</a> — free, no obligation.</p>
+<p>For a full breakdown of budget, mid-range, and luxury rates, see our <a href="/blog/tanzania-safari-cost"><strong>Tanzania Safari Cost 2026 guide</strong></a> — or get a number for <em>your</em> dates via our <a href="/booking">online booking form</a>.</p>
 
 <h2 id="best-time">Best Time to Visit Tanzania</h2>
 <ul>
@@ -178,18 +180,19 @@
 
 <h2 id="final-thoughts">Final Thoughts</h2>
 <p>A Tanzania safari succeeds when timing, parks, and lodge style match <em>your</em> trip — not a generic brochure. Work with a local Arusha team, keep itineraries private when you can, and leave room for the unexpected moments that make East Africa unforgettable.</p>
-<p>I’m John Raphael Shayo — message me on WhatsApp or request a quote online. Let’s build your safari the right way.</p>
+<p>Message <strong>Our Team</strong> on WhatsApp or request a quote online — and read our full <a href="/blog/tanzania-safari-cost">Tanzania safari cost 2026 guide</a> before you lock dates.</p>
 
 <div class="guide-cta-box">
-  <h2>Plan with Tanzania Safari Magic</h2>
+  <h2>Talk to Our Team</h2>
   <p>Private guides · Transparent quotes · Arusha base · WhatsApp +255 695 108 009</p>
   <div class="guide-cta-actions">
     <a class="btn btn-primary" href="/booking" style="min-height:48px">Book / Get Free Quote</a>
     <a class="btn btn-outline" href="/safaris" style="min-height:48px">Browse Safari Packages</a>
+    <a class="btn btn-outline" href="${AUTHOR.whatsapp}" target="_blank" rel="noopener" style="min-height:48px"><i class="fab fa-whatsapp"></i> WhatsApp Our Team</a>
   </div>
 </div>
 `;
   }
 
-  global.TanzaniaSafariGuide = { AUTHOR, META, contentHtml };
+  global.TanzaniaSafariGuide = { AUTHOR: { ...AUTHOR, displayName: 'Our Team' }, META, contentHtml };
 })(window);

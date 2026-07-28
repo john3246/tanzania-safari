@@ -320,7 +320,7 @@ function renderDestinationDetails(destination) {
                             </button>
                             <a class="btn btn-outline btn-block" style="min-height:48px" target="_blank" rel="noopener"
                                href="https://wa.me/255695108009?text=${encodeURIComponent("Hi Tanzania Safari Magic, I'm interested in booking a custom safari package to " + name + "...")}">
-                                <i class="fab fa-whatsapp" style="color:#25D366"></i> WhatsApp Quote
+                                <i class="fab fa-whatsapp" style="color:#25D366"></i> WhatsApp Our Team
                             </a>
                             <div class="seo-trust-strip" style="justify-content:flex-start;margin-top:1rem">
                                 <div class="seo-trust-item"><i class="fab fa-tripadvisor" style="color:#00af87"></i> TripAdvisor</div>
@@ -513,7 +513,7 @@ async function enhanceNgorongoroPackageSection() {
                 </a>`;
             }).join('')}
           </div>
-          <p><a href="/safaris">View all packages →</a> · <a href="/booking">Free Ngorongoro quote →</a> · <a href="/blog/tanzania-safari">Tanzania safari ultimate guide →</a></p>
+          <p><a href="/safaris">View all packages →</a> · <a href="/booking">Free Ngorongoro quote →</a> · <a href="/blog/tanzania-safari">Tanzania safari ultimate guide →</a> · <a href="/blog/tanzania-safari-cost">Safari cost guide →</a></p>
         `;
     } catch (e) {
         console.warn('Ngorongoro package enhance skipped', e);
@@ -603,7 +603,7 @@ async function loadSafariPackagesForDestination(destinationName, slug) {
                     <p style="margin:0;color:var(--text-secondary)">Our Arusha team can craft a private itinerary for this destination.</p>
                     <div class="actions">
                       <a href="/contact" class="btn btn-outline" style="min-height:48px">Contact Us</a>
-                      <a href="https://wa.me/255695108009?text=Hi%20Tanzania%20Safari%20Magic%2C%20I%27m%20interested%20in%20a%20safari%20to%20this%20destination." class="btn btn-primary" target="_blank" rel="noopener" style="min-height:48px"><i class="fab fa-whatsapp"></i> WhatsApp Quote</a>
+                      <a href="https://wa.me/255695108009?text=Hi%20Tanzania%20Safari%20Magic%20team%2C%20I%27m%20interested%20in%20a%20safari%20to%20this%20destination." class="btn btn-primary" target="_blank" rel="noopener" style="min-height:48px"><i class="fab fa-whatsapp"></i> WhatsApp Our Team</a>
                     </div>
                   </div>`;
                 if (window.SafariSEO) SafariSEO.setNoIndexFollow();

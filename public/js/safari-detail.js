@@ -258,8 +258,9 @@ function applySafariSeo(safari) {
 
     const wa = document.getElementById('waQuoteBtn');
     if (wa) {
-        const msg = encodeURIComponent(`Hi Tanzania Safari Magic, I'm interested in booking "${name}". Please send me a free quote.`);
+        const msg = encodeURIComponent(`Hi Tanzania Safari Magic team, I'm interested in booking "${name}". Please send me a free quote.`);
         wa.href = `https://wa.me/255695108009?text=${msg}`;
+        wa.innerHTML = '<i class="fab fa-whatsapp" style="color:#25D366"></i> WhatsApp Our Team';
     }
 }
 

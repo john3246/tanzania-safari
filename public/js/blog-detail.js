@@ -1,8 +1,20 @@
 /**
- * Editorial blog detail — Ella-inspired layout
- * Default author: John Raphael Shayo
+ * Editorial blog detail — pillar guides + CMS posts
+ * Author byline: John Raphael Shayo · CTAs: Our Team
  */
 const DEFAULT_AUTHOR = 'John Raphael Shayo';
+const TEAM_WHATSAPP =
+  'https://wa.me/255695108009?text=Hi%20Tanzania%20Safari%20Magic%20team%2C%20I%27d%20like%20help%20planning%20a%20safari.';
+
+const PILLAR_SLUGS = {
+  'tanzania-safari': 'TanzaniaSafariGuide',
+  'tanzania-safari-cost': 'TanzaniaSafariCostGuide'
+};
+
+function getGuide(slug) {
+  const key = PILLAR_SLUGS[slug];
+  return key ? window[key] : null;
+}
 
 async function loadPost() {
   const slug = window.location.pathname.split('/').filter(Boolean).pop();
@@ -17,24 +29,25 @@ async function loadPost() {
     data = null;
   }
 
-  // Pillar guide fallback / override for SEO landing page
-  if (slug === 'tanzania-safari' && window.TanzaniaSafariGuide) {
-    const g = window.TanzaniaSafariGuide;
+  const guide = getGuide(slug);
+  if (guide) {
     data = {
       ...(data || {}),
-      post_title: g.META.title,
-      post_slug: g.META.slug,
-      post_excerpt: g.META.excerpt,
-      post_content: g.contentHtml(),
-      featured_image_url: (data && data.featured_image_url) || g.META.featured_image_url,
-      meta_title: g.META.meta_title,
-      meta_description: g.META.meta_description,
-      published_at: (data && data.published_at) || g.META.published_at,
-      updated_at: g.META.updated_at,
-      category_name: g.META.category_name,
-      author_name: DEFAULT_AUTHOR,
-      post_tags: g.META.post_tags,
-      _isGuide: true
+      post_title: guide.META.title,
+      post_slug: guide.META.slug,
+      post_excerpt: guide.META.excerpt,
+      post_content: guide.contentHtml(),
+      featured_image_url: (data && data.featured_image_url) || guide.META.featured_image_url,
+      meta_title: guide.META.meta_title,
+      meta_description: guide.META.meta_description,
+      published_at: (data && data.published_at) || guide.META.published_at,
+      updated_at: guide.META.updated_at,
+      category_name: guide.META.category_name,
+      author_name: guide.META.author_name || DEFAULT_AUTHOR,
+      post_tags: guide.META.post_tags,
+      keywords: guide.META.keywords,
+      _isGuide: true,
+      _guide: guide
     };
   }
 
@@ -42,7 +55,7 @@ async function loadPost() {
     container.innerHTML = `
       <div style="grid-column:1/-1;text-align:center;padding:4rem 1rem">
         <h1>Post not found</h1>
-        <p><a href="/blog">Back to Blog</a> · <a href="/blog/tanzania-safari">Tanzania Safari Ultimate Guide</a></p>
+        <p><a href="/blog">Back to Blog</a> · <a href="/blog/tanzania-safari">Ultimate Guide</a> · <a href="/blog/tanzania-safari-cost">Safari Cost Guide</a></p>
       </div>`;
     return;
   }
@@ -56,7 +69,17 @@ async function loadPost() {
     .slice(0, 160);
   const image = data.featured_image_url || '/images/optimized/serengeti-national-park.webp';
   const updated = data.updated_at || data.published_at;
-  const guideAuthor = window.TanzaniaSafariGuide?.AUTHOR;
+  const gAuthor = data._guide?.AUTHOR || data._guide?.TEAM || {};
+  const teamName = gAuthor.displayName || 'Our Team';
+  const teamRole = gAuthor.role || 'Safari Specialists · Arusha';
+  const teamBio =
+    gAuthor.bio ||
+    'Tanzania Safari Magic’s Arusha team designs private mid-range and luxury safaris across Serengeti, Ngorongoro, Tarangire, Kilimanjaro, and Zanzibar.';
+  const teamWa = gAuthor.whatsapp || TEAM_WHATSAPP;
+  const keywords =
+    data.keywords ||
+    (Array.isArray(data.post_tags) ? data.post_tags.join(', ') : '') ||
+    'tanzania safari, serengeti, ngorongoro, safari packages';
 
   document.title = (data.meta_title || `${title} | Tanzania Safari Magic`).slice(0, 70);
 
@@ -67,6 +90,7 @@ async function loadPost() {
       image
     });
     ensureMeta('name', 'author', author);
+    ensureMeta('name', 'keywords', keywords);
     injectArticleSchema({
       title,
       description: desc,
@@ -76,11 +100,16 @@ async function loadPost() {
       dateModified: updated,
       url: location.href.split('?')[0]
     });
+    if (data._guide?.FAQS?.length && SafariSEO.faqSchema) {
+      SafariSEO.injectJsonLd('faq-jsonld', SafariSEO.faqSchema(data._guide.FAQS));
+    }
   }
 
-  const content = data._isGuide
-    ? data.post_content
-    : enrichInternalLinks(data.post_content || '');
+  const content = data._isGuide ? data.post_content : enrichInternalLinks(data.post_content || '');
+  const relatedGuides =
+    slug === 'tanzania-safari-cost'
+      ? `<li><a href="/blog/tanzania-safari">Ultimate Safari Guide</a></li>`
+      : `<li><a href="/blog/tanzania-safari-cost">Safari Cost 2026</a></li>`;
 
   container.innerHTML = `
     <article class="blog-article-main">
@@ -111,25 +140,28 @@ async function loadPost() {
     </article>
 
     <aside class="blog-sidebar">
-      <div class="author-card">
-        <img src="${guideAuthor?.image || '/images/logo.png'}" alt="${escapeHtml(author)}" width="300" height="300" loading="lazy">
-        <h3>${escapeHtml(author)}</h3>
-        <div class="role">${escapeHtml(guideAuthor?.role || 'Safari Specialist · Arusha')}</div>
-        <p>${escapeHtml(guideAuthor?.bio || 'Licensed Tanzania safari planning from Arusha — Serengeti, Ngorongoro, Tarangire, Kilimanjaro, and Zanzibar.')}</p>
+      <div class="author-card blog-team-card">
+        <img src="${gAuthor.image || '/images/logo.png'}" alt="Tanzania Safari Magic Our Team" width="300" height="300" loading="lazy">
+        <h3>${escapeHtml(teamName)}</h3>
+        <div class="role">${escapeHtml(teamRole)}</div>
+        <p>${escapeHtml(teamBio)}</p>
         <div class="author-social">
-          <a class="btn btn-primary" href="${guideAuthor?.whatsapp || 'https://wa.me/255695108009'}" target="_blank" rel="noopener" style="min-height:48px;width:100%;justify-content:center"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+          <a class="btn btn-primary" href="${teamWa}" target="_blank" rel="noopener" style="min-height:48px;width:100%;justify-content:center"><i class="fab fa-whatsapp"></i> WhatsApp Our Team</a>
           <a class="btn btn-outline" href="/booking" style="min-height:48px;width:100%;justify-content:center">Free Safari Quote</a>
-          <a class="btn btn-ghost" href="/about" style="min-height:48px;width:100%;justify-content:center">About Us</a>
+          <a class="btn btn-ghost" href="/safaris" style="min-height:48px;width:100%;justify-content:center">All Packages</a>
         </div>
       </div>
       <div class="author-card" style="background:#fff">
-        <h3 style="font-size:1rem;margin-bottom:0.75rem">Popular Destinations</h3>
+        <h3 style="font-size:1rem;margin-bottom:0.75rem">Plan &amp; Explore</h3>
         <ul style="margin:0;padding-left:1.1rem;line-height:1.9;font-size:0.92rem">
+          ${relatedGuides}
           <li><a href="/destinations/serengeti-national-park">Serengeti</a></li>
           <li><a href="/destinations/ngorongoro-conservation-area">Ngorongoro</a></li>
           <li><a href="/destinations/tarangire-national-park">Tarangire</a></li>
           <li><a href="/destinations/zanzibar">Zanzibar</a></li>
           <li><a href="/safaris">All Safari Packages</a></li>
+          <li><a href="/destinations">Tour Destinations</a></li>
+          <li><a href="/booking">Inquire / Book</a></li>
         </ul>
       </div>
     </aside>
@@ -159,7 +191,7 @@ async function injectPackageCards() {
 
   const section = `
     <h2 id="packages">Recommended Safari Packages</h2>
-    <p>These live itineraries from Tanzania Safari Magic pair well with this guide. Tap any package for full day-by-day details, then request a custom quote.</p>
+    <p>These live itineraries from Tanzania Safari Magic pair well with this guide. Tap any package for full day-by-day details, then request a custom quote from Our Team.</p>
     <div class="guide-pkg-grid">
       ${packages.slice(0, 6).map(p => {
         const slug = p.package_slug || p.slug;
@@ -191,7 +223,6 @@ async function injectPackageCards() {
 
 function enrichInternalLinks(html) {
   if (!html) return '';
-  // Light enrichment for CMS posts: wrap bare destination names if not already linked
   return html;
 }
 
@@ -223,7 +254,7 @@ function injectArticleSchema({ title, description, image, author, datePublished,
     datePublished: datePublished || undefined,
     dateModified: dateModified || datePublished || undefined,
     mainEntityOfPage: { '@type': 'WebPage', '@id': url },
-    about: ['Tanzania safari', 'Serengeti', 'Great Migration', 'Ngorongoro', 'Zanzibar']
+    about: ['Tanzania safari', 'Serengeti', 'Great Migration', 'Ngorongoro', 'safari cost', 'Zanzibar']
   };
   if (window.SafariSEO?.injectJsonLd) {
     SafariSEO.injectJsonLd('article-jsonld', schema);
@@ -269,10 +300,10 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;');
 }
 
-// Wait for guide script if needed
 function boot() {
   const slug = window.location.pathname.split('/').filter(Boolean).pop();
-  if (slug === 'tanzania-safari' && !window.TanzaniaSafariGuide) {
+  const key = PILLAR_SLUGS[slug];
+  if (key && !window[key]) {
     setTimeout(boot, 50);
     return;
   }

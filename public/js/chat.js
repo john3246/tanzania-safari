@@ -51,7 +51,7 @@ class LiveChat {
                 <div class="chat-header-info">
                     <div class="chat-avatar"><i class="fas fa-user-tie"></i></div>
                     <div>
-                        <h3 class="chat-title">Safari Support</h3>
+                        <h3 class="chat-title">Our Team</h3>
                         <div class="chat-status" id="chatConnStatus"><span class="status-dot" style="background:#999"></span> Online</div>
                     </div>
                 </div>
