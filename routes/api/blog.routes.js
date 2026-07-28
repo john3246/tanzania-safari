@@ -6,7 +6,11 @@ const db = require('../../config/db');
 router.get('/', async (req, res) => {
     try {
         const query = `
-            SELECT bp.*, bc.category_name, bc.category_slug, u.first_name as author_name
+            SELECT bp.*, bc.category_name, bc.category_slug,
+                   COALESCE(
+                     NULLIF(TRIM(CONCAT(COALESCE(u.first_name,''), ' ', COALESCE(u.last_name,''))), ''),
+                     'John Raphael Shayo'
+                   ) as author_name
             FROM blog_posts bp
             LEFT JOIN blog_categories bc ON bp.category_id = bc.category_id
             LEFT JOIN users u ON bp.author_id = u.user_id
@@ -24,7 +28,11 @@ router.get('/', async (req, res) => {
 router.get('/:slug', async (req, res) => {
     try {
         const query = `
-            SELECT bp.*, bc.category_name, bc.category_slug, u.first_name as author_name
+            SELECT bp.*, bc.category_name, bc.category_slug,
+                   COALESCE(
+                     NULLIF(TRIM(CONCAT(COALESCE(u.first_name,''), ' ', COALESCE(u.last_name,''))), ''),
+                     'John Raphael Shayo'
+                   ) as author_name
             FROM blog_posts bp
             LEFT JOIN blog_categories bc ON bp.category_id = bc.category_id
             LEFT JOIN users u ON bp.author_id = u.user_id

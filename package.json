@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "build": "tailwindcss -i ./public/css/tailwind-input.css -o ./public/css/tailwind-output.css"
+    "build": "tailwindcss -i ./public/css/tailwind-input.css -o ./public/css/tailwind-output.css",
+    "seed:guide": "node seed_tanzania_safari_guide.js"
   },
   "engines": {
     "node": ">=18.0.0",

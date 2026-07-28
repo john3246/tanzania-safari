@@ -1,65 +1,127 @@
+const DEFAULT_AUTHOR = 'John Raphael Shayo';
+
 async function loadBlog() {
-    const container = document.getElementById('blogContainer');
-    try {
-        const { data } = await API.get('/blog');
-        if (!data || data.length === 0) {
-            container.innerHTML = '<p class="text-center" style="padding:4rem;color:var(--text-muted)">No blog posts yet. Stay tuned!</p>';
-            return;
-        }
+  const container = document.getElementById('blogContainer');
+  if (!container) return;
 
-        const featured = data[0];
-        const rest = data.slice(1);
+  let posts = [];
+  try {
+    const { data } = await API.get('/blog');
+    posts = data || [];
+  } catch (e) {
+    posts = [];
+  }
 
-        let html = `
-        <div class="featured-post">
-            <div class="featured-post-img">
-                <img src="${imgSrc(featured.featured_image_url, '/images/blog-placeholder.jpg')}" alt="${featured.post_title}" width="1200" height="675" loading="eager" decoding="async">
-            </div>
-            <div class="featured-post-body">
-                <span class="featured-badge">Featured Post</span>
-                <h2 class="post-title" style="font-size:clamp(1.4rem,1.1rem + 1vw,2rem);margin-bottom:1rem">${featured.post_title}</h2>
-                <p class="blog-card-excerpt">${featured.post_excerpt}</p>
-                <div class="blog-card-meta">
-                    <span><i class="far fa-calendar"></i> ${fmtDate(featured.published_at)}</span>
-                    <span><i class="far fa-user"></i> ${featured.author_name || 'Admin'}</span>
-                </div>
-                <a href="/blog/${featured.post_slug}" class="btn btn-primary" style="margin-top:1.5rem;min-height:48px">Read Full Story</a>
-            </div>
+  // Ensure pillar guide is always featured for SEO traffic
+  const guideMeta = window.TanzaniaSafariGuide?.META;
+  const hasGuide = posts.some(p => (p.post_slug || p.slug) === 'tanzania-safari');
+  if (guideMeta && !hasGuide) {
+    posts = [{
+      post_title: guideMeta.title,
+      post_slug: guideMeta.slug,
+      post_excerpt: guideMeta.excerpt,
+      featured_image_url: guideMeta.featured_image_url,
+      published_at: guideMeta.published_at,
+      author_name: DEFAULT_AUTHOR,
+      category_name: guideMeta.category_name,
+      _pillar: true
+    }, ...posts];
+  } else {
+    // Pin guide to top
+    posts = posts.slice().sort((a, b) => {
+      const ag = (a.post_slug === 'tanzania-safari') ? 0 : 1;
+      const bg = (b.post_slug === 'tanzania-safari') ? 0 : 1;
+      return ag - bg;
+    });
+  }
+
+  if (!posts.length) {
+    container.innerHTML = `
+      <a class="blog-pillar-card" href="/blog/tanzania-safari">
+        <img src="/images/optimized/serengeti-national-park.webp" alt="Tanzania safari guide" width="800" height="500">
+        <div class="blog-pillar-body">
+          <span class="badge">Ultimate Guide</span>
+          <h2 style="margin:0 0 0.75rem;font-size:clamp(1.35rem,1.1rem + 1vw,1.85rem)">Tanzania Safari: The Ultimate Guide</h2>
+          <p style="color:var(--text-secondary);margin:0 0 1rem">Plan parks, migration timing, costs, and private itineraries with John Raphael Shayo.</p>
+          <span class="btn btn-primary" style="width:fit-content;min-height:48px">Read the Guide</span>
         </div>
-        <div class="blog-grid">
-            ${rest.map(post => `
-                <div class="blog-card">
-                    <div class="blog-card-img">
-                        <img src="${imgSrc(post.featured_image_url, '/images/blog-placeholder.jpg')}" alt="${post.post_title}" width="800" height="450" loading="lazy" decoding="async">
-                    </div>
-                    <div class="blog-card-body">
-                        <div class="blog-card-meta">
-                            <span>${fmtDate(post.published_at)}</span>
-                            <span>${post.category_name || 'Safari'}</span>
-                        </div>
-                        <h3 class="blog-card-title">${post.post_title}</h3>
-                        <p class="blog-card-excerpt">${post.post_excerpt}</p>
-                        <a href="/blog/${post.post_slug}" class="blog-card-link">Read More <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-            `).join('')}
+      </a>`;
+    return;
+  }
+
+  const featured = posts[0];
+  const rest = posts.slice(1);
+
+  container.innerHTML = `
+    <a class="blog-pillar-card" href="/blog/${featured.post_slug}">
+      <img src="${imgSrc(featured.featured_image_url, '/images/optimized/serengeti-national-park.webp')}"
+           alt="${escapeHtml(featured.post_title)}" width="900" height="560" loading="eager"
+           onerror="this.src='/images/optimized/serengeti-national-park.webp'">
+      <div class="blog-pillar-body">
+        <span class="badge">${featured.post_slug === 'tanzania-safari' ? 'Ultimate Guide' : 'Featured'}</span>
+        <h2 style="margin:0 0 0.75rem;font-size:clamp(1.35rem,1.1rem + 1vw,1.85rem);color:var(--earth-dark)">${escapeHtml(featured.post_title)}</h2>
+        <p style="color:var(--text-secondary);margin:0 0 1rem;line-height:1.65">${escapeHtml(featured.post_excerpt || '')}</p>
+        <div class="blog-card-meta" style="margin-bottom:1rem">
+          <span><i class="far fa-user"></i> ${escapeHtml(featured.author_name || DEFAULT_AUTHOR)}</span>
+          <span><i class="far fa-calendar"></i> ${fmtDate(featured.published_at)}</span>
         </div>
-        `;
-        container.innerHTML = html;
-    } catch (error) {
-        container.innerHTML = '<p class="text-center" style="padding:4rem;color:var(--error)">Failed to load blog posts. Please try again later.</p>';
-    }
+        <span class="btn btn-primary" style="width:fit-content;min-height:48px">Read Full Guide</span>
+      </div>
+    </a>
+
+    ${rest.length ? `
+    <div class="blog-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem">
+      ${rest.map(post => `
+        <article class="blog-card" style="background:#fff;border-radius:16px;overflow:hidden;border:1px solid rgba(38,62,34,0.08);box-shadow:0 8px 28px rgba(38,62,34,0.05);display:flex;flex-direction:column">
+          <a href="/blog/${post.post_slug}" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;height:100%">
+            <div class="blog-card-img" style="aspect-ratio:16/9;overflow:hidden;background:#f0f0f0">
+              <img src="${imgSrc(post.featured_image_url)}" alt="${escapeHtml(post.post_title)}" width="640" height="360" loading="lazy"
+                   style="width:100%;height:100%;object-fit:cover" onerror="this.src='/images/optimized/mbugani.webp'">
+            </div>
+            <div class="blog-card-body" style="padding:1.35rem;flex:1;display:flex;flex-direction:column">
+              <div class="blog-card-meta" style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.65rem;display:flex;gap:0.75rem;flex-wrap:wrap">
+                <span>${fmtDate(post.published_at)}</span>
+                <span>${escapeHtml(post.author_name || DEFAULT_AUTHOR)}</span>
+              </div>
+              <h3 class="blog-card-title" style="font-size:1.1rem;margin:0 0 0.65rem;line-height:1.35">${escapeHtml(post.post_title)}</h3>
+              <p class="blog-card-excerpt" style="font-size:0.9rem;color:var(--text-secondary);flex:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">${escapeHtml(post.post_excerpt || '')}</p>
+              <span class="blog-card-link" style="color:var(--primary);font-weight:600;margin-top:0.75rem;min-height:48px;display:inline-flex;align-items:center">Read More <i class="fas fa-arrow-right" style="margin-left:0.4rem"></i></span>
+            </div>
+          </a>
+        </article>
+      `).join('')}
+    </div>
+    <style>@media(max-width:1024px){.blog-grid{grid-template-columns:repeat(2,1fr)!important}}@media(max-width:640px){.blog-grid{grid-template-columns:1fr!important}}</style>
+    ` : ''}
+
+    <div class="guide-cta-box" style="margin-top:2.5rem">
+      <h2 style="color:#fff;margin:0 0 0.75rem">Plan Your Tanzania Safari</h2>
+      <p style="color:rgba(255,255,255,0.9)">Private itineraries from Arusha — Serengeti, Ngorongoro, Kilimanjaro &amp; Zanzibar.</p>
+      <div class="guide-cta-actions">
+        <a class="btn btn-primary" href="/booking" style="min-height:48px">Get a Free Quote</a>
+        <a class="btn btn-outline" href="/safaris" style="min-height:48px;border-color:rgba(255,255,255,0.45);color:#fff">Browse Packages</a>
+      </div>
+    </div>
+  `;
 }
 
 function fmtDate(d) {
-    if (!d) return '';
-    return new Date(d).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  if (!d) return '';
+  return new Date(d).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 }
 
 function imgSrc(src, fallback = '/images/optimized/balloon.webp') {
-    if (!src) return fallback;
-    if (src.startsWith('http')) return src;
-    return src.startsWith('/') ? src : '/' + src;
+  if (!src) return fallback;
+  if (src.startsWith('http') || src.startsWith('/')) return src;
+  return '/' + src;
+}
+
+function escapeHtml(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
 loadBlog();
