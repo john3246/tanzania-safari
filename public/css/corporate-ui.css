@@ -128,25 +128,38 @@ h3 { font-size: clamp(1.1rem, 1rem + 0.4vw, 1.35rem); }
 /* Solid mobile nav drawer (never translucent over page) */
 @media (max-width: 1024px) {
   .header.menu-open {
-    z-index: 1200 !important;
+    z-index: 9999 !important;
   }
+  .menu-overlay,
   .menu-overlay.active {
-    z-index: 1190 !important;
+    z-index: 9998 !important;
     background: rgba(0, 0, 0, 0.55) !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
+    pointer-events: auto !important;
   }
   #mainNav.nav,
-  .nav {
+  .nav,
+  #mainNav.nav.active,
+  .nav.active {
     background: #ffffff !important;
     opacity: 1 !important;
-    z-index: 1210 !important;
+    filter: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    z-index: 9999 !important;
+    pointer-events: auto !important;
     box-shadow: -8px 0 32px rgba(0,0,0,0.18) !important;
   }
   #mainNav.nav .nav-link,
+  #mainNav.nav .nav-cta,
+  #mainNav.nav .drawer-close,
   #mainNav.nav .drawer-header .brand {
     color: #1a1a1a !important;
     opacity: 1 !important;
+    pointer-events: auto !important;
+    position: relative;
+    z-index: 1;
   }
   #mainNav.nav .nav-cta {
     background: var(--accent) !important;

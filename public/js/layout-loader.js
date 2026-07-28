@@ -14,7 +14,7 @@
     if (document.querySelector('link[href*="fluid-responsive.css"]')) return;
     const fluid = document.createElement('link');
     fluid.rel = 'stylesheet';
-    fluid.href = '/css/fluid-responsive.css?v=1';
+    fluid.href = '/css/fluid-responsive.css?v=2';
     const head = document.head || document.getElementsByTagName('head')[0];
     if (head) head.appendChild(fluid);
     else document.addEventListener('DOMContentLoaded', () => document.head.appendChild(fluid));
@@ -89,16 +89,25 @@ async function loadComponent(id, url, callback) {
  * Initializes header functionality after injection
  */
 function initHeader() {
-    const header = document.getElementById('header');
+    // Prefer the real <header.header> — views wrap includes in <div id="header">,
+    // so getElementById('header') can hit the wrapper and break .header.menu-open stacking.
+    const header =
+        document.getElementById('siteHeader') ||
+        document.querySelector('#header header.header') ||
+        document.querySelector('header.header') ||
+        document.getElementById('header');
     const mobileToggle = document.getElementById('mobileToggle');
     const mainNav = document.getElementById('mainNav');
     const menuOverlay = document.getElementById('menuOverlay');
-    const navLinks = document.querySelectorAll('.nav-link');
+    const navLinks = mainNav
+        ? mainNav.querySelectorAll('.nav-link, .nav-cta')
+        : document.querySelectorAll('.nav-link');
 
     // Set active link based on current path
     const currentPath = window.location.pathname;
     navLinks.forEach(link => {
         const href = link.getAttribute('href');
+        if (!href || href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
         if (href === currentPath || (currentPath === '/' && href === '/') || (href !== '/' && currentPath.startsWith(href))) {
             link.classList.add('active');
         } else {
@@ -114,6 +123,7 @@ function initHeader() {
         mainNav.classList.remove('active');
         menuOverlay?.classList.remove('active');
         header?.classList.remove('menu-open');
+        document.body.classList.remove('nav-drawer-open');
         document.body.style.overflow = '';
         mobileToggle?.setAttribute('aria-expanded', 'false');
     }
@@ -123,6 +133,7 @@ function initHeader() {
         mainNav.classList.add('active');
         menuOverlay?.classList.add('active');
         header?.classList.add('menu-open');
+        document.body.classList.add('nav-drawer-open');
         document.body.style.overflow = 'hidden';
         mobileToggle?.setAttribute('aria-expanded', 'true');
     }
@@ -140,8 +151,15 @@ function initHeader() {
             e.stopPropagation();
             toggleDrawer();
         });
-        menuOverlay.addEventListener('click', closeDrawer);
-        if (drawerClose) drawerClose.addEventListener('click', closeDrawer);
+        menuOverlay.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeDrawer();
+        });
+        if (drawerClose) drawerClose.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            closeDrawer();
+        });
 
         // Close when a nav link / CTA is tapped
         mainNav.querySelectorAll('a.nav-link, a.nav-cta').forEach((link) => {
@@ -163,6 +181,7 @@ function initHeader() {
 
     // Scroll effect - Navbar color change
     const handleScroll = () => {
+        if (!header) return;
         if (window.scrollY > 50) {
             header.classList.add('scrolled');
         } else {
@@ -170,7 +189,7 @@ function initHeader() {
         }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll(); // Initial check
 }
 

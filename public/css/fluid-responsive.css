@@ -70,6 +70,9 @@ table { max-width: 100%; }
     max-height: 100dvh;
     background: #ffffff !important;
     opacity: 1 !important;
+    filter: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
     flex-direction: column !important;
     align-items: stretch !important;
     padding: 0 0 env(safe-area-inset-bottom, 0) !important;
@@ -77,19 +80,30 @@ table { max-width: 100%; }
     overflow-y: auto !important;
     overflow-x: hidden !important;
     -webkit-overflow-scrolling: touch;
-    z-index: 1210 !important;
+    z-index: 9999 !important;
+    pointer-events: auto !important;
     box-shadow: -12px 0 40px rgba(0,0,0,0.2) !important;
     transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
   }
   #mainNav.nav.active,
   .nav.active {
     right: 0 !important;
+    pointer-events: auto !important;
   }
   #mainNav.nav .nav-link,
-  .nav .nav-link {
+  .nav .nav-link,
+  #mainNav.nav .nav-cta,
+  .nav .nav-cta,
+  #mainNav.nav .drawer-close {
     color: #1a1a1a !important;
     opacity: 1 !important;
     text-shadow: none !important;
+    pointer-events: auto !important;
+    position: relative;
+    z-index: 1;
+  }
+  #mainNav.nav .nav-link,
+  .nav .nav-link {
     width: 100% !important;
     justify-content: flex-start;
   }
@@ -103,24 +117,39 @@ table { max-width: 100%; }
     white-space: normal !important;
     line-height: 1.3;
     padding: 0.85rem 1rem !important;
+    color: #fff !important;
   }
   #mainNav.nav .nav-link-inquire {
     width: calc(100% - 3rem) !important;
     margin: 0.35rem 1.5rem !important;
     justify-content: center !important;
   }
+  .menu-overlay,
+  .menu-overlay.active {
+    display: none;
+    position: fixed !important;
+    inset: 0 !important;
+    background: rgba(0, 0, 0, 0.55) !important;
+    z-index: 9998 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    pointer-events: auto !important;
+  }
   .menu-overlay.active {
     display: block !important;
-    z-index: 1190 !important;
   }
-  .header.menu-open {
-    z-index: 1200 !important;
+  .header.menu-open,
+  body.nav-drawer-open .header {
+    z-index: 9999 !important;
   }
   .mobile-toggle {
     display: inline-flex !important;
     min-width: 48px;
     min-height: 48px;
     color: #fff !important;
+    pointer-events: auto !important;
+    position: relative;
+    z-index: 10000;
   }
 }
 
