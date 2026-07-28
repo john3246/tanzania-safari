@@ -9,7 +9,9 @@
     <meta name="robots" content="index, follow">
     <link rel="stylesheet" href="/css/seo.css">
     <link rel="stylesheet" href="/css/corporate-ui.css">
+    <link rel="stylesheet" href="/css/blog-editorial.css">
     <script src="/js/seo.js"></script>
+    <script src="/js/destination-guides/ngorongoro.js"></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,6 +38,14 @@
         .lightbox.active { display: flex; }
         .lightbox img { max-width: 90%; max-height: 90vh; object-fit: contain; border-radius: 8px; }
         .lightbox-close { position: fixed; top: 1.5rem; right: 1.5rem; background: rgba(255,255,255,0.1); border: none; color: #fff; font-size: 1.5rem; width: 48px; height: 48px; border-radius: 50%; cursor: pointer; }
+        .dest-guide { margin-top: 1.5rem; }
+        .dest-guide .guide-lead { font-size: 1.12rem; line-height: 1.75; }
+        .dest-table-wrap { overflow-x: auto; margin: 1.25rem 0 1.75rem; border-radius: 12px; border: 1px solid rgba(38,62,34,0.1); }
+        .dest-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+        .dest-table th, .dest-table td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(0,0,0,0.06); }
+        .dest-table th { background: #f4f7f4; font-weight: 700; color: var(--earth-dark); }
+        .dest-table tr:last-child td { border-bottom: none; }
+        .dest-guide-panel { background: #fff; border-radius: 16px; border: 1px solid rgba(38,62,34,0.08); padding: clamp(1.25rem, 3vw, 2rem); box-shadow: 0 8px 28px rgba(38,62,34,0.05); margin-bottom: 1.25rem; }
     </style>
 </head>
 <body>

@@ -108,12 +108,21 @@ async function loadDestinationDetails(slug) {
             
             renderDestinationDetails(currentDestination);
             const displayName = currentDestination.park_name || currentDestination.name;
-            updatePageTitle(displayName);
-            updateMetaDescription(currentDestination.park_description || currentDestination.description);
-            applyDestinationSeo(currentDestination);
-            injectDestinationSchema(currentDestination);
-            await loadSafariPackagesForDestination(displayName);
-            await loadRelatedDestinations(currentDestination.park_id || currentDestination.id, currentDestination.park_slug || currentDestination.slug);
+            const slug = currentDestination.park_slug || currentDestination.slug || currentSlug;
+            if (isNgorongoroDestination(slug, displayName)) {
+                applyNgorongoroSeo(currentDestination);
+                injectNgorongoroSchemas(currentDestination);
+            } else {
+                updatePageTitle(displayName);
+                updateMetaDescription(currentDestination.park_description || currentDestination.description);
+                applyDestinationSeo(currentDestination);
+                injectDestinationSchema(currentDestination);
+            }
+            await loadSafariPackagesForDestination(displayName, slug);
+            await loadRelatedDestinations(currentDestination.park_id || currentDestination.id, slug);
+            if (isNgorongoroDestination(slug, displayName)) {
+                await enhanceNgorongoroPackageSection();
+            }
         } else {
             showError('Destination not found');
         }
@@ -131,10 +140,16 @@ function renderDestinationDetails(destination) {
     const description = destination.park_description || destination.description || `Experience the breathtaking beauty of ${name}. This amazing destination offers incredible wildlife viewing opportunities and stunning landscapes that will leave you in awe.`;
     const slug = destination.park_slug || destination.slug || '';
     
+    const isNgorongoro = isNgorongoroDestination(slug, name);
+    const guide = (isNgorongoro && window.NgorongoroDestinationGuide) ? window.NgorongoroDestinationGuide : null;
+    
     // Determine destination type and features
     const isUnesco = destination.is_unesco_heritage || name.toLowerCase().includes('ngorongoro') || 
                      name.toLowerCase().includes('serengeti') ||
                      name.toLowerCase().includes('kilimanjaro');
+    
+    const heroTitle = guide ? guide.META.h1 : name;
+    const eyebrow = isNgorongoro ? 'UNESCO World Heritage · Northern Circuit' : 'Safari Destination · Tanzania';
     
     // Get icon based on name
     let iconClass = 'fa-tree';
@@ -151,7 +166,12 @@ function renderDestinationDetails(destination) {
     let bestMonths = getBestTimeForDestination(name, destination.best_season);
     
     // Generate quick facts
-    let facts = [
+    let facts = isNgorongoro ? [
+        { icon: 'fa-ruler', label: 'Crater Floor', value: '~260 sq km' },
+        { icon: 'fa-mountain', label: 'Depth', value: '~600 m' },
+        { icon: 'fa-paw', label: 'Large Mammals', value: '25,000+' },
+        { icon: 'fa-award', label: 'Status', value: 'UNESCO Site' }
+    ] : [
         { icon: 'fa-ruler', label: 'Size', value: destination.size_sq_km ? `${Number(destination.size_sq_km).toLocaleString()} sq km` : 'Varies' },
         { icon: 'fa-calendar', label: 'Established', value: destination.established_year || 'Various' },
         { icon: 'fa-users', label: 'Annual Visitors', value: '350,000+' },
@@ -160,7 +180,7 @@ function renderDestinationDetails(destination) {
     
     const heroImg = imgSrc(
         destination.featured_image_url || destination.image_url || (destination.image_urls && destination.image_urls[0]) || (destination.gallery_urls && destination.gallery_urls[0]),
-        slug ? `/images/optimized/${slug}.webp` : '/images/optimized/serengeti-national-park.webp'
+        isNgorongoro ? '/images/optimized/mbugani.webp' : (slug ? `/images/optimized/${slug}.webp` : '/images/optimized/serengeti-national-park.webp')
     );
     
     const html = `
@@ -175,8 +195,8 @@ function renderDestinationDetails(destination) {
                     <div class="corp-breadcrumb">
                         <a href="/">Home</a><span>/</span><a href="/destinations">Destinations</a><span>/</span><span>${escapeHtml(name)}</span>
                     </div>
-                    <span class="corp-eyebrow">Safari Destination · Tanzania</span>
-                    <h1 class="page-hero-title" style="color:#fff;margin:0">${escapeHtml(name)}</h1>
+                    <span class="corp-eyebrow">${eyebrow}</span>
+                    <h1 class="page-hero-title" style="color:#fff;margin:0">${escapeHtml(heroTitle)}</h1>
                     <div style="display:flex;flex-wrap:wrap;gap:0.6rem;margin-top:1rem">
                         <span class="badge" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;padding:0.4rem 0.85rem;border-radius:999px;font-size:0.8rem;font-weight:600"><i class="fas fa-map-marker-alt"></i> East Africa</span>
                         ${isUnesco ? '<span class="badge" style="background:var(--accent);color:#fff;padding:0.4rem 0.85rem;border-radius:999px;font-size:0.8rem;font-weight:600"><i class="fas fa-award"></i> UNESCO Site</span>' : ''}
@@ -273,8 +293,13 @@ function renderDestinationDetails(destination) {
                             </div>
                         </div>
 
+                        ${isNgorongoro && guide ? `
+                        <div class="dest-guide-panel blog-prose content-section" id="ngorongoroGuide" style="margin-bottom:1.25rem">
+                            ${guide.contentHtml()}
+                        </div>` : ''}
+
                         <div class="corp-panel content-section" id="safariPackagesSection">
-                            <h2>Safari Packages in ${escapeHtml(name)}</h2>
+                            <h2 id="packages-heading">Safari Packages Featuring ${escapeHtml(name)}</h2>
                             <div class="packages-grid" id="packagesGrid">
                                 <div class="loading-card">Loading packages...</div>
                             </div>
@@ -323,16 +348,192 @@ function renderDestinationDetails(destination) {
     
     mainContent.innerHTML = html;
     document.body.classList.add('has-mobile-book-bar');
-    injectDestinationSchema(destination);
+}
+
+function isNgorongoroDestination(slug, name) {
+    if (window.NgorongoroDestinationGuide?.matchesSlug?.(slug)) return true;
+    const s = `${slug || ''} ${name || ''}`.toLowerCase();
+    return s.includes('ngorongoro');
+}
+
+function applyNgorongoroSeo(destination) {
+    const guide = window.NgorongoroDestinationGuide;
+    const meta = guide?.META || {};
+    const name = destination.park_name || destination.name || 'Ngorongoro Crater';
+    const title = (meta.title || `${name} Safari Guide | Tanzania Safari Magic`).slice(0, 70);
+    const description = (meta.meta_description || destination.park_description || '').slice(0, 160);
+    const image = destination.featured_image_url || destination.image_urls?.[0] || meta.image;
+
+    if (window.SafariSEO) {
+        SafariSEO.applyPageSeo({ title, description, image, noindex: false });
+        SafariSEO.setRobots?.('index, follow');
+    } else {
+        document.title = title;
+        updateMetaDescription(description);
+    }
+
+    // Extra SEO metas
+    ensureDestMeta('name', 'keywords', meta.keywords || 'ngorongoro crater safari, tanzania safari magic');
+    ensureDestMeta('name', 'author', 'John Raphael Shayo');
+    ensureDestMeta('property', 'og:type', 'article');
+    const canonical = document.querySelector('link[rel="canonical"]') || (() => {
+        const l = document.createElement('link');
+        l.rel = 'canonical';
+        document.head.appendChild(l);
+        return l;
+    })();
+    canonical.href = `https://tanzaniasafarimagic.com/destinations/${destination.park_slug || destination.slug || 'ngorongoro-conservation-area'}`;
+}
+
+function injectNgorongoroSchemas(destination) {
+    const guide = window.NgorongoroDestinationGuide;
+    const name = destination.park_name || destination.name || 'Ngorongoro Conservation Area';
+    const desc = guide?.META?.meta_description || destination.park_description || destination.description || '';
+    const image = destination.featured_image_url || destination.image_url || guide?.META?.image || '/images/optimized/mbugani.webp';
+    const absImg = image.startsWith('http') ? image : `https://tanzaniasafarimagic.com${image}`;
+
+    const tourist = {
+        '@context': 'https://schema.org',
+        '@type': ['TouristDestination', 'Place'],
+        name,
+        description: desc,
+        image: absImg,
+        url: `https://tanzaniasafarimagic.com/destinations/${destination.park_slug || destination.slug || 'ngorongoro-conservation-area'}`,
+        touristType: ['Safari', 'Wildlife', 'Nature'],
+        isAccessibleForFree: false,
+        publicAccess: true,
+        address: {
+            '@type': 'PostalAddress',
+            addressRegion: 'Arusha Region',
+            addressCountry: 'TZ'
+        },
+        geo: {
+            '@type': 'GeoCoordinates',
+            latitude: -3.2095,
+            longitude: 35.5655
+        },
+        containedInPlace: {
+            '@type': 'Country',
+            name: 'Tanzania'
+        },
+        provider: {
+            '@type': 'TravelAgency',
+            name: 'Tanzania Safari Magic',
+            url: 'https://tanzaniasafarimagic.com',
+            telephone: '+255695108009',
+            email: 'info@tanzaniasafarimagic.com'
+        }
+    };
+
+    const faq = guide?.FAQS || [];
+    const faqSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: faq.map(f => ({
+            '@type': 'Question',
+            name: f.q,
+            acceptedAnswer: { '@type': 'Answer', text: f.a }
+        }))
+    };
+
+    const breadcrumb = {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://tanzaniasafarimagic.com/' },
+            { '@type': 'ListItem', position: 2, name: 'Destinations', item: 'https://tanzaniasafarimagic.com/destinations' },
+            { '@type': 'ListItem', position: 3, name: name, item: `https://tanzaniasafarimagic.com/destinations/${destination.park_slug || destination.slug || 'ngorongoro-conservation-area'}` }
+        ]
+    };
+
+    if (window.SafariSEO?.injectJsonLd) {
+        SafariSEO.injectJsonLd('ngorongoro-destination-jsonld', tourist);
+        SafariSEO.injectJsonLd('ngorongoro-faq-jsonld', faqSchema);
+        SafariSEO.injectJsonLd('ngorongoro-breadcrumb-jsonld', breadcrumb);
+    } else {
+        [tourist, faqSchema, breadcrumb].forEach((obj, i) => {
+            const el = document.createElement('script');
+            el.type = 'application/ld+json';
+            el.id = `ngorongoro-schema-${i}`;
+            el.textContent = JSON.stringify(obj);
+            document.head.appendChild(el);
+        });
+    }
+}
+
+function ensureDestMeta(attr, key, content) {
+    if (!content) return;
+    let el = document.querySelector(`meta[${attr}="${key}"]`);
+    if (!el) {
+        el = document.createElement('meta');
+        el.setAttribute(attr, key);
+        document.head.appendChild(el);
+    }
+    el.setAttribute('content', content);
+}
+
+async function enhanceNgorongoroPackageSection() {
+    const anchor = document.getElementById('packages-ngoro');
+    const grid = document.getElementById('packagesGrid');
+    if (!anchor || !grid) return;
+    // Mirror packages into the in-guide anchor for SEO internal linking
+    if (grid.innerHTML && !grid.innerHTML.includes('loading-card')) {
+        anchor.innerHTML = `
+          <h2>Our Ngorongoro Safari Packages</h2>
+          <p>Live itineraries from Tanzania Safari Magic that include Ngorongoro Crater — open any package for full details, then request a custom quote.</p>
+          <div class="guide-pkg-grid">${grid.innerHTML.replace(/package-card/g, 'guide-pkg-card').replace(/onclick="window.location.href='/g, 'href="').replace(/'"/g, '"')}</div>
+          <p><a href="/safaris">Browse all safari packages →</a> · <a href="/booking">Get a free quote →</a></p>
+        `;
+        // Simpler: clone clean cards
+    }
+    try {
+        const result = await API.getPackages({ limit: 12 });
+        const pkgs = (result.data || []).filter(pkg => {
+            const blob = JSON.stringify(pkg).toLowerCase();
+            return blob.includes('ngorongoro') || (pkg.destinations || []).some(d =>
+                String(d.park_name || d.name || d.park_slug || d.slug || '').toLowerCase().includes('ngorongoro')
+            );
+        });
+        const list = (pkgs.length ? pkgs : (result.data || [])).slice(0, 6);
+        if (!list.length) return;
+
+        anchor.innerHTML = `
+          <h2>Our Ngorongoro Safari Packages</h2>
+          <p>Private itineraries featuring the crater — linked directly from this guide so you can compare days and pricing, then book with our Arusha team.</p>
+          <div class="guide-pkg-grid">
+            ${list.map(p => {
+                const slug = p.package_slug || p.slug;
+                const pname = p.package_name || p.name || 'Safari Package';
+                const img = imgSrc(p.featured_image_url || p.image_url || p.image_urls?.[0], '/images/optimized/mbugani.webp');
+                const days = p.duration_days ? `${p.duration_days} days` : '';
+                const price = p.base_price_usd ? `From $${Number(p.base_price_usd).toLocaleString()}` : 'Request quote';
+                return `<a class="guide-pkg-card" href="/safaris/${slug}">
+                  <img src="${img}" alt="${escapeHtml(pname)}" width="480" height="300" loading="lazy" onerror="this.src='/images/optimized/balloon.webp'">
+                  <div class="body"><div class="meta">${days}</div><h3>${escapeHtml(pname)}</h3><div class="price">${price}</div></div>
+                </a>`;
+            }).join('')}
+          </div>
+          <p><a href="/safaris">View all packages →</a> · <a href="/booking">Free Ngorongoro quote →</a> · <a href="/blog/tanzania-safari">Tanzania safari ultimate guide →</a></p>
+        `;
+    } catch (e) {
+        console.warn('Ngorongoro package enhance skipped', e);
+    }
 }
 
 function injectDestinationSchema(destination) {
     const schema = {
         "@context": "https://schema.org",
         "@type": "TouristDestination",
-        "name": destination.park_name,
-        "description": destination.park_description,
-        "image": destination.image_urls && destination.image_urls.length > 0 ? destination.image_urls[0] : (destination.image_url || 'https://tanzaniasafarimagic.com/images/hero.jpg')
+        "name": destination.park_name || destination.name,
+        "description": destination.park_description || destination.description,
+        "image": destination.image_urls && destination.image_urls.length > 0 ? destination.image_urls[0] : (destination.featured_image_url || destination.image_url || 'https://tanzaniasafarimagic.com/images/hero.jpg'),
+        "url": `https://tanzaniasafarimagic.com/destinations/${destination.park_slug || destination.slug || ''}`,
+        "provider": {
+            "@type": "TravelAgency",
+            "name": "Tanzania Safari Magic",
+            "telephone": "+255695108009",
+            "url": "https://tanzaniasafarimagic.com"
+        }
     };
     const script = document.createElement('script');
     script.type = "application/ld+json";
@@ -340,25 +541,28 @@ function injectDestinationSchema(destination) {
     document.head.appendChild(script);
 }
 
-async function loadSafariPackagesForDestination(destinationName) {
+async function loadSafariPackagesForDestination(destinationName, slug) {
     const packagesGrid = document.getElementById('packagesGrid');
     if (!packagesGrid) return;
-    
+
     packagesGrid.innerHTML = '<div class="loading-card">Loading safari packages...</div>';
-    
+
     try {
         // Get all packages and filter by destination
-        const result = await API.getPackages({ limit: 6 });
-        
+        const result = await API.getPackages({ limit: 12 });
+
         if (result && result.success && result.data && result.data.length > 0) {
             // Filter packages that include this destination
+            const needle = (destinationName || slug || '').toLowerCase();
             const filteredPackages = result.data.filter(pkg => {
-                return pkg.destinations && pkg.destinations.some(dest => 
-                    dest.park_name && dest.park_name.toLowerCase().includes(destinationName.toLowerCase())
-                );
+                if (pkg.destinations && pkg.destinations.some(dest => {
+                    const label = `${dest.park_name || ''} ${dest.name || ''} ${dest.park_slug || ''} ${dest.slug || ''}`.toLowerCase();
+                    return needle && label.includes(needle.split(' ')[0]);
+                })) return true;
+                return JSON.stringify(pkg).toLowerCase().includes(needle.split(' ')[0] || '___');
             });
-            
-            const packagesToShow = filteredPackages.length > 0 ? filteredPackages.slice(0, 3) : result.data.slice(0, 3);
+
+            const packagesToShow = filteredPackages.length > 0 ? filteredPackages.slice(0, 6) : result.data.slice(0, 3);
             
             if (packagesToShow.length > 0) {
                 packagesGrid.innerHTML = packagesToShow.map(pkg => {
@@ -645,9 +849,14 @@ function updateMetaDescription(description) {
 
 function applyDestinationSeo(destination) {
     if (!window.SafariSEO || !destination) return;
-    const name = destination.park_name || 'Tanzania Destination';
-    const count = Number(destination.safari_count || 0);
-    const desc = destination.park_description || destination.short_description ||
+    const name = destination.park_name || destination.name || 'Tanzania Destination';
+    const slug = destination.park_slug || destination.slug || '';
+    if (isNgorongoroDestination(slug, name)) {
+        applyNgorongoroSeo(destination);
+        return;
+    }
+    const count = Number(destination.safari_count || destination.tour_count || 0);
+    const desc = destination.park_description || destination.description || destination.short_description ||
         `Explore ${name} with Tanzania Safari Magic — private safari itineraries from Arusha. Inquire for a free quote.`;
     SafariSEO.applyPageSeo({
         title: `${name} | Tanzania Safari Destination from Arusha`.slice(0, 70),
