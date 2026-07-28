@@ -17,6 +17,10 @@ const createTourSchema = z.object({
     duration_nights: z.number().optional(),
     category_id: z.number().optional(),
     destination_id: z.number().optional(),
+    destinations: z.array(z.object({
+        park_id: z.number(),
+        visit_day: z.number().optional()
+    })).optional(),
     difficulty: z.string().optional(),
     group_size_min: z.number().optional(),
     group_size_max: z.number().optional(),
@@ -60,6 +64,10 @@ const updateTourSchema = z.object({
     duration_nights: z.number().optional(),
     category_id: z.number().optional(),
     destination_id: z.number().optional(),
+    destinations: z.array(z.object({
+        park_id: z.number(),
+        visit_day: z.number().optional()
+    })).optional(),
     difficulty: z.string().optional(),
     group_size_min: z.number().optional(),
     group_size_max: z.number().optional(),

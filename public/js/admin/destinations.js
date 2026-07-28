@@ -89,34 +89,47 @@ async function initEditDestPage() {
     if (titleEl) titleEl.textContent = id ? 'Edit Destination' : 'Create New Destination';
 
     if (id) {
-        const d = destinationsList.find(x => x.id == id);
+        let d = destinationsList.find(x => String(x.id) === String(id));
+        try {
+            const res = await apiRequest('GET', `/destinations/${id}`);
+            if (res.data) d = res.data;
+        } catch (e) {
+            console.warn('Could not fetch destination by id, using list cache', e);
+        }
+
         if (d) {
             if (idEl) idEl.value = d.id;
-            
-            // Populate fields
+
             Object.entries(d).forEach(([k, v]) => {
                 [editForm, mediaForm, geoForm].filter(Boolean).forEach(f => {
                     const el = f.querySelector(`[name="${k}"]`);
                     if (el) {
                         if (el.type === 'checkbox') el.checked = !!v;
-                        else el.value = v || '';
+                        else if (Array.isArray(v)) el.value = v.join(', ');
+                        else el.value = v ?? '';
                     }
                 });
             });
 
-            // Set checkboxes
             const activeEl = document.getElementById('editDestActive');
             const featuredEl = document.getElementById('editDestFeatured');
             if (activeEl) activeEl.checked = !!d.is_active;
             if (featuredEl) featuredEl.checked = !!d.is_featured;
 
-            // Populate CSV Gallery
-            if (d.gallery_urls && mediaForm) {
+            if (mediaForm) {
+                const featuredInput = mediaForm.querySelector('[name="featured_image_url"]');
                 const csvEl = mediaForm.querySelector('[name="gallery_urls_csv"]');
-                if (csvEl) csvEl.value = d.gallery_urls.join(', ');
+                const cover = d.featured_image_url || (d.gallery_urls && d.gallery_urls[0]) || '';
+                if (featuredInput) featuredInput.value = cover || '';
+                if (csvEl) {
+                    const gallery = Array.isArray(d.gallery_urls) ? d.gallery_urls : [];
+                    csvEl.value = gallery.filter(u => u && u !== cover).join(', ');
+                }
             }
         }
     }
+
+    setTimeout(() => window.MediaPicker?.enhanceAll(document.getElementById('page-edit-destination') || document), 50);
 }
 
 async function saveEditDest(btn) {
@@ -140,21 +153,28 @@ async function saveEditDest(btn) {
     if (activeEl) data.is_active = !!activeEl.checked;
     if (featuredEl) data.is_featured = !!featuredEl.checked;
 
-    // Process Gallery CSV
+    const featured = String(data.featured_image_url || '').trim();
+    let gallery = [];
     if (data.gallery_urls_csv) {
-        data.gallery_urls = data.gallery_urls_csv.split(',').map(s => s.trim()).filter(Boolean);
-        delete data.gallery_urls_csv;
-    } else if (!Array.isArray(data.gallery_urls)) {
-        data.gallery_urls = [];
+        gallery = data.gallery_urls_csv.split(',').map(s => s.trim()).filter(Boolean);
     }
+    delete data.gallery_urls_csv;
+
+    // Cover first, then gallery (no duplicates) — never drop cover when gallery is empty
+    if (featured) {
+        gallery = [featured, ...gallery.filter(u => u !== featured)];
+    }
+    data.featured_image_url = featured || undefined;
+    data.gallery_urls = gallery;
 
     // Auto generate slug if missing
     if (!data.slug && data.name) {
         data.slug = data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
     }
 
-    // Clean empty values
+    // Clean empty values (keep arrays and booleans)
     Object.keys(data).forEach(key => {
+        if (Array.isArray(data[key]) || typeof data[key] === 'boolean') return;
         if (data[key] === '' || data[key] === null || data[key] === undefined || (typeof data[key] === 'number' && isNaN(data[key]))) {
             delete data[key];
         }
@@ -169,6 +189,7 @@ async function saveEditDest(btn) {
             await apiRequest('POST', '/destinations', data);
             if (typeof showToast === 'function') showToast('Destination created successfully');
         }
+        destinationsList = [];
         if (typeof navigate === 'function') navigate('destinations');
     } catch (e) {
         console.error('Error saving destination:', e);

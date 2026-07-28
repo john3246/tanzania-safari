@@ -156,6 +156,7 @@ class LiveChat {
         this.isOpen = !this.isOpen;
         if (this.isOpen) {
             this.window.classList.add('active');
+            document.body.classList.add('chat-open');
             if (this.hasVisitorInfo()) {
                 this.showChatUI();
                 if (!this.socket) this.connectSocket();
@@ -169,6 +170,7 @@ class LiveChat {
             this.clearUnreadBadge();
         } else {
             this.window.classList.remove('active');
+            document.body.classList.remove('chat-open');
         }
     }
 
@@ -335,7 +337,7 @@ function initLiveChatWidget() {
     if (!document.querySelector('link[href="/css/chat.css"]')) {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
-        link.href = '/css/chat.css';
+        link.href = '/css/chat.css?v=3';
         document.head.appendChild(link);
     }
 

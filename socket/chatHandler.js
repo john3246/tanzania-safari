@@ -25,6 +25,17 @@ function untrackVisitor(chatId, socketId) {
     if (set.size === 0) visitorSockets.delete(chatId);
 }
 
+/** Emit to everyone in the chat room except the sender, plus any tracked visitor sockets. */
+function emitToOthersInChat(io, socket, chatId, event, payload) {
+    socket.to(chatId).emit(event, payload);
+    const sockets = visitorSockets.get(chatId);
+    if (sockets) {
+        for (const sid of sockets) {
+            if (sid !== socket.id) io.to(sid).emit(event, payload);
+        }
+    }
+}
+
 function emitToVisitors(io, chatId, event, payload) {
     io.to(chatId).emit(event, payload);
     const sockets = visitorSockets.get(chatId);
@@ -203,13 +214,29 @@ function initChatSocket(io) {
 
                 const msg = await ChatRepository.addMessage(chatId, sender, message);
                 const updatedChat = await ChatRepository.getChatWithMessages(chatId);
+                const payload = { chatId, msg };
+                const listTouch = {
+                    chatId,
+                    updatedAt: updatedChat?.updatedAt,
+                    preview: msg.message,
+                    visitorName: updatedChat?.visitorName,
+                    visitorEmail: updatedChat?.visitorEmail,
+                    status: updatedChat?.status
+                };
 
-                // Fast path for both sides
-                emitToVisitors(io, chatId, 'new_message', { chatId, msg });
-                io.to('admin_room').emit('new_message', { chatId, msg });
-                io.to('admin_room').emit('chat_updated', updatedChat);
+                // Deliver to the other party (never echo new_message back to sender)
+                emitToOthersInChat(io, socket, chatId, 'new_message', payload);
 
-                if (!isAdminSender) {
+                // Confirm to sender so optimistic UI can settle without a full re-render
+                socket.emit('message_ack', payload);
+
+                if (isAdminSender) {
+                    socket.emit('chat_list_touch', listTouch);
+                    socket.to('admin_room').emit('new_message', payload);
+                    socket.to('admin_room').emit('chat_list_touch', listTouch);
+                } else {
+                    io.to('admin_room').emit('new_message', payload);
+                    io.to('admin_room').emit('chat_list_touch', listTouch);
                     await createNotification({
                         type: 'chat',
                         title: 'New chat message',

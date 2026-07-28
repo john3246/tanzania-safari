@@ -62,8 +62,25 @@ class DestinationRepository extends BaseRepository {
         if (data.region !== undefined) payload.park_location = data.region;
         if (data.is_featured !== undefined) payload.is_unesco_heritage = data.is_featured;
         if (data.is_active !== undefined) payload.is_active = data.is_active;
-        if (data.gallery_urls !== undefined) payload.image_urls = data.gallery_urls;
-        else if (data.featured_image_url !== undefined) payload.image_urls = [data.featured_image_url];
+
+        // Merge cover + gallery into image_urls (cover is always first)
+        const hasGallery = data.gallery_urls !== undefined;
+        const hasFeatured = data.featured_image_url !== undefined;
+        if (hasGallery || hasFeatured) {
+            let urls = hasGallery
+                ? (Array.isArray(data.gallery_urls) ? data.gallery_urls : [])
+                    .map((u) => String(u || '').trim())
+                    .filter(Boolean)
+                : [];
+            const featured = hasFeatured ? String(data.featured_image_url || '').trim() : '';
+            if (featured) {
+                urls = [featured, ...urls.filter((u) => u !== featured)];
+            }
+            // Only wipe images when gallery was explicitly sent empty AND no featured cover
+            if (urls.length > 0 || hasGallery) {
+                payload.image_urls = urls;
+            }
+        }
         return payload;
     }
 

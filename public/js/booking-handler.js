@@ -226,13 +226,21 @@ const BookingHandler = {
         if (mainContent) {
             mainContent.innerHTML = `
                 <div class="success-message" style="text-align: center; padding: 3rem;">
-                    <div style="font-size: 4rem; margin-bottom: 1rem;">✓</div>
+                    <div style="font-size: 4rem; margin-bottom: 1rem; color: var(--success, #16a34a);">✓</div>
                     <h2>Thank You, ${this.escapeHtml(name)}!</h2>
                     <p>Your booking request has been received successfully.</p>
                     <p><strong>Booking Reference: ${this.escapeHtml(bookingRef)}</strong></p>
                     <p>Please save this reference number for future inquiries.</p>
                     <p>Our safari experts will review your request and get back to you within <strong>24 hours</strong>.</p>
-                    <a href="/" style="display: inline-block; margin-top: 2rem; padding: 0.75rem 1.5rem; background: #0f172a; color: white; text-decoration: none; border-radius: 8px;">Return to Home</a>
+                    <div class="seo-review-box" style="margin:2rem auto;max-width:420px;text-align:left">
+                      <h3 style="margin-top:0">Enjoyed planning with us?</h3>
+                      <p style="margin-bottom:1rem">Leave a Google review — it helps fellow travelers find Tanzania Safari Magic.</p>
+                      <a class="btn btn-primary" href="https://maps.app.goo.gl/36osoUgbeghcvwE89" target="_blank" rel="noopener" style="min-height:48px;display:inline-flex;align-items:center;gap:0.5rem"><i class="fab fa-google"></i> Leave a Google Review</a>
+                    </div>
+                    <div style="display:flex;flex-wrap:wrap;gap:0.75rem;justify-content:center;margin-top:1.5rem">
+                      <a href="https://wa.me/255695108009?text=Hi%20Tanzania%20Safari%20Magic%20team%2C%20I%20just%20submitted%20booking%20${encodeURIComponent(bookingRef)}" class="btn btn-outline" target="_blank" rel="noopener" style="min-height:48px">WhatsApp Our Team</a>
+                      <a href="/" class="btn btn-primary" style="min-height:48px">Return to Home</a>
+                    </div>
                 </div>
             `;
         }

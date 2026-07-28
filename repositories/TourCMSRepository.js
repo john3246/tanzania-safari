@@ -52,12 +52,10 @@ class TourCMSRepository extends BaseRepository {
     // Helper to map CMS data to DB payload
     mapPayload(data) {
         const payload = {};
-        
-        // Auto-generate UUID if not provided for creation
+
+        // Only set package_id on create (never rewrite PK on update)
         if (data.id) {
             payload.package_id = data.id;
-        } else {
-            payload.package_id = crypto.randomUUID();
         }
 
         if (data.title !== undefined) payload.package_name = data.title;
@@ -106,26 +104,78 @@ class TourCMSRepository extends BaseRepository {
             for (let i = 0; i < itineraryArray.length; i++) {
                 const item = itineraryArray[i];
                 await db.query(
-                    `INSERT INTO package_itinerary (package_id, day_number, title, description)
+                    `INSERT INTO package_itinerary (package_id, day_number, day_title, day_description)
                      VALUES ($1, $2, $3, $4)`,
-                    [packageId, item.day || item.day_number || (i + 1), item.title || '', item.description || '']
+                    [
+                        packageId,
+                        item.day || item.day_number || (i + 1),
+                        item.title || `Day ${i + 1}`,
+                        item.description || ''
+                    ]
                 );
             }
-        } catch (e) {}
+        } catch (e) {
+            console.warn('syncPackageItinerary failed:', e.message);
+        }
+    }
+
+    /**
+     * Link tour to national parks via package_destinations.
+     * Accepts destination_id and/or destinations: [{ park_id, visit_day }]
+     */
+    async syncDestinations(packageId, data) {
+        let parks = [];
+        if (Array.isArray(data.destinations) && data.destinations.length > 0) {
+            parks = data.destinations
+                .map((p) => ({
+                    park_id: parseInt(p.park_id || p.destination_id || p.id, 10),
+                    visit_day: parseInt(p.visit_day || p.day || 1, 10) || 1
+                }))
+                .filter((p) => Number.isFinite(p.park_id));
+        } else if (data.destination_id != null && data.destination_id !== '') {
+            parks = [{ park_id: parseInt(data.destination_id, 10), visit_day: 1 }];
+        }
+
+        await db.query('DELETE FROM package_destinations WHERE package_id = $1', [packageId]);
+        for (const p of parks) {
+            if (!Number.isFinite(p.park_id)) continue;
+            await db.query(
+                `INSERT INTO package_destinations (package_id, park_id, visit_day)
+                 VALUES ($1, $2, $3)`,
+                [packageId, p.park_id, p.visit_day]
+            );
+        }
+    }
+
+    async getPackageDestinations(packageId) {
+        const result = await db.query(
+            `SELECT park_id, visit_day FROM package_destinations
+             WHERE package_id = $1 ORDER BY visit_day ASC NULLS LAST`,
+            [packageId]
+        );
+        return result.rows;
     }
 
     async create(data) {
-        const result = await super.create(data);
+        const withId = { ...data, id: data.id || crypto.randomUUID() };
+        const result = await super.create(withId);
+        const packageId = result.id || withId.id;
         if (data.itinerary && Array.isArray(data.itinerary)) {
-            await this.syncPackageItinerary(result.id || data.id, data.itinerary);
+            await this.syncPackageItinerary(packageId, data.itinerary);
         }
+        await this.syncDestinations(packageId, data);
         return result;
     }
 
     async update(id, data) {
-        const result = await super.update(id, data);
+        // Never let mapPayload invent a new package_id during update
+        const { id: _ignore, ...rest } = data;
+        const result = await super.update(id, rest);
         if (data.itinerary && Array.isArray(data.itinerary)) {
             await this.syncPackageItinerary(id, data.itinerary);
+        }
+        if (data.destination_id !== undefined || data.destinations !== undefined) {
+            await this.syncDestinations(id, data);
         }
         return result;
     }
@@ -137,11 +187,16 @@ class TourCMSRepository extends BaseRepository {
                    pc.category_slug as category_slug,
                    np.park_name as destination_name,
                    np.park_slug as destination_slug,
-                   pd.park_id as destination_id
+                   pd_first.park_id as destination_id
             FROM safari_packages sp
             LEFT JOIN package_categories pc ON sp.category_id = pc.category_id
-            LEFT JOIN package_destinations pd ON sp.package_id = pd.package_id
-            LEFT JOIN national_parks np ON pd.park_id = np.park_id
+            LEFT JOIN LATERAL (
+                SELECT park_id FROM package_destinations
+                WHERE package_id = sp.package_id
+                ORDER BY visit_day ASC NULLS LAST
+                LIMIT 1
+            ) pd_first ON true
+            LEFT JOIN national_parks np ON pd_first.park_id = np.park_id
             WHERE 1=1
         `;
         let values = [];
@@ -160,7 +215,10 @@ class TourCMSRepository extends BaseRepository {
             values.push(options.categoryId);
         }
         if (options.destinationId) {
-            query += ` AND pd.park_id = $${index++}`;
+            query += ` AND EXISTS (
+                SELECT 1 FROM package_destinations pd2
+                WHERE pd2.package_id = sp.package_id AND pd2.park_id = $${index++}
+            )`;
             values.push(options.destinationId);
         }
         if (options.search) {
@@ -212,15 +270,27 @@ class TourCMSRepository extends BaseRepository {
                    pc.category_slug as category_slug,
                    np.park_name as destination_name,
                    np.park_slug as destination_slug,
-                   pd.park_id as destination_id
+                   pd_first.park_id as destination_id
             FROM safari_packages sp
             LEFT JOIN package_categories pc ON sp.category_id = pc.category_id
-            LEFT JOIN package_destinations pd ON sp.package_id = pd.package_id
-            LEFT JOIN national_parks np ON pd.park_id = np.park_id
+            LEFT JOIN LATERAL (
+                SELECT park_id FROM package_destinations
+                WHERE package_id = sp.package_id
+                ORDER BY visit_day ASC NULLS LAST
+                LIMIT 1
+            ) pd_first ON true
+            LEFT JOIN national_parks np ON pd_first.park_id = np.park_id
             WHERE sp.package_id = $1
         `;
         const result = await db.query(query, [id]);
-        return this.mapRow(result.rows[0]);
+        const tour = this.mapRow(result.rows[0]);
+        if (tour) {
+            tour.destinations = await this.getPackageDestinations(id);
+            if (!tour.destination_id && tour.destinations.length > 0) {
+                tour.destination_id = tour.destinations[0].park_id;
+            }
+        }
+        return tour;
     }
 
     async findBySlug(slug) {

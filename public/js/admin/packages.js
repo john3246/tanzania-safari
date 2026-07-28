@@ -203,9 +203,13 @@ async function initEditTourPage() {
                 if (t.itinerary) {
                     t.itinerary.forEach(day => addItineraryDay(day));
                 }
-                // Load destinations/parks
-                if (t.destination_id) {
-                    addPkgLocation({ park_id: t.destination_id });
+                // Load destinations/parks — prefer full destinations list
+                const locs = Array.isArray(t.destinations) && t.destinations.length
+                    ? t.destinations
+                    : (t.destination_id ? [{ park_id: t.destination_id, visit_day: 1 }] : []);
+                locs.forEach((loc) => addPkgLocation(loc));
+                if (t.destination_id && destSelect) {
+                    destSelect.value = String(t.destination_id);
                 }
             }
         } catch (e) {
@@ -276,6 +280,29 @@ async function saveEditTour(btn) {
         description: el.querySelector('.day-desc')?.value || ''
     }));
 
+    // Collect linked destinations / parks (primary select + location rows)
+    const locRows = Array.from(document.querySelectorAll('#locationsContainer .location-item')).map(el => ({
+        park_id: parseInt(el.querySelector('.loc-park')?.value, 10),
+        visit_day: parseInt(el.querySelector('.loc-day')?.value || 1, 10) || 1
+    })).filter(p => Number.isFinite(p.park_id));
+
+    if (locRows.length > 0) {
+        data.destinations = locRows;
+        if (!data.destination_id) data.destination_id = locRows[0].park_id;
+    } else if (data.destination_id) {
+        data.destinations = [{ park_id: data.destination_id, visit_day: 1 }];
+    } else {
+        data.destinations = [];
+    }
+
+    // Keep featured image in gallery so cover is not dropped
+    if (data.featured_image_url) {
+        const feat = String(data.featured_image_url).trim();
+        if (feat && !data.gallery_urls.includes(feat)) {
+            data.gallery_urls = [feat, ...data.gallery_urls];
+        }
+    }
+
     // Prune temp form values
     delete data.gallery_urls_csv;
     delete data.highlights_text;
@@ -283,8 +310,9 @@ async function saveEditTour(btn) {
     delete data.included_text;
     delete data.excluded_text;
 
-    // Clean empty values, empty strings, and NaN values
+    // Clean empty values, empty strings, and NaN values (keep arrays/booleans)
     Object.keys(data).forEach(key => {
+        if (Array.isArray(data[key]) || typeof data[key] === 'boolean') return;
         if (data[key] === '' || data[key] === null || data[key] === undefined || (typeof data[key] === 'number' && isNaN(data[key]))) {
             delete data[key];
         }

@@ -53,6 +53,94 @@ function queueRenderChatList() {
   });
 }
 
+function messageKey(m) {
+  if (!m) return '';
+  if (m.id != null) return `id:${m.id}`;
+  return `t:${m.sender}|${m.message}|${m.timestamp}`;
+}
+
+function mergeChatStore(incoming) {
+  if (!incoming?.id) return;
+  const id = incoming.id;
+  const prev = allChats[id];
+  if (!prev) {
+    allChats[id] = incoming;
+    return;
+  }
+  const byKey = new Map();
+  (prev.messages || []).forEach((m) => {
+    if (m._optimistic) return;
+    byKey.set(messageKey(m), m);
+  });
+  (incoming.messages || []).forEach((m) => byKey.set(messageKey(m), m));
+  allChats[id] = {
+    ...prev,
+    ...incoming,
+    messages: Array.from(byKey.values())
+  };
+}
+
+/** Store + optional UI append; replaces matching optimistic bubbles. */
+function ingestMessage(chatIdRaw, msg, { appendUi = false, fromAck = false } = {}) {
+  if (!chatIdRaw || !msg) return;
+  const chatId = String(chatIdRaw);
+  if (!allChats[chatId]) {
+    allChats[chatId] = {
+      id: chatId,
+      status: 'open',
+      messages: [],
+      updatedAt: new Date().toISOString()
+    };
+  }
+  const chat = allChats[chatId];
+  chat.messages = chat.messages || [];
+
+  const already = chat.messages.some(
+    (m) =>
+      (!m._optimistic && messageKey(m) === messageKey(msg)) ||
+      (m.id != null && msg.id != null && m.id === msg.id)
+  );
+
+  // Drop optimistic twin
+  const beforeLen = chat.messages.length;
+  chat.messages = chat.messages.filter(
+    (m) => !(m._optimistic && m.message === msg.message && m.sender === msg.sender)
+  );
+  const removedOptimistic = chat.messages.length < beforeLen;
+
+  if (!already) {
+    chat.messages.push(msg);
+  } else if (removedOptimistic) {
+    // replace already handled by filter; ensure real msg present
+    const hasReal = chat.messages.some((m) => !m._optimistic && messageKey(m) === messageKey(msg));
+    if (!hasReal) chat.messages.push(msg);
+  }
+
+  chat.updatedAt = msg.timestamp || new Date().toISOString();
+  chat.status = chat.status || 'open';
+
+  if (appendUi && currentAdminChatId === chatId) {
+    if (removedOptimistic) {
+      removeOptimisticBubbles(msg.message, msg.sender);
+    }
+    if (!already || removedOptimistic || fromAck) {
+      appendMessageBubble(msg, { skipIfPresent: true });
+    }
+  }
+  queueRenderChatList();
+}
+
+function removeOptimisticBubbles(message, sender) {
+  if (!chatMessagesEl) return;
+  chatMessagesEl.querySelectorAll('[data-optimistic="1"]').forEach((el) => {
+    const text = el.querySelector('.text-sm')?.textContent || '';
+    const isAdmin = el.classList.contains('justify-end');
+    if (text === message && ((sender === 'admin') === isAdmin)) {
+      el.remove();
+    }
+  });
+}
+
 function initAdminChat() {
   try {
     if (typeof io === 'undefined') {
@@ -149,43 +237,51 @@ function initAdminChat() {
       }
     });
 
-    // Fast path: append a single message without full list rebuild when possible
     adminSocket.on('new_message', (payload) => {
       try {
-        if (!payload?.chatId || !payload?.msg) return;
-        const chatId = String(payload.chatId);
+        ingestMessage(payload?.chatId, payload?.msg, { appendUi: true });
+      } catch (e) {
+        console.error('new_message handler', e);
+      }
+    });
+
+    // Settle optimistic send without wiping the pane
+    adminSocket.on('message_ack', (payload) => {
+      try {
+        ingestMessage(payload?.chatId, payload?.msg, { appendUi: true, fromAck: true });
+      } catch (e) {
+        console.error('message_ack handler', e);
+      }
+    });
+
+    // Lightweight sidebar sync — never clears the message pane
+    adminSocket.on('chat_list_touch', (touch) => {
+      try {
+        if (!touch?.chatId) return;
+        const chatId = String(touch.chatId);
         if (!allChats[chatId]) {
           allChats[chatId] = {
             id: chatId,
-            status: 'open',
+            status: touch.status || 'open',
             messages: [],
-            updatedAt: new Date().toISOString()
+            visitorName: touch.visitorName,
+            visitorEmail: touch.visitorEmail,
+            updatedAt: touch.updatedAt || new Date().toISOString()
           };
-        }
-        const chat = allChats[chatId];
-        chat.messages = chat.messages || [];
-        const exists = chat.messages.some(
-          (m) =>
-            (m.id && payload.msg.id && m.id === payload.msg.id) ||
-            (m.message === payload.msg.message &&
-              m.sender === payload.msg.sender &&
-              String(m.timestamp) === String(payload.msg.timestamp))
-        );
-        if (!exists) {
-          // Remove optimistic temp messages that match
-          chat.messages = chat.messages.filter(
-            (m) => !(m._optimistic && m.message === payload.msg.message && m.sender === payload.msg.sender)
-          );
-          chat.messages.push(payload.msg);
-        }
-        chat.updatedAt = new Date().toISOString();
-        chat.status = chat.status || 'open';
-        if (currentAdminChatId === chatId) {
-          appendMessageBubble(payload.msg);
+        } else {
+          const chat = allChats[chatId];
+          if (touch.updatedAt) chat.updatedAt = touch.updatedAt;
+          if (touch.visitorName) chat.visitorName = touch.visitorName;
+          if (touch.visitorEmail) chat.visitorEmail = touch.visitorEmail;
+          if (touch.status) chat.status = touch.status;
+          if (touch.preview && (!chat.messages || chat.messages.length === 0)) {
+            // Keep list preview text available even before messages hydrate
+            chat._preview = touch.preview;
+          }
         }
         queueRenderChatList();
       } catch (e) {
-        console.error('new_message handler', e);
+        console.error('chat_list_touch handler', e);
       }
     });
 
@@ -205,10 +301,22 @@ function initAdminChat() {
                 '<div class="m-auto text-center text-gray-400 text-sm">Conversation closed.</div>';
             }
           }
-        } else {
+          queueRenderChatList();
+          return;
+        }
+
+        const existing = allChats[chat.id];
+        const wasOpen = currentAdminChatId === chat.id;
+        const prevLen = existing?.messages?.length || 0;
+        // Merge into store; avoid full pane wipe when we already have messages rendered
+        if (!existing || prevLen === 0) {
           allChats[chat.id] = chat;
-          if (currentAdminChatId === chat.id) {
-            renderMessages(chat);
+          if (wasOpen) renderMessages(chat);
+        } else {
+          mergeChatStore(chat);
+          const nextLen = (allChats[chat.id].messages || []).length;
+          if (wasOpen && nextLen > prevLen + 1) {
+            renderMessages(allChats[chat.id]);
           }
         }
         queueRenderChatList();
@@ -252,7 +360,7 @@ function renderChatList() {
       const lastMsg =
         chat.messages && chat.messages.length > 0
           ? chat.messages[chat.messages.length - 1].message
-          : 'Started chat';
+          : chat._preview || 'Started chat';
       const label = chat.visitorName || `Visitor ${String(chat.id).substring(0, 6).toUpperCase()}`;
 
       div.innerHTML = `
@@ -298,15 +406,24 @@ function selectChat(chatId) {
   }
 }
 
-function appendMessageBubble(msg) {
+function appendMessageBubble(msg, opts = {}) {
   if (!chatMessagesEl || !msg) return;
   // Clear empty state
   const empty = chatMessagesEl.querySelector('.m-auto');
   if (empty) chatMessagesEl.innerHTML = '';
 
+  const key = messageKey(msg);
+  if (opts.skipIfPresent && key) {
+    const nodes = chatMessagesEl.querySelectorAll('[data-msg-key]');
+    for (const el of nodes) {
+      if (el.getAttribute('data-msg-key') === key) return;
+    }
+  }
+
   const isMe = msg.sender === 'admin';
   const div = document.createElement('div');
   div.className = `flex ${isMe ? 'justify-end' : 'justify-start'} mb-3`;
+  div.dataset.msgKey = key;
   if (msg._optimistic) div.dataset.optimistic = '1';
   const cardStyle = isMe
     ? 'bg-emerald-600 text-white rounded-br-none'

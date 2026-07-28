@@ -18,7 +18,16 @@ class TourCMSService extends BaseService {
         return tour;
     }
 
+    normalizeStatus(data) {
+        if (!data || typeof data !== 'object') return data;
+        const next = { ...data };
+        if (next.status === 'published') next.is_active = true;
+        if (next.status === 'draft' || next.status === 'archived') next.is_active = false;
+        return next;
+    }
+
     async create(data) {
+        data = this.normalizeStatus(data);
         // Check if slug already exists
         const existing = await this.repository.findBySlug(data.slug);
         if (existing) {
@@ -30,6 +39,7 @@ class TourCMSService extends BaseService {
     }
 
     async update(id, data) {
+        data = this.normalizeStatus(data);
         if (data.slug) {
             const existing = await this.repository.findBySlug(data.slug);
             if (existing && String(existing.id) !== String(id)) {
