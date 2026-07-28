@@ -3,8 +3,26 @@
  * and handles global UI interactions like navbar scrolling and social float.
  */
 
+/**
+ * Layout Loader - Dynamically injects shared components (Header, Footer)
+ * and handles global UI interactions like navbar scrolling and social float.
+ */
+
+/* Inject fluid responsive CSS immediately (all public pages) */
+(function injectFluidCss() {
+    if (typeof document === 'undefined') return;
+    if (document.querySelector('link[href*="fluid-responsive.css"]')) return;
+    const fluid = document.createElement('link');
+    fluid.rel = 'stylesheet';
+    fluid.href = '/css/fluid-responsive.css?v=1';
+    const head = document.head || document.getElementsByTagName('head')[0];
+    if (head) head.appendChild(fluid);
+    else document.addEventListener('DOMContentLoaded', () => document.head.appendChild(fluid));
+})();
+
 document.addEventListener('DOMContentLoaded', () => {
     const cb = '?v=' + Date.now();
+
     // Load shared SEO helpers early
     if (!document.querySelector('script[src^="/js/seo.js"]')) {
         const seo = document.createElement('script');
@@ -91,18 +109,56 @@ function initHeader() {
     // Mobile menu toggle
     const drawerClose = document.getElementById('drawerClose');
     
+    function closeDrawer() {
+        if (!mainNav) return;
+        mainNav.classList.remove('active');
+        menuOverlay?.classList.remove('active');
+        header?.classList.remove('menu-open');
+        document.body.style.overflow = '';
+        mobileToggle?.setAttribute('aria-expanded', 'false');
+    }
+
+    function openDrawer() {
+        if (!mainNav) return;
+        mainNav.classList.add('active');
+        menuOverlay?.classList.add('active');
+        header?.classList.add('menu-open');
+        document.body.style.overflow = 'hidden';
+        mobileToggle?.setAttribute('aria-expanded', 'true');
+    }
+
     function toggleDrawer() {
-        const open = !mainNav.classList.contains('active');
-        mainNav.classList.toggle('active', open);
-        menuOverlay.classList.toggle('active', open);
-        header?.classList.toggle('menu-open', open);
-        document.body.style.overflow = open ? 'hidden' : '';
+        if (mainNav?.classList.contains('active')) closeDrawer();
+        else openDrawer();
     }
 
     if (mobileToggle && mainNav && menuOverlay) {
-        mobileToggle.addEventListener('click', toggleDrawer);
-        menuOverlay.addEventListener('click', toggleDrawer);
-        if (drawerClose) drawerClose.addEventListener('click', toggleDrawer);
+        mobileToggle.setAttribute('aria-expanded', 'false');
+        mobileToggle.setAttribute('aria-controls', 'mainNav');
+        mobileToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleDrawer();
+        });
+        menuOverlay.addEventListener('click', closeDrawer);
+        if (drawerClose) drawerClose.addEventListener('click', closeDrawer);
+
+        // Close when a nav link / CTA is tapped
+        mainNav.querySelectorAll('a.nav-link, a.nav-cta').forEach((link) => {
+            link.addEventListener('click', () => closeDrawer());
+        });
+
+        // Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && mainNav.classList.contains('active')) {
+                closeDrawer();
+            }
+        });
+
+        // If resized to desktop, force-close drawer
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 1024) closeDrawer();
+        });
     }
 
     // Scroll effect - Navbar color change

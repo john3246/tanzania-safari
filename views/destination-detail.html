@@ -21,8 +21,9 @@
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/responsive.css">
     <style>
-        .months-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 0.25rem; margin-bottom: 1rem; }
-        @media(max-width: 768px) { .months-grid { grid-template-columns: repeat(6, 1fr); gap: 0.5rem; } }
+        .months-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0.35rem; margin-bottom: 1rem; }
+        @media(max-width: 768px) { .months-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.4rem; } }
+        @media(max-width: 380px) { .months-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
         .month { text-align: center; padding: 0.5rem 0; font-size: 0.75rem; font-weight: 600; border-radius: 4px; color: #fff; }
         .month.excellent { background: var(--success); }
         .month.good { background: #f59e0b; }
@@ -33,7 +34,7 @@
         .legend-color.excellent { background: var(--success); }
         .legend-color.good { background: #f59e0b; }
         .legend-color.poor { background: var(--text-muted); opacity: 0.5; }
-        .packages-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.25rem; }
+        .packages-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 1.25rem; }
         .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; align-items: center; justify-content: center; }
         .lightbox.active { display: flex; }
         .lightbox img { max-width: 90%; max-height: 90vh; object-fit: contain; border-radius: 8px; }
@@ -63,7 +64,7 @@
 <!-- Footer -->
 <div id="footer"></div>
 
-<script src="/js/layout-loader.js"></script>
+<script src="/js/layout-loader.js?v=4"></script>
 <script src="/js/api.js"></script>
 <script src="/js/destination-detail.js"></script>
 </body>

@@ -61,6 +61,11 @@
 
 .inc-exc { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
 @media(max-width:768px) { .inc-exc { grid-template-columns: 1fr; } }
+.review-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+@media(max-width:640px) {
+  .review-form-grid { grid-template-columns: 1fr; }
+  .review-card-header { flex-direction: column; gap: 0.75rem; align-items: stretch; }
+}
 .inc-list li, .exc-list li { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.5rem 0; font-size: 0.95rem; color: var(--text-secondary); border-bottom: 1px solid var(--border-light); }
 .inc-list li:last-child, .exc-list li:last-child { border-bottom: none; }
 .inc-list li i { color: var(--success); flex-shrink: 0; margin-top: 3px; }
@@ -74,7 +79,7 @@
 .lightbox img { max-width: 90%; max-height: 90vh; object-fit: contain; }
 .lightbox-close { position: fixed; top: 1rem; right: 1rem; background: none; border: none; color: #fff; font-size: 2rem; cursor: pointer; }
 
-.page-hero { height: 400px; }
+.page-hero { height: auto; min-height: clamp(240px, 42vh, 400px); }
 .page-hero-title { font-size: clamp(2rem, 4vw, 3.5rem); font-family: var(--font-heading); font-weight: 700; color: var(--earth-dark); }
 .page-hero-breadcrumb { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
 
@@ -165,7 +170,7 @@
             <div id="reviewFormContainer" style="display: none; background: #f9fafb; padding: 1.5rem; border: 1px solid var(--border-light); margin-bottom: 2rem;">
               <h4 style="margin-bottom: 1rem; font-weight: 600; color: var(--earth-dark);">Share Your Experience</h4>
               <form id="submitReviewForm" onsubmit="submitReview(event)">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <div class="review-form-grid">
                   <div>
                     <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-muted);">Your Name</label>
                     <input type="text" id="reviewAuthor" required style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-light); background: #fff;">
@@ -253,7 +258,7 @@
 <div id="footer"></div>
 
 <script src="/js/seo.js"></script>
-<script src="/js/layout-loader.js"></script>
+<script src="/js/layout-loader.js?v=4"></script>
 <script src="/js/api.js"></script>
 <script src="/js/safari-detail.js"></script>
 </body>
