@@ -204,8 +204,9 @@ function initChatSocket(io) {
                 const msg = await ChatRepository.addMessage(chatId, sender, message);
                 const updatedChat = await ChatRepository.getChatWithMessages(chatId);
 
-                // Deliver to everyone in the chat room + tracked visitor sockets
+                // Fast path for both sides
                 emitToVisitors(io, chatId, 'new_message', { chatId, msg });
+                io.to('admin_room').emit('new_message', { chatId, msg });
                 io.to('admin_room').emit('chat_updated', updatedChat);
 
                 if (!isAdminSender) {

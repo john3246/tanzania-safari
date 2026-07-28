@@ -1,232 +1,186 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>{{subject}}</title>
-  <style>
-    :root {
-      --primary: #263E22;
-      --accent: #D4AF37;
-    }
+  <!--[if mso]>
+  <noscript>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+      </o:OfficeDocumentSettings>
+    </xml>
+  </noscript>
+  <![endif]-->
+  <style type="text/css">
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; }
+    img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
     body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background: #f8f9fa;
+      margin: 0 !important;
+      padding: 0 !important;
+      width: 100% !important;
+      background-color: #f4f6f3;
+      font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
       color: #334155;
-      -webkit-font-smoothing: antialiased;
       line-height: 1.6;
     }
-    .wrapper {
+    .email-shell { width: 100%; background-color: #f4f6f3; padding: 28px 12px; }
+    .email-card {
       max-width: 640px;
-      margin: 40px auto;
+      width: 100%;
       background: #ffffff;
       border-radius: 16px;
       overflow: hidden;
-      box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
+      border: 1px solid #e5ebe3;
     }
-    .header {
-      background: linear-gradient(135deg, #1e331b 0%, #263E22 100%);
-      padding: 48px 40px;
+    .brand-bar {
+      background: linear-gradient(135deg, #1E311B 0%, #263E22 55%, #365730 100%);
+      padding: 28px 32px 24px;
       text-align: center;
-      color: #ffffff;
-      border-bottom: 5px solid #D4AF37;
-      position: relative;
     }
-    .header::after {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: url('https://www.transparenttextures.com/patterns/cubes.png') opacity(0.05);
-      pointer-events: none;
-    }
-    .header img {
-      max-height: 70px;
-      margin-bottom: 24px;
-      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
-    }
-    .header h1 {
+    .brand-bar img { max-height: 56px; margin: 0 auto 14px; display: block; background: #fff; border-radius: 10px; padding: 6px; }
+    .brand-bar h1 {
       margin: 0;
-      font-size: 28px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      color: #ffffff;
-    }
-    .header p {
-      margin: 8px 0 0;
-      opacity: 0.85;
-      font-size: 15px;
-      color: #e2e8f0;
-      font-weight: 500;
-    }
-    .body {
-      padding: 48px 40px;
-    }
-    .body h2 {
-      margin-top: 0;
-      color: #263E22;
       font-size: 22px;
-      font-weight: 700;
-      border-bottom: 2px solid #f1f5f9;
-      padding-bottom: 12px;
+      line-height: 1.25;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.02em;
     }
-    .body p {
-      font-size: 15px;
-      color: #475569;
-      margin-bottom: 20px;
+    .brand-bar p {
+      margin: 8px 0 0;
+      font-size: 14px;
+      color: rgba(255,255,255,0.88);
     }
+    .accent-line { height: 4px; background: #FF6F00; width: 100%; }
+    .email-body { padding: 32px 28px; color: #475569; font-size: 15px; }
+    .email-body h2 { margin: 0 0 14px; color: #1E311B; font-size: 20px; font-weight: 700; }
+    .email-body p { margin: 0 0 16px; }
+    .email-body a { color: #C45500; font-weight: 600; }
     .data-card {
-      background: #f8fafc;
+      background: #f7f9f6;
+      border: 1px solid #e5ebe3;
       border-radius: 12px;
-      padding: 24px;
-      margin: 24px 0;
-      border: 1px solid #e2e8f0;
+      padding: 8px 18px;
+      margin: 20px 0;
     }
     .row {
-      display: flex;
-      justify-content: space-between;
-      padding: 14px 0;
-      border-bottom: 1px dashed #cbd5e1;
-      font-size: 15px;
+      padding: 12px 0;
+      border-bottom: 1px dashed #d5ddd2;
+      font-size: 14px;
     }
-    .row:last-child {
-      border: none;
-      padding-bottom: 0;
-    }
-    .row:first-child {
-      padding-top: 0;
-    }
-    .label {
-      color: #64748b;
-      font-weight: 600;
-    }
-    .value {
-      font-weight: 700;
-      color: #1e293b;
-      text-align: right;
-    }
+    .row:last-child { border-bottom: none; }
+    .label { color: #64748b; font-weight: 600; display: block; margin-bottom: 2px; }
+    .value { color: #1e293b; font-weight: 700; }
     .btn {
       display: inline-block;
-      background: #D4AF37;
+      background: #FF6F00;
       color: #ffffff !important;
-      padding: 16px 36px;
+      padding: 14px 28px;
       border-radius: 8px;
       text-decoration: none;
       font-weight: 700;
-      font-size: 16px;
-      margin: 32px 0;
-      transition: all 0.3s ease;
-      text-align: center;
-      box-shadow: 0 4px 14px rgba(212, 175, 55, 0.4);
+      font-size: 15px;
+      margin: 8px 0 4px;
     }
-    .btn:hover {
-      background: #b5952f;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+    .btn-secondary {
+      display: inline-block;
+      background: #263E22;
+      color: #ffffff !important;
+      padding: 14px 28px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 15px;
+      margin: 8px 8px 4px 0;
     }
-    .footer {
-      background: #f1f5f9;
-      padding: 32px 40px;
+    .badge {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #fff3e6;
+      color: #C45500;
+    }
+    .badge-success { background: #dcfce7; color: #15803d; }
+    .badge-error { background: #fee2e2; color: #b91c1c; }
+    .badge-warning { background: #fef3c7; color: #b45309; }
+    .divider { border: none; border-top: 1px solid #eef2ee; margin: 24px 0; }
+    .email-footer {
+      background: #f0f3ef;
+      padding: 24px 28px;
       text-align: center;
       font-size: 13px;
       color: #64748b;
     }
-    .footer a {
-      color: #D4AF37;
-      text-decoration: none;
-      font-weight: 600;
-    }
-    .footer .socials {
-      margin-top: 16px;
-      margin-bottom: 16px;
-    }
-    .socials a {
-      margin: 0 8px;
-      color: #263E22;
-      font-size: 18px;
-    }
-    .badge {
-      display: inline-block;
-      padding: 6px 14px;
-      border-radius: 50px;
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-    }
-    .badge-warning {
-      background: #fef3c7;
-      color: #b45309;
-    }
-    .badge-error {
-      background: #fee2e2;
-      color: #b91c1c;
-    }
-    .badge-success {
-      background: #dcfce7;
-      color: #15803d;
-    }
-    .divider {
-      border: none;
-      border-top: 2px solid #f1f5f9;
-      margin: 32px 0;
+    .email-footer a { color: #263E22; font-weight: 700; text-decoration: none; }
+    .trust {
+      margin-top: 14px;
+      font-size: 12px;
+      color: #94a3b8;
     }
     @media only screen and (max-width: 600px) {
-      .wrapper {
-        width: 100%;
-        margin: 0;
-        border-radius: 0;
-      }
-      .header, .body, .footer {
-        padding: 32px 24px;
-      }
-      .row {
-        flex-direction: column;
-      }
-      .value {
-        text-align: left;
-        margin-top: 6px;
-      }
-      .btn {
-        display: block;
-        width: 100%;
-        box-sizing: border-box;
-      }
+      .email-shell { padding: 0 !important; }
+      .email-card { border-radius: 0 !important; border-left: 0 !important; border-right: 0 !important; }
+      .brand-bar, .email-body, .email-footer { padding-left: 20px !important; padding-right: 20px !important; }
+      .btn, .btn-secondary { display: block !important; width: 100% !important; box-sizing: border-box !important; text-align: center !important; margin: 8px 0 !important; }
     }
   </style>
 </head>
 <body>
-  <div style="padding: 24px 0;">
-    <div class="wrapper">
-      {{#if header}}
-      <div class="header">
-        <img src="https://tanzania-safari.onrender.com/images/logo.png" alt="Tanzania Safari Logo">
-        <h1>{{header.title}}</h1>
-        <p>{{header.subtitle}}</p>
-      </div>
-      {{else}}
-      <div class="header">
-        <img src="https://tanzania-safari.onrender.com/images/logo.png" alt="Tanzania Safari Logo">
-        <h1>Tanzania Safari Magic</h1>
-        <p>Premium Safari Experiences in Tanzania</p>
-      </div>
-      {{/if}}
-      
-      <div class="body">
-        {{{body}}}
-      </div>
-      
-      <div class="footer">
-        {{#if footer}}
-          {{{footer}}}
-        {{else}}
-          <p style="margin: 0 0 8px;"><strong>Tanzania Safari Magic</strong> · Arusha, Tanzania</p>
-          <p style="margin: 0 0 16px;"><a href="mailto:info@tanzaniasafarimagic.com">info@tanzaniasafarimagic.com</a></p>
-          <p style="font-size: 12px; opacity: 0.7;">This is an automated message. Please do not reply directly to this email.</p>
-        {{/if}}
-      </div>
-    </div>
+  <div class="email-shell">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+      <tr>
+        <td align="center">
+          <table role="presentation" class="email-card" width="640" cellspacing="0" cellpadding="0" border="0">
+            <tr>
+              <td class="brand-bar">
+                <img src="https://tanzaniasafarimagic.com/images/logo.png" width="56" height="56" alt="Tanzania Safari Magic">
+                {{#if header}}
+                <h1>{{header.title}}</h1>
+                {{#if header.subtitle}}<p>{{header.subtitle}}</p>{{/if}}
+                {{else}}
+                <h1>Tanzania Safari Magic</h1>
+                <p>Private safaris from Arusha · Serengeti · Ngorongoro · Zanzibar</p>
+                {{/if}}
+              </td>
+            </tr>
+            <tr><td class="accent-line"></td></tr>
+            <tr>
+              <td class="email-body">
+                {{{body}}}
+              </td>
+            </tr>
+            <tr>
+              <td class="email-footer">
+                {{#if footer}}
+                  {{{footer}}}
+                {{else}}
+                  <p style="margin:0 0 6px;"><strong style="color:#1E311B;">Tanzania Safari Magic</strong></p>
+                  <p style="margin:0 0 6px;">Arusha, Tanzania</p>
+                  <p style="margin:0 0 10px;">
+                    <a href="mailto:info@tanzaniasafarimagic.com">info@tanzaniasafarimagic.com</a>
+                    &nbsp;·&nbsp;
+                    <a href="https://wa.me/255695108009">+255 695 108 009</a>
+                  </p>
+                  <p style="margin:0 0 8px;">
+                    <a href="https://tanzaniasafarimagic.com/safaris">Safaris</a> ·
+                    <a href="https://tanzaniasafarimagic.com/destinations">Destinations</a> ·
+                    <a href="https://tanzaniasafarimagic.com/blog">Blog</a> ·
+                    <a href="https://tanzaniasafarimagic.com/booking">Get a Quote</a>
+                  </p>
+                  <p class="trust">Licensed local operator · TripAdvisor travellers · Transparent private itineraries</p>
+                {{/if}}
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
   </div>
 </body>
 </html>

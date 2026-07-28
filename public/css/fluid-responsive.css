@@ -388,10 +388,8 @@ body > .corp-page-hero,
   }
   .chat-widget,
   .chat-window {
-    width: min(calc(100vw - 1.5rem), 380px) !important;
+    width: min(calc(100vw - 1.5rem), 400px) !important;
     max-width: calc(100vw - 1.5rem) !important;
-    right: 0.75rem !important;
-    left: auto !important;
   }
   .footer-grid,
   .footer-columns {

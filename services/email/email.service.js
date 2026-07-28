@@ -113,16 +113,20 @@ async function sendEmailDirect(options) {
       logger.warn({ event: 'template_render_warning', templateName, error: err.message }, 'Using inline HTML fallback for direct email');
       const bodyContent = templateData?.response_notes || templateData?.enquiry_message || templateData?.message || subject || '';
       html = `
-        <div style="font-family: 'Segoe UI', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff;">
-          <div style="background: #0f172a; padding: 20px; border-radius: 8px 8px 0 0; text-align: center;">
-            <h2 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 700;">Tanzania Safari Magic</h2>
+        <div style="font-family:'Segoe UI',Helvetica,Arial,sans-serif;max-width:640px;margin:0 auto;background:#fff;border:1px solid #e5ebe3;border-radius:16px;overflow:hidden">
+          <div style="background:linear-gradient(135deg,#1E311B,#263E22);padding:28px;text-align:center">
+            <h2 style="color:#fff;margin:0;font-size:22px;font-weight:800">Tanzania Safari Magic</h2>
+            <p style="color:rgba(255,255,255,0.85);margin:8px 0 0;font-size:14px">Private safaris from Arusha</p>
           </div>
-          <div style="padding: 24px; color: #334155; font-size: 15px; line-height: 1.6;">
-            <h3 style="color: #0f172a; margin-top: 0;">${subject}</h3>
-            <div style="margin-top: 16px; white-space: pre-wrap;">${bodyContent}</div>
+          <div style="height:4px;background:#FF6F00"></div>
+          <div style="padding:28px;color:#475569;font-size:15px;line-height:1.6">
+            <h3 style="color:#1E311B;margin:0 0 12px">${String(subject || '').replace(/</g,'&lt;')}</h3>
+            <div style="white-space:pre-wrap">${String(bodyContent).replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+            <p style="margin-top:24px"><a href="https://tanzaniasafarimagic.com/booking" style="display:inline-block;background:#FF6F00;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:700">Get a Free Quote</a></p>
           </div>
-          <div style="border-top: 1px solid #e2e8f0; padding: 16px; font-size: 12px; color: #94a3b8; text-align: center; background: #f8fafc; border-radius: 0 0 8px 8px;">
-            &copy; ${new Date().getFullYear()} Tanzania Safari Magic. All rights reserved.
+          <div style="background:#f0f3ef;padding:20px;text-align:center;font-size:13px;color:#64748b">
+            <strong>Tanzania Safari Magic</strong> · Arusha · <a href="https://wa.me/255695108009" style="color:#263E22;font-weight:700">+255 695 108 009</a>
+            <div style="margin-top:8px;font-size:12px;opacity:0.8">&copy; ${new Date().getFullYear()} Tanzania Safari Magic</div>
           </div>
         </div>
       `;
