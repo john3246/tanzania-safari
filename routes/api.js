@@ -41,11 +41,11 @@ router.post('/reviews', async (req, res) => {
 
         const query = `
             INSERT INTO reviews (package_id, first_name, last_name, rating, review_comment, comment, is_approved)
-            VALUES ($1, $2, $3, $4, $5, $5, true)
+            VALUES ($1, $2, $3, $4, $5, $5, false)
             RETURNING review_id
         `;
         await db.query(query, [package_id || null, fName, lName, numRating, revComment]);
-        res.json({ success: true, message: 'Thank you! Your review has been published.' });
+        res.json({ success: true, message: 'Thank you! Your review has been submitted and is pending approval.' });
     } catch (error) {
         console.error('Error submitting review:', error);
         res.status(500).json({ success: false, message: 'Error submitting review' });
@@ -86,7 +86,7 @@ router.get(['/testimonials', '/reviews'], async (req, res) => {
             FROM reviews r
             LEFT JOIN users u ON r.user_id = u.user_id
             LEFT JOIN safari_packages sp ON r.package_id = sp.package_id
-            WHERE r.is_approved = true OR r.is_approved IS NULL
+            WHERE r.is_approved = true
             ORDER BY r.created_at DESC LIMIT $1`, [limit]);
         res.json({ success: true, data: result.rows });
     } catch (err) {

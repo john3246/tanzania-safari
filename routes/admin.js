@@ -49,5 +49,6 @@ router.put('/profile', verifyAdmin, adminController.updateProfile);
     router.delete('/enquiries/:id', verifyAdmin, adminController.deleteEnquiry);
 router.get('/reviews', verifyAdmin, adminController.getReviews);
 router.put('/reviews/:id/approve', verifyAdmin, adminController.approveReview);
+router.delete('/reviews/:id', verifyAdmin, adminController.deleteReview);
 
 module.exports = router;

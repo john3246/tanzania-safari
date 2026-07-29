@@ -159,7 +159,17 @@ class AdminController {
         try {
             const db = require('../config/db');
             const result = await db.query(`
-                SELECT r.*, u.first_name, u.last_name, sp.package_name
+                SELECT r.review_id, r.package_id, r.rating, r.review_title,
+                       COALESCE(NULLIF(r.review_comment, ''), NULLIF(r.comment, '')) AS review_comment,
+                       r.is_approved, r.is_featured, r.created_at, r.updated_at,
+                       COALESCE(NULLIF(r.first_name, ''), NULLIF(u.first_name, ''), 'Guest') AS first_name,
+                       COALESCE(NULLIF(r.last_name, ''), NULLIF(u.last_name, ''), '') AS last_name,
+                       TRIM(CONCAT(
+                           COALESCE(NULLIF(r.first_name, ''), NULLIF(u.first_name, ''), 'Guest'),
+                           ' ',
+                           COALESCE(NULLIF(r.last_name, ''), NULLIF(u.last_name, ''), '')
+                       )) AS full_name,
+                       sp.package_name
                 FROM reviews r
                 LEFT JOIN users u ON r.user_id = u.user_id
                 LEFT JOIN safari_packages sp ON r.package_id = sp.package_id
@@ -174,11 +184,37 @@ class AdminController {
     async approveReview(req, res) {
         try {
             const db = require('../config/db');
-            const { is_approved } = req.body;
-            await db.query('UPDATE reviews SET is_approved = $1, updated_at = NOW() WHERE review_id = $2', [is_approved, req.params.id]);
-            res.json({ success: true });
+            const isApproved = req.body.is_approved === true || req.body.is_approved === 'true';
+            const result = await db.query(
+                'UPDATE reviews SET is_approved = $1, updated_at = NOW() WHERE review_id = $2 RETURNING review_id, is_approved',
+                [isApproved, req.params.id]
+            );
+            if (result.rowCount === 0) {
+                return res.status(404).json({ success: false, message: 'Review not found' });
+            }
+            res.json({
+                success: true,
+                data: result.rows[0],
+                message: isApproved ? 'Review approved' : 'Review unapproved'
+            });
         } catch (error) {
             res.status(500).json({ success: false, message: 'Error updating review' });
+        }
+    }
+
+    async deleteReview(req, res) {
+        try {
+            const db = require('../config/db');
+            const result = await db.query(
+                'DELETE FROM reviews WHERE review_id = $1 RETURNING review_id',
+                [req.params.id]
+            );
+            if (result.rowCount === 0) {
+                return res.status(404).json({ success: false, message: 'Review not found' });
+            }
+            res.json({ success: true, message: 'Review deleted' });
+        } catch (error) {
+            res.status(500).json({ success: false, message: 'Error deleting review' });
         }
     }
 
