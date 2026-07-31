@@ -6,6 +6,9 @@
                 <p class="text-sm text-gray-500 mt-1">Manage shared itinerary templates and fixed-date departures for the public calendar.</p>
             </div>
             <div class="flex flex-wrap gap-2">
+                <button type="button" onclick="openCreateGroupModal()" class="px-4 py-2 text-sm font-semibold rounded-lg bg-amber-600 text-white hover:bg-amber-500">
+                    <i class="fa-solid fa-plus mr-1"></i> Create group safari
+                </button>
                 <button type="button" onclick="openMarkGroupModal()" class="px-4 py-2 text-sm font-semibold rounded-lg border border-gray-200 bg-white hover:bg-gray-50">
                     <i class="fa-solid fa-link mr-1"></i> Mark existing tour
                 </button>
@@ -51,6 +54,91 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create full group safari modal -->
+    <div id="createGroupModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 p-4">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-3xl p-6 space-y-4 max-h-[92vh] overflow-y-auto">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-bold text-gray-900">Create group safari</h3>
+                <button type="button" onclick="closeCreateGroupModal()" class="text-gray-400 hover:text-gray-700"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p class="text-sm text-gray-500">Build a full shared itinerary with overview, day-by-day plan, inclusions, packing &amp; visa info — then add fixed departures on the calendar.</p>
+            <div class="grid md:grid-cols-2 gap-3">
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Title</label>
+                    <input id="cgTitle" type="text" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm" placeholder="e.g. 6-Day Tarangire, Ngorongoro &amp; Serengeti Group Safari">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Slug</label>
+                    <input id="cgSlug" type="text" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm" placeholder="auto from title if blank">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Price USD</label>
+                    <input id="cgPrice" type="number" min="0" step="1" value="1890" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Duration (days)</label>
+                    <input id="cgDays" type="number" min="1" value="5" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Max pax</label>
+                    <input id="cgMaxPax" type="number" min="2" value="6" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Min age</label>
+                    <input id="cgMinAge" type="number" min="0" value="3" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Physical rating</label>
+                    <select id="cgRating" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm">
+                        <option>Easy</option>
+                        <option>Moderate</option>
+                        <option>Challenging</option>
+                    </select>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Featured image URL</label>
+                    <input id="cgImage" type="text" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm" placeholder="/images/optimized/serengeti-national-park.webp">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Short overview</label>
+                    <textarea id="cgOverview" rows="2" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm" placeholder="Listing summary…"></textarea>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Full description</label>
+                    <textarea id="cgDescription" rows="3" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm"></textarea>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Highlights (one per line)</label>
+                    <textarea id="cgHighlights" rows="3" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm" placeholder="Big Five&#10;Small groups&#10;Expert guides"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Inclusions (one per line)</label>
+                    <textarea id="cgIncluded" rows="4" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Exclusions (one per line)</label>
+                    <textarea id="cgExcluded" rows="4" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm"></textarea>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Day-by-day itinerary (Day title | description — one day per line)</label>
+                    <textarea id="cgItinerary" rows="5" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm" placeholder="Arrival in Arusha | Airport transfer and briefing&#10;Tarangire National Park | Full-day game drive among elephants and baobabs"></textarea>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Packing list (HTML or text)</label>
+                    <textarea id="cgPacking" rows="2" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm"></textarea>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Visa &amp; documents (HTML or text)</label>
+                    <textarea id="cgVisa" rows="2" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm"></textarea>
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button type="button" onclick="closeCreateGroupModal()" class="px-4 py-2 text-sm rounded-lg border">Cancel</button>
+                <button type="button" onclick="submitCreateGroup()" class="px-4 py-2 text-sm font-semibold rounded-lg bg-amber-600 text-white">Create itinerary</button>
             </div>
         </div>
     </div>

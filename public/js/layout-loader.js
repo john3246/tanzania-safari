@@ -14,7 +14,7 @@
     if (document.querySelector('link[href*="fluid-responsive.css"]')) return;
     const fluid = document.createElement('link');
     fluid.rel = 'stylesheet';
-    fluid.href = '/css/fluid-responsive.css?v=2';
+    fluid.href = '/css/fluid-responsive.css?v=3';
     const head = document.head || document.getElementsByTagName('head')[0];
     if (head) head.appendChild(fluid);
     else document.addEventListener('DOMContentLoaded', () => document.head.appendChild(fluid));
@@ -166,32 +166,52 @@ function initHeader() {
             link.addEventListener('click', () => closeDrawer());
         });
 
-        // Mobile Safaris accordion
+        // Safaris accordion (mobile) / click toggle (desktop)
         mainNav.querySelectorAll('.nav-dropdown-toggle').forEach((btn) => {
             btn.addEventListener('click', (e) => {
-                if (window.innerWidth > 1024) return;
                 e.preventDefault();
                 e.stopPropagation();
                 const parent = btn.closest('.nav-dropdown');
                 const open = parent?.classList.contains('open');
-                mainNav.querySelectorAll('.nav-dropdown').forEach((d) => d.classList.remove('open'));
-                if (!open) parent?.classList.add('open');
-                btn.setAttribute('aria-expanded', (!open).toString());
+                document.querySelectorAll('.nav-dropdown').forEach((d) => {
+                    d.classList.remove('open');
+                    d.querySelector('.nav-dropdown-toggle')?.setAttribute('aria-expanded', 'false');
+                });
+                if (!open) {
+                    parent?.classList.add('open');
+                    btn.setAttribute('aria-expanded', 'true');
+                }
+            });
+        });
+
+        // Keep submenu closed unless hovered/toggled — same on every page
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.nav-dropdown')) return;
+            document.querySelectorAll('.nav-dropdown.open').forEach((d) => {
+                d.classList.remove('open');
+                d.querySelector('.nav-dropdown-toggle')?.setAttribute('aria-expanded', 'false');
             });
         });
 
         // Escape key
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && mainNav.classList.contains('active')) {
-                closeDrawer();
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.nav-dropdown.open').forEach((d) => {
+                    d.classList.remove('open');
+                    d.querySelector('.nav-dropdown-toggle')?.setAttribute('aria-expanded', 'false');
+                });
+                if (mainNav.classList.contains('active')) closeDrawer();
             }
         });
 
-        // If resized to desktop, force-close drawer
+        // If resized to desktop, force-close drawer + dropdowns
         window.addEventListener('resize', () => {
             if (window.innerWidth > 1024) {
                 closeDrawer();
-                mainNav.querySelectorAll('.nav-dropdown').forEach((d) => d.classList.remove('open'));
+                mainNav.querySelectorAll('.nav-dropdown').forEach((d) => {
+                    d.classList.remove('open');
+                    d.querySelector('.nav-dropdown-toggle')?.setAttribute('aria-expanded', 'false');
+                });
             }
         });
     }

@@ -162,16 +162,38 @@ async function loadHomepage() {
     try {
         const teaser = document.getElementById('groupHomeTeaser');
         if (teaser) {
-            const { data } = await API.get('/group-departures?limit=3');
+            const { data } = await API.get('/group-departures?limit=2');
             if (data?.length) {
                 teaser.innerHTML = data.map(d => {
                     const start = new Date(d.start_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-                    return `<a href="/group-safaris/${encodeURIComponent(d.departure_slug)}" class="group-home-teaser-item">
-                      <strong>${start}</strong>
-                      <span>${d.title}</span>
-                      <em>$${Number(d.sale_price_usd || d.price_usd || 0).toLocaleString()}</em>
+                    const img = d.featured_image_url || '/images/optimized/serengeti-national-park.webp';
+                    const price = Number(d.sale_price_usd || d.price_usd || 0);
+                    const seats = d.seats_left != null ? `${d.seats_left} seats left` : 'Open';
+                    return `<a href="/group-safaris/${encodeURIComponent(d.departure_slug)}" class="group-home-card">
+                      <div class="group-home-card-media">
+                        <img src="${img}" alt="${(d.title || 'Group safari').replace(/"/g, '&quot;')}" loading="lazy" decoding="async"
+                             onerror="this.src='/images/optimized/serengeti-national-park.webp'">
+                        <span class="group-home-card-badge">${d.duration_days || '—'} days</span>
+                      </div>
+                      <div class="group-home-card-body">
+                        <div class="group-home-card-meta">
+                          <span><i class="fas fa-calendar-alt"></i> ${start}</span>
+                          <span><i class="fas fa-users"></i> ${seats}</span>
+                        </div>
+                        <h3>${d.title || 'Group safari'}</h3>
+                        <p>${(d.short_description || 'Fixed-date shared safari with expert local guides from Arusha.').slice(0, 120)}${(d.short_description || '').length > 120 ? '…' : ''}</p>
+                        <div class="group-home-card-foot">
+                          <div class="group-home-card-price">$${price.toLocaleString()}<small>per person</small></div>
+                          <span class="btn btn-primary btn-sm">Join group</span>
+                        </div>
+                      </div>
                     </a>`;
                 }).join('');
+            } else {
+                teaser.innerHTML = `<div class="group-home-empty" style="grid-column:1/-1">
+                  <p style="margin:0 0 1rem;color:var(--text-secondary)">New open-group dates are being scheduled. Browse the calendar or request a custom date.</p>
+                  <a href="/group-safaris" class="btn btn-primary">View group calendar</a>
+                </div>`;
             }
         }
     } catch {}

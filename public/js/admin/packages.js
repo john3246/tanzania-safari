@@ -127,6 +127,7 @@ async function initEditTourPage() {
     const pricingForm = document.getElementById('editTourPricingForm');
     const classificationForm = document.getElementById('editTourClassificationForm');
     const mediaForm = document.getElementById('editTourMediaForm');
+    const groupForm = document.getElementById('editTourGroupForm');
 
     if (!editForm) return;
 
@@ -137,6 +138,7 @@ async function initEditTourPage() {
     pricingForm.reset();
     classificationForm.reset();
     mediaForm.reset();
+    if (groupForm) groupForm.reset();
     
     document.getElementById('editTourId').value = '';
     document.getElementById('itineraryContainer').innerHTML = '';
@@ -178,7 +180,8 @@ async function initEditTourPage() {
 
                 // Populate form fields
                 Object.entries(t).forEach(([k, v]) => {
-                    [editForm, detailsForm, seoForm, pricingForm, classificationForm, mediaForm].forEach(f => {
+                    [editForm, detailsForm, seoForm, pricingForm, classificationForm, mediaForm, groupForm].forEach(f => {
+                        if (!f) return;
                         const el = f.querySelector(`[name="${k}"]`);
                         if (el) {
                             if (el.type === 'checkbox') el.checked = !!v;
@@ -191,6 +194,8 @@ async function initEditTourPage() {
                 document.getElementById('editTourStatus').value = t.status || 'draft';
                 document.getElementById('editTourActive').checked = !!t.is_active;
                 document.getElementById('editTourFeatured').checked = !!t.is_featured;
+                const groupCb = document.getElementById('editTourIsGroup');
+                if (groupCb) groupCb.checked = !!t.is_group_tour;
 
                 // Populate CSV/Text fields
                 if (t.gallery_urls) mediaForm.querySelector('[name="gallery_urls_csv"]').value = t.gallery_urls.join(', ');
@@ -235,17 +240,20 @@ async function saveEditTour(btn) {
         ...getFormData('editTourSEOForm'),
         ...getFormData('editTourPricingForm'),
         ...getFormData('editTourClassificationForm'),
-        ...getFormData('editTourMediaForm')
+        ...getFormData('editTourMediaForm'),
+        ...getFormData('editTourGroupForm')
     };
 
     // Parse status and boolean checkboxes
     const statusEl = document.getElementById('editTourStatus');
     const activeEl = document.getElementById('editTourActive');
     const featuredEl = document.getElementById('editTourFeatured');
+    const groupEl = document.getElementById('editTourIsGroup');
 
     if (statusEl) data.status = statusEl.value;
     if (activeEl) data.is_active = !!activeEl.checked;
     if (featuredEl) data.is_featured = !!featuredEl.checked;
+    data.is_group_tour = !!(groupEl && groupEl.checked);
 
     // Parse numeric fields
     if (data.price_usd) data.price_usd = parseFloat(data.price_usd);
@@ -256,6 +264,8 @@ async function saveEditTour(btn) {
     if (data.group_size_min) data.group_size_min = parseInt(data.group_size_min);
     if (data.group_size_max) data.group_size_max = parseInt(data.group_size_max);
     if (data.age_minimum) data.age_minimum = parseInt(data.age_minimum);
+    if (data.group_max_pax) data.group_max_pax = parseInt(data.group_max_pax);
+    if (data.min_age) data.min_age = parseInt(data.min_age);
 
     // Process lists and arrays
     if (data.gallery_urls_csv) data.gallery_urls = data.gallery_urls_csv.split(',').map(s => s.trim()).filter(Boolean);

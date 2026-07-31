@@ -49,22 +49,34 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="/css/variables.css">
-<link rel="stylesheet" href="/css/main.css?v=3">
+<link rel="stylesheet" href="/css/main.css?v=4">
 <style>
-.hero{min-height:95vh}
+.hero{min-height:80vh;min-height:80svh}
 .hero-bg{background:#b8b8b800}
-.hero-bg img{opacity:.85}
+.hero-bg img{opacity:1;object-fit:cover}
 .hero-video{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
-.categories-section{padding:5rem 0;background:var(--bg-secondary)}
-.group-home-entry{display:grid;grid-template-columns:1.1fr 1fr;gap:0;background:#fff;border-radius:18px;overflow:hidden;border:1px solid rgba(38,62,34,0.1);box-shadow:0 16px 40px rgba(38,62,34,0.08)}
-@media(max-width:800px){.group-home-entry{grid-template-columns:1fr}}
-.group-home-entry-media{min-height:260px;background-size:cover;background-position:center}
-.group-home-entry-body{padding:clamp(1.5rem,3vw,2.25rem);display:flex;flex-direction:column;justify-content:center}
-.group-home-teaser{display:flex;flex-direction:column;gap:0.55rem;margin-top:1.25rem}
-.group-home-teaser-item{display:grid;grid-template-columns:auto 1fr auto;gap:0.65rem;align-items:center;padding:0.65rem 0.75rem;border-radius:10px;background:#f7f8f6;text-decoration:none;color:inherit;font-size:0.88rem}
-.group-home-teaser-item:hover{background:#eef2ee}
-.group-home-teaser-item strong{color:var(--primary);white-space:nowrap}
-.group-home-teaser-item em{font-style:normal;font-weight:800;color:var(--earth-dark);white-space:nowrap}
+.categories-section{padding:5rem 0;background:linear-gradient(180deg,#f7f8f6 0%,#fff 100%)}
+.group-home-showcase{display:flex;flex-direction:column;gap:2rem}
+.group-home-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:1.25rem}
+.group-home-head .section-title{margin-bottom:0.35rem}
+.group-home-head .section-desc{margin:0;max-width:36rem}
+.group-home-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.35rem}
+@media(max-width:800px){.group-home-grid{grid-template-columns:1fr}}
+.group-home-card{display:flex;flex-direction:column;background:#fff;border-radius:18px;overflow:hidden;border:1px solid rgba(38,62,34,0.1);box-shadow:0 18px 40px rgba(38,62,34,0.08);text-decoration:none;color:inherit;transition:transform .25s,box-shadow .25s;min-height:100%}
+.group-home-card:hover{transform:translateY(-4px);box-shadow:0 24px 48px rgba(38,62,34,0.14)}
+.group-home-card-media{position:relative;aspect-ratio:16/10;overflow:hidden;background:#1a2e1a}
+.group-home-card-media img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .45s}
+.group-home-card:hover .group-home-card-media img{transform:scale(1.04)}
+.group-home-card-badge{position:absolute;top:0.85rem;left:0.85rem;background:rgba(15,26,14,0.82);color:#fff;font-size:0.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:0.4rem 0.7rem;border-radius:8px}
+.group-home-card-body{padding:1.25rem 1.35rem 1.45rem;display:flex;flex-direction:column;gap:0.55rem;flex:1}
+.group-home-card-meta{display:flex;flex-wrap:wrap;gap:0.65rem;font-size:0.8rem;color:var(--text-muted);font-weight:600}
+.group-home-card-meta span{display:inline-flex;align-items:center;gap:0.3rem}
+.group-home-card h3{margin:0;font-size:1.2rem;line-height:1.3;color:var(--earth-dark)}
+.group-home-card p{margin:0;font-size:0.92rem;line-height:1.55;color:var(--text-secondary);flex:1}
+.group-home-card-foot{display:flex;align-items:center;justify-content:space-between;gap:0.75rem;margin-top:0.35rem;padding-top:0.85rem;border-top:1px solid rgba(38,62,34,0.08)}
+.group-home-card-price{font-weight:800;font-size:1.15rem;color:var(--earth-dark)}
+.group-home-card-price small{display:block;font-size:0.72rem;font-weight:600;color:var(--text-muted)}
+.group-home-empty{padding:2rem;text-align:center;background:#fff;border-radius:16px;border:1px dashed rgba(38,62,34,0.2)}
 .why-section{padding:5rem 0}
 .cta-band{padding:5rem 0;background:var(--primary)}
 .cta-band h2{color:#fff;margin-bottom:.75rem}
@@ -209,23 +221,31 @@
     <div class="features-grid">
       <div class="feature-card">
         <div class="feature-icon"><i class="fas fa-users"></i></div>
-        <h3>Expert Local Guides</h3>
-        <p>Certified professionals with deep knowledge of Tanzanian wildlife and habitats.</p>
+        <div class="feature-card-body">
+          <h3>Expert Local Guides</h3>
+          <p>Certified professionals with deep knowledge of Tanzanian wildlife and habitats.</p>
+        </div>
       </div>
       <div class="feature-card">
         <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
-        <h3>Safety First</h3>
-        <p>Well-maintained 4x4 vehicles and comprehensive emergency protocols for your peace of mind.</p>
+        <div class="feature-card-body">
+          <h3>Safety First</h3>
+          <p>Well-maintained 4x4 vehicles and comprehensive emergency protocols for your peace of mind.</p>
+        </div>
       </div>
       <div class="feature-card">
         <div class="feature-icon"><i class="fas fa-leaf"></i></div>
-        <h3>Eco-Responsible</h3>
-        <p>We support conservation efforts and local communities through responsible travel practices.</p>
+        <div class="feature-card-body">
+          <h3>Eco-Responsible</h3>
+          <p>We support conservation efforts and local communities through responsible travel practices.</p>
+        </div>
       </div>
       <div class="feature-card">
         <div class="feature-icon"><i class="fas fa-headset"></i></div>
-        <h3>24/7 Support</h3>
-        <p>Round-the-clock assistance from booking through your entire safari journey.</p>
+        <div class="feature-card-body">
+          <h3>24/7 Support</h3>
+          <p>Round-the-clock assistance from booking through your entire safari journey.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -234,18 +254,19 @@
 <!-- Group Safaris entry -->
 <section class="categories-section group-entry-section">
   <div class="container">
-    <div class="group-home-entry" id="groupHomeEntry">
-      <div class="group-home-entry-media" style="background-image:url('/images/optimized/serengeti-national-park.webp')"></div>
-      <div class="group-home-entry-body">
-        <span class="section-eyebrow"><i class="fas fa-users"></i> Open group departures</span>
-        <h2 class="section-title">Join a <span>Group Safari</span></h2>
-        <p class="section-desc" style="margin-bottom:1.25rem">Fixed dates, shared costs, small groups — perfect for solo travelers and couples. Browse the live calendar and request your seat.</p>
+    <div class="group-home-showcase">
+      <div class="group-home-head">
+        <div>
+          <span class="section-eyebrow"><i class="fas fa-users"></i> Open group departures</span>
+          <h2 class="section-title">Join a <span>Group Safari</span></h2>
+          <p class="section-desc">Fixed dates, shared costs, small groups — perfect for solo travelers and couples. Pick a departure and request your seat.</p>
+        </div>
         <div style="display:flex;flex-wrap:wrap;gap:0.75rem">
-          <a href="/group-safaris" class="btn btn-primary" style="min-height:48px">View group calendar</a>
+          <a href="/group-safaris" class="btn btn-primary" style="min-height:48px">View full calendar</a>
           <a href="/safaris" class="btn btn-outline" style="min-height:48px">Private safaris</a>
         </div>
-        <div id="groupHomeTeaser" class="group-home-teaser" aria-live="polite"></div>
       </div>
+      <div id="groupHomeTeaser" class="group-home-grid" aria-live="polite"></div>
     </div>
   </div>
 </section>

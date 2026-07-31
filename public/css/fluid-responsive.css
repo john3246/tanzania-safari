@@ -183,15 +183,19 @@ table { max-width: 100%; }
 body > .corp-page-hero,
 #destinationDetailContent > .corp-page-hero,
 #mainContent > .corp-page-hero,
-.safari-detail-hero {
-  min-height: clamp(300px, 55vh, 640px) !important;
+.safari-detail-hero,
+.group-hero {
+  min-height: 80vh !important;
+  min-height: 80svh !important;
 }
 @media (min-width: 900px) {
   .corp-page-hero,
   body > .corp-page-hero,
   #destinationDetailContent > .corp-page-hero,
-  .safari-detail-hero {
-    min-height: 70vh !important;
+  .safari-detail-hero,
+  .group-hero {
+    min-height: 80vh !important;
+    min-height: 80svh !important;
   }
 }
 @media (max-width: 768px) {
@@ -200,8 +204,10 @@ body > .corp-page-hero,
   #destinationDetailContent > .corp-page-hero,
   #mainContent > .corp-page-hero,
   .safari-detail-hero,
-  .page-hero {
-    min-height: clamp(240px, 42vh, 380px) !important;
+  .page-hero,
+  .group-hero {
+    min-height: 70vh !important;
+    min-height: 70svh !important;
     padding-top: calc(var(--site-header-offset, 86px) + 1rem) !important;
   }
   .corp-page-hero-inner {
@@ -227,7 +233,6 @@ body > .corp-page-hero,
 /* ── Fluid card / content grids ────────────────────────────── */
 .safari-grid,
 .dest-grid,
-.features-grid,
 .packages-grid,
 .destinations-grid,
 .related-grid,
@@ -242,7 +247,6 @@ body > .corp-page-hero,
 @media (max-width: 640px) {
   .safari-grid,
   .dest-grid,
-  .features-grid,
   .packages-grid,
   .destinations-grid,
   .related-grid,

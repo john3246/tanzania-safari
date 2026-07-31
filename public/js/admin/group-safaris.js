@@ -33,7 +33,10 @@ function renderGroupPackages() {
         return `
         <button type="button" onclick="filterDeparturesByPackage('${p.package_id}')"
             class="w-full text-left px-5 py-4 hover:bg-gray-50 transition-colors ${active ? 'bg-emerald-50 border-l-4 border-emerald-600' : 'border-l-4 border-transparent'}">
-            <div class="font-semibold text-gray-900 text-sm">${escapeAdmin(p.package_name)}</div>
+            <div class="flex items-start justify-between gap-2">
+              <div class="font-semibold text-gray-900 text-sm">${escapeAdmin(p.package_name)}</div>
+              <a href="#edit-tour" onclick="event.stopPropagation(); window.currentEditTourId='${p.package_id}'; navigate('edit-tour');" class="text-xs text-safari-600 hover:underline whitespace-nowrap" title="Edit full details">Edit</a>
+            </div>
             <div class="text-xs text-gray-500 mt-1 flex flex-wrap gap-2">
                 <span>${p.duration_days || '?'} days</span>
                 <span>·</span>
@@ -289,6 +292,107 @@ function escapeAdmin(str) {
         .replace(/"/g, '&quot;');
 }
 
+function slugifyTitle(title) {
+    return String(title || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '')
+        .slice(0, 80);
+}
+
+function linesToArr(elId) {
+    return String(document.getElementById(elId)?.value || '')
+        .split('\n')
+        .map(s => s.trim())
+        .filter(Boolean);
+}
+
+function parseItineraryText(raw) {
+    return String(raw || '')
+        .split('\n')
+        .map(s => s.trim())
+        .filter(Boolean)
+        .map((line, i) => {
+            const parts = line.split('|').map(p => p.trim());
+            return {
+                day: i + 1,
+                title: parts[0] || `Day ${i + 1}`,
+                description: parts.slice(1).join(' | ') || ''
+            };
+        });
+}
+
+function openCreateGroupModal() {
+    const modal = document.getElementById('createGroupModal');
+    if (!modal) return;
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function closeCreateGroupModal() {
+    const modal = document.getElementById('createGroupModal');
+    if (!modal) return;
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+async function submitCreateGroup() {
+    const title = document.getElementById('cgTitle')?.value?.trim();
+    if (!title) return showToast('Title is required', 'error');
+    const days = parseInt(document.getElementById('cgDays')?.value, 10) || 5;
+    const included = linesToArr('cgIncluded');
+    const excluded = linesToArr('cgExcluded');
+    const packing = document.getElementById('cgPacking')?.value || '';
+    const visa = document.getElementById('cgVisa')?.value || '';
+    const payload = {
+        title,
+        slug: document.getElementById('cgSlug')?.value?.trim() || slugifyTitle(title),
+        overview: document.getElementById('cgOverview')?.value || '',
+        description: document.getElementById('cgDescription')?.value || '',
+        price_usd: parseFloat(document.getElementById('cgPrice')?.value) || 0,
+        duration_days: days,
+        duration_nights: Math.max(0, days - 1),
+        difficulty: document.getElementById('cgRating')?.value || 'Easy',
+        physical_rating: document.getElementById('cgRating')?.value || 'Easy',
+        group_size_min: 1,
+        group_size_max: parseInt(document.getElementById('cgMaxPax')?.value, 10) || 6,
+        group_max_pax: parseInt(document.getElementById('cgMaxPax')?.value, 10) || 6,
+        min_age: parseInt(document.getElementById('cgMinAge')?.value, 10) || 3,
+        age_minimum: parseInt(document.getElementById('cgMinAge')?.value, 10) || 3,
+        featured_image_url: document.getElementById('cgImage')?.value?.trim() || '/images/optimized/serengeti-national-park.webp',
+        gallery_urls: [
+            document.getElementById('cgImage')?.value?.trim() || '/images/optimized/serengeti-national-park.webp'
+        ].filter(Boolean),
+        highlights: linesToArr('cgHighlights'),
+        included,
+        excluded,
+        itinerary: parseItineraryText(document.getElementById('cgItinerary')?.value),
+        inclusions_html: included.length ? `<ul>${included.map(i => `<li>${i}</li>`).join('')}</ul>` : '',
+        exclusions_html: excluded.length ? `<ul>${excluded.map(i => `<li>${i}</li>`).join('')}</ul>` : '',
+        packing_list_html: packing,
+        visa_info_html: visa,
+        is_group_tour: true,
+        is_active: true,
+        is_featured: true,
+        status: 'published'
+    };
+    try {
+        const res = await apiRequest('POST', '/tours', payload);
+        showToast('Group safari created');
+        closeCreateGroupModal();
+        await loadGroupSafaris();
+        const id = res?.data?.id || res?.data?.package_id;
+        if (id && typeof navigate === 'function') {
+            if (confirm('Itinerary created. Open full editor for more details?')) {
+                window.currentEditTourId = id;
+                navigate('edit-tour');
+            }
+        }
+    } catch (e) {
+        console.error(e);
+    }
+}
+
 window.loadGroupSafaris = loadGroupSafaris;
 window.openMarkGroupModal = openMarkGroupModal;
 window.closeMarkGroupModal = closeMarkGroupModal;
@@ -302,3 +406,6 @@ window.deleteDeparture = deleteDeparture;
 window.bumpSeats = bumpSeats;
 window.filterDeparturesByPackage = filterDeparturesByPackage;
 window.clearGroupPackageFilter = clearGroupPackageFilter;
+window.openCreateGroupModal = openCreateGroupModal;
+window.closeCreateGroupModal = closeCreateGroupModal;
+window.submitCreateGroup = submitCreateGroup;

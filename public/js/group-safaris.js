@@ -22,9 +22,14 @@ function cardHtml(d) {
   const price = Number(d.sale_price_usd || d.price_usd || 0);
   const was = Number(d.price_usd || 0);
   const showWas = d.discount_percent > 0 && was > price;
+  const img = d.featured_image_url || '/images/optimized/serengeti-national-park.webp';
   return `
     <a class="group-dep-card" href="/group-safaris/${encodeURIComponent(d.departure_slug)}">
-      <div>
+      <div class="group-dep-media">
+        <img src="${escapeHtml(img)}" alt="${escapeHtml(d.title)}" loading="lazy" decoding="async"
+             onerror="this.src='/images/optimized/serengeti-national-park.webp'">
+      </div>
+      <div class="group-dep-body">
         <div class="group-dep-dates"><i class="fas fa-calendar-alt"></i> ${fmtRange(d.start_date, d.end_date)}</div>
         <h3 class="group-dep-title">${escapeHtml(d.title)}</h3>
         <div class="group-dep-meta">
@@ -32,13 +37,13 @@ function cardHtml(d) {
           <span><i class="fas fa-users"></i> ${d.seats_left} seats left</span>
           <span>${statusBadge(d.status)}</span>
         </div>
-      </div>
-      <div class="group-dep-side">
-        <div class="group-dep-price">
-          ${showWas ? `<s>$${was.toLocaleString()}</s>` : ''}
-          $${price.toLocaleString()}
+        <div class="group-dep-side">
+          <div class="group-dep-price">
+            ${showWas ? `<s>$${was.toLocaleString()}</s>` : ''}
+            $${price.toLocaleString()}
+          </div>
+          <span class="btn btn-primary btn-sm" style="pointer-events:none">Join group</span>
         </div>
-        <span class="btn btn-primary" style="min-height:44px;pointer-events:none">View departure</span>
       </div>
     </a>`;
 }
