@@ -65,9 +65,8 @@ function cardHtml(post, index) {
   const title = post.post_title || 'Safari Guide';
   const img = imgSrc(post.featured_image_url, '/images/optimized/serengeti-national-park.webp');
   const date = fmtDateShort(post.published_at);
-  const tall = index % 5 === 1 || index % 5 === 4;
   return `
-    <article class="blog-mag-card ${tall ? 'is-tall' : ''}">
+    <article class="blog-mag-card">
       <a href="/blog/${escapeHtml(slug)}" class="blog-mag-link">
         <div class="blog-mag-media">
           <img src="${img}" alt="${escapeHtml(title)}" width="800" height="600" loading="${index < 4 ? 'eager' : 'lazy'}"
