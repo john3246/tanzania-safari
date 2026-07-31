@@ -71,6 +71,10 @@ router.get('/sitemap.xml', async (req, res) => {
         const staticPages = [
             { path: '', priority: '1.0', changefreq: 'daily' },
             { path: '/safaris', priority: '0.95', changefreq: 'daily' },
+            { path: '/group-safaris', priority: '0.95', changefreq: 'daily' },
+            { path: '/kilimanjaro', priority: '0.9', changefreq: 'weekly' },
+            { path: '/migrations', priority: '0.9', changefreq: 'weekly' },
+            { path: '/zanzibar', priority: '0.9', changefreq: 'weekly' },
             { path: '/destinations', priority: '0.9', changefreq: 'weekly' },
             { path: '/booking', priority: '0.9', changefreq: 'monthly' },
             { path: '/about', priority: '0.7', changefreq: 'monthly' },
@@ -89,6 +93,22 @@ router.get('/sitemap.xml', async (req, res) => {
                 lastmod: pkg.updated_at
             });
         });
+
+        try {
+            const departures = await db.query(`
+                SELECT departure_slug AS slug, updated_at
+                FROM group_departures
+                WHERE is_active = true AND start_date >= CURRENT_DATE AND status <> 'cancelled'
+            `);
+            departures.rows.forEach(dep => {
+                if (!dep.slug) return;
+                xml += urlEntry(`/group-safaris/${dep.slug}`, {
+                    priority: '0.85',
+                    changefreq: 'weekly',
+                    lastmod: dep.updated_at
+                });
+            });
+        } catch (_) { /* table may not exist until migration */ }
 
         destinations.rows.forEach(dest => {
             if (!dest.slug) return;
@@ -124,6 +144,18 @@ router.get('/thank-you', (req, res) => {
 
 router.get('/safaris', (req, res) => {
   res.sendFile(path.join(__dirname, '../views/safaris.html'));
+});
+
+router.get('/group-safaris', (req, res) => {
+  res.sendFile(path.join(__dirname, '../views/group-safaris.html'));
+});
+
+router.get('/group-safaris/:slug', (req, res) => {
+  res.sendFile(path.join(__dirname, '../views/group-safari-detail.html'));
+});
+
+router.get(['/kilimanjaro', '/migrations', '/zanzibar'], (req, res) => {
+  res.sendFile(path.join(__dirname, '../views/safari-hub.html'));
 });
 
 // IMPORTANT: This route must come BEFORE the wildcard route

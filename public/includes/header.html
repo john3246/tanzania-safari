@@ -37,7 +37,18 @@
                 </button>
             </div>
             <a href="/" class="nav-link">Home</a>
-            <a href="/safaris" class="nav-link">Safaris</a>
+            <div class="nav-dropdown">
+              <button type="button" class="nav-link nav-dropdown-toggle" aria-expanded="false" aria-haspopup="true">
+                Safaris <i class="fas fa-chevron-down nav-caret" aria-hidden="true"></i>
+              </button>
+              <div class="nav-dropdown-menu" role="menu">
+                <a href="/group-safaris" class="nav-dropdown-item" role="menuitem">Group Safaris</a>
+                <a href="/kilimanjaro" class="nav-dropdown-item" role="menuitem">Kilimanjaro Safaris</a>
+                <a href="/safaris" class="nav-dropdown-item" role="menuitem">Safaris</a>
+                <a href="/migrations" class="nav-dropdown-item" role="menuitem">Migrations</a>
+                <a href="/zanzibar" class="nav-dropdown-item" role="menuitem">Zanzibar Safaris</a>
+              </div>
+            </div>
             <a href="/destinations" class="nav-link nav-link-emphasis">Destinations</a>
             <a href="/blog" class="nav-link nav-link-emphasis">Blog</a>
             <a href="/about" class="nav-link">About</a>

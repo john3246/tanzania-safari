@@ -36,6 +36,14 @@ class TourCMSRepository extends BaseRepository {
             gallery_order: [],
             is_featured: row.is_featured,
             is_active: row.is_active,
+            is_group_tour: row.is_group_tour === true,
+            physical_rating: row.physical_rating || row.difficulty_level || 'Easy',
+            min_age: row.min_age != null ? row.min_age : (row.child_age_limit || 3),
+            group_max_pax: row.group_max_pax || row.maximum_pax,
+            inclusions_html: row.inclusions_html || null,
+            exclusions_html: row.exclusions_html || null,
+            packing_list_html: row.packing_list_html || null,
+            visa_info_html: row.visa_info_html || null,
             status: row.is_active ? 'published' : 'draft',
             seo_title: row.meta_title,
             seo_description: row.meta_description,
@@ -84,6 +92,17 @@ class TourCMSRepository extends BaseRepository {
         if (data.gallery_urls !== undefined) payload.image_urls = Array.isArray(data.gallery_urls) ? data.gallery_urls : [];
         if (data.is_featured !== undefined) payload.is_featured = Boolean(data.is_featured);
         if (data.is_active !== undefined) payload.is_active = Boolean(data.is_active);
+        if (data.is_group_tour !== undefined) {
+            payload.is_group_tour = Boolean(data.is_group_tour);
+            if (data.is_group_tour) payload.is_private = false;
+        }
+        if (data.physical_rating !== undefined) payload.physical_rating = data.physical_rating;
+        if (data.min_age !== undefined) payload.min_age = data.min_age;
+        if (data.group_max_pax !== undefined) payload.group_max_pax = data.group_max_pax;
+        if (data.inclusions_html !== undefined) payload.inclusions_html = data.inclusions_html;
+        if (data.exclusions_html !== undefined) payload.exclusions_html = data.exclusions_html;
+        if (data.packing_list_html !== undefined) payload.packing_list_html = data.packing_list_html;
+        if (data.visa_info_html !== undefined) payload.visa_info_html = data.visa_info_html;
         if (data.itinerary !== undefined) {
             payload.itinerary = JSON.stringify(Array.isArray(data.itinerary) ? data.itinerary : []);
         }

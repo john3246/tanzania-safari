@@ -133,12 +133,11 @@ async function loadHomepage() {
         if (grid) grid.innerHTML = '<p style="color:var(--text-muted);grid-column:1/-1;text-align:center">Unable to load destinations.</p>';
     }
 
-    // Categories (filters + category cards)
+    // Categories (filters only) + Group Safaris homepage entry
     let allPackages = [];
     try {
         const { data: cats } = await API.get('/categories');
         const filterBar = document.getElementById('categoryFilters');
-        const catGrid = document.getElementById('categoriesGrid');
         if (cats?.length && filterBar) {
             cats.forEach(c => {
                 const btn = document.createElement('button');
@@ -157,13 +156,23 @@ async function loadHomepage() {
                 });
             });
         }
-        if (cats?.length && catGrid) {
-            catGrid.innerHTML = cats.map(c => `
-            <a href="/safaris?category=${c.category_slug}" class="cat-card">
-              <div class="cat-icon"><i class="fas ${getCatIcon(c.category_name, c.icon_class)}"></i></div>
-              <div class="cat-name">${c.category_name}</div>
-              <div class="cat-count">${c.safari_count > 0 ? `${c.safari_count} Safaris` : 'View options'}</div>
-            </a>`).join('');
+    } catch {}
+
+    // Upcoming group departures teaser on homepage
+    try {
+        const teaser = document.getElementById('groupHomeTeaser');
+        if (teaser) {
+            const { data } = await API.get('/group-departures?limit=3');
+            if (data?.length) {
+                teaser.innerHTML = data.map(d => {
+                    const start = new Date(d.start_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                    return `<a href="/group-safaris/${encodeURIComponent(d.departure_slug)}" class="group-home-teaser-item">
+                      <strong>${start}</strong>
+                      <span>${d.title}</span>
+                      <em>$${Number(d.sale_price_usd || d.price_usd || 0).toLocaleString()}</em>
+                    </a>`;
+                }).join('');
+            }
         }
     } catch {}
 

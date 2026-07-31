@@ -21,7 +21,7 @@ class PackageRepository {
         limit = parseInt(limit) || 9;
         const offset = (parseInt(page) - 1) * limit;
 
-        const conditions = ['sp.is_active = true'];
+        const conditions = ['sp.is_active = true', '(sp.is_group_tour IS NOT TRUE)'];
         const params = [];
         let paramIndex = 1;
 
@@ -104,7 +104,7 @@ class PackageRepository {
 
     async count(filters = {}) {
         const { category, destination, duration, difficulty, minPrice, maxPrice, search } = filters;
-        const conditions = ['sp.is_active = true'];
+        const conditions = ['sp.is_active = true', '(sp.is_group_tour IS NOT TRUE)'];
         const params = [];
         let paramIndex = 1;
 
@@ -186,7 +186,7 @@ class PackageRepository {
             FROM safari_packages sp
             LEFT JOIN package_categories pc ON sp.category_id = pc.category_id
             LEFT JOIN reviews r ON sp.package_id = r.package_id AND r.is_approved = true
-            WHERE sp.is_active = true AND sp.is_featured = true
+            WHERE sp.is_active = true AND sp.is_featured = true AND (sp.is_group_tour IS NOT TRUE)
             GROUP BY sp.package_id, pc.category_name, pc.category_slug
             ORDER BY sp.created_at DESC
             LIMIT $1

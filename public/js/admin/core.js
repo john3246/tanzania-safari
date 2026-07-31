@@ -30,7 +30,7 @@ async function initAdminApp() {
 
         // Setup routing (load dashboard by default)
         const initialPage = window.location.hash.replace('#', '') || window.location.pathname.split('/').pop();
-        const validPages = ['dashboard', 'packages', 'categories', 'bookings', 'booking-details', 'enquiries', 'settings', 'destinations', 'blog', 'reviews', 'users', 'images', 'communications', 'edit-tour', 'edit-destination', 'customers', 'chat'];
+        const validPages = ['dashboard', 'packages', 'categories', 'bookings', 'booking-details', 'enquiries', 'settings', 'destinations', 'blog', 'reviews', 'users', 'images', 'communications', 'edit-tour', 'edit-destination', 'customers', 'chat', 'group-safaris'];
         const pageToLoad = validPages.includes(initialPage) ? initialPage : 'dashboard';
         
         await navigate(pageToLoad, false); // pass false so we don't push state on initial load
@@ -186,6 +186,7 @@ async function navigate(page, pushState = true) {
         case 'users': loadUsers(); break;
         case 'blog': loadBlogs(); break;
         case 'reviews': loadReviews(); break;
+        case 'group-safaris': if (window.loadGroupSafaris) { window.loadGroupSafaris(); } else { setTimeout(() => window.loadGroupSafaris?.(), 100); } break;
         case 'categories': loadCategories(); break;
         case 'images': loadImages(); break;
         case 'settings': loadProfile(); loadSettings(); break;
@@ -219,6 +220,7 @@ function updateBreadcrumb(page) {
         'enquiries': 'Inquiries',
         'blog': 'Blog Posts',
         'reviews': 'Reviews',
+        'group-safaris': 'Group Safaris',
         'images': 'Media Library',
         'users': 'Team Accounts',
         'settings': 'Settings',
@@ -230,6 +232,7 @@ function updateBreadcrumb(page) {
     const categoryMap = {
         'dashboard': 'Overview',
         'packages': 'Inventory',
+        'group-safaris': 'Inventory',
         'categories': 'Inventory',
         'destinations': 'Inventory',
         'bookings': 'Overview',

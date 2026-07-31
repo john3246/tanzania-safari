@@ -49,22 +49,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="/css/variables.css">
-<link rel="stylesheet" href="/css/main.css?v=2">
+<link rel="stylesheet" href="/css/main.css?v=3">
 <style>
 .hero{min-height:95vh}
 .hero-bg{background:#b8b8b800}
 .hero-bg img{opacity:.85}
 .hero-video{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
 .categories-section{padding:5rem 0;background:var(--bg-secondary)}
-.cat-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:1rem}
-@media(max-width:1024px){.cat-grid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:640px){.cat-grid{grid-template-columns:repeat(2,1fr)}}
-.cat-card{background:#fff;border-radius:var(--radius-lg);padding:1.5rem 1rem;text-align:center;border:1.5px solid var(--border);transition:var(--transition);cursor:pointer;text-decoration:none;display:block}
-.cat-card:hover{border-color:var(--primary);transform:translateY(-4px);box-shadow:var(--shadow-md)}
-.cat-icon{width:52px;height:52px;background:var(--primary-pale);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;margin:0 auto .875rem;color:var(--primary);font-size:1.375rem;transition:var(--transition)}
-.cat-card:hover .cat-icon{background:var(--primary);color:#fff}
-.cat-name{font-size:.875rem;font-weight:600;color:var(--earth-dark);margin-bottom:.25rem}
-.cat-count{font-size:.75rem;color:var(--text-muted)}
+.group-home-entry{display:grid;grid-template-columns:1.1fr 1fr;gap:0;background:#fff;border-radius:18px;overflow:hidden;border:1px solid rgba(38,62,34,0.1);box-shadow:0 16px 40px rgba(38,62,34,0.08)}
+@media(max-width:800px){.group-home-entry{grid-template-columns:1fr}}
+.group-home-entry-media{min-height:260px;background-size:cover;background-position:center}
+.group-home-entry-body{padding:clamp(1.5rem,3vw,2.25rem);display:flex;flex-direction:column;justify-content:center}
+.group-home-teaser{display:flex;flex-direction:column;gap:0.55rem;margin-top:1.25rem}
+.group-home-teaser-item{display:grid;grid-template-columns:auto 1fr auto;gap:0.65rem;align-items:center;padding:0.65rem 0.75rem;border-radius:10px;background:#f7f8f6;text-decoration:none;color:inherit;font-size:0.88rem}
+.group-home-teaser-item:hover{background:#eef2ee}
+.group-home-teaser-item strong{color:var(--primary);white-space:nowrap}
+.group-home-teaser-item em{font-style:normal;font-weight:800;color:var(--earth-dark);white-space:nowrap}
 .why-section{padding:5rem 0}
 .cta-band{padding:5rem 0;background:var(--primary)}
 .cta-band h2{color:#fff;margin-bottom:.75rem}
@@ -231,17 +231,21 @@
   </div>
 </section>
 
-<!-- Safari Categories -->
-<section class="categories-section">
+<!-- Group Safaris entry -->
+<section class="categories-section group-entry-section">
   <div class="container">
-    <div class="section-header">
-      <span class="section-eyebrow"><i class="fas fa-th-large"></i> Browse by Type</span>
-      <h2 class="section-title">Safari <span>Categories</span></h2>
-    </div>
-    <div class="cat-grid" id="categoriesGrid">
-      <div class="cat-card skeleton-card" style="height:130px"></div>
-      <div class="cat-card skeleton-card" style="height:130px"></div>
-      <div class="cat-card skeleton-card" style="height:130px"></div>
+    <div class="group-home-entry" id="groupHomeEntry">
+      <div class="group-home-entry-media" style="background-image:url('/images/optimized/serengeti-national-park.webp')"></div>
+      <div class="group-home-entry-body">
+        <span class="section-eyebrow"><i class="fas fa-users"></i> Open group departures</span>
+        <h2 class="section-title">Join a <span>Group Safari</span></h2>
+        <p class="section-desc" style="margin-bottom:1.25rem">Fixed dates, shared costs, small groups — perfect for solo travelers and couples. Browse the live calendar and request your seat.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:0.75rem">
+          <a href="/group-safaris" class="btn btn-primary" style="min-height:48px">View group calendar</a>
+          <a href="/safaris" class="btn btn-outline" style="min-height:48px">Private safaris</a>
+        </div>
+        <div id="groupHomeTeaser" class="group-home-teaser" aria-live="polite"></div>
+      </div>
     </div>
   </div>
 </section>
@@ -294,8 +298,8 @@
 
 <!-- Footer -->
 <div id="footer"></div>
-<script src="/js/layout-loader.js?v=5"></script>
+<script src="/js/layout-loader.js?v=6"></script>
 <script src="/js/api.js"></script>
-<script src="/js/main.js?v=3"></script>
+<script src="/js/main.js?v=4"></script>
 </body>
 </html>

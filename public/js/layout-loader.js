@@ -162,8 +162,22 @@ function initHeader() {
         });
 
         // Close when a nav link / CTA is tapped
-        mainNav.querySelectorAll('a.nav-link, a.nav-cta').forEach((link) => {
+        mainNav.querySelectorAll('a.nav-link, a.nav-cta, a.nav-dropdown-item').forEach((link) => {
             link.addEventListener('click', () => closeDrawer());
+        });
+
+        // Mobile Safaris accordion
+        mainNav.querySelectorAll('.nav-dropdown-toggle').forEach((btn) => {
+            btn.addEventListener('click', (e) => {
+                if (window.innerWidth > 1024) return;
+                e.preventDefault();
+                e.stopPropagation();
+                const parent = btn.closest('.nav-dropdown');
+                const open = parent?.classList.contains('open');
+                mainNav.querySelectorAll('.nav-dropdown').forEach((d) => d.classList.remove('open'));
+                if (!open) parent?.classList.add('open');
+                btn.setAttribute('aria-expanded', (!open).toString());
+            });
         });
 
         // Escape key
@@ -175,7 +189,10 @@ function initHeader() {
 
         // If resized to desktop, force-close drawer
         window.addEventListener('resize', () => {
-            if (window.innerWidth > 1024) closeDrawer();
+            if (window.innerWidth > 1024) {
+                closeDrawer();
+                mainNav.querySelectorAll('.nav-dropdown').forEach((d) => d.classList.remove('open'));
+            }
         });
     }
 

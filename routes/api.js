@@ -10,6 +10,7 @@ router.use('/packages',     require('./api/package.routes'));
 router.use('/destinations', require('./api/destination.routes'));
 router.use('/blog',         require('./api/blog.routes'));
 router.use('/bookings',     require('./api/booking.routes'));
+router.use('/group-departures', require('./api/group-departures.routes'));
 
 // ── Stats ─────────────────────────────────────────────────────
 router.get('/stats', safariController.getGlobalStats || (async (req, res) => {
