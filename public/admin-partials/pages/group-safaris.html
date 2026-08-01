@@ -2,58 +2,101 @@
     <div class="space-y-6">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-                <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Group Safaris</h1>
-                <p class="text-sm text-gray-500 mt-1">Manage shared itinerary templates and fixed-date departures for the public calendar.</p>
+                <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Group Safaris Management</h1>
+                <p class="text-sm text-gray-500 mt-1">Create shared itineraries, mark existing tours, and publish fixed-date departures to the public calendar.</p>
             </div>
-            <div class="flex flex-wrap gap-2">
-                <button type="button" onclick="openCreateGroupModal()" class="px-4 py-2 text-sm font-semibold rounded-lg bg-amber-600 text-white hover:bg-amber-500">
-                    <i class="fa-solid fa-plus mr-1"></i> Create group safari
+            <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+                <button type="button" onclick="openCreateGroupModal()" class="flex-1 sm:flex-none bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 shadow-sm">
+                    <i class="ph ph-plus-circle text-lg"></i> Add Group Safari
                 </button>
-                <button type="button" onclick="openMarkGroupModal()" class="px-4 py-2 text-sm font-semibold rounded-lg border border-gray-200 bg-white hover:bg-gray-50">
-                    <i class="fa-solid fa-link mr-1"></i> Mark existing tour
+                <button type="button" onclick="openMarkGroupModal()" class="flex-1 sm:flex-none bg-white border border-gray-200 hover:bg-gray-50 text-gray-800 px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-link"></i> Mark existing tour
                 </button>
-                <button type="button" onclick="openDepartureModal()" class="px-4 py-2 text-sm font-semibold rounded-lg bg-forest-800 text-white hover:bg-forest-700">
-                    <i class="fa-solid fa-calendar-plus mr-1"></i> Add departure
+                <button type="button" onclick="openDepartureModal()" class="flex-1 sm:flex-none bg-forest-800 hover:bg-forest-700 text-white px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-calendar-plus"></i> Add departure
                 </button>
             </div>
         </div>
 
-        <div class="grid lg:grid-cols-5 gap-6">
-            <div class="lg:col-span-2 bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
-                <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-                    <h2 class="font-semibold text-gray-900">Group itineraries</h2>
-                    <button type="button" onclick="loadGroupSafaris()" class="text-xs text-gray-500 hover:text-gray-800"><i class="fa-solid fa-rotate"></i></button>
+        <!-- Tabs -->
+        <div class="flex gap-1 border-b border-gray-200">
+            <button type="button" id="gsTabItineraries" onclick="switchGroupTab('itineraries')" class="px-4 py-2.5 text-sm font-semibold border-b-2 border-emerald-600 text-emerald-700">Group itineraries</button>
+            <button type="button" id="gsTabDepartures" onclick="switchGroupTab('departures')" class="px-4 py-2.5 text-sm font-semibold border-b-2 border-transparent text-gray-500 hover:text-gray-800">Departures calendar</button>
+        </div>
+
+        <!-- Itineraries panel (same layout language as Tours Management) -->
+        <div id="gsPanelItineraries" class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden flex flex-col">
+            <div class="p-4 border-b border-gray-200 bg-gray-50/50 flex flex-col md:flex-row gap-4 items-center justify-between">
+                <div class="relative w-full md:w-80">
+                    <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
+                    <input type="text" id="groupItinerarySearch" placeholder="Search group itineraries..."
+                        class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
+                        onkeyup="filterGroupItineraries()">
                 </div>
-                <div id="groupPackageList" class="divide-y divide-gray-100 max-h-[28rem] overflow-y-auto">
-                    <div class="p-6 text-center text-gray-400 text-sm">Loading…</div>
+                <select id="groupItineraryStatus" onchange="filterGroupItineraries()" class="bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm w-full md:w-auto">
+                    <option value="">All statuses</option>
+                    <option value="live">Live</option>
+                    <option value="draft">Draft</option>
+                </select>
+            </div>
+            <div class="overflow-x-auto relative min-h-[300px]">
+                <table class="w-full text-left text-sm text-gray-600">
+                    <thead class="bg-gray-50 text-gray-400 text-xs font-semibold uppercase tracking-wider border-b">
+                        <tr>
+                            <th class="px-6 py-4">Itinerary</th>
+                            <th class="px-6 py-4">Duration</th>
+                            <th class="px-6 py-4">Price (USD)</th>
+                            <th class="px-6 py-4">Upcoming</th>
+                            <th class="px-6 py-4">Status</th>
+                            <th class="px-6 py-4 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 bg-white" id="groupItineraryBody">
+                        <tr><td colspan="6" class="px-6 py-10 text-center text-gray-400">Loading…</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Departures panel -->
+        <div id="gsPanelDepartures" class="hidden bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden flex flex-col">
+            <div class="p-4 border-b border-gray-200 bg-gray-50/50 flex flex-col md:flex-row gap-4 items-center justify-between">
+                <div class="relative w-full md:w-80">
+                    <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
+                    <input type="text" id="groupDepartureSearch" placeholder="Search departures..."
+                        class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
+                        onkeyup="filterGroupDepartures()">
+                </div>
+                <div class="flex flex-wrap gap-2 w-full md:w-auto">
+                    <select id="groupDeparturePackageFilter" onchange="filterGroupDepartures()" class="bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm">
+                        <option value="">All itineraries</option>
+                    </select>
+                    <select id="groupDepartureStatusFilter" onchange="filterGroupDepartures()" class="bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm">
+                        <option value="">All statuses</option>
+                        <option value="open">Open</option>
+                        <option value="guaranteed">Guaranteed</option>
+                        <option value="almost_full">Almost full</option>
+                        <option value="full">Full</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
                 </div>
             </div>
-
-            <div class="lg:col-span-3 bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
-                <div class="px-5 py-4 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div>
-                        <h2 class="font-semibold text-gray-900">Departures calendar</h2>
-                        <p id="groupDepartureFilterLabel" class="text-xs text-gray-500">All group departures</p>
-                    </div>
-                    <button type="button" onclick="clearGroupPackageFilter()" class="text-xs font-semibold text-safari-600 hover:underline">Show all</button>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm text-gray-600">
-                        <thead class="bg-gray-50 text-gray-400 text-xs font-semibold uppercase tracking-wider border-b">
-                            <tr>
-                                <th class="px-4 py-3">Dates</th>
-                                <th class="px-4 py-3">Tour</th>
-                                <th class="px-4 py-3">Seats</th>
-                                <th class="px-4 py-3">Price</th>
-                                <th class="px-4 py-3">Status</th>
-                                <th class="px-4 py-3 text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="groupDepartureBody" class="divide-y divide-gray-100 bg-white">
-                            <tr><td colspan="6" class="px-4 py-10 text-center text-gray-400">Loading…</td></tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="overflow-x-auto relative min-h-[300px]">
+                <table class="w-full text-left text-sm text-gray-600">
+                    <thead class="bg-gray-50 text-gray-400 text-xs font-semibold uppercase tracking-wider border-b">
+                        <tr>
+                            <th class="px-6 py-4">Dates</th>
+                            <th class="px-6 py-4">Tour</th>
+                            <th class="px-6 py-4">Seats</th>
+                            <th class="px-6 py-4">Price</th>
+                            <th class="px-6 py-4">Status</th>
+                            <th class="px-6 py-4 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 bg-white" id="groupDepartureBody">
+                        <tr><td colspan="6" class="px-6 py-10 text-center text-gray-400">Loading…</td></tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -65,7 +108,7 @@
                 <h3 class="text-lg font-bold text-gray-900">Create group safari</h3>
                 <button type="button" onclick="closeCreateGroupModal()" class="text-gray-400 hover:text-gray-700"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <p class="text-sm text-gray-500">Build a full shared itinerary with overview, day-by-day plan, inclusions, packing &amp; visa info — then add fixed departures on the calendar.</p>
+            <p class="text-sm text-gray-500">Build a full shared itinerary, then add fixed departures for the public calendar.</p>
             <div class="grid md:grid-cols-2 gap-3">
                 <div class="md:col-span-2">
                     <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Title</label>
@@ -105,7 +148,7 @@
                 </div>
                 <div class="md:col-span-2">
                     <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Short overview</label>
-                    <textarea id="cgOverview" rows="2" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm" placeholder="Listing summary…"></textarea>
+                    <textarea id="cgOverview" rows="2" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm"></textarea>
                 </div>
                 <div class="md:col-span-2">
                     <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Full description</label>
@@ -113,7 +156,7 @@
                 </div>
                 <div class="md:col-span-2">
                     <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Highlights (one per line)</label>
-                    <textarea id="cgHighlights" rows="3" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm" placeholder="Big Five&#10;Small groups&#10;Expert guides"></textarea>
+                    <textarea id="cgHighlights" rows="3" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm"></textarea>
                 </div>
                 <div>
                     <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Inclusions (one per line)</label>
@@ -125,32 +168,32 @@
                 </div>
                 <div class="md:col-span-2">
                     <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Day-by-day itinerary (Day title | description — one day per line)</label>
-                    <textarea id="cgItinerary" rows="5" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm" placeholder="Arrival in Arusha | Airport transfer and briefing&#10;Tarangire National Park | Full-day game drive among elephants and baobabs"></textarea>
+                    <textarea id="cgItinerary" rows="5" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm" placeholder="Arrival in Arusha | Airport transfer and briefing"></textarea>
                 </div>
                 <div class="md:col-span-2">
-                    <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Packing list (HTML or text)</label>
+                    <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Packing list</label>
                     <textarea id="cgPacking" rows="2" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm"></textarea>
                 </div>
                 <div class="md:col-span-2">
-                    <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Visa &amp; documents (HTML or text)</label>
+                    <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Visa &amp; documents</label>
                     <textarea id="cgVisa" rows="2" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm"></textarea>
                 </div>
             </div>
             <div class="flex justify-end gap-2 pt-2">
                 <button type="button" onclick="closeCreateGroupModal()" class="px-4 py-2 text-sm rounded-lg border">Cancel</button>
-                <button type="button" onclick="submitCreateGroup()" class="px-4 py-2 text-sm font-semibold rounded-lg bg-amber-600 text-white">Create itinerary</button>
+                <button type="button" onclick="submitCreateGroup()" class="px-4 py-2 text-sm font-semibold rounded-lg bg-emerald-600 text-white">Create itinerary</button>
             </div>
         </div>
     </div>
 
     <!-- Mark package modal -->
     <div id="markGroupModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 p-4">
-        <div class="bg-white rounded-xl shadow-xl w-full max-w-lg p-6 space-y-4">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-lg p-6 space-y-4 max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between">
                 <h3 class="text-lg font-bold text-gray-900">Mark tour as group safari</h3>
                 <button type="button" onclick="closeMarkGroupModal()" class="text-gray-400 hover:text-gray-700"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <p class="text-sm text-gray-500">Select an existing published tour to enable fixed departures for it.</p>
+            <p class="text-sm text-gray-500">Convert an existing tour into a shared itinerary and optionally publish the first departure so it appears on the website calendar immediately.</p>
             <div>
                 <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Tour</label>
                 <select id="markGroupPackageSelect" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm"></select>
@@ -173,9 +216,23 @@
                     </select>
                 </div>
             </div>
+            <div class="rounded-lg border border-emerald-100 bg-emerald-50/60 p-3 space-y-3">
+                <p class="text-xs font-semibold uppercase text-emerald-800">First public departure (recommended)</p>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Start date</label>
+                        <input id="markGroupStart" type="date" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">End date</label>
+                        <input id="markGroupEnd" type="date" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white">
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500">Leave blank to mark only — then add a departure so it shows on the client calendar.</p>
+            </div>
             <div class="flex justify-end gap-2 pt-2">
                 <button type="button" onclick="closeMarkGroupModal()" class="px-4 py-2 text-sm rounded-lg border">Cancel</button>
-                <button type="button" onclick="submitMarkGroup()" class="px-4 py-2 text-sm font-semibold rounded-lg bg-forest-800 text-white">Save</button>
+                <button type="button" onclick="submitMarkGroup()" class="px-4 py-2 text-sm font-semibold rounded-lg bg-forest-800 text-white">Save &amp; publish</button>
             </div>
         </div>
     </div>

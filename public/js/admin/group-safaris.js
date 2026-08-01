@@ -1,70 +1,135 @@
-// ── Group Safaris CMS ─────────────────────────────────────────
+// ── Group Safaris CMS (Tours/Destinations-style management) ───
 let groupPackages = [];
 let groupDepartures = [];
 let selectedGroupPackageId = null;
 let allToursForMark = [];
+let groupAdminTab = 'itineraries';
 
 async function loadGroupSafaris() {
     try {
         const [pkgRes, depRes] = await Promise.all([
             apiRequest('GET', '/group-departures/packages'),
-            apiRequest('GET', '/group-departures' + (selectedGroupPackageId ? `?package_id=${selectedGroupPackageId}` : ''))
+            apiRequest('GET', '/group-departures')
         ]);
         groupPackages = pkgRes.data || [];
         groupDepartures = depRes.data || [];
-        renderGroupPackages();
+        renderGroupItineraries();
         renderGroupDepartures();
         fillDeparturePackageSelect();
+        fillDeparturePackageFilter();
+        switchGroupTab(groupAdminTab);
     } catch (e) {
         console.error(e);
         showToast('Failed to load group safaris', 'error');
     }
 }
 
-function renderGroupPackages() {
-    const el = document.getElementById('groupPackageList');
-    if (!el) return;
-    if (!groupPackages.length) {
-        el.innerHTML = '<div class="p-6 text-center text-gray-500 text-sm">No group itineraries yet. Mark an existing tour or create one under Tours with the group flag.</div>';
+function switchGroupTab(tab) {
+    groupAdminTab = tab === 'departures' ? 'departures' : 'itineraries';
+    const it = document.getElementById('gsPanelItineraries');
+    const dep = document.getElementById('gsPanelDepartures');
+    const t1 = document.getElementById('gsTabItineraries');
+    const t2 = document.getElementById('gsTabDepartures');
+    if (!it || !dep) return;
+    const onIt = groupAdminTab === 'itineraries';
+    it.classList.toggle('hidden', !onIt);
+    dep.classList.toggle('hidden', onIt);
+    if (t1) {
+        t1.className = onIt
+            ? 'px-4 py-2.5 text-sm font-semibold border-b-2 border-emerald-600 text-emerald-700'
+            : 'px-4 py-2.5 text-sm font-semibold border-b-2 border-transparent text-gray-500 hover:text-gray-800';
+    }
+    if (t2) {
+        t2.className = !onIt
+            ? 'px-4 py-2.5 text-sm font-semibold border-b-2 border-emerald-600 text-emerald-700'
+            : 'px-4 py-2.5 text-sm font-semibold border-b-2 border-transparent text-gray-500 hover:text-gray-800';
+    }
+}
+
+function filteredItineraries() {
+    const q = (document.getElementById('groupItinerarySearch')?.value || '').toLowerCase().trim();
+    const status = document.getElementById('groupItineraryStatus')?.value || '';
+    return groupPackages.filter(p => {
+        if (status === 'live' && !p.is_active) return false;
+        if (status === 'draft' && p.is_active) return false;
+        if (!q) return true;
+        return String(p.package_name || '').toLowerCase().includes(q)
+            || String(p.package_slug || '').toLowerCase().includes(q);
+    });
+}
+
+function renderGroupItineraries() {
+    const body = document.getElementById('groupItineraryBody');
+    if (!body) return;
+    const rows = filteredItineraries();
+    if (!rows.length) {
+        body.innerHTML = `<tr><td colspan="6" class="px-6 py-10 text-center text-gray-500">No group itineraries yet. Add a group safari or mark an existing tour.</td></tr>`;
         return;
     }
-    el.innerHTML = groupPackages.map(p => {
-        const active = selectedGroupPackageId === p.package_id;
-        return `
-        <button type="button" onclick="filterDeparturesByPackage('${p.package_id}')"
-            class="w-full text-left px-5 py-4 hover:bg-gray-50 transition-colors ${active ? 'bg-emerald-50 border-l-4 border-emerald-600' : 'border-l-4 border-transparent'}">
-            <div class="flex items-start justify-between gap-2">
-              <div class="font-semibold text-gray-900 text-sm">${escapeAdmin(p.package_name)}</div>
-              <a href="#edit-tour" onclick="event.stopPropagation(); window.currentEditTourId='${p.package_id}'; navigate('edit-tour');" class="text-xs text-safari-600 hover:underline whitespace-nowrap" title="Edit full details">Edit</a>
-            </div>
-            <div class="text-xs text-gray-500 mt-1 flex flex-wrap gap-2">
-                <span>${p.duration_days || '?'} days</span>
-                <span>·</span>
-                <span>${p.upcoming_departures || 0} upcoming</span>
-                <span>·</span>
-                <span class="${p.is_active ? 'text-emerald-600' : 'text-amber-600'}">${p.is_active ? 'Live' : 'Draft'}</span>
-            </div>
-        </button>`;
-    }).join('');
+    body.innerHTML = rows.map(p => `
+        <tr class="hover:bg-slate-50/60">
+            <td class="px-6 py-4">
+                <div class="font-semibold text-gray-900">${escapeAdmin(p.package_name)}</div>
+                <div class="text-xs text-gray-400 mt-0.5">${escapeAdmin(p.package_slug)}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">${p.duration_days || '—'} days</td>
+            <td class="px-6 py-4 whitespace-nowrap font-semibold text-gray-800">$${Number(p.base_price_usd || 0).toLocaleString()}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${p.upcoming_departures || 0}</td>
+            <td class="px-6 py-4">
+                <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${p.is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">
+                    ${p.is_active ? 'Live' : 'Draft'}
+                </span>
+            </td>
+            <td class="px-6 py-4 text-right whitespace-nowrap">
+                <button type="button" class="p-2 text-gray-400 hover:text-emerald-600" title="Edit full details"
+                    onclick="window.currentEditTourId='${p.package_id}'; navigate('edit-tour')"><i class="fa-solid fa-pen"></i></button>
+                <button type="button" class="p-2 text-gray-400 hover:text-sky-600" title="Add departure"
+                    onclick="selectedGroupPackageId='${p.package_id}'; switchGroupTab('departures'); openDepartureModal()"><i class="fa-solid fa-calendar-plus"></i></button>
+                <button type="button" class="p-2 text-gray-400 hover:text-forest-700" title="View departures"
+                    onclick="selectedGroupPackageId='${p.package_id}'; document.getElementById('groupDeparturePackageFilter').value='${p.package_id}'; switchGroupTab('departures'); filterGroupDepartures()"><i class="fa-solid fa-list"></i></button>
+                <a class="p-2 text-gray-400 hover:text-amber-600 inline-block" title="Public calendar" href="/group-safaris" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function filterGroupItineraries() {
+    renderGroupItineraries();
+}
+
+function fillDeparturePackageFilter() {
+    const sel = document.getElementById('groupDeparturePackageFilter');
+    if (!sel) return;
+    const current = sel.value;
+    sel.innerHTML = '<option value="">All itineraries</option>' + groupPackages.map(p =>
+        `<option value="${p.package_id}">${escapeAdmin(p.package_name)}</option>`
+    ).join('');
+    if (current) sel.value = current;
+}
+
+function filteredDepartures() {
+    const q = (document.getElementById('groupDepartureSearch')?.value || '').toLowerCase().trim();
+    const pkg = document.getElementById('groupDeparturePackageFilter')?.value || selectedGroupPackageId || '';
+    const status = document.getElementById('groupDepartureStatusFilter')?.value || '';
+    return groupDepartures.filter(d => {
+        if (pkg && d.package_id !== pkg) return false;
+        if (status && d.status !== status) return false;
+        if (!q) return true;
+        return String(d.title || '').toLowerCase().includes(q)
+            || String(d.departure_slug || '').toLowerCase().includes(q)
+            || String(d.package_name || '').toLowerCase().includes(q);
+    });
 }
 
 function renderGroupDepartures() {
     const body = document.getElementById('groupDepartureBody');
-    const label = document.getElementById('groupDepartureFilterLabel');
     if (!body) return;
-    if (label) {
-        if (selectedGroupPackageId) {
-            const pkg = groupPackages.find(p => p.package_id === selectedGroupPackageId);
-            label.textContent = pkg ? `Departures for ${pkg.package_name}` : 'Filtered departures';
-        } else {
-            label.textContent = 'All group departures';
-        }
-    }
-    if (!groupDepartures.length) {
-        body.innerHTML = '<tr><td colspan="6" class="px-4 py-10 text-center text-gray-500">No departures yet. Add a fixed date to appear on the public calendar.</td></tr>';
+    const rows = filteredDepartures();
+    if (!rows.length) {
+        body.innerHTML = '<tr><td colspan="6" class="px-6 py-10 text-center text-gray-500">No departures yet. Add a fixed date to appear on the public calendar.</td></tr>';
         return;
     }
-    body.innerHTML = groupDepartures.map(d => {
+    body.innerHTML = rows.map(d => {
         const statusClass = {
             open: 'bg-emerald-100 text-emerald-700',
             guaranteed: 'bg-sky-100 text-sky-700',
@@ -77,21 +142,21 @@ function renderGroupDepartures() {
             : `<strong>$${Number(d.price_usd || 0).toLocaleString()}</strong>`;
         return `
         <tr class="hover:bg-slate-50/60">
-            <td class="px-4 py-3 whitespace-nowrap">
+            <td class="px-6 py-4 whitespace-nowrap">
                 <div class="font-medium text-gray-900">${fmtAdminDate(d.start_date)}</div>
                 <div class="text-xs text-gray-400">→ ${fmtAdminDate(d.end_date)}</div>
             </td>
-            <td class="px-4 py-3">
+            <td class="px-6 py-4">
                 <div class="font-medium text-gray-800">${escapeAdmin(d.title)}</div>
-                <div class="text-xs text-gray-400 truncate max-w-[12rem]">${escapeAdmin(d.departure_slug)}</div>
+                <div class="text-xs text-gray-400 truncate max-w-[14rem]">${escapeAdmin(d.departure_slug)}</div>
             </td>
-            <td class="px-4 py-3 whitespace-nowrap">${d.seats_left} / ${d.capacity}</td>
-            <td class="px-4 py-3 whitespace-nowrap">${price}</td>
-            <td class="px-4 py-3">
+            <td class="px-6 py-4 whitespace-nowrap">${d.seats_left} / ${d.capacity}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${price}</td>
+            <td class="px-6 py-4">
                 <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${statusClass}">${d.status}</span>
                 ${!d.is_active ? '<div class="text-[10px] text-amber-600 mt-1">Hidden</div>' : ''}
             </td>
-            <td class="px-4 py-3 text-right whitespace-nowrap">
+            <td class="px-6 py-4 text-right whitespace-nowrap">
                 <button type="button" class="p-2 text-gray-400 hover:text-emerald-600" title="Edit" onclick="editDepartureById('${d.departure_id}')"><i class="fa-solid fa-pen"></i></button>
                 <button type="button" class="p-2 text-gray-400 hover:text-sky-600" title="+1 seat booked" onclick="bumpSeats('${d.departure_id}', 1)"><i class="fa-solid fa-user-plus"></i></button>
                 <button type="button" class="p-2 text-gray-400 hover:text-amber-600" title="-1 seat booked" onclick="bumpSeats('${d.departure_id}', -1)"><i class="fa-solid fa-user-minus"></i></button>
@@ -102,14 +167,9 @@ function renderGroupDepartures() {
     }).join('');
 }
 
-function filterDeparturesByPackage(id) {
-    selectedGroupPackageId = id;
-    loadGroupSafaris();
-}
-
-function clearGroupPackageFilter() {
-    selectedGroupPackageId = null;
-    loadGroupSafaris();
+function filterGroupDepartures() {
+    selectedGroupPackageId = document.getElementById('groupDeparturePackageFilter')?.value || null;
+    renderGroupDepartures();
 }
 
 function fillDeparturePackageSelect() {
@@ -131,6 +191,12 @@ async function openMarkGroupModal() {
         sel.innerHTML = allToursForMark.map(t =>
             `<option value="${t.id || t.package_id}">${escapeAdmin(t.title || t.package_name)}</option>`
         ).join('') || '<option value="">No tours available</option>';
+        const start = document.getElementById('markGroupStart');
+        if (start && !start.value) {
+            const d = new Date();
+            d.setUTCDate(d.getUTCDate() + 21);
+            start.value = d.toISOString().slice(0, 10);
+        }
         modal.classList.remove('hidden');
         modal.classList.add('flex');
     } catch (e) {
@@ -148,17 +214,22 @@ function closeMarkGroupModal() {
 async function submitMarkGroup() {
     const package_id = document.getElementById('markGroupPackageSelect')?.value;
     if (!package_id) return showToast('Select a tour', 'error');
+    const start_date = document.getElementById('markGroupStart')?.value || null;
+    const end_date = document.getElementById('markGroupEnd')?.value || null;
     try {
-        await apiRequest('POST', '/group-departures/packages/mark', {
+        const res = await apiRequest('POST', '/group-departures/packages/mark', {
             package_id,
             is_group_tour: true,
             group_max_pax: parseInt(document.getElementById('markGroupMaxPax').value, 10) || 6,
             min_age: parseInt(document.getElementById('markGroupMinAge').value, 10) || 3,
-            physical_rating: document.getElementById('markGroupRating').value
+            physical_rating: document.getElementById('markGroupRating').value,
+            start_date: start_date || undefined,
+            end_date: end_date || undefined
         });
-        showToast('Tour marked as group safari');
+        showToast(res.message || 'Tour marked as group safari');
         closeMarkGroupModal();
         await loadGroupSafaris();
+        if (res?.data?.departure) switchGroupTab('departures');
     } catch (e) {
         console.error(e);
     }
@@ -179,7 +250,7 @@ function openDepartureModal(dep = null) {
         document.getElementById('departureCapacity').value = dep.capacity || 6;
         document.getElementById('departureSeats').value = dep.seats_booked || 0;
         document.getElementById('departureDiscount').value = dep.discount_percent || 0;
-        document.getElementById('departurePrice').value = dep.price_usd || '';
+        document.getElementById('departurePrice').value = dep.price_usd != null ? dep.price_usd : '';
         document.getElementById('departureStatus').value = dep.status || 'open';
         document.getElementById('departureActive').checked = dep.is_active !== false;
         document.getElementById('departureNotes').value = dep.admin_notes || '';
@@ -195,6 +266,7 @@ function openDepartureModal(dep = null) {
         document.getElementById('departureStatus').value = 'open';
         document.getElementById('departureActive').checked = true;
         document.getElementById('departureNotes').value = '';
+        if (selectedGroupPackageId) document.getElementById('departurePackageId').value = selectedGroupPackageId;
     }
     modal.classList.remove('hidden');
     modal.classList.add('flex');
@@ -243,10 +315,11 @@ async function submitDeparture() {
             showToast('Departure updated');
         } else {
             await apiRequest('POST', '/group-departures', payload);
-            showToast('Departure created');
+            showToast('Departure created — now visible on the public calendar');
         }
         closeDepartureModal();
         await loadGroupSafaris();
+        switchGroupTab('departures');
     } catch (e) {
         console.error(e);
     }
@@ -272,24 +345,18 @@ async function deleteDeparture(id) {
     }
 }
 
-function fmtAdminDate(d) {
-    if (!d) return '—';
-    const dt = new Date(d);
-    return dt.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+function openCreateGroupModal() {
+    const modal = document.getElementById('createGroupModal');
+    if (!modal) return;
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
 }
 
-function toInputDate(d) {
-    if (!d) return '';
-    const dt = new Date(d);
-    return dt.toISOString().slice(0, 10);
-}
-
-function escapeAdmin(str) {
-    return String(str || '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
+function closeCreateGroupModal() {
+    const modal = document.getElementById('createGroupModal');
+    if (!modal) return;
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
 }
 
 function slugifyTitle(title) {
@@ -320,20 +387,6 @@ function parseItineraryText(raw) {
                 description: parts.slice(1).join(' | ') || ''
             };
         });
-}
-
-function openCreateGroupModal() {
-    const modal = document.getElementById('createGroupModal');
-    if (!modal) return;
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
-}
-
-function closeCreateGroupModal() {
-    const modal = document.getElementById('createGroupModal');
-    if (!modal) return;
-    modal.classList.add('hidden');
-    modal.classList.remove('flex');
 }
 
 async function submitCreateGroup() {
@@ -382,18 +435,43 @@ async function submitCreateGroup() {
         closeCreateGroupModal();
         await loadGroupSafaris();
         const id = res?.data?.id || res?.data?.package_id;
-        if (id && typeof navigate === 'function') {
-            if (confirm('Itinerary created. Open full editor for more details?')) {
-                window.currentEditTourId = id;
-                navigate('edit-tour');
-            }
+        if (id && confirm('Itinerary created. Open full editor, or add a departure now?\nOK = editor, Cancel = add departure')) {
+            window.currentEditTourId = id;
+            navigate('edit-tour');
+        } else if (id) {
+            selectedGroupPackageId = id;
+            switchGroupTab('departures');
+            openDepartureModal();
         }
     } catch (e) {
         console.error(e);
     }
 }
 
+function fmtAdminDate(d) {
+    if (!d) return '—';
+    const dt = new Date(d);
+    return dt.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function toInputDate(d) {
+    if (!d) return '';
+    const dt = new Date(d);
+    return dt.toISOString().slice(0, 10);
+}
+
+function escapeAdmin(str) {
+    return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+}
+
 window.loadGroupSafaris = loadGroupSafaris;
+window.switchGroupTab = switchGroupTab;
+window.filterGroupItineraries = filterGroupItineraries;
+window.filterGroupDepartures = filterGroupDepartures;
 window.openMarkGroupModal = openMarkGroupModal;
 window.closeMarkGroupModal = closeMarkGroupModal;
 window.submitMarkGroup = submitMarkGroup;
@@ -404,8 +482,6 @@ window.editDeparture = editDeparture;
 window.editDepartureById = editDepartureById;
 window.deleteDeparture = deleteDeparture;
 window.bumpSeats = bumpSeats;
-window.filterDeparturesByPackage = filterDeparturesByPackage;
-window.clearGroupPackageFilter = clearGroupPackageFilter;
 window.openCreateGroupModal = openCreateGroupModal;
 window.closeCreateGroupModal = closeCreateGroupModal;
 window.submitCreateGroup = submitCreateGroup;

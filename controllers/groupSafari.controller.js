@@ -4,9 +4,11 @@ const enquiryRepo = require('../repositories/enquiry.repository');
 class GroupSafariController {
     async listDepartures(req, res) {
         try {
-            const limit = parseInt(req.query.limit, 10) || 50;
+            const limit = parseInt(req.query.limit, 10) || 100;
             const upcomingOnly = req.query.upcoming !== 'false';
-            const data = await groupDepartureRepo.listPublic({ limit, upcomingOnly });
+            const year = req.query.year ? parseInt(req.query.year, 10) : null;
+            const month = req.query.month ? parseInt(req.query.month, 10) : null;
+            const data = await groupDepartureRepo.listPublic({ limit, upcomingOnly, year, month });
             res.json({ success: true, data });
         } catch (error) {
             console.error('listDepartures error:', error);

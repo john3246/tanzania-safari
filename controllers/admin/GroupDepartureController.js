@@ -67,24 +67,39 @@ class GroupDepartureController {
     async markPackageGroup(req, res) {
         try {
             const { package_id, is_group_tour = true, physical_rating, min_age, group_max_pax,
-                inclusions_html, exclusions_html, packing_list_html, visa_info_html } = req.body;
+                inclusions_html, exclusions_html, packing_list_html, visa_info_html,
+                start_date, end_date, capacity, price_usd, discount_percent } = req.body;
             if (!package_id) {
                 return res.status(400).json({ success: false, message: 'package_id is required' });
             }
+
+            // Prefer Group Safaris category when marking
+            let categoryId = null;
+            try {
+                const cat = await db.query(
+                    `SELECT category_id FROM package_categories WHERE category_slug = 'group-safaris' LIMIT 1`
+                );
+                categoryId = cat.rows[0]?.category_id || null;
+            } catch (_) { /* optional */ }
+
             const result = await db.query(`
                 UPDATE safari_packages SET
                     is_group_tour = $1,
+                    is_active = CASE WHEN $1 = true THEN true ELSE is_active END,
+                    is_private = CASE WHEN $1 = true THEN false ELSE is_private END,
                     physical_rating = COALESCE($2, physical_rating),
                     min_age = COALESCE($3, min_age),
                     group_max_pax = COALESCE($4, group_max_pax),
+                    maximum_pax = COALESCE($4, maximum_pax, group_max_pax),
                     inclusions_html = COALESCE($5, inclusions_html),
                     exclusions_html = COALESCE($6, exclusions_html),
                     packing_list_html = COALESCE($7, packing_list_html),
                     visa_info_html = COALESCE($8, visa_info_html),
-                    is_private = CASE WHEN $1 = true THEN false ELSE is_private END,
+                    category_id = COALESCE($9, category_id),
                     updated_at = NOW()
-                WHERE package_id = $9
-                RETURNING package_id, package_name, package_slug, is_group_tour, physical_rating, min_age, group_max_pax
+                WHERE package_id = $10
+                RETURNING package_id, package_name, package_slug, is_group_tour, physical_rating,
+                          min_age, group_max_pax, duration_days, base_price_usd, is_active
             `, [
                 Boolean(is_group_tour),
                 physical_rating || null,
@@ -94,15 +109,41 @@ class GroupDepartureController {
                 exclusions_html || null,
                 packing_list_html || null,
                 visa_info_html || null,
+                categoryId,
                 package_id
             ]);
             if (!result.rowCount) {
                 return res.status(404).json({ success: false, message: 'Package not found' });
             }
-            res.json({ success: true, data: result.rows[0], message: 'Package updated' });
+
+            const pkg = result.rows[0];
+            let departure = null;
+            // Optional first departure so it appears on the public calendar immediately
+            if (Boolean(is_group_tour) && start_date) {
+                departure = await groupDepartureRepo.create({
+                    package_id,
+                    start_date,
+                    end_date: end_date || null,
+                    capacity: capacity || group_max_pax || 6,
+                    price_usd: price_usd != null ? price_usd : Number(pkg.base_price_usd) || null,
+                    discount_percent: discount_percent || 0,
+                    status: 'open',
+                    is_active: true,
+                    is_featured: true
+                });
+            }
+
+            res.json({
+                success: true,
+                data: { ...pkg, departure },
+                message: departure
+                    ? 'Tour marked as group safari and first departure published'
+                    : 'Tour marked as group safari'
+            });
         } catch (error) {
             console.error('markPackageGroup:', error);
-            res.status(500).json({ success: false, message: 'Error updating package' });
+            const msg = error.code === '23505' ? 'Departure slug already exists' : 'Error updating package';
+            res.status(500).json({ success: false, message: msg });
         }
     }
 

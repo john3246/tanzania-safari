@@ -51,27 +51,37 @@ function mapDeparture(row) {
         short_description: row.short_description,
         physical_rating: row.physical_rating || row.difficulty_level || 'Easy',
         min_age: row.min_age != null ? row.min_age : 3,
-        group_max_pax: row.group_max_pax || row.maximum_pax || capacity
+        group_max_pax: row.group_max_pax || row.maximum_pax || capacity,
+        highlights: Array.isArray(row.highlights) ? row.highlights : []
     };
 }
 
 class GroupDepartureRepository {
-    async listPublic({ limit = 50, upcomingOnly = true } = {}) {
+    async listPublic({ limit = 50, upcomingOnly = true, year = null, month = null } = {}) {
         const params = [];
         let where = `gd.is_active = true AND sp.is_active = true AND sp.is_group_tour = true AND gd.status <> 'cancelled'`;
         if (upcomingOnly) {
             where += ` AND gd.start_date >= CURRENT_DATE`;
         }
-        params.push(Math.min(parseInt(limit, 10) || 50, 100));
+        if (year && Number.isFinite(year)) {
+            params.push(year);
+            where += ` AND EXTRACT(YEAR FROM gd.start_date) = $${params.length}`;
+        }
+        if (month && Number.isFinite(month) && month >= 1 && month <= 12) {
+            params.push(month);
+            where += ` AND EXTRACT(MONTH FROM gd.start_date) = $${params.length}`;
+        }
+        params.push(Math.min(parseInt(limit, 10) || 50, 200));
         const result = await db.query(`
             SELECT gd.*, sp.package_name, sp.package_slug, sp.duration_days, sp.duration_nights,
                    sp.featured_image_url, sp.short_description, sp.base_price_usd,
-                   sp.physical_rating, sp.min_age, sp.group_max_pax, sp.maximum_pax, sp.difficulty_level
+                   sp.physical_rating, sp.min_age, sp.group_max_pax, sp.maximum_pax, sp.difficulty_level,
+                   sp.highlights
             FROM group_departures gd
             JOIN safari_packages sp ON sp.package_id = gd.package_id
             WHERE ${where}
             ORDER BY gd.start_date ASC
-            LIMIT $1
+            LIMIT $${params.length}
         `, params);
         return result.rows.map(mapDeparture);
     }
