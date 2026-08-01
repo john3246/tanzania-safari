@@ -144,6 +144,33 @@ async function migrate() {
           ON public.bookings (departure_id) WHERE departure_id IS NOT NULL;
     `);
 
+    await runStep('contact_enquiries group request columns', `
+        ALTER TABLE public.contact_enquiries ADD COLUMN IF NOT EXISTS departure_id uuid;
+        ALTER TABLE public.contact_enquiries ADD COLUMN IF NOT EXISTS seats_held integer DEFAULT 0;
+        ALTER TABLE public.contact_enquiries ADD COLUMN IF NOT EXISTS deposit_percent numeric(5,2) DEFAULT 30;
+        ALTER TABLE public.contact_enquiries ADD COLUMN IF NOT EXISTS deposit_amount_usd numeric(12,2);
+        ALTER TABLE public.contact_enquiries ADD COLUMN IF NOT EXISTS deposit_due_at timestamptz;
+        ALTER TABLE public.contact_enquiries ADD COLUMN IF NOT EXISTS seats_adjusted boolean DEFAULT false;
+    `);
+
+    await runStep('contact_enquiries status/type checks for group approvals', `
+        ALTER TABLE public.contact_enquiries DROP CONSTRAINT IF EXISTS contact_enquiries_enquiry_status_check;
+        ALTER TABLE public.contact_enquiries
+          ADD CONSTRAINT contact_enquiries_enquiry_status_check
+          CHECK (enquiry_status::text = ANY (ARRAY[
+            'New'::text, 'In Progress'::text, 'Approved'::text,
+            'Responded'::text, 'Converted'::text, 'Closed'::text
+          ]));
+        ALTER TABLE public.contact_enquiries DROP CONSTRAINT IF EXISTS contact_enquiries_enquiry_type_check;
+        ALTER TABLE public.contact_enquiries
+          ADD CONSTRAINT contact_enquiries_enquiry_type_check
+          CHECK (enquiry_type::text = ANY (ARRAY[
+            'General'::text, 'Booking'::text, 'Custom Safari'::text,
+            'Group'::text, 'Corporate'::text, 'Other'::text,
+            'Booking Inquiry'::text, 'Quick Booking'::text
+          ]));
+    `);
+
     await runStep('hub category seeds', `
         INSERT INTO public.package_categories (category_name, category_slug, category_description, icon_class, display_order, is_active)
         VALUES

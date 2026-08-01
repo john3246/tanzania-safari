@@ -43,6 +43,7 @@
                     <button onclick="setEnqFilter('all')" class="enq-filter-btn active text-xs font-extrabold px-3 py-1.5 rounded-lg bg-[#075e54] text-white border border-[#075e54] transition-all shadow-sm" data-filter="all">ALL</button>
                     <button onclick="setEnqFilter('new')" class="enq-filter-btn text-xs font-extrabold px-3 py-1.5 rounded-lg bg-slate-200 text-slate-800 hover:bg-slate-300 border border-slate-300 transition-all" data-filter="new">NEW</button>
                     <button onclick="setEnqFilter('in progress')" class="enq-filter-btn text-xs font-extrabold px-3 py-1.5 rounded-lg bg-slate-200 text-slate-800 hover:bg-slate-300 border border-slate-300 transition-all" data-filter="in progress">IN PROGRESS</button>
+                    <button onclick="setEnqFilter('approved')" class="enq-filter-btn text-xs font-extrabold px-3 py-1.5 rounded-lg bg-slate-200 text-slate-800 hover:bg-slate-300 border border-slate-300 transition-all" data-filter="approved">APPROVED</button>
                     <button onclick="setEnqFilter('responded')" class="enq-filter-btn text-xs font-extrabold px-3 py-1.5 rounded-lg bg-slate-200 text-slate-800 hover:bg-slate-300 border border-slate-300 transition-all" data-filter="responded">RESPONDED</button>
                 </div>
             </div>
@@ -93,6 +94,7 @@
                             <select id="enqUpdateStatus" class="text-xs font-black bg-transparent text-slate-900 focus:outline-none cursor-pointer">
                                 <option value="New">New</option>
                                 <option value="In Progress">In Progress</option>
+                                <option value="Approved">Approved (hold seats)</option>
                                 <option value="Responded">Responded</option>
                                 <option value="Closed">Closed</option>
                             </select>

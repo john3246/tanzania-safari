@@ -252,8 +252,9 @@ class GroupDepartureRepository {
                 status = CASE
                     WHEN GREATEST(0, LEAST(capacity, seats_booked + $1)) >= capacity THEN 'full'
                     WHEN status = 'cancelled' THEN status
-                    WHEN GREATEST(0, LEAST(capacity, seats_booked + $1)) <= capacity - 2
-                         AND status = 'full' THEN 'open'
+                    WHEN GREATEST(0, LEAST(capacity, seats_booked + $1)) >= GREATEST(1, capacity - 2)
+                         THEN 'almost_full'
+                    WHEN status IN ('full', 'almost_full') THEN 'open'
                     ELSE status
                 END
             WHERE departure_id = $2

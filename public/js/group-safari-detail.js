@@ -34,11 +34,18 @@ function renderItinerary(itinerary) {
   `).join('');
 }
 
+function depositFor(price, travelers) {
+  const p = Number(price) || 0;
+  const t = Math.max(1, parseInt(travelers, 10) || 1);
+  return Math.round(p * t * 0.3);
+}
+
 function renderSummary(d) {
   const price = Number(d.sale_price_usd || d.price_usd || 0);
   const was = Number(d.price_usd || 0);
   const showWas = d.discount_percent > 0 && was > price;
-  const canRequest = d.status !== 'full' && d.status !== 'cancelled';
+  const canRequest = d.status !== 'full' && d.status !== 'cancelled' && Number(d.seats_left) > 0;
+  const sampleDeposit = depositFor(price, 1);
   return `
     <div class="group-summary-row"><span>Start</span><strong>${fmtDate(d.start_date)}</strong></div>
     <div class="group-summary-row"><span>End</span><strong>${fmtDate(d.end_date)}</strong></div>
@@ -55,22 +62,40 @@ function renderSummary(d) {
       <button type="button" class="btn btn-primary" style="width:100%;min-height:48px" onclick="document.getElementById('requestTripForm').scrollIntoView({behavior:'smooth'})">
         <i class="fas fa-paw"></i> Request this trip
       </button>
+      <p class="group-deposit-note">
+        To secure your seat, a <strong>30% deposit</strong> (from $${sampleDeposit.toLocaleString()} USD per traveler)
+        must be paid <strong>within 24 hours</strong> of your request. Seats are held after admin approval of your payment.
+      </p>
       <form id="requestTripForm" class="group-request-form" onsubmit="return submitGroupRequest(event)">
         <input name="full_name" required placeholder="Full name" autocomplete="name">
         <input name="email" type="email" required placeholder="Email" autocomplete="email">
         <input name="phone" placeholder="Phone / WhatsApp" autocomplete="tel">
         <input name="country" placeholder="Country">
-        <select name="travelers">
+        <select name="travelers" id="groupTravelersSelect" onchange="updateDepositHint()">
           <option value="1">1 traveler</option>
           <option value="2">2 travelers</option>
           <option value="3">3 travelers</option>
-          <option value="4">4+ travelers</option>
+          <option value="4">4 travelers</option>
         </select>
+        <p id="groupDepositHint" class="group-deposit-note" style="margin-top:0">
+          Estimated deposit due in 24h: <strong>$${sampleDeposit.toLocaleString()} USD</strong> (30%)
+        </p>
         <textarea name="message" rows="3" placeholder="Notes (optional)"></textarea>
-        <button type="submit" class="btn btn-primary" style="min-height:48px">Send request</button>
+        <button type="submit" class="btn btn-primary" style="min-height:48px;width:100%">Send request</button>
       </form>
     ` : `<p style="margin:0;color:var(--text-muted);font-size:0.9rem">This departure is not open for new requests. <a href="/group-safaris">See other dates</a>.</p>`}
   `;
+}
+
+function updateDepositHint() {
+  if (!currentDeparture) return;
+  const price = Number(currentDeparture.sale_price_usd || currentDeparture.price_usd || 0);
+  const travelers = document.getElementById('groupTravelersSelect')?.value || 1;
+  const deposit = depositFor(price, travelers);
+  const el = document.getElementById('groupDepositHint');
+  if (el) {
+    el.innerHTML = `Estimated deposit due in 24h: <strong>$${deposit.toLocaleString()} USD</strong> (30% for ${travelers} traveler${travelers > 1 ? 's' : ''})`;
+  }
 }
 
 let currentDeparture = null;
@@ -122,7 +147,8 @@ async function loadGroupDetail() {
         $${price.toLocaleString()} <span style="font-size:0.95rem;font-weight:500;color:var(--text-muted)">per person</span>
       </p>
       ${data.discount_percent > 0 ? `<p style="color:var(--accent);font-weight:700;margin:0 0 0.75rem">Save up to ${data.discount_percent}%</p>` : ''}
-      <p style="color:var(--text-secondary);margin:0;line-height:1.65">Price is based on sharing. Single supplements and optional activities may apply — confirm with Our Team when you request this departure.</p>`;
+      <p class="group-deposit-note">A <strong>30% deposit</strong> is required within <strong>24 hours</strong> of your request to secure your seat. The balance is due before departure as confirmed by Our Team.</p>
+      <p style="color:var(--text-secondary);margin:0.85rem 0 0;line-height:1.65">Price is based on sharing. Single supplements and optional activities may apply — confirm with Our Team when you request this departure.</p>`;
 
     document.getElementById('groupItinerary').innerHTML = renderItinerary(data.itinerary);
 
@@ -152,16 +178,23 @@ async function submitGroupRequest(event) {
   const btn = form.querySelector('button[type="submit"]');
   const fd = new FormData(form);
   const body = Object.fromEntries(fd.entries());
+  body.travelers = parseInt(body.travelers, 10) || 1;
   try {
     btn.disabled = true;
     btn.textContent = 'Sending…';
-    const res = await API.post(`/group-departures/${encodeURIComponent(currentDeparture.departure_slug)}/request`, body);
-    if (typeof toast === 'function') toast(res.message || 'Request sent!', 'success');
-    else alert(res.message || 'Request sent!');
+    const res = await API.post(
+      `/group-departures/${encodeURIComponent(currentDeparture.departure_slug)}/request`,
+      body
+    );
+    const msg = res.message || 'Request sent!';
+    if (typeof toast === 'function') toast(msg, 'success', 8000);
+    else alert(msg);
     form.reset();
+    updateDepositHint();
   } catch (err) {
-    if (typeof toast === 'function') toast(err.message || 'Request failed', 'error');
-    else alert(err.message || 'Request failed');
+    const msg = err.message || 'Request failed. Please try again or WhatsApp Our Team.';
+    if (typeof toast === 'function') toast(msg, 'error');
+    else alert(msg);
   } finally {
     btn.disabled = false;
     btn.textContent = 'Send request';
@@ -170,4 +203,5 @@ async function submitGroupRequest(event) {
 }
 
 window.submitGroupRequest = submitGroupRequest;
+window.updateDepositHint = updateDepositHint;
 loadGroupDetail();

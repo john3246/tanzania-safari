@@ -72,6 +72,7 @@ function filterEnquiriesList() {
         
         let statusBadgeClass = 'bg-yellow-500 text-white';
         if (statusName.toLowerCase() === 'responded') statusBadgeClass = 'bg-emerald-600 text-white';
+        else if (statusName.toLowerCase() === 'approved') statusBadgeClass = 'bg-emerald-700 text-white';
         else if (statusName.toLowerCase() === 'closed') statusBadgeClass = 'bg-slate-600 text-white';
         else if (statusName.toLowerCase() === 'in progress') statusBadgeClass = 'bg-blue-600 text-white';
 
@@ -151,7 +152,13 @@ function selectEnquiry(id) {
         const travelers = enq.number_of_travelers ? `${enq.number_of_travelers} Travelers` : 'Standard group';
         const dateStr = enq.preferred_travel_date ? new Date(enq.preferred_travel_date).toLocaleDateString() : 'Flexible Date';
         const countryStr = enq.country ? ` | ${enq.country}` : '';
-        metaEl.textContent = `${travelers} | ${dateStr}${countryStr}`;
+        let depositStr = '';
+        if (enq.deposit_amount_usd != null) {
+            const due = enq.deposit_due_at ? new Date(enq.deposit_due_at).toLocaleString() : 'within 24h';
+            depositStr = ` | Deposit ${enq.deposit_percent || 30}%: $${Number(enq.deposit_amount_usd).toLocaleString()} due ${due}`;
+            if (enq.seats_adjusted) depositStr += ' | Seats held';
+        }
+        metaEl.textContent = `${travelers} | ${dateStr}${countryStr}${depositStr}`;
     }
 
     const dateEl = document.getElementById('enqDetailDate');
@@ -167,6 +174,7 @@ function selectEnquiry(id) {
         statusBadge.textContent = statusName;
         statusBadge.className = 'px-3 py-1 rounded-md text-xs font-black uppercase tracking-wider ';
         if (statusName.toLowerCase() === 'responded') statusBadge.className += 'bg-emerald-600 text-white';
+        else if (statusName.toLowerCase() === 'approved') statusBadge.className += 'bg-emerald-700 text-white';
         else if (statusName.toLowerCase() === 'closed') statusBadge.className += 'bg-slate-700 text-white';
         else if (statusName.toLowerCase() === 'in progress') statusBadge.className += 'bg-blue-600 text-white';
         else statusBadge.className += 'bg-yellow-500 text-white';
@@ -306,8 +314,9 @@ document.body.addEventListener('change', async (e) => {
     if (e.target.id === 'enqUpdateStatus' && window.currentEnquiryId) {
         const newStatus = e.target.value;
         try {
-            await apiRequest('PUT', `/enquiries/${window.currentEnquiryId}`, { enquiry_status: newStatus });
-            if (typeof showToast === 'function') showToast(`Status updated to ${newStatus}`, 'success');
+            const res = await apiRequest('PUT', `/enquiries/${window.currentEnquiryId}`, { enquiry_status: newStatus });
+            const msg = res?.message || `Status updated to ${newStatus}`;
+            if (typeof showToast === 'function') showToast(msg, 'success');
             loadEnquiries();
         } catch (err) {
             if (typeof showToast === 'function') showToast('Failed to update status', 'error');

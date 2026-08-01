@@ -134,14 +134,92 @@ class AdminController {
     async updateEnquiry(req, res) {
         try {
             const db = require('../config/db');
+            const groupDepartureRepo = require('../repositories/GroupDepartureRepository');
             const { enquiry_status } = req.body;
+
+            // Ensure seat/deposit columns exist before reading them
+            try {
+                await db.query(`ALTER TABLE contact_enquiries ADD COLUMN IF NOT EXISTS departure_id uuid`);
+                await db.query(`ALTER TABLE contact_enquiries ADD COLUMN IF NOT EXISTS seats_held integer DEFAULT 0`);
+                await db.query(`ALTER TABLE contact_enquiries ADD COLUMN IF NOT EXISTS seats_adjusted boolean DEFAULT false`);
+                await db.query(`
+                    ALTER TABLE contact_enquiries DROP CONSTRAINT IF EXISTS contact_enquiries_enquiry_status_check;
+                    ALTER TABLE contact_enquiries
+                      ADD CONSTRAINT contact_enquiries_enquiry_status_check
+                      CHECK (enquiry_status::text = ANY (ARRAY[
+                        'New'::text, 'In Progress'::text, 'Approved'::text,
+                        'Responded'::text, 'Converted'::text, 'Closed'::text
+                      ]));
+                `);
+            } catch (_) { /* best-effort */ }
+
+            const existing = await db.query(
+                `SELECT enquiry_id, enquiry_type, departure_id, seats_held, number_of_travelers,
+                        seats_adjusted, enquiry_status AS old_status, enquiry_message
+                 FROM contact_enquiries WHERE enquiry_id = $1`,
+                [req.params.id]
+            );
+            const enq = existing.rows[0];
+            if (!enq) {
+                return res.status(404).json({ success: false, message: 'Enquiry not found' });
+            }
+
             await db.query(
                 'UPDATE contact_enquiries SET enquiry_status = $1, updated_at = NOW() WHERE enquiry_id = $2',
                 [enquiry_status, req.params.id]
             );
-            res.json({ success: true });
+
+            let seatsUpdated = null;
+            const isGroup = String(enq.enquiry_type || '').toLowerCase().includes('group')
+                || String(enq.enquiry_message || '').toLowerCase().includes('[group safari request]');
+            const approving = String(enquiry_status || '').toLowerCase() === 'approved';
+            const wasApproved = String(enq.old_status || '').toLowerCase() === 'approved';
+
+            // Recover departure_id from message if column was empty (legacy/fallback inserts)
+            let departureId = enq.departure_id;
+            if (!departureId && enq.enquiry_message) {
+                const m = String(enq.enquiry_message).match(/Departure ID:\s*([0-9a-f-]{36})/i);
+                if (m) departureId = m[1];
+            }
+            let seats = Math.max(1, parseInt(enq.seats_held || enq.number_of_travelers, 10) || 1);
+            if ((!enq.seats_held || !enq.number_of_travelers) && enq.enquiry_message) {
+                const sm = String(enq.enquiry_message).match(/Travelers\s*\/\s*seats:\s*(\d+)/i);
+                if (sm) seats = Math.max(1, parseInt(sm[1], 10) || seats);
+            }
+
+            // When a group safari request is approved, hold seats on the departure
+            if (isGroup && approving && !enq.seats_adjusted && departureId) {
+                seatsUpdated = await groupDepartureRepo.adjustSeats(departureId, seats);
+                await db.query(
+                    `UPDATE contact_enquiries
+                     SET seats_adjusted = true,
+                         departure_id = COALESCE(departure_id, $2::uuid),
+                         seats_held = COALESCE(NULLIF(seats_held, 0), $3),
+                         updated_at = NOW()
+                     WHERE enquiry_id = $1`,
+                    [req.params.id, departureId, seats]
+                );
+            }
+
+            // If un-approving / closing after seats were held, release seats once
+            if (isGroup && enq.seats_adjusted && wasApproved && !approving && departureId) {
+                seatsUpdated = await groupDepartureRepo.adjustSeats(departureId, -seats);
+                await db.query(
+                    `UPDATE contact_enquiries SET seats_adjusted = false, updated_at = NOW() WHERE enquiry_id = $1`,
+                    [req.params.id]
+                );
+            }
+
+            res.json({
+                success: true,
+                seatsUpdated,
+                message: seatsUpdated
+                    ? `Status updated. Seats now ${seatsUpdated.seats_booked}/${seatsUpdated.capacity}`
+                    : 'Status updated'
+            });
         } catch (error) {
-            res.status(500).json({ success: false, message: 'Error updating enquiry' });
+            console.error('updateEnquiry:', error);
+            res.status(500).json({ success: false, message: error.message || 'Error updating enquiry' });
         }
     }
 

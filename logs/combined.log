@@ -438,3 +438,4 @@
 {"level":"warn","message":{"event":"smtp_startup_failed"},"service":"tanzania-safari","timestamp":"2026-07-29 19:02:33"}
 {"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-07-29 19:02:33"}
 {"level":"info","message":{"environment":"development","event":"server_started","port":"3000","smtp":"disconnected"},"service":"tanzania-safari","timestamp":"2026-07-29 19:02:33"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-08-01 13:24:55"}

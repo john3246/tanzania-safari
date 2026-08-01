@@ -332,15 +332,18 @@
 }
 .group-tabs a {
   text-decoration: none;
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  padding: 0.45rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #1a1a1a !important;
+  padding: 0.55rem 0.9rem;
   border-radius: 8px;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
 }
 .group-tabs a:hover, .group-tabs a.active {
-  color: var(--primary);
-  background: rgba(38,62,34,0.06);
+  color: #fff !important;
+  background: var(--accent, #FF6F00);
+  border-color: var(--accent, #FF6F00);
 }
 .group-section {
   margin-bottom: 2.25rem;
@@ -404,4 +407,82 @@
   border: 1px dashed rgba(38,62,34,0.15);
 }
 
-.hub-hero { /* reuse corp-page-hero patterns via markup */ }
+.group-hero-inner,
+.group-hero-inner h1,
+.group-hero-inner p,
+.group-hero .corp-eyebrow {
+  color: #fff !important;
+}
+.group-hero .corp-breadcrumb,
+.group-hero .corp-breadcrumb a,
+.group-hero .corp-breadcrumb span {
+  color: rgba(255,255,255,0.95) !important;
+  opacity: 1;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.45);
+}
+.group-hero .corp-breadcrumb a:hover {
+  color: #fff !important;
+  text-decoration: underline;
+}
+
+/* High-contrast CTAs on group pages + homepage teaser */
+.group-entry-section .btn-primary,
+.group-cal-section .btn-primary,
+.group-dep-card .btn-primary,
+.group-home-card .btn-primary,
+.group-summary-card .btn-primary,
+.group-request-form .btn-primary {
+  background: var(--accent, #FF6F00) !important;
+  color: #fff !important;
+  border: none !important;
+  opacity: 1 !important;
+  text-shadow: none;
+}
+.group-entry-section .btn-outline,
+.group-cal-section .btn-outline {
+  background: #fff !important;
+  color: #1E311B !important;
+  border: 2px solid #263E22 !important;
+  opacity: 1 !important;
+}
+.group-home-card-price,
+.group-dep-price,
+.group-dep-title,
+.group-home-card h3 {
+  color: #1a1a1a !important;
+}
+.group-home-card p,
+.group-dep-meta,
+.group-dep-dates {
+  color: #3f3f46 !important;
+}
+.group-dep-dates { color: #263E22 !important; }
+.group-cal-chip {
+  color: #111 !important;
+  background: #fff !important;
+  border-color: #d1d5db !important;
+}
+.group-cal-chip.active {
+  background: #FF6F00 !important;
+  border-color: #FF6F00 !important;
+  color: #fff !important;
+}
+.group-cal-chip:disabled {
+  color: #9ca3af !important;
+  background: #f3f4f6 !important;
+}
+
+.group-deposit-note {
+  margin: 0.75rem 0 0;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  background: #fff7ed;
+  border: 1px solid #fdba74;
+  color: #9a3412;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  font-weight: 600;
+}
+.group-request-form .btn-primary[disabled] {
+  opacity: 0.7 !important;
+}
