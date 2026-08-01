@@ -4,6 +4,7 @@ const adminController = require('../controllers/admin.controller');
 const verifyAdmin = require('../middleware/verifyAdmin');
 const authController = require('../controllers/admin/AuthController');
 const { requireAuth } = require('../middleware/authMiddleware');
+const upload = require('../middleware/upload');
 
 // ── Authentication ────────────────────────────────────────────
 router.post('/login', authController.login);
@@ -45,6 +46,13 @@ router.get('/analytics', verifyAdmin, adminController.getAnalytics);
 
 // ── Shared Management ─────────────────────────────────────────
 router.put('/profile', verifyAdmin, adminController.updateProfile);
+router.post('/profile/photo', verifyAdmin, (req, res, next) => {
+    upload.any()(req, res, (err) => {
+        if (err) return res.status(400).json({ success: false, message: err.message });
+        if (!req.file && Array.isArray(req.files) && req.files.length) req.file = req.files[0];
+        next();
+    });
+}, adminController.uploadProfilePhoto);
 router.put('/profile/password', verifyAdmin, adminController.changePassword);
 router.get('/health', verifyAdmin, adminController.getSystemHealth);
     router.get('/enquiries', verifyAdmin, adminController.getEnquiries);

@@ -85,7 +85,10 @@ async function sendBroadcastEmail() {
             };
         }
         const res = await apiRequest('POST', '/communications/send', payload);
-        showToast(res.message || 'Email sent successfully!', 'success');
+        const extra = res.data
+            ? ` (${res.data.sent || res.count || 0} sent${res.data.skipped ? `, ${res.data.skipped} skipped` : ''}${res.data.batches ? `, ${res.data.batches} batches` : ''})`
+            : '';
+        showToast((res.message || 'Email sent successfully!') + extra, 'success');
         document.getElementById('communicationsForm').reset();
         toggleCustomEmailInput();
         onCampaignTypeChange();

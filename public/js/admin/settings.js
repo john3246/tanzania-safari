@@ -34,13 +34,35 @@ async function uploadProfilePhoto(file) {
     if (!file) return;
     const fd = new FormData();
     fd.append('image', file);
+    fd.append('file', file);
+    fd.append('folder', 'profiles');
     try {
-        const res = await apiUpload(fd);
-        const path = res.data?.path || res.data?.url || res.path;
-        await apiRequest('PUT', '/profile', { profile_image_url: path });
-        showToast('Photo updated');
-        await loadProfile();
-    } catch (e) {}
+        const activeToken = localStorage.getItem('adminToken') || localStorage.getItem('token') || '';
+        let ok = false;
+        try {
+            const response = await fetch('/api/admin/profile/photo', {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${activeToken}` },
+                body: fd
+            });
+            const text = await response.text();
+            const result = JSON.parse(text);
+            if (!response.ok) throw new Error(result.message || 'Upload failed');
+            ok = true;
+        } catch (primaryErr) {
+            const uploaded = await apiUpload(fd);
+            const path = uploaded.data?.path || uploaded.data?.url || uploaded.path || uploaded.url;
+            if (!path) throw primaryErr;
+            await apiRequest('PUT', '/profile', { profile_image_url: path });
+            ok = true;
+        }
+        if (ok) {
+            showToast('Photo updated');
+            await loadProfile();
+        }
+    } catch (e) {
+        showToast(e.message || 'Photo upload failed', 'error');
+    }
 }
 
 async function loadSettings() {

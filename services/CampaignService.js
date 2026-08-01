@@ -1,9 +1,18 @@
 /**
- * Newsletter / content campaign broadcasts to subscribers.
+ * Campaign broadcasts — audience from newsletter + customers + bookings.
+ * Batches of 100; never sends the same campaign to the same email twice.
  */
+const crypto = require('crypto');
 const db = require('../config/db');
 const emailService = require('../src/utils/emailService');
 const { notifyAdmins, logAudit } = require('./adminEvents');
+
+const BATCH_SIZE = 100;
+const BATCH_DELAY_MS = 1500;
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 function wrapCampaignHtml({ title, intro, itemsHtml, ctaUrl, ctaLabel }) {
   const site = process.env.SITE_URL || 'https://tanzaniasafarimagic.com';
@@ -43,25 +52,102 @@ async function ensureCampaignTables() {
       created_at timestamptz DEFAULT NOW()
     )
   `).catch(() => {});
+
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS email_campaign_recipients (
+      id bigserial PRIMARY KEY,
+      campaign_id uuid NOT NULL REFERENCES email_campaigns(campaign_id) ON DELETE CASCADE,
+      email varchar(255) NOT NULL,
+      source varchar(40),
+      sent_at timestamptz DEFAULT NOW(),
+      UNIQUE (campaign_id, email)
+    )
+  `).catch(() => {});
+
   await db.query(`
     ALTER TABLE newsletter_subscribers
       ADD COLUMN IF NOT EXISTS unsubscribe_token varchar(64),
-      ADD COLUMN IF NOT EXISTS is_active boolean DEFAULT true
+      ADD COLUMN IF NOT EXISTS is_active boolean DEFAULT true,
+      ADD COLUMN IF NOT EXISTS full_name varchar(150)
   `).catch(() => {});
 }
 
-async function getActiveSubscribers() {
+/**
+ * Unique audience: newsletter + customers + booking emails.
+ */
+async function getCampaignAudience() {
   await ensureCampaignTables();
-  const result = await db.query(`
-    SELECT subscriber_id, email, full_name, unsubscribe_token
-    FROM newsletter_subscribers
-    WHERE COALESCE(is_active, true) = true
-      AND email IS NOT NULL AND email <> ''
-    ORDER BY subscribed_at DESC NULLS LAST
-  `).catch(async () => {
-    return db.query(`SELECT subscriber_id, email, full_name FROM newsletter_subscribers`);
-  });
-  return result.rows || [];
+  const map = new Map();
+
+  const add = (email, name, source) => {
+    const key = String(email || '').trim().toLowerCase();
+    if (!key || !key.includes('@')) return;
+    if (!map.has(key)) {
+      map.set(key, {
+        email: key,
+        full_name: name || null,
+        source: source || 'unknown',
+        unsubscribe_token: null
+      });
+    } else if (name && !map.get(key).full_name) {
+      map.get(key).full_name = name;
+    }
+  };
+
+  // Newsletter
+  try {
+    const news = await db.query(`
+      SELECT email, full_name, unsubscribe_token
+      FROM newsletter_subscribers
+      WHERE COALESCE(is_active, true) = true AND email IS NOT NULL AND email <> ''
+    `);
+    for (const r of news.rows) {
+      add(r.email, r.full_name, 'newsletter');
+      if (r.unsubscribe_token && map.has(String(r.email).toLowerCase())) {
+        map.get(String(r.email).toLowerCase()).unsubscribe_token = r.unsubscribe_token;
+      }
+    }
+  } catch (e) {
+    console.warn('newsletter audience:', e.message);
+  }
+
+  // Customers CRM
+  try {
+    const cust = await db.query(`
+      SELECT email, name FROM customers
+      WHERE email IS NOT NULL AND email <> ''
+    `);
+    for (const r of cust.rows) add(r.email, r.name, 'customer');
+  } catch (e) {
+    console.warn('customers audience:', e.message);
+  }
+
+  // Bookings
+  try {
+    const books = await db.query(`
+      SELECT DISTINCT LOWER(email) AS email,
+             COALESCE(customer_name, full_name) AS full_name
+      FROM bookings
+      WHERE email IS NOT NULL AND TRIM(email) <> ''
+    `);
+    for (const r of books.rows) add(r.email, r.full_name, 'booking');
+  } catch (e) {
+    // column names may vary
+    try {
+      const books = await db.query(`
+        SELECT DISTINCT LOWER(email) AS email FROM bookings WHERE email IS NOT NULL AND email <> ''
+      `);
+      for (const r of books.rows) add(r.email, null, 'booking');
+    } catch (e2) {
+      console.warn('bookings audience:', e2.message);
+    }
+  }
+
+  return Array.from(map.values());
+}
+
+async function getActiveSubscribers() {
+  return getCampaignAudience();
 }
 
 function personalize(html, subscriber) {
@@ -74,52 +160,93 @@ function personalize(html, subscriber) {
     .replace(/\{\{email\}\}/g, subscriber.email);
 }
 
+async function ensureRecipientTokens(recipients) {
+  for (const s of recipients) {
+    if (s.unsubscribe_token) continue;
+    const token = crypto.randomBytes(24).toString('hex');
+    s.unsubscribe_token = token;
+    await db.query(
+      `UPDATE newsletter_subscribers SET unsubscribe_token = $1 WHERE LOWER(email) = LOWER($2)`,
+      [token, s.email]
+    ).catch(() => {});
+  }
+}
+
 async function sendToSubscribers({ subject, bodyHtml, campaignType = 'custom', contentRef = null, sentBy = null, req = null }) {
-  await ensureCampaignTables();
-  const subscribers = await getActiveSubscribers();
-  if (!subscribers.length) {
-    const err = new Error('No active newsletter subscribers');
+  if (!subject || !bodyHtml) {
+    const err = new Error('Subject and body are required');
     err.status = 400;
     throw err;
   }
 
-  // Ensure tokens exist
-  for (const s of subscribers) {
-    if (!s.unsubscribe_token) {
-      const token = require('crypto').randomBytes(24).toString('hex');
-      await db.query(
-        `UPDATE newsletter_subscribers SET unsubscribe_token = $1 WHERE subscriber_id = $2 OR email = $3`,
-        [token, s.subscriber_id, s.email]
-      ).catch(() => {});
-      s.unsubscribe_token = token;
-    }
+  await ensureCampaignTables();
+  const audience = await getCampaignAudience();
+  if (!audience.length) {
+    const err = new Error('No recipients found (newsletter, customers, or bookings)');
+    err.status = 400;
+    throw err;
   }
+
+  await ensureRecipientTokens(audience);
+
+  const campaignRes = await db.query(
+    `INSERT INTO email_campaigns (campaign_type, subject, body_html, content_ref, status, recipients_count, sent_by)
+     VALUES ($1, $2, $3, $4, 'sending', 0, $5)
+     RETURNING *`,
+    [campaignType, subject, bodyHtml, contentRef, sentBy]
+  );
+  const campaign = campaignRes.rows[0];
+  const campaignId = campaign.campaign_id;
 
   let sent = 0;
-  for (const s of subscribers) {
-    try {
-      await emailService.sendEmail({
-        to: s.email,
-        subject,
-        html: personalize(bodyHtml, s)
-      });
-      sent++;
-    } catch (e) {
-      console.error(`Campaign email failed for ${s.email}:`, e.message);
+  let skipped = 0;
+  let failed = 0;
+
+  for (let i = 0; i < audience.length; i += BATCH_SIZE) {
+    const batch = audience.slice(i, i + BATCH_SIZE);
+    for (const s of batch) {
+      // Claim slot — unique (campaign_id, email) prevents double send
+      let claimed = false;
+      try {
+        await db.query(
+          `INSERT INTO email_campaign_recipients (campaign_id, email, source)
+           VALUES ($1, $2, $3)`,
+          [campaignId, s.email, s.source]
+        );
+        claimed = true;
+      } catch (dup) {
+        skipped++;
+        continue;
+      }
+
+      try {
+        await emailService.sendEmail({
+          to: s.email,
+          subject,
+          html: personalize(bodyHtml, s)
+        });
+        sent++;
+      } catch (e) {
+        failed++;
+        console.error(`Campaign email failed for ${s.email}:`, e.message);
+        // Keep recipient row so we don't retry the same campaign endlessly
+      }
+    }
+
+    if (i + BATCH_SIZE < audience.length) {
+      await sleep(BATCH_DELAY_MS);
     }
   }
 
-  const campaign = await db.query(
-    `INSERT INTO email_campaigns (campaign_type, subject, body_html, content_ref, status, recipients_count, sent_by)
-     VALUES ($1, $2, $3, $4, 'sent', $5, $6)
-     RETURNING *`,
-    [campaignType, subject, bodyHtml, contentRef, sent, sentBy]
-  ).catch(() => ({ rows: [] }));
+  await db.query(
+    `UPDATE email_campaigns SET status = 'sent', recipients_count = $1 WHERE campaign_id = $2`,
+    [sent, campaignId]
+  ).catch(() => {});
 
   await notifyAdmins({
     type: 'email',
     title: 'Campaign sent',
-    message: `"${subject}" delivered to ${sent} subscriber(s)`,
+    message: `"${subject}" → ${sent} sent, ${skipped} skipped (already sent), ${failed} failed · batches of ${BATCH_SIZE}`,
     actionUrl: '/admin/communications'
   });
 
@@ -127,12 +254,19 @@ async function sendToSubscribers({ subject, bodyHtml, campaignType = 'custom', c
     userId: sentBy,
     action: 'campaign_send',
     entityType: 'email_campaign',
-    entityId: campaign.rows[0]?.campaign_id,
-    newValues: { subject, campaignType, recipients: sent },
+    entityId: campaignId,
+    newValues: { subject, campaignType, sent, skipped, failed, audience: audience.length },
     req
   });
 
-  return { sent, total: subscribers.length, campaign: campaign.rows[0] || null };
+  return {
+    sent,
+    skipped,
+    failed,
+    total: audience.length,
+    batches: Math.ceil(audience.length / BATCH_SIZE),
+    campaign: { ...campaign, recipients_count: sent, status: 'sent' }
+  };
 }
 
 async function buildContentCampaign(type, refId) {
@@ -141,12 +275,11 @@ async function buildContentCampaign(type, refId) {
   if (type === 'tour' || type === 'package') {
     const r = await db.query(
       `SELECT package_id, package_name, package_slug, short_description, base_price_usd, featured_image_url
-       FROM safari_packages WHERE package_id = $1 OR package_slug = $1 LIMIT 1`,
-      [refId]
+       FROM safari_packages WHERE package_id::text = $1 OR package_slug = $1 LIMIT 1`,
+      [String(refId)]
     );
     const p = r.rows[0];
     if (!p) throw Object.assign(new Error('Tour not found'), { status: 404 });
-    const url = `${site}/safaris/${p.package_slug}`;
     return {
       subject: `Safari spotlight: ${p.package_name}`,
       bodyHtml: wrapCampaignHtml({
@@ -156,7 +289,7 @@ async function buildContentCampaign(type, refId) {
           ${p.featured_image_url ? `<img src="${p.featured_image_url}" alt="" style="width:100%;border-radius:12px;margin:12px 0">` : ''}
           <p><strong>From $${Number(p.base_price_usd || 0).toLocaleString()} USD</strong> · private itinerary</p>
         `,
-        ctaUrl: url,
+        ctaUrl: `${site}/safaris/${p.package_slug}`,
         ctaLabel: 'View this safari'
       }),
       contentRef: String(p.package_id)
@@ -247,7 +380,9 @@ async function buildContentCampaign(type, refId) {
 module.exports = {
   wrapCampaignHtml,
   getActiveSubscribers,
+  getCampaignAudience,
   sendToSubscribers,
   buildContentCampaign,
-  ensureCampaignTables
+  ensureCampaignTables,
+  BATCH_SIZE
 };

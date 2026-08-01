@@ -29,8 +29,17 @@ router.get('/entity/:entityType/:entityId', requirePermission('media.view'), med
 // GET /api/admin/media/tags - Get media by tags
 router.get('/tags', requirePermission('media.view'), mediaController.getByTags);
 
-// POST /api/admin/media/upload - Upload single file
-router.post('/upload', requirePermission('media.upload'), upload.single('file'), mediaController.upload);
+// POST /api/admin/media/upload - Upload single file (accept file or image field)
+router.post('/upload', requirePermission('media.upload'), (req, res, next) => {
+    const handler = upload.any();
+    handler(req, res, (err) => {
+        if (err) return res.status(400).json({ success: false, message: err.message });
+        if (!req.file && Array.isArray(req.files) && req.files.length) {
+            req.file = req.files[0];
+        }
+        next();
+    });
+}, mediaController.upload);
 
 // POST /api/admin/media/upload-multiple - Upload multiple files
 router.post('/upload-multiple', requirePermission('media.upload'), upload.array('files', 10), mediaController.uploadMultiple);

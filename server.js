@@ -425,6 +425,14 @@ async function startServer() {
     logger.info({ event: 'worker_starting' }, 'Starting email worker...');
     // Worker is already started by requiring the module
 
+    // Booking quote reminders: every 6h for 24h after request
+    try {
+      const { startBookingReminderJob } = require('./services/BookingReminderService');
+      startBookingReminderJob();
+    } catch (remErr) {
+      logger.warn({ event: 'booking_reminder_start_failed', error: remErr.message }, 'Booking reminder job not started');
+    }
+
     server.listen(PORT, () => {
       logger.info({
         event: 'server_started',

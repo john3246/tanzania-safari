@@ -112,6 +112,30 @@ class AdminController {
         }
     }
 
+    async uploadProfilePhoto(req, res) {
+        try {
+            if (!req.file) {
+                return res.status(400).json({ success: false, message: 'No image uploaded' });
+            }
+            const mediaService = require('../services/MediaService');
+            const data = await mediaService.processUpload(
+                req.file,
+                { folder: 'profiles', alt_text: 'Admin profile photo' },
+                req.user.user_id
+            );
+            const url = data.url || data.path;
+            await userRepository.update(req.user.user_id, { profile_image_url: url });
+            res.json({
+                success: true,
+                message: 'Profile photo updated',
+                data: { profile_image_url: url, path: url, url }
+            });
+        } catch (error) {
+            console.error('uploadProfilePhoto error:', error);
+            res.status(500).json({ success: false, message: error.message || 'Upload failed' });
+        }
+    }
+
     async changePassword(req, res) {
         try {
             const bcrypt = require('bcrypt');

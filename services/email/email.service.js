@@ -658,8 +658,8 @@ async function sendNewsletterUpdate(subscriberEmail, content) {
     templateName: 'newsletter',
     templateData: {
       ...content,
-      site_url: process.env.SITE_URL || 'http://localhost:3000',
-      unsubscribe_url: `${process.env.SITE_URL || 'http://localhost:3000'}/unsubscribe?email=${subscriberEmail}`,
+      site_url: process.env.SITE_URL || 'https://tanzaniasafarimagic.com',
+      unsubscribe_url: `${process.env.SITE_URL || 'https://tanzaniasafarimagic.com'}/unsubscribe?email=${encodeURIComponent(subscriberEmail)}`,
       header: {
         title: 'Newsletter',
         subtitle: 'Tanzania Safari Magic'
@@ -667,6 +667,31 @@ async function sendNewsletterUpdate(subscriberEmail, content) {
     }
   };
   return sendEmailQueued('newsletter', data);
+}
+
+/**
+ * Comprehensive welcome + thank-you after newsletter subscribe.
+ */
+async function sendNewsletterWelcome({ email, full_name = null, unsubscribe_token = null }) {
+  const site = process.env.SITE_URL || 'https://tanzaniasafarimagic.com';
+  const token = unsubscribe_token || Buffer.from(String(email).toLowerCase()).toString('base64url');
+  const unsubscribe_url = `${site}/unsubscribe?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}`;
+  const data = {
+    to: email,
+    subject: 'Karibu! Welcome to Tanzania Safari Magic',
+    templateName: 'newsletter-welcome',
+    templateData: {
+      full_name: full_name || null,
+      email,
+      site_url: site,
+      unsubscribe_url,
+      header: {
+        title: 'Welcome to the journey',
+        subtitle: 'Thank you for subscribing'
+      }
+    }
+  };
+  return sendEmailQueued('newsletter-welcome', data);
 }
 
 // Admin alerts
@@ -738,6 +763,7 @@ module.exports = {
   
   // Newsletter
   sendNewsletterUpdate,
+  sendNewsletterWelcome,
   
   // Admin alerts
   sendAdminAlert

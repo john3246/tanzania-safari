@@ -42,10 +42,18 @@ class MediaController {
             if (!req.file) {
                 return res.status(400).json({ success: false, message: 'No file uploaded' });
             }
-            const userId = req.user ? req.user.id : null;
+            const userId = req.user?.user_id || req.user?.id || null;
             const data = await mediaService.processUpload(req.file, req.body, userId);
-            res.status(201).json({ success: true, data });
+            res.status(201).json({
+                success: true,
+                data: {
+                    ...data,
+                    path: data.path || data.url,
+                    url: data.url || data.path
+                }
+            });
         } catch (error) {
+            console.error('Media upload error:', error);
             res.status(500).json({ success: false, message: error.message });
         }
     }

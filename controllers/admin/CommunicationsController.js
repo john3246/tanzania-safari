@@ -26,7 +26,7 @@ class CommunicationsController {
                 });
                 return res.json({
                     success: true,
-                    message: `Campaign sent to ${result.sent} subscriber(s)`,
+                    message: `Campaign sent to ${result.sent} of ${result.total} unique recipients (${result.skipped} already had this campaign)`,
                     count: result.sent,
                     data: result
                 });
@@ -97,7 +97,7 @@ class CommunicationsController {
 
     async listSubscribers(req, res) {
         try {
-            const rows = await campaignService.getActiveSubscribers();
+            const rows = await campaignService.getCampaignAudience();
             res.json({ success: true, data: rows, count: rows.length });
         } catch (error) {
             res.status(500).json({ success: false, message: error.message });

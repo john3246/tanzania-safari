@@ -224,6 +224,22 @@ async function migrate() {
             sent_by uuid,
             created_at timestamptz DEFAULT NOW()
         );
+        CREATE TABLE IF NOT EXISTS email_campaign_recipients (
+            id bigserial PRIMARY KEY,
+            campaign_id uuid NOT NULL REFERENCES email_campaigns(campaign_id) ON DELETE CASCADE,
+            email varchar(255) NOT NULL,
+            source varchar(40),
+            sent_at timestamptz DEFAULT NOW(),
+            UNIQUE (campaign_id, email)
+        );
+        CREATE TABLE IF NOT EXISTS booking_reminders (
+            id bigserial PRIMARY KEY,
+            booking_id uuid NOT NULL,
+            hours_offset integer NOT NULL,
+            email varchar(255) NOT NULL,
+            sent_at timestamptz DEFAULT NOW(),
+            UNIQUE (booking_id, hours_offset)
+        );
         ALTER TABLE newsletter_subscribers ADD COLUMN IF NOT EXISTS unsubscribe_token varchar(64);
         ALTER TABLE newsletter_subscribers ADD COLUMN IF NOT EXISTS is_active boolean DEFAULT true;
         ALTER TABLE newsletter_subscribers ADD COLUMN IF NOT EXISTS full_name varchar(150);

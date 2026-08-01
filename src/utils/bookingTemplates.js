@@ -137,9 +137,34 @@ function getAdminGroupRequestEmailHTML({ full_name, email, phone, departure, sea
     `;
 }
 
+function getClientBookingReminderHTML(booking, hoursOffset = 6) {
+    const name = booking.customer_name || booking.full_name || 'Traveler';
+    const pkg = booking.package_name || booking.package_id || 'your Tanzania safari';
+    const date = booking.start_date || booking.travel_date || 'TBD';
+    return `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0;">
+        ${getHeader()}
+        <div style="padding: 30px; background-color: #ffffff;">
+          <h2 style="color: #0D47A1; margin-top: 0;">Safari quote reminder (${hoursOffset}h)</h2>
+          <p style="color: #333; line-height: 1.6;">Hi ${name},</p>
+          <p style="color: #333; line-height: 1.6;">Just checking in — we received your quote request and Our Team is still preparing your itinerary. No payment is taken online.</p>
+          <div style="background-color: #FBF6EE; border-left: 4px solid #FF6F00; padding: 15px; margin: 25px 0;">
+            <p style="margin: 5px 0;"><strong>Package:</strong> ${pkg}</p>
+            <p style="margin: 5px 0;"><strong>Travel Date:</strong> ${date}</p>
+            <p style="margin: 5px 0;"><strong>Follow-up:</strong> Reminder at ${hoursOffset} hours (within 24h of your request)</p>
+          </div>
+          <p style="color: #333; line-height: 1.6;">Reply with any updates (dates, lodge style, budget) or WhatsApp <a href="https://wa.me/255695108009">+255 695 108 009</a>.</p>
+          <a href="https://wa.me/255695108009" style="display: inline-block; background-color: #FF6F00; color: #ffffff; text-decoration: none; padding: 12px 25px; border-radius: 4px; margin-top: 20px; font-weight: bold;">WhatsApp Us</a>
+        </div>
+        ${getFooter()}
+      </div>
+    `;
+}
+
 module.exports = {
     getClientBookingEmailHTML,
     getAdminBookingEmailHTML,
     getClientGroupRequestEmailHTML,
-    getAdminGroupRequestEmailHTML
+    getAdminGroupRequestEmailHTML,
+    getClientBookingReminderHTML
 };

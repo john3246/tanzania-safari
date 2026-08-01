@@ -176,79 +176,85 @@ class MediaService extends BaseService {
     async processUpload(file, body, userId) {
         if (!file) throw new Error('No file provided');
 
-        const { alt_text, caption, folder, entity_type, entity_id, tags } = body;
-        const uploadDir = path.join(__dirname, '../../uploads');
-        
-        // Ensure folder exists
-        const targetFolder = folder || 'root';
+        const { alt_text, caption, folder } = body || {};
+        // services/ → project root uploads/
+        const uploadDir = path.join(__dirname, '../uploads');
+
+        const targetFolder = (folder || 'profiles').replace(/[^a-z0-9/_-]/gi, '') || 'profiles';
         const folderPath = path.join(uploadDir, targetFolder);
         if (!fs.existsSync(folderPath)) {
             fs.mkdirSync(folderPath, { recursive: true });
         }
 
-        // Generate unique filename
-        const ext = path.extname(file.originalname);
-        const baseName = path.parse(file.originalname).name;
+        const ext = path.extname(file.originalname).toLowerCase() || '.jpg';
+        const baseName = path.parse(file.originalname).name.replace(/[^a-z0-9_-]/gi, '-').slice(0, 40) || 'upload';
         const uniqueName = `${baseName}-${crypto.randomBytes(8).toString('hex')}${ext}`;
         const outputPath = path.join(folderPath, uniqueName);
+        const publicPath = `/uploads/${targetFolder}/${uniqueName}`;
         const fileSlug = this.generateSlug(file.originalname);
 
-        // Process image if it's an image
-        let processedPath = outputPath;
+        // Multer already wrote temp file — copy into destination
+        const sourcePath = file.path;
+        if (!sourcePath || !fs.existsSync(sourcePath)) {
+            throw new Error('Uploaded temp file missing');
+        }
+        fs.copyFileSync(sourcePath, outputPath);
+
         let webpPath = null;
         let thumbnailPath = null;
-
-        if (file.mimetype.startsWith('image/')) {
-            // Save original
-            fs.writeFileSync(outputPath, fs.readFileSync(file.path));
-
-            // Generate WebP version
-            webpPath = outputPath.replace(ext, '.webp');
-            await sharp(file.path)
-                .resize({ width: 1920, height: 1080, fit: 'inside', withoutEnlargement: true })
-                .webp({ quality: 80 })
-                .toFile(webpPath);
-
-            // Generate thumbnail
-            thumbnailPath = outputPath.replace(ext, '-thumb.webp');
-            await sharp(file.path)
-                .resize({ width: 400, height: 300, fit: 'cover' })
-                .webp({ quality: 70 })
-                .toFile(thumbnailPath);
-        } else {
-            // For non-images (videos, etc), just copy the file
-            fs.writeFileSync(outputPath, fs.readFileSync(file.path));
-        }
-
-        // Delete temp file
         try {
-            fs.unlinkSync(file.path);
-        } catch (err) {
-            console.error('Error deleting temporary file:', err);
+            if (file.mimetype && file.mimetype.startsWith('image/')) {
+                webpPath = outputPath.replace(ext, '.webp');
+                await sharp(sourcePath)
+                    .resize({ width: 1920, height: 1080, fit: 'inside', withoutEnlargement: true })
+                    .webp({ quality: 80 })
+                    .toFile(webpPath);
+
+                thumbnailPath = outputPath.replace(ext, '-thumb.webp');
+                await sharp(sourcePath)
+                    .resize({ width: 400, height: 300, fit: 'cover' })
+                    .webp({ quality: 70 })
+                    .toFile(thumbnailPath);
+            }
+        } catch (imgErr) {
+            console.warn('Image optimize skipped:', imgErr.message);
         }
 
-        // Save to DB
+        try {
+            fs.unlinkSync(sourcePath);
+        } catch (_) {}
+
+        // Match media_library schema (url, original_name, …)
         const mediaData = {
             filename: uniqueName,
-            original_filename: file.originalname,
+            original_name: file.originalname,
             mime_type: file.mimetype,
             file_size: file.size,
-            path: `/uploads/${targetFolder}/${uniqueName}`,
-            url: `/uploads/${targetFolder}/${uniqueName}`,
+            url: publicPath,
             slug: fileSlug,
-            thumbnail_url: thumbnailPath ? `/uploads/${targetFolder}/${path.basename(thumbnailPath)}` : null,
-            webp_url: webpPath ? `/uploads/${targetFolder}/${path.basename(webpPath)}` : null,
             alt_text: alt_text || null,
             caption: caption || null,
             folder: targetFolder,
-            tags: tags || [],
-            entity_type: entity_type || null,
-            entity_id: entity_id ? parseInt(entity_id) : null,
-            uploaded_by: userId
+            uploaded_by: userId || null
         };
 
-        const media = await this.repository.create(mediaData);
-        return this.repository.findById(media.id);
+        let saved = null;
+        try {
+            saved = await this.repository.create(mediaData);
+        } catch (dbErr) {
+            console.warn('media_library insert failed (file still saved):', dbErr.message);
+        }
+
+        return {
+            ...(saved || {}),
+            id: saved?.id,
+            filename: uniqueName,
+            path: publicPath,
+            url: publicPath,
+            slug: fileSlug,
+            thumbnail_url: thumbnailPath ? `/uploads/${targetFolder}/${path.basename(thumbnailPath)}` : null,
+            webp_url: webpPath ? `/uploads/${targetFolder}/${path.basename(webpPath)}` : null
+        };
     }
 
     async processMultipleUploads(files, body, userId) {
