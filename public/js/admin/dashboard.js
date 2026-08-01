@@ -143,8 +143,42 @@ async function loadDashboard() {
 
         renderRevenueChart(stats);
         loadRecentActivity();
+        refreshDashboardHealth();
     } catch (e) {
         console.error('Error loading dashboard:', e);
+    }
+}
+
+async function refreshDashboardHealth() {
+    try {
+        const res = await apiRequest('GET', '/health');
+        const h = res.data || res;
+        const db = h.services?.database || {};
+        const dbEl = document.getElementById('dash-db-status');
+        if (dbEl) {
+            const ok = db.status === 'connected';
+            dbEl.className = ok ? 'text-forest-600 font-medium flex items-center gap-1' : 'text-red-600 font-medium';
+            dbEl.innerHTML = ok
+                ? `Connected ${db.latencyMs != null ? `(${db.latencyMs}ms)` : ''} <i class="fa-solid fa-check"></i>`
+                : `Error`;
+        }
+        const nodeEl = document.getElementById('dash-node-status');
+        if (nodeEl) {
+            const host = h.render?.isRender
+                ? `Render · ${h.render.service || 'web'} · ${h.node || ''}`
+                : (h.node || 'local');
+            nodeEl.textContent = host;
+        }
+        const sysEl = document.getElementById('dash-system-status');
+        if (sysEl) {
+            const st = h.status || 'unknown';
+            const color = st === 'healthy' ? 'forest' : st === 'degraded' ? 'amber' : 'red';
+            sysEl.className = `text-${color}-600 font-medium flex items-center gap-1`;
+            sysEl.innerHTML = `${st.charAt(0).toUpperCase() + st.slice(1)} <div class="w-2 h-2 rounded-full bg-${color}-500 ml-1"></div>`;
+        }
+    } catch (e) {
+        const sysEl = document.getElementById('dash-system-status');
+        if (sysEl) sysEl.textContent = 'Unavailable';
     }
 }
 

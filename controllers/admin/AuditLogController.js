@@ -12,8 +12,8 @@ class AuditLogController {
                 search,
                 action,
                 entityType,
-                entityId: entityId ? parseInt(entityId) : undefined,
-                actorId: actorId ? parseInt(actorId) : undefined,
+                entityId: entityId || undefined,
+                actorId: actorId || undefined,
                 startDate,
                 endDate,
                 severity,
@@ -52,7 +52,7 @@ class AuditLogController {
         try {
             const { entityType, entityId } = req.params;
             const { limit = 50 } = req.query;
-            const logs = await auditLogService.getLogsByEntity(entityType, parseInt(entityId), { limit: parseInt(limit) });
+            const logs = await auditLogService.getLogsByEntity(entityType, entityId, { limit: parseInt(limit) });
             res.json({ success: true, data: logs });
         } catch (error) {
             res.status(500).json({ success: false, message: error.message });

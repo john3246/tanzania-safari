@@ -60,6 +60,7 @@ module.exports = async (req, res, next) => {
         }
 
         req.user = userRow;
+        req.user.user_id = userRow.user_id;
         req.user.role = role;
         req.user.permissions = permissions;
         next();

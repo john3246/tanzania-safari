@@ -160,14 +160,35 @@ router.post(['/enquiry', '/contact'], validate(contactSchema), async (req, res) 
 async function handleNewsletterSubscribe(req, res) {
     try {
         const db = require('../config/db');
+        const crypto = require('crypto');
         const CustomerRepository = require('../repositories/CustomerRepository');
-        const { email } = req.body;
+        const { email, full_name } = req.body;
         if (!email) return res.status(400).json({ success: false, message: 'Email is required' });
 
-        await db.query(
-            'INSERT INTO newsletter_subscribers (email, subscribed_at) VALUES ($1, NOW()) ON CONFLICT (email) DO NOTHING',
-            [email]
-        );
+        const token = crypto.randomBytes(24).toString('hex');
+        await db.query(`
+            ALTER TABLE newsletter_subscribers
+              ADD COLUMN IF NOT EXISTS unsubscribe_token varchar(64),
+              ADD COLUMN IF NOT EXISTS is_active boolean DEFAULT true,
+              ADD COLUMN IF NOT EXISTS full_name varchar(150)
+        `).catch(() => {});
+
+        try {
+            await db.query(
+                `INSERT INTO newsletter_subscribers (email, full_name, subscribed_at, is_active, unsubscribe_token)
+                 VALUES ($1, $2, NOW(), true, $3)
+                 ON CONFLICT (email) DO UPDATE SET
+                   is_active = true,
+                   full_name = COALESCE(EXCLUDED.full_name, newsletter_subscribers.full_name),
+                   unsubscribe_token = COALESCE(newsletter_subscribers.unsubscribe_token, EXCLUDED.unsubscribe_token)`,
+                [email, full_name || null, token]
+            );
+        } catch (_) {
+            await db.query(
+                'INSERT INTO newsletter_subscribers (email, subscribed_at) VALUES ($1, NOW()) ON CONFLICT (email) DO NOTHING',
+                [email]
+            );
+        }
         await CustomerRepository.upsertFromNewsletter(email);
 
         res.json({ success: true, message: 'Subscribed successfully' });
@@ -177,7 +198,31 @@ async function handleNewsletterSubscribe(req, res) {
     }
 }
 
+async function handleNewsletterUnsubscribe(req, res) {
+    try {
+        const db = require('../config/db');
+        const { email, token } = req.body || {};
+        if (!email) {
+            return res.status(400).json({ success: false, message: 'Email is required' });
+        }
+        await db.query(
+            `UPDATE newsletter_subscribers
+             SET is_active = false
+             WHERE LOWER(email) = LOWER($1)
+               AND ($2::text IS NULL OR unsubscribe_token IS NULL OR unsubscribe_token = $2)`,
+            [email, token || null]
+        ).catch(async () => {
+            await db.query(`DELETE FROM newsletter_subscribers WHERE LOWER(email) = LOWER($1)`, [email]);
+        });
+        res.json({ success: true, message: 'You have been unsubscribed from newsletter emails.' });
+    } catch (error) {
+        console.error('Unsubscribe error:', error.message);
+        res.status(500).json({ success: false, message: 'Could not unsubscribe' });
+    }
+}
+
 router.post('/newsletter', validate(newsletterSchema), handleNewsletterSubscribe);
 router.post('/newsletter/subscribe', validate(newsletterSchema), handleNewsletterSubscribe);
+router.post('/newsletter/unsubscribe', handleNewsletterUnsubscribe);
 
 module.exports = router;

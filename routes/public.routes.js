@@ -204,7 +204,13 @@ router.get('/menus/:slug', async (req, res) => {
 router.get('/settings', async (req, res) => {
     try {
         const settings = await siteSettingsService.getSettingsAsObject();
-        res.json({ success: true, data: settings });
+        // Never expose SMTP credentials publicly
+        const safe = {};
+        for (const [k, v] of Object.entries(settings || {})) {
+            if (/^smtp\.|smtp_|password|secret|api_key/i.test(k)) continue;
+            safe[k] = v;
+        }
+        res.json({ success: true, data: safe });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }

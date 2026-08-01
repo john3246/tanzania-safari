@@ -7,21 +7,27 @@ async function loadProfile() {
         if (document.getElementById('profFirst')) document.getElementById('profFirst').value = u.first_name || '';
         if (document.getElementById('profLast')) document.getElementById('profLast').value = u.last_name || '';
         if (document.getElementById('profEmail')) document.getElementById('profEmail').value = u.email || '';
-        
-        const avatarUrl = u.profile_image_url || 'https://ui-avatars.com/api/?name=Admin&background=263E22&color=D4AF37';
-        
+
+        const displayName = `${u.first_name || ''} ${u.last_name || ''}`.trim() || u.email || 'Admin';
+        const avatarUrl = u.profile_image_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=263E22&color=D4AF37`;
+
         const sImg = document.getElementById('sidebarAvatarImg');
         if (sImg) { sImg.src = avatarUrl; sImg.style.display = 'block'; }
 
         const hImg = document.getElementById('headerAvatarImg');
         if (hImg) { hImg.src = avatarUrl; hImg.style.display = 'block'; }
 
+        document.querySelectorAll('#headerUserName, #userName, .admin-user-name').forEach(el => {
+            el.textContent = displayName;
+        });
+
         if (u.profile_image_url) {
             const preview = document.getElementById('profileImagePreview');
-            if (preview) preview.innerHTML = `<img src="${u.profile_image_url}" style="width:100%; height:100%; object-fit:cover">`;
+            if (preview) preview.innerHTML = `<img src="${u.profile_image_url}" alt="" style="width:100%; height:100%; object-fit:cover">`;
         }
-        if (document.getElementById('userName')) document.getElementById('userName').textContent = `${u.first_name} ${u.last_name || ''}`;
-    } catch (e) {}
+    } catch (e) {
+        console.warn('loadProfile', e);
+    }
 }
 
 async function uploadProfilePhoto(file) {
@@ -30,25 +36,46 @@ async function uploadProfilePhoto(file) {
     fd.append('image', file);
     try {
         const res = await apiUpload(fd);
-        await apiRequest('PUT', '/profile', { profile_image_url: res.data.path });
-        showToast('Photo Updated');
-        loadProfile();
+        const path = res.data?.path || res.data?.url || res.path;
+        await apiRequest('PUT', '/profile', { profile_image_url: path });
+        showToast('Photo updated');
+        await loadProfile();
     } catch (e) {}
 }
 
 async function loadSettings() {
     const sForm = document.getElementById('settingsForm');
     const pForm = document.getElementById('passwordForm');
-    
+    const profileForm = document.getElementById('profileForm');
+
+    if (profileForm && !profileForm.dataset.bound) {
+        profileForm.dataset.bound = '1';
+        profileForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const data = Object.fromEntries(new FormData(profileForm));
+            try {
+                await apiRequest('PUT', '/profile', {
+                    first_name: data.first_name,
+                    last_name: data.last_name
+                });
+                showToast('Profile details updated');
+                await loadProfile();
+            } catch (err) {
+                showToast(err.message || 'Failed to update profile', 'error');
+            }
+        };
+    }
+
     if (sForm) {
         try {
             const res = await apiRequest('GET', '/settings');
             sForm.innerHTML = `<div class="space-y-4">${(res.data || []).map(s => `
                 <div class="space-y-1">
-                    <label class="text-xs font-medium text-slate-500">${s.setting_key.replace(/_/g, ' ').toUpperCase()}</label>
-                    <input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="${s.setting_key}" value="${s.setting_value || ''}">
-                </div>`).join('')}</div><div class="mt-6 flex justify-end"><button type="submit" class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">Save Configuration</button></div>`;
-            
+                    <label class="text-xs font-medium text-slate-500">${String(s.setting_key || '').replace(/_/g, ' ').toUpperCase()}</label>
+                    <input class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" name="${s.setting_key}" value="${(s.setting_value || '').replace(/"/g, '&quot;')}">
+                </div>`).join('') || '<p class="text-sm text-slate-400">No system_settings rows yet.</p>'}</div>
+                <div class="mt-6 flex justify-end"><button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium">Save Configuration</button></div>`;
+
             sForm.onsubmit = async (e) => {
                 e.preventDefault();
                 const data = Object.fromEntries(new FormData(sForm));
@@ -56,7 +83,7 @@ async function loadSettings() {
                     await apiRequest('PUT', '/settings', data);
                     showToast('System configuration updated');
                     await loadSettings();
-                } catch (e) {}
+                } catch (err) {}
             };
         } catch (e) {}
     }
@@ -70,15 +97,21 @@ async function loadSettings() {
                 return;
             }
             try {
-                await apiRequest('PUT', '/profile/password', { password: data.new_password });
+                await apiRequest('PUT', '/profile/password', {
+                    current_password: data.current_password || undefined,
+                    password: data.new_password
+                });
                 showToast('Password changed successfully');
                 pForm.reset();
-            } catch (e) {}
+            } catch (err) {
+                showToast(err.message || 'Password update failed', 'error');
+            }
         };
     }
 
     await loadSiteContactSettings();
     await loadSmtpSettings();
+    await loadSeoSettings();
 }
 
 function pickSetting(rows, key) {
@@ -133,7 +166,7 @@ async function loadSiteContactSettings() {
                 twitter: data.twitter,
                 youtube: data.youtube
             });
-            showToast('Site contact settings saved');
+            showToast('Site contact settings saved — live on the public site');
         } catch (err) {
             showToast(err.message || 'Failed to save site settings', 'error');
         }
@@ -153,7 +186,6 @@ async function loadSmtpSettings() {
         set('port', 'smtp.port');
         set('secure', 'smtp.secure');
         set('user', 'smtp.user');
-        // Don't prefill password for security — leave blank unless stored
         set('from', 'smtp.from');
         set('admin_email', 'smtp.admin_email');
     } catch (e) {
@@ -180,3 +212,37 @@ async function loadSmtpSettings() {
         }
     };
 }
+
+async function loadSeoSettings() {
+    const form = document.getElementById('seoSettingsForm');
+    if (!form) return;
+    try {
+        const res = await apiRequest('GET', '/site-settings/seo').catch(() => ({ data: [] }));
+        const rows = res.data || [];
+        const set = (name, key) => {
+            if (form.elements[name]) form.elements[name].value = pickSetting(rows, key) || pickSetting(rows, key.replace('seo.', '')) || '';
+        };
+        set('default_title', 'seo.default_title');
+        set('default_description', 'seo.default_description');
+        set('og_image', 'seo.og_image');
+    } catch (e) {}
+
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+        const data = Object.fromEntries(new FormData(form));
+        try {
+            await apiRequest('PUT', '/site-settings/seo', {
+                default_title: data.default_title,
+                default_description: data.default_description,
+                og_image: data.og_image
+            });
+            showToast('SEO defaults saved');
+        } catch (err) {
+            showToast(err.message || 'Failed to save SEO', 'error');
+        }
+    };
+}
+
+window.loadProfile = loadProfile;
+window.loadSettings = loadSettings;
+window.uploadProfilePhoto = uploadProfilePhoto;

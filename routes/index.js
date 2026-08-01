@@ -206,6 +206,19 @@ router.get('/thank-you', (req, res) => {
   }
 });
 
+router.get('/unsubscribe', (req, res) => {
+  try {
+    seo.sendSeoHtml(res, 'unsubscribe.html', {
+      title: 'Unsubscribe | Tanzania Safari Magic',
+      description: 'Manage newsletter subscription.',
+      canonical: seo.SITE.url + '/unsubscribe',
+      robots: 'noindex, follow'
+    });
+  } catch {
+    sendFile(res, 'unsubscribe.html');
+  }
+});
+
 router.get('/safaris', (req, res) => {
   try {
     seo.sendSeoHtml(res, 'safaris.html', {

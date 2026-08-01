@@ -30,7 +30,7 @@ async function initAdminApp() {
 
         // Setup routing (load dashboard by default)
         const initialPage = window.location.hash.replace('#', '') || window.location.pathname.split('/').pop();
-        const validPages = ['dashboard', 'analytics', 'packages', 'categories', 'bookings', 'booking-details', 'enquiries', 'settings', 'destinations', 'blog', 'reviews', 'users', 'images', 'communications', 'edit-tour', 'edit-destination', 'customers', 'chat', 'group-safaris'];
+        const validPages = ['dashboard', 'analytics', 'packages', 'categories', 'bookings', 'booking-details', 'enquiries', 'settings', 'destinations', 'blog', 'reviews', 'users', 'images', 'communications', 'system-logs', 'edit-tour', 'edit-destination', 'customers', 'chat', 'group-safaris'];
         const pageToLoad = validPages.includes(initialPage) ? initialPage : 'dashboard';
         
         await navigate(pageToLoad, false); // pass false so we don't push state on initial load
@@ -193,6 +193,8 @@ async function navigate(page, pushState = true) {
         case 'settings': loadProfile(); loadSettings(); break;
         case 'customers': if (window.loadCustomers) { window.loadCustomers(); } else { setTimeout(() => window.loadCustomers?.(), 100); } break;
         case 'chat': if (window.initChatPage) { window.initChatPage(); } else { setTimeout(() => window.initChatPage?.(), 100); } break;
+        case 'communications': if (window.loadCommunications) { window.loadCommunications(); } else { setTimeout(() => window.loadCommunications?.(), 100); } break;
+        case 'system-logs': if (window.loadSystemLogs) { window.loadSystemLogs(); } else { setTimeout(() => window.loadSystemLogs?.(), 100); } break;
         case 'edit-tour': if (window.initEditTourPage) { window.initEditTourPage(); } else { setTimeout(() => window.initEditTourPage?.(), 100); } setTimeout(() => window.MediaPicker?.enhanceAll(), 200); break;
         case 'edit-destination': if (window.initEditDestPage) { window.initEditDestPage(); } else { setTimeout(() => window.initEditDestPage?.(), 100); } setTimeout(() => window.MediaPicker?.enhanceAll(), 200); break;
         case 'packages':
@@ -228,7 +230,8 @@ function updateBreadcrumb(page) {
         'settings': 'Settings',
         'customers': 'Customers',
         'chat': 'Live Chat',
-        'communications': 'Communications'
+        'communications': 'Email Campaigns',
+        'system-logs': 'System Logs'
     };
     
     const categoryMap = {
@@ -243,7 +246,8 @@ function updateBreadcrumb(page) {
         'enquiries': 'Overview',
         'customers': 'Overview',
         'chat': 'Overview',
-        'communications': 'Overview',
+        'communications': 'System',
+        'system-logs': 'System',
         'blog': 'Content',
         'reviews': 'Content',
         'images': 'Content',

@@ -211,6 +211,24 @@ async function migrate() {
           is_active = true;
     `);
 
+    await runStep('email campaigns and newsletter columns', `
+        CREATE TABLE IF NOT EXISTS email_campaigns (
+            campaign_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+            campaign_type varchar(50) NOT NULL,
+            subject varchar(255) NOT NULL,
+            preview_text text,
+            body_html text NOT NULL,
+            content_ref varchar(100),
+            status varchar(30) DEFAULT 'sent',
+            recipients_count integer DEFAULT 0,
+            sent_by uuid,
+            created_at timestamptz DEFAULT NOW()
+        );
+        ALTER TABLE newsletter_subscribers ADD COLUMN IF NOT EXISTS unsubscribe_token varchar(64);
+        ALTER TABLE newsletter_subscribers ADD COLUMN IF NOT EXISTS is_active boolean DEFAULT true;
+        ALTER TABLE newsletter_subscribers ADD COLUMN IF NOT EXISTS full_name varchar(150);
+    `);
+
     console.log('Database migrations completed.');
 }
 

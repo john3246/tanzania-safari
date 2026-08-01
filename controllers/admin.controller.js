@@ -87,14 +87,125 @@ class AdminController {
     async updateProfile(req, res) {
         try {
             const { first_name, last_name, profile_image_url } = req.body;
-            await userRepository.update(req.user.user_id, {
-                first_name,
-                last_name,
-                profile_image_url
-            });
-            res.json({ success: true });
+            const patch = {};
+            if (first_name !== undefined) patch.first_name = first_name;
+            if (last_name !== undefined) patch.last_name = last_name;
+            if (profile_image_url !== undefined) patch.profile_image_url = profile_image_url;
+            if (!Object.keys(patch).length) {
+                return res.status(400).json({ success: false, message: 'No profile fields to update' });
+            }
+            await userRepository.update(req.user.user_id, patch);
+            try {
+                const { logAudit, notifyAdmins } = require('../services/adminEvents');
+                await logAudit({
+                    userId: req.user.user_id,
+                    action: 'profile_update',
+                    entityType: 'user',
+                    entityId: req.user.user_id,
+                    newValues: patch,
+                    req
+                });
+            } catch (_) {}
+            res.json({ success: true, message: 'Profile updated' });
         } catch (error) {
             res.status(500).json({ success: false, message: 'Error updating profile' });
+        }
+    }
+
+    async changePassword(req, res) {
+        try {
+            const bcrypt = require('bcrypt');
+            const { current_password, password, new_password } = req.body;
+            const nextPassword = password || new_password;
+            if (!nextPassword || String(nextPassword).length < 8) {
+                return res.status(400).json({ success: false, message: 'Password must be at least 8 characters' });
+            }
+            const user = await userRepository.findById(req.user.user_id);
+            if (!user) {
+                return res.status(404).json({ success: false, message: 'User not found' });
+            }
+            if (current_password) {
+                const ok = await bcrypt.compare(current_password, user.password_hash);
+                if (!ok) {
+                    return res.status(400).json({ success: false, message: 'Current password is incorrect' });
+                }
+            }
+            const password_hash = await bcrypt.hash(String(nextPassword), 10);
+            await userRepository.update(req.user.user_id, { password_hash });
+            try {
+                const { logAudit } = require('../services/adminEvents');
+                await logAudit({
+                    userId: req.user.user_id,
+                    action: 'password_change',
+                    entityType: 'user',
+                    entityId: req.user.user_id,
+                    req
+                });
+            } catch (_) {}
+            res.json({ success: true, message: 'Password updated' });
+        } catch (error) {
+            console.error('changePassword error:', error);
+            res.status(500).json({ success: false, message: 'Error updating password' });
+        }
+    }
+
+    async getSystemHealth(req, res) {
+        try {
+            const db = require('../config/db');
+            const emailService = require('../services/email');
+            const started = Date.now();
+            let dbStatus = 'error';
+            let dbLatencyMs = null;
+            try {
+                await db.query('SELECT 1');
+                dbLatencyMs = Date.now() - started;
+                dbStatus = 'connected';
+            } catch (e) {
+                dbStatus = 'error';
+            }
+
+            let smtp = { status: 'unknown' };
+            try {
+                const ok = await emailService.verifyConnection();
+                smtp = { status: ok ? 'connected' : 'disconnected' };
+            } catch (e) {
+                smtp = { status: 'error', error: e.message };
+            }
+
+            let queue = { status: 'unknown' };
+            try {
+                const stats = await emailService.getQueueStats();
+                queue = { status: 'connected', stats };
+            } catch (e) {
+                queue = { status: 'error', error: e.message };
+            }
+
+            const health = {
+                status: dbStatus === 'connected' && smtp.status !== 'error' ? 'healthy' : 'degraded',
+                timestamp: new Date().toISOString(),
+                uptime: process.uptime(),
+                environment: process.env.NODE_ENV || 'development',
+                node: process.version,
+                render: {
+                    service: process.env.RENDER_SERVICE_NAME || null,
+                    instance: process.env.RENDER_INSTANCE_ID || null,
+                    region: process.env.RENDER_REGION || null,
+                    gitCommit: process.env.RENDER_GIT_COMMIT || null,
+                    isRender: Boolean(process.env.RENDER)
+                },
+                services: {
+                    database: { status: dbStatus, latencyMs: dbLatencyMs },
+                    smtp,
+                    queue,
+                    memory: {
+                        rssMb: Math.round(process.memoryUsage().rss / 1024 / 1024),
+                        heapUsedMb: Math.round(process.memoryUsage().heapUsed / 1024 / 1024)
+                    }
+                }
+            };
+            res.status(health.status === 'healthy' ? 200 : 503).json({ success: true, data: health });
+        } catch (error) {
+            res.status(500).json({ success: false, message: error.message });
         }
     }
 

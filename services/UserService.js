@@ -1,7 +1,6 @@
 const BaseService = require('./BaseService');
 const userRepository = require('../repositories/UserRepository');
 const bcrypt = require('bcrypt');
-const { z } = require('zod');
 
 class UserService extends BaseService {
     constructor() {
@@ -9,47 +8,54 @@ class UserService extends BaseService {
     }
 
     async create(data) {
-        // Check if email or username already exists
         const existingEmail = await this.repository.findByEmail(data.email);
         if (existingEmail) {
             throw new Error('Email already exists');
         }
 
-        const existingUsername = await this.repository.findByUsername(data.username);
-        if (existingUsername) {
-            throw new Error('Username already exists');
-        }
+        const payload = {
+            email: data.email,
+            first_name: data.first_name || data.email.split('@')[0],
+            last_name: data.last_name || '',
+            phone: data.phone || null,
+            role_id: data.role_id ? Number(data.role_id) : 1,
+            is_active: data.is_active !== false
+        };
 
-        if (data.password) {
-            data.password_hash = await bcrypt.hash(data.password, 10);
-            delete data.password;
+        if (!data.password || String(data.password).length < 8) {
+            throw new Error('Password must be at least 8 characters');
         }
-        
-        const user = await super.create(data);
-        return this.repository.findByIdWithRole(user.id);
+        payload.password_hash = await bcrypt.hash(data.password, 10);
+
+        const user = await this.repository.create(payload);
+        return this.repository.findByIdWithRole(user.user_id);
     }
 
     async update(id, data) {
-        if (data.password) {
-            data.password_hash = await bcrypt.hash(data.password, 10);
-            delete data.password;
+        const patch = { ...data };
+        delete patch.username;
+        delete patch.user_id;
+        delete patch.password_hash;
+
+        if (patch.password) {
+            patch.password_hash = await bcrypt.hash(patch.password, 10);
+            delete patch.password;
         }
 
-        if (data.email) {
-            const existingEmail = await this.repository.findByEmail(data.email);
-            if (existingEmail && existingEmail.id !== id) {
+        if (patch.role_id != null) patch.role_id = Number(patch.role_id);
+        if (patch.is_active != null) {
+            patch.is_active = patch.is_active === true || patch.is_active === 'true';
+        }
+
+        if (patch.email) {
+            const existingEmail = await this.repository.findByEmail(patch.email);
+            if (existingEmail && String(existingEmail.user_id) !== String(id)) {
                 throw new Error('Email already exists');
             }
         }
 
-        if (data.username) {
-            const existingUsername = await this.repository.findByUsername(data.username);
-            if (existingUsername && existingUsername.id !== id) {
-                throw new Error('Username already exists');
-            }
-        }
-
-        return super.update(id, data);
+        await this.repository.update(id, patch);
+        return this.repository.findByIdWithRole(id);
     }
 
     async getAll(conditions = {}, options = {}) {
@@ -58,9 +64,7 @@ class UserService extends BaseService {
 
     async getById(id) {
         const user = await this.repository.findByIdWithRole(id);
-        if (!user) {
-            throw new Error('User not found');
-        }
+        if (!user) throw new Error('User not found');
         return user;
     }
 
@@ -92,9 +96,13 @@ class UserService extends BaseService {
         return await this.repository.count(conditions);
     }
 
+    async listRoles() {
+        return this.repository.listRoles();
+    }
+
     async hasPermission(userId, permission) {
         const permissions = await this.getUserPermissions(userId);
-        return permissions.includes(permission);
+        return permissions.includes('*') || permissions.includes(permission);
     }
 }
 

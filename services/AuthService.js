@@ -28,15 +28,17 @@ class AuthService {
         );
 
         // Update last login
-        await userService.update(user.user_id, { last_login: new Date() });
+        await userService.updateLastLogin(user.user_id);
 
         return {
             token,
             user: {
                 userId: user.user_id,
+                user_id: user.user_id,
                 email: user.email,
                 first_name: user.first_name,
                 last_name: user.last_name,
+                profile_image_url: user.profile_image_url,
                 role: user.role_name
             }
         };

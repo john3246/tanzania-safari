@@ -1,8 +1,25 @@
 // ── Users ─────────────────────────────────────────────────────
 let usersList = [];
+
+async function loadUserRolesIntoSelect() {
+    const select = document.querySelector('#userForm select[name="role_id"]');
+    if (!select) return;
+    try {
+        const res = await apiRequest('GET', '/users/roles');
+        const roles = res.data || [];
+        if (!roles.length) return;
+        const current = select.value;
+        select.innerHTML = roles.map(r =>
+            `<option value="${r.role_id}">${escapeHtml(r.role_name)}</option>`
+        ).join('');
+        if (current) select.value = current;
+    } catch (_) {}
+}
+
 async function loadUsers() {
     const body = document.getElementById('userBody');
     if (!body) return;
+    await loadUserRolesIntoSelect();
     try {
         const res = await apiRequest('GET', '/users');
         usersList = res.data || [];
@@ -19,6 +36,7 @@ async function loadUsers() {
                 <td class="px-6 py-4 text-right">
                     <div class="flex items-center space-x-3 justify-end">
                         <button class="text-slate-400 hover:text-emerald-600 transition-colors p-2 hover:bg-emerald-50 rounded-lg" onclick="openUserModal('${u.user_id}')" title="Edit"><i class="fa-solid fa-pencil text-sm"></i></button>
+                        <button class="text-slate-400 hover:text-amber-600 transition-colors p-2 hover:bg-amber-50 rounded-lg" onclick="sendPasswordReset('${u.email}')" title="Send password reset"><i class="fa-solid fa-key text-sm"></i></button>
                         <button class="text-slate-400 hover:text-red-600 transition-colors p-2 hover:bg-red-50 rounded-lg" onclick="deleteUser('${u.user_id}')" title="Delete"><i class="fa-solid fa-trash text-sm"></i></button>
                     </div>
                 </td>
@@ -29,18 +47,21 @@ async function loadUsers() {
 function openUserModal(id = null) {
     const form = document.getElementById('userForm');
     if (!form) return;
+    loadUserRolesIntoSelect();
     form.reset();
     document.getElementById('userId').value = '';
     document.getElementById('userModalTitle').textContent = id ? 'Edit User' : 'New User';
+    const pwd = form.querySelector('[name="password"]');
+    if (pwd) pwd.required = !id;
     if (id) {
-        const u = usersList.find(x => x.user_id == id);
+        const u = usersList.find(x => String(x.user_id) === String(id));
         if (u) {
             document.getElementById('userId').value = u.user_id;
             Object.entries(u).forEach(([k, v]) => {
                 const el = form.querySelector(`[name="${k}"]`);
-                if (el) { 
+                if (el) {
                     if (el.tagName === 'SELECT') el.value = String(v);
-                    else el.value = v || ''; 
+                    else el.value = v || '';
                 }
             });
         }
@@ -49,30 +70,58 @@ function openUserModal(id = null) {
 }
 
 async function saveUser() {
-    const btn = event.target;
+    const btn = event?.target;
     const form = document.getElementById('userForm');
     const data = Object.fromEntries(new FormData(form));
     const id = document.getElementById('userId').value;
     data.is_active = data.is_active === 'true';
-    
-    setLoading(btn, true);
+    if (data.role_id) data.role_id = Number(data.role_id);
+    if (!data.password) delete data.password;
+
+    if (btn) setLoading(btn, true);
     try {
         if (id) await apiRequest('PUT', `/users/${id}`, data);
         else await apiRequest('POST', '/users', data);
         closeModal('userModal');
-        showToast('Team member updated');
+        showToast(id ? 'Team member updated' : 'Team member created');
         await loadUsers();
     } catch (e) {
     } finally {
-        setLoading(btn, false);
+        if (btn) setLoading(btn, false);
     }
 }
 
 async function deleteUser(id) {
-    if (!confirm('Are you sure you want to delete this team member?')) return;
+    if (!confirm('Are you sure you want to deactivate this team member?')) return;
     try {
         await apiRequest('DELETE', `/users/${id}`);
-        showToast('Team member deleted');
+        showToast('Team member deactivated');
         await loadUsers();
     } catch (e) {}
 }
+
+async function sendPasswordReset(email) {
+    if (!email || !confirm(`Send password reset email to ${email}?`)) return;
+    try {
+        const res = await fetch('/api/auth/forgot-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+        const data = await res.json().catch(() => ({}));
+        showToast(data.message || 'Reset email sent if the account exists', 'success');
+    } catch (e) {
+        showToast('Could not send reset email', 'error');
+    }
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+window.loadUsers = loadUsers;
+window.openUserModal = openUserModal;
+window.saveUser = saveUser;
+window.deleteUser = deleteUser;
+window.sendPasswordReset = sendPasswordReset;

@@ -46,16 +46,31 @@
                 <h3 class="font-bold text-slate-800 text-base mb-4 border-b border-gray-100 pb-2">Security & Account</h3>
                 <form id="passwordForm" class="space-y-4">
                     <div class="space-y-1">
+                        <label class="text-xs font-medium text-slate-500">Current Password (optional)</label>
+                        <input type="password" name="current_password" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20" autocomplete="current-password">
+                    </div>
+                    <div class="space-y-1">
                         <label class="text-xs font-medium text-slate-500">New Password</label>
-                        <input type="password" name="new_password" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20" required>
+                        <input type="password" name="new_password" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20" required minlength="8" autocomplete="new-password">
                     </div>
                     <div class="space-y-1">
                         <label class="text-xs font-medium text-slate-500">Confirm Password</label>
-                        <input type="password" name="confirm_password" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20" required>
+                        <input type="password" name="confirm_password" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20" required minlength="8" autocomplete="new-password">
                     </div>
                     <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-lg text-sm font-semibold transition-all shadow-sm">Update Password</button>
                 </form>
             </div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 max-w-5xl">
+            <h3 class="font-bold text-slate-800 text-base mb-4 border-b border-gray-100 pb-2">SEO Defaults</h3>
+            <p class="text-xs text-gray-500 mb-4">Fallback title/description used when a page does not set its own meta.</p>
+            <form id="seoSettingsForm" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="space-y-1 md:col-span-2"><label class="text-xs font-medium text-slate-500">Default title</label><input name="default_title" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm"></div>
+                <div class="space-y-1 md:col-span-2"><label class="text-xs font-medium text-slate-500">Default description</label><textarea name="default_description" rows="3" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm"></textarea></div>
+                <div class="space-y-1 md:col-span-2"><label class="text-xs font-medium text-slate-500">Default OG image URL</label><input name="og_image" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm" placeholder="/images/..."></div>
+                <div class="md:col-span-2"><button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-semibold">Save SEO Defaults</button></div>
+            </form>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-5xl">

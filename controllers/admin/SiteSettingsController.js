@@ -128,6 +128,11 @@ class SiteSettingsController {
     async updateContactInfo(req, res) {
         try {
             const result = await siteSettingsService.updateContactInfo(req.body);
+            try {
+                const { logAudit, notifyAdmins } = require('../../services/adminEvents');
+                await logAudit({ userId: req.user?.user_id, action: 'settings_update', entityType: 'site_settings', entityId: 'contact', newValues: req.body, req });
+                await notifyAdmins({ type: 'system', title: 'Contact settings updated', message: 'Public contact details were changed', actionUrl: '/admin/settings' });
+            } catch (_) {}
             res.json({ success: true, data: result });
         } catch (error) {
             res.status(400).json({ success: false, message: error.message });

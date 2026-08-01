@@ -163,8 +163,32 @@ app.get('/health', async (req, res) => {
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     environment: process.env.NODE_ENV || 'development',
+    node: process.version,
+    render: {
+      service: process.env.RENDER_SERVICE_NAME || null,
+      instance: process.env.RENDER_INSTANCE_ID || null,
+      region: process.env.RENDER_REGION || null,
+      gitCommit: (process.env.RENDER_GIT_COMMIT || '').slice(0, 8) || null,
+      isRender: Boolean(process.env.RENDER || process.env.RENDER_SERVICE_ID)
+    },
     services: {}
   };
+
+  // Database
+  try {
+    const db = require('./config/db');
+    const t0 = Date.now();
+    await db.query('SELECT 1 AS ok');
+    health.services.database = {
+      status: 'connected',
+      latencyMs: Date.now() - t0
+    };
+  } catch (error) {
+    health.services.database = {
+      status: 'error',
+      error: error.message
+    };
+  }
 
   // SMTP status
   try {
@@ -195,6 +219,22 @@ app.get('/health', async (req, res) => {
     };
   }
 
+  // Redis (optional)
+  if (process.env.REDIS_URL) {
+    try {
+      const Redis = require('ioredis');
+      const redis = new Redis(process.env.REDIS_URL, { maxRetriesPerRequest: 1, connectTimeout: 2000, lazyConnect: true });
+      await redis.connect();
+      const pong = await redis.ping();
+      await redis.quit();
+      health.services.redis = { status: pong === 'PONG' ? 'connected' : 'error' };
+    } catch (error) {
+      health.services.redis = { status: 'error', error: error.message };
+    }
+  } else {
+    health.services.redis = { status: 'not_configured' };
+  }
+
   // Environment validation
   const envValidation = emailService.validateEnvironment();
   health.services.environment = {
@@ -202,10 +242,20 @@ app.get('/health', async (req, res) => {
     missing: envValidation.missing || []
   };
 
-  const overallStatus = Object.values(health.services).every(s => s.status !== 'error');
-  health.status = overallStatus ? 'healthy' : 'degraded';
+  const criticalOk = health.services.database?.status === 'connected';
+  const overallStatus = criticalOk && Object.values(health.services).every(s =>
+    s.status !== 'error' || s.status === 'not_configured'
+  );
+  // Degraded if non-critical services fail; unhealthy if DB down
+  if (!criticalOk) {
+    health.status = 'unhealthy';
+  } else if (!overallStatus) {
+    health.status = 'degraded';
+  } else {
+    health.status = 'healthy';
+  }
 
-  const statusCode = overallStatus ? 200 : 503;
+  const statusCode = health.status === 'unhealthy' ? 503 : 200;
   res.status(statusCode).json(health);
 });
 

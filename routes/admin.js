@@ -45,6 +45,8 @@ router.get('/analytics', verifyAdmin, adminController.getAnalytics);
 
 // ── Shared Management ─────────────────────────────────────────
 router.put('/profile', verifyAdmin, adminController.updateProfile);
+router.put('/profile/password', verifyAdmin, adminController.changePassword);
+router.get('/health', verifyAdmin, adminController.getSystemHealth);
     router.get('/enquiries', verifyAdmin, adminController.getEnquiries);
     router.put('/enquiries/:id/respond', verifyAdmin, adminController.respondEnquiry);
     router.put('/enquiries/:id', verifyAdmin, adminController.updateEnquiry);

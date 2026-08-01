@@ -59,17 +59,34 @@ async function saveBlog(event) {
     const data = Object.fromEntries(new FormData(form));
     const id = document.getElementById('blogId').value;
     data.is_published = !!form.querySelector('[name="is_published"]').checked;
+    const notifySubscribers = !!form.querySelector('[name="notify_subscribers"]')?.checked;
     if (data.post_tags_csv) {
         data.post_tags = data.post_tags_csv.split(',').map(s => s.trim()).filter(s => s);
         delete data.post_tags_csv;
     }
-    
+    delete data.notify_subscribers;
+
     setLoading(btn, true);
     try {
-        if (id) await apiRequest('PUT', `/blog/${id}`, data);
-        else await apiRequest('POST', '/blog', data);
+        let saved;
+        if (id) saved = await apiRequest('PUT', '/blog/' + id, data);
+        else saved = await apiRequest('POST', '/blog', data);
         closeModal('blogModal');
         showToast('Article published/updated');
+
+        const postId = id || saved?.data?.post_id || saved?.post_id;
+        if (notifySubscribers && data.is_published && postId) {
+            try {
+                await apiRequest('POST', '/communications/send', {
+                    recipientType: 'subscribers',
+                    campaignType: 'blog',
+                    contentRef: postId
+                });
+                showToast('Newsletter campaign sent to subscribers', 'success');
+            } catch (err) {
+                showToast(err.message || 'Post saved, but subscriber email failed', 'error');
+            }
+        }
         await loadBlogs();
     } catch (e) {
     } finally {
@@ -80,9 +97,13 @@ async function saveBlog(event) {
 async function deleteBlog(id) {
     if (!confirm('Are you sure you want to delete this blog post?')) return;
     try {
-        await apiRequest('DELETE', `/blog/${id}`);
+        await apiRequest('DELETE', '/blog/' + id);
         showToast('Blog post deleted');
         await loadBlogs();
     } catch (e) {}
 }
-window.openBlogModal = openBlogModal; 
+
+window.loadBlogs = loadBlogs;
+window.openBlogModal = openBlogModal;
+window.saveBlog = saveBlog;
+window.deleteBlog = deleteBlog;

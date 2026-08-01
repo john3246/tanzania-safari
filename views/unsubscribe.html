@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Unsubscribe | Tanzania Safari Magic</title>
+<meta name="robots" content="noindex, follow">
+<link rel="stylesheet" href="/css/variables.css">
+<link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<div id="header"></div>
+<section class="corp-section" style="padding:4rem 1rem;text-align:center;max-width:36rem;margin:0 auto">
+  <h1 style="margin-bottom:0.75rem">Newsletter</h1>
+  <p id="unsubMsg" style="color:var(--text-muted);line-height:1.6">Updating your preference…</p>
+  <p style="margin-top:1.5rem"><a class="btn btn-primary" href="/">Back to home</a></p>
+</section>
+<div id="footer"></div>
+<script src="/js/layout-loader.js"></script>
+<script>
+(async function () {
+  const params = new URLSearchParams(location.search);
+  const email = params.get('email');
+  const token = params.get('token');
+  const el = document.getElementById('unsubMsg');
+  try {
+    const res = await fetch('/api/newsletter/unsubscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, token })
+    });
+    const data = await res.json();
+    el.textContent = data.message || (res.ok ? 'You have been unsubscribed.' : 'Could not update subscription.');
+  } catch {
+    el.textContent = 'Could not update subscription. Please email info@tanzaniasafarimagic.com.';
+  }
+})();
+</script>
+</body>
+</html>
