@@ -272,7 +272,7 @@
     <li>Binoculars matter on open plains</li>
     <li>Book northern camps early for July–October crossings</li>
     <li>Allow buffer days; migration timing is rainfall-driven</li>
-    <li>Pair with our <a href="/blog/tanzania-safari">ultimate Tanzania safari guide</a> when building the full trip</li>
+    <li>Pair with our <a href="/blog/serengeti-national-park">Serengeti National Park guide</a> and <a href="/blog/tanzania-safari">ultimate Tanzania safari guide</a> when building the full trip</li>
   </ul>
 
   <div class="guide-cta-box">

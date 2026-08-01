@@ -9,8 +9,32 @@ const TEAM_WHATSAPP =
 const PILLAR_SLUGS = {
   'tanzania-safari': 'TanzaniaSafariGuide',
   'tanzania-safari-cost': 'TanzaniaSafariCostGuide',
-  'great-wildebeest-migration': 'GreatWildebeestMigrationGuide'
+  'great-wildebeest-migration': 'GreatWildebeestMigrationGuide',
+  'zanzibar-guide': 'ZanzibarGuide',
+  'ngorongoro-crater': 'NgorongoroCraterGuide',
+  'serengeti-national-park': 'SerengetiNationalParkGuide',
+  'arusha-national-park': 'ArushaNationalParkGuide',
+  'best-time-to-visit-tanzania': 'BestTimeToVisitTanzaniaGuide'
 };
+
+const RELATED_PILLARS = [
+  { slug: 'tanzania-safari', label: 'Ultimate Safari Guide' },
+  { slug: 'best-time-to-visit-tanzania', label: 'Best Time to Visit' },
+  { slug: 'tanzania-safari-cost', label: 'Safari Cost 2026' },
+  { slug: 'great-wildebeest-migration', label: 'Great Migration' },
+  { slug: 'serengeti-national-park', label: 'Serengeti Guide' },
+  { slug: 'ngorongoro-crater', label: 'Ngorongoro Crater' },
+  { slug: 'arusha-national-park', label: 'Arusha National Park' },
+  { slug: 'zanzibar-guide', label: 'Zanzibar Guide' }
+];
+
+function relatedGuidesHtml(currentSlug) {
+  return RELATED_PILLARS
+    .filter(p => p.slug !== currentSlug)
+    .slice(0, 6)
+    .map(p => `<li><a href="/blog/${p.slug}">${p.label}</a></li>`)
+    .join('');
+}
 
 function getGuide(slug) {
   const key = PILLAR_SLUGS[slug];
@@ -56,7 +80,7 @@ async function loadPost() {
     container.innerHTML = `
       <div style="grid-column:1/-1;text-align:center;padding:4rem 1rem">
         <h1>Post not found</h1>
-        <p><a href="/blog">Back to Blog</a> · <a href="/blog/tanzania-safari">Ultimate Guide</a> · <a href="/blog/tanzania-safari-cost">Safari Cost Guide</a></p>
+        <p><a href="/blog">Back to Blog</a> · <a href="/blog/tanzania-safari">Ultimate Guide</a> · <a href="/blog/best-time-to-visit-tanzania">Best Time</a> · <a href="/blog/serengeti-national-park">Serengeti</a></p>
       </div>`;
     return;
   }
@@ -107,10 +131,7 @@ async function loadPost() {
   }
 
   const content = data._isGuide ? data.post_content : enrichInternalLinks(data.post_content || '');
-  const relatedGuides =
-    slug === 'tanzania-safari-cost'
-      ? `<li><a href="/blog/tanzania-safari">Ultimate Safari Guide</a></li>`
-      : `<li><a href="/blog/tanzania-safari-cost">Safari Cost 2026</a></li>`;
+  const relatedGuides = relatedGuidesHtml(slug);
 
   container.innerHTML = `
     <article class="blog-article-main">

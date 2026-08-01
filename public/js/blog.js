@@ -1,12 +1,28 @@
 const DEFAULT_AUTHOR = 'John Raphael Shayo';
 
-const PILLAR_ORDER = ['great-wildebeest-migration', 'tanzania-safari', 'tanzania-safari-cost'];
+const PILLAR_ORDER = [
+  'best-time-to-visit-tanzania',
+  'serengeti-national-park',
+  'ngorongoro-crater',
+  'great-wildebeest-migration',
+  'zanzibar-guide',
+  'arusha-national-park',
+  'tanzania-safari',
+  'tanzania-safari-cost'
+];
 
 function pillarFromWindow(slug) {
-  if (slug === 'tanzania-safari') return window.TanzaniaSafariGuide?.META;
-  if (slug === 'tanzania-safari-cost') return window.TanzaniaSafariCostGuide?.META;
-  if (slug === 'great-wildebeest-migration') return window.GreatWildebeestMigrationGuide?.META;
-  return null;
+  const map = {
+    'tanzania-safari': window.TanzaniaSafariGuide?.META,
+    'tanzania-safari-cost': window.TanzaniaSafariCostGuide?.META,
+    'great-wildebeest-migration': window.GreatWildebeestMigrationGuide?.META,
+    'zanzibar-guide': window.ZanzibarGuide?.META,
+    'ngorongoro-crater': window.NgorongoroCraterGuide?.META,
+    'serengeti-national-park': window.SerengetiNationalParkGuide?.META,
+    'arusha-national-park': window.ArushaNationalParkGuide?.META,
+    'best-time-to-visit-tanzania': window.BestTimeToVisitTanzaniaGuide?.META
+  };
+  return map[slug] || null;
 }
 
 function ensurePillars(posts) {

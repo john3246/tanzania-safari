@@ -208,7 +208,8 @@
   <p>Licensed local operator · Our Team · Arusha, Tanzania</p>
   <div class="guide-cta-actions">
     <a class="btn btn-primary" href="/booking" style="min-height:48px">Book / Free Quote</a>
-    <a class="btn btn-outline" href="/destinations/serengeti-national-park" style="min-height:48px;border-color:rgba(255,255,255,0.45);color:#fff">Serengeti Destination</a>
+    <a class="btn btn-outline" href="/blog/serengeti-national-park" style="min-height:48px;border-color:rgba(255,255,255,0.45);color:#fff">Serengeti Guide</a>
+    <a class="btn btn-outline" href="/blog/best-time-to-visit-tanzania" style="min-height:48px;border-color:rgba(255,255,255,0.45);color:#fff">Best Time</a>
     <a class="btn btn-outline" href="/safaris" style="min-height:48px;border-color:rgba(255,255,255,0.45);color:#fff">All Packages</a>
   </div>
 </div>

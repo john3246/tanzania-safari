@@ -118,7 +118,7 @@
   <li><strong>Luxury:</strong> frequently USD 700–1,500+ per person per day</li>
 </ul>
 <p>Costs include park fees, lodging, guiding, and most meals on safari — always confirm inclusions. Flying between parks raises comfort and cost; driving the circuit is classic and scenic.</p>
-<p>For a full breakdown of budget, mid-range, and luxury rates, see our <a href="/blog/tanzania-safari-cost"><strong>Tanzania Safari Cost 2026 guide</strong></a> — or get a number for <em>your</em> dates via our <a href="/booking">online booking form</a>.</p>
+<p>For a full breakdown of budget, mid-range, and luxury rates, see our <a href="/blog/tanzania-safari-cost"><strong>Tanzania Safari Cost 2026 guide</strong></a> — or get a number for <em>your</em> dates via our <a href="/booking">online booking form</a>. Timing help: <a href="/blog/best-time-to-visit-tanzania">best time to visit Tanzania</a>.</p>
 
 <h2 id="best-time">Best Time to Visit Tanzania</h2>
 <ul>
@@ -144,19 +144,19 @@
 
 <h2 id="great-migration">The Great Migration in Tanzania</h2>
 <p>There is no single “migration month.” Herds follow rain and grass. For river crossings, plan northern Serengeti in peak dry months; for calving, focus south (Ndutu / Ndutu-adjacent areas) in early year. We adjust camps as herds move — that flexibility is why private local planning beats rigid group tours.</p>
-<p>Explore <a href="/destinations/serengeti-national-park">Serengeti destination details</a> and migration-focused packages below.</p>
+<p>Explore our <a href="/blog/serengeti-national-park">Serengeti National Park guide</a>, the deep-dive <a href="/blog/great-wildebeest-migration">Great Migration guide</a>, and migration-focused packages below.</p>
 
 <h2 id="parks">National Parks &amp; Wildlife Reserves</h2>
 <ul>
-  <li><a href="/destinations/serengeti-national-park">Serengeti National Park</a> — endless plains, cats, migration</li>
-  <li><a href="/destinations/ngorongoro-conservation-area">Ngorongoro Conservation Area</a> — crater floor biodiversity</li>
+  <li><a href="/blog/serengeti-national-park">Serengeti National Park guide</a> — plains, cats, migration sectors</li>
+  <li><a href="/blog/ngorongoro-crater">Ngorongoro Crater guide</a> — Big Five crater floor</li>
+  <li><a href="/blog/arusha-national-park">Arusha National Park guide</a> — Mount Meru &amp; day trips</li>
   <li><a href="/destinations/tarangire-national-park">Tarangire National Park</a> — elephants &amp; baobabs</li>
   <li><a href="/destinations/lake-manyara-national-park">Lake Manyara National Park</a> — compact, scenic, birdlife</li>
-  <li><a href="/destinations/arusha-national-park">Arusha National Park</a> — ideal day trip near base</li>
   <li><a href="/destinations/mount-kilimanjaro-national-park">Kilimanjaro</a> — trek or viewpoint days</li>
-  <li><a href="/destinations/zanzibar">Zanzibar</a> — spice island beaches</li>
+  <li><a href="/blog/zanzibar-guide">Zanzibar guide</a> — spice island beach extension</li>
 </ul>
-<p>See the full list on our <a href="/destinations">destinations hub</a>.</p>
+<p>See the full list on our <a href="/destinations">destinations hub</a> and month picks in <a href="/blog/best-time-to-visit-tanzania">best time to visit Tanzania</a>.</p>
 
 <h2 id="itineraries">Best Tanzania Safari Itineraries</h2>
 <p>Strong classic routes we build weekly:</p>

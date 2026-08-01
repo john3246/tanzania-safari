@@ -212,7 +212,7 @@
     <li>Pack layers — crater rim mornings can be cold even in dry season</li>
     <li>Bring binoculars; distances on the floor still matter</li>
     <li>Follow guide instructions; stay in the vehicle unless told otherwise</li>
-    <li>Combine with <a href="/blog/tanzania-safari">our Tanzania safari ultimate guide</a> when planning the full trip</li>
+    <li>Combine with <a href="/blog/ngorongoro-crater">our Ngorongoro Crater guide</a> and the <a href="/blog/tanzania-safari">ultimate Tanzania safari guide</a> when planning the full trip</li>
   </ul>
 
   <div class="guide-cta-box">
