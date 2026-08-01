@@ -30,7 +30,7 @@ async function initAdminApp() {
 
         // Setup routing (load dashboard by default)
         const initialPage = window.location.hash.replace('#', '') || window.location.pathname.split('/').pop();
-        const validPages = ['dashboard', 'packages', 'categories', 'bookings', 'booking-details', 'enquiries', 'settings', 'destinations', 'blog', 'reviews', 'users', 'images', 'communications', 'edit-tour', 'edit-destination', 'customers', 'chat', 'group-safaris'];
+        const validPages = ['dashboard', 'analytics', 'packages', 'categories', 'bookings', 'booking-details', 'enquiries', 'settings', 'destinations', 'blog', 'reviews', 'users', 'images', 'communications', 'edit-tour', 'edit-destination', 'customers', 'chat', 'group-safaris'];
         const pageToLoad = validPages.includes(initialPage) ? initialPage : 'dashboard';
         
         await navigate(pageToLoad, false); // pass false so we don't push state on initial load
@@ -178,6 +178,7 @@ async function navigate(page, pushState = true) {
     // Data Loading
     switch(page) {
         case 'dashboard': loadDashboard(); break;
+        case 'analytics': if (window.loadAnalytics) { window.loadAnalytics(); } else { setTimeout(() => window.loadAnalytics?.(), 100); } break;
         case 'packages': loadPackages(); break;
         case 'destinations': loadDestinations(); break;
         case 'bookings': loadBookings(); break;
@@ -212,6 +213,7 @@ function updateBreadcrumb(page) {
     
     const pageNames = {
         'dashboard': 'Dashboard',
+        'analytics': 'Website Analytics',
         'packages': 'Safari Packages',
         'categories': 'Categories',
         'destinations': 'Destinations',
@@ -231,6 +233,7 @@ function updateBreadcrumb(page) {
     
     const categoryMap = {
         'dashboard': 'Overview',
+        'analytics': 'Overview',
         'packages': 'Inventory',
         'group-safaris': 'Inventory',
         'categories': 'Inventory',

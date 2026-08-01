@@ -7,36 +7,59 @@ async function renderRevenueChart(stats = {}) {
     if (window.visitorsChartInstance) window.visitorsChartInstance.destroy();
     if (window.bookingsChartInstance) window.bookingsChartInstance.destroy();
 
-    // Use stats or mock data
     const visitorData = stats.visitorsByMonth || [];
     const visitorLabels = stats.visitorLabels || [];
+    const uniqueData = stats.uniqueVisitorsByPeriod || [];
 
     if (dashVisitorsCanvas) {
         const ctx = dashVisitorsCanvas.getContext('2d');
+        const datasets = [{
+            label: 'Page views',
+            data: visitorData,
+            borderColor: '#059669',
+            backgroundColor: 'rgba(5, 150, 105, 0.12)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4
+        }];
+        if (uniqueData.length) {
+            datasets.push({
+                label: 'Unique visitors',
+                data: uniqueData,
+                borderColor: '#1E311B',
+                backgroundColor: 'transparent',
+                borderWidth: 2,
+                borderDash: [5, 4],
+                fill: false,
+                tension: 0.4
+            });
+        }
         window.visitorsChartInstance = new Chart(ctx, {
             type: 'line',
-            data: {
-                labels: visitorLabels,
-                datasets: [{
-                    label: 'Bookings',
-                    data: visitorData,
-                    borderColor: '#263E22',
-                    backgroundColor: 'rgba(11, 59, 45, 0.1)',
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
+            data: { labels: visitorLabels, datasets },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: { legend: { display: datasets.length > 1, position: 'bottom' } },
                 scales: {
                     y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
                     x: { grid: { display: false } }
                 }
             }
         });
+    }
+
+    // Mini sources list on dashboard
+    const sourcesBox = document.getElementById('dash-traffic-sources');
+    if (sourcesBox) {
+        const sources = stats.traffic_sources || [];
+        sourcesBox.innerHTML = sources.length
+            ? sources.slice(0, 5).map(s => `
+                <div class="flex justify-between text-sm py-1.5 border-b border-gray-50 last:border-0">
+                  <span class="text-gray-700 font-medium truncate pr-2">${String(s.source || '').replace(/</g,'&lt;')}</span>
+                  <span class="text-gray-500 shrink-0">${Number(s.views || 0).toLocaleString()}</span>
+                </div>`).join('')
+            : '<p class="text-sm text-gray-400">No traffic yet — open the public site to collect visits.</p>';
     }
 
     if (dashBookingsCanvas) {
@@ -48,7 +71,6 @@ async function renderRevenueChart(stats = {}) {
         
         const total = confirmed + pending + cancelled + completed;
 
-        // Update Text
         if (document.getElementById('dash-chart-total-bookings')) {
             document.getElementById('dash-chart-total-bookings').textContent = total;
             document.getElementById('dash-confirmed-count').textContent = confirmed;
@@ -90,10 +112,23 @@ async function loadDashboard() {
         const res = await apiRequest('GET', '/stats');
         if (!res || !res.data) return;
         const stats = res.data;
+
+        const rangeEl = document.getElementById('dateRangeDisplay');
+        if (rangeEl) {
+            const now = new Date();
+            rangeEl.textContent = `Today ${now.toLocaleDateString()} · Live traffic`;
+        }
         
         if (document.getElementById('dash-visitors')) {
-            document.getElementById('dash-visitors').textContent = (stats.total_views || 0).toLocaleString();
+            document.getElementById('dash-visitors').textContent = Number(stats.total_views || stats.page_views_all || 0).toLocaleString();
         }
+        const todayEl = document.getElementById('dash-today-views');
+        if (todayEl) todayEl.textContent = Number(stats.today_views || 0).toLocaleString();
+        const weekEl = document.getElementById('dash-week-views');
+        if (weekEl) weekEl.textContent = Number(stats.week_views || 0).toLocaleString();
+        const monthEl = document.getElementById('dash-month-views');
+        if (monthEl) monthEl.textContent = Number(stats.month_views || 0).toLocaleString();
+
         if (document.getElementById('dash-inquiries')) document.getElementById('dash-inquiries').textContent = stats.total_enquiries || 0;
         if (document.getElementById('dash-bookings')) document.getElementById('dash-bookings').textContent = stats.total_bookings || 0;
         if (document.getElementById('dash-revenue')) {
@@ -115,7 +150,6 @@ async function loadDashboard() {
 
 async function loadRecentActivity() {
     try {
-        // Bookings Table
         const bRes = await apiRequest('GET', '/bookings');
         const bBody = document.getElementById('dashBookingsBody');
         if (bBody) {
@@ -133,7 +167,6 @@ async function loadRecentActivity() {
             </tr>`).join('') || '<tr><td colspan="7" class="p-4 text-center">No recent bookings</td></tr>';
         }
 
-        // Recent Activities (Using Enquiries and Reviews as activity)
         const eRes = await apiRequest('GET', '/enquiries');
         const aBody = document.getElementById('dashActivityBody');
         if (aBody) {
@@ -147,7 +180,6 @@ async function loadRecentActivity() {
             </div>`).join('') || '<div class="text-center text-slate-400 text-sm py-4">No recent activities</div>';
         }
 
-        // Top Performing Tours (Using Packages)
         const pRes = await apiRequest('GET', '/packages?limit=3');
         const tBody = document.getElementById('dashTopToursBody');
         if (tBody) {

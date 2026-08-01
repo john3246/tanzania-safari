@@ -171,6 +171,31 @@ async function migrate() {
           ]));
     `);
 
+    await runStep('page_views analytics table', `
+        CREATE TABLE IF NOT EXISTS public.page_views (
+          view_id bigserial PRIMARY KEY,
+          session_id varchar(64),
+          path varchar(500) NOT NULL,
+          title varchar(300),
+          referrer text,
+          referrer_host varchar(255),
+          source varchar(120) DEFAULT 'Direct',
+          utm_source varchar(120),
+          utm_medium varchar(120),
+          utm_campaign varchar(180),
+          ip_hash varchar(64),
+          user_agent varchar(500),
+          country varchar(80),
+          viewed_at timestamptz DEFAULT NOW()
+        )
+    `);
+    await runStep('page_views indexes', `
+        CREATE INDEX IF NOT EXISTS idx_page_views_viewed_at ON public.page_views (viewed_at DESC);
+        CREATE INDEX IF NOT EXISTS idx_page_views_path ON public.page_views (path);
+        CREATE INDEX IF NOT EXISTS idx_page_views_source ON public.page_views (source);
+        CREATE INDEX IF NOT EXISTS idx_page_views_session ON public.page_views (session_id)
+    `);
+
     await runStep('hub category seeds', `
         INSERT INTO public.package_categories (category_name, category_slug, category_description, icon_class, display_order, is_active)
         VALUES

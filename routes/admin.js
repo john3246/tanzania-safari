@@ -41,6 +41,7 @@ router.use('/settings',     require('./admin/settings.admin.routes'));
 
 // ── Stats ─────────────────────────────────────────────────────
 router.get('/stats', verifyAdmin, adminController.getStats);
+router.get('/analytics', verifyAdmin, adminController.getAnalytics);
 
 // ── Shared Management ─────────────────────────────────────────
 router.put('/profile', verifyAdmin, adminController.updateProfile);

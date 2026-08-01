@@ -36,7 +36,50 @@ document.addEventListener('DOMContentLoaded', () => {
         loadChatScripts();
     });
     initSEO();
+    trackPageView();
 });
+
+/**
+ * First-party visitor analytics (admin CMS dashboard)
+ */
+function trackPageView() {
+    try {
+        const path = window.location.pathname || '/';
+        if (path.startsWith('/admin') || path.startsWith('/api')) return;
+
+        let sessionId = localStorage.getItem('tsm_vid');
+        if (!sessionId) {
+            sessionId = 'v_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+            localStorage.setItem('tsm_vid', sessionId);
+        }
+
+        // Debounce duplicate hits on same path within 30s (refresh/back)
+        const key = 'tsm_last_pv_' + path;
+        const last = Number(sessionStorage.getItem(key) || 0);
+        if (Date.now() - last < 30000) return;
+        sessionStorage.setItem(key, String(Date.now()));
+
+        const params = new URLSearchParams(window.location.search);
+        const payload = {
+            path,
+            title: document.title || '',
+            referrer: document.referrer || '',
+            session_id: sessionId,
+            utm_source: params.get('utm_source') || '',
+            utm_medium: params.get('utm_medium') || '',
+            utm_campaign: params.get('utm_campaign') || ''
+        };
+
+        const body = JSON.stringify(payload);
+        fetch('/api/analytics/pageview', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body,
+            keepalive: true,
+            credentials: 'same-origin'
+        }).catch(() => {});
+    } catch (_) { /* never block UX */ }
+}
 
 function loadChatScripts() {
     if (typeof io === 'undefined') {

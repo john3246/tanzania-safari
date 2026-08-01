@@ -45,9 +45,42 @@ class AdminController {
     async getStats(req, res) {
         try {
             const stats = await statRepository.getGlobalStats();
+            try {
+                const analyticsRepo = require('../repositories/analytics.repository');
+                const snap = await analyticsRepo.getDashboardSnapshot();
+                stats.page_views_all = snap.all_time_views || 0;
+                stats.unique_visitors_all = snap.all_time_visitors || 0;
+                stats.today_views = snap.today_views || 0;
+                stats.week_views = snap.week_views || 0;
+                stats.month_views = snap.month_views || 0;
+                stats.year_views = snap.year_views || 0;
+                // Prefer real traffic for the visitors KPI
+                if (snap.all_time_views != null) {
+                    stats.total_views = snap.all_time_views;
+                }
+                const overview = await analyticsRepo.getOverview('month');
+                stats.visitorLabels = overview.series.labels;
+                stats.visitorsByMonth = overview.series.views;
+                stats.uniqueVisitorsByPeriod = overview.series.visitors;
+                stats.traffic_sources = overview.sources;
+            } catch (e) {
+                console.warn('Analytics snapshot skipped:', e.message);
+            }
             res.json({ success: true, data: stats });
         } catch (error) {
             res.status(500).json({ success: false, message: 'Error fetching stats' });
+        }
+    }
+
+    async getAnalytics(req, res) {
+        try {
+            const analyticsRepo = require('../repositories/analytics.repository');
+            const range = req.query.range || 'month';
+            const data = await analyticsRepo.getOverview(range);
+            res.json({ success: true, data });
+        } catch (error) {
+            console.error('getAnalytics:', error);
+            res.status(500).json({ success: false, message: error.message || 'Error fetching analytics' });
         }
     }
 
