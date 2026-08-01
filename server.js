@@ -25,7 +25,7 @@ const PORT = process.env.PORT || 3000;
 // ── Performance Optimization ──────────────────────────────────
 app.use(compression({
     level: 6,
-    threshold: 100 * 1024,
+    threshold: 1024,
     filter: (req, res) => {
         if (req.headers['x-no-compression']) return false;
         return compression.filter(req, res);
@@ -36,6 +36,16 @@ app.use(compression({
 // Instruct Express to trust headers set by Render's reverse proxy (e.g., X-Forwarded-For).
 // This is crucial for rate limiting and logging accurate client IPs.
 app.set('trust proxy', 1);
+
+// Apex host canonicalization (www → non-www) — avoids duplicate ranking signals
+app.use((req, res, next) => {
+    const host = (req.hostname || '').toLowerCase();
+    if (host === 'www.tanzaniasafarimagic.com') {
+        const target = `https://tanzaniasafarimagic.com${req.originalUrl || '/'}`;
+        return res.redirect(301, target);
+    }
+    next();
+});
 
 // Ensure uploads directory exists
 const fs = require('fs');
@@ -132,7 +142,10 @@ app.use(express.static(path.join(__dirname, 'public'), cacheOptions));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'), cacheOptions));
 
 // ── Crawler Fallbacks (Prevent 404 Pollution) ───────────────────
-app.get(['/favicon.ico', '/ads.txt', '/app-ads.txt', '/sellers.json'], (req, res) => {
+app.get('/favicon.ico', (req, res) => {
+    res.redirect(301, '/images/logo.png');
+});
+app.get(['/ads.txt', '/app-ads.txt', '/sellers.json'], (req, res) => {
     res.status(204).end();
 });
 

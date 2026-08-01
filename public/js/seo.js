@@ -119,9 +119,9 @@
                 name: 'Tanzania'
             },
             sameAs: [
-                'https://www.tripadvisor.com',
                 'https://facebook.com/tanzaniasafarimagic',
-                'https://instagram.com/tanzaniasafarimagic'
+                'https://instagram.com/tanzaniasafarimagic',
+                'https://wa.me/255695108009'
             ],
             priceRange: '$$-$$$'
         };
@@ -260,20 +260,50 @@
             .replace(/"/g, '&quot;');
     }
 
-    function applyPageSeo({ title, description, image, noindex }) {
+    function applyPageSeo({ title, description, image, noindex, type, keywords, canonical }) {
         if (title) setTitle(title);
         if (description) setDescription(description);
-        setCanonical();
+        setCanonical(canonical);
         setOgImage(image);
-        ensureMeta('property', 'og:url', window.location.href.split('?')[0]);
-        ensureMeta('property', 'og:type', 'website');
+        ensureMeta('property', 'og:url', (canonical || window.location.href).split('?')[0]);
+        ensureMeta('property', 'og:type', type || 'website');
         ensureMeta('property', 'og:site_name', SITE.name);
+        ensureMeta('property', 'og:locale', 'en_US');
+        if (keywords) ensureMeta('name', 'keywords', keywords);
         if (noindex) setNoIndexFollow();
-        else setRobots('index, follow');
+        else setRobots('index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
+    }
+
+    function breadcrumbSchema(items) {
+        return {
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: (items || []).map((it, i) => ({
+                '@type': 'ListItem',
+                position: i + 1,
+                name: it.name,
+                item: absoluteUrl(it.url)
+            }))
+        };
+    }
+
+    function websiteSchema() {
+        return {
+            '@context': 'https://schema.org',
+            '@type': 'WebSite',
+            name: SITE.name,
+            url: SITE.url,
+            potentialAction: {
+                '@type': 'SearchAction',
+                target: SITE.url + '/safaris?q={search_term_string}',
+                'query-input': 'required name=search_term_string'
+            }
+        };
     }
 
     function initGlobalSchemas() {
         injectJsonLd('localbusiness-jsonld', localBusinessSchema());
+        injectJsonLd('website-jsonld', websiteSchema());
     }
 
     function imgAttrs(src, alt, w, h) {
@@ -299,6 +329,8 @@
         defaultSafariFaqs,
         renderFaqSection,
         initGlobalSchemas,
+        breadcrumbSchema,
+        websiteSchema,
         imgAttrs,
         absoluteUrl,
         durationToISO

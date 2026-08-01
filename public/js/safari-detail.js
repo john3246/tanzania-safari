@@ -253,8 +253,19 @@ function applySafariSeo(safari) {
     SafariSEO.applyPageSeo({
         title: title.slice(0, 70),
         description: String(description).replace(/\s+/g, ' ').trim().slice(0, 160),
-        image: safari.featured_image_url || safari.image_urls?.[0]
+        image: safari.featured_image_url || safari.image_urls?.[0],
+        type: 'product',
+        keywords: `tanzania safari, ${name}, serengeti safari, ngorongoro, private safari arusha`,
+        canonical: `https://tanzaniasafarimagic.com/safaris/${safari.package_slug || ''}`
     });
+
+    if (window.SafariSEO?.breadcrumbSchema) {
+        SafariSEO.injectJsonLd('breadcrumb-jsonld', SafariSEO.breadcrumbSchema([
+            { name: 'Home', url: '/' },
+            { name: 'Safaris', url: '/safaris' },
+            { name: name, url: `/safaris/${safari.package_slug || ''}` }
+        ]));
+    }
 
     const wa = document.getElementById('waQuoteBtn');
     if (wa) {

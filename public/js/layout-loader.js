@@ -547,4 +547,5 @@ function initSEO() {
     ensure('name', 'twitter:card', 'summary_large_image');
     ensure('name', 'twitter:title', document.title);
     ensure('name', 'twitter:description', descMeta ? descMeta.getAttribute('content') : 'Experience authentic Tanzania safari tours.');
+    ensure('name', 'twitter:image', 'https://tanzaniasafarimagic.com/images/hero.jpg');
 }

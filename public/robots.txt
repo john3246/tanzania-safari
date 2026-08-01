@@ -4,10 +4,33 @@ Allow: /images/
 Allow: /css/
 Allow: /js/
 Allow: /uploads/
+Allow: /blog/
+Allow: /safaris/
+Allow: /destinations/
+Allow: /group-safaris/
 
 # Keep admin and API out of the public index
 Disallow: /admin
+Disallow: /admin/
 Disallow: /api/
 Disallow: /health
+Disallow: /thank-you
+
+# Primary crawl targets (high-value keyword pages)
+Allow: /blog/tanzania-safari
+Allow: /blog/tanzania-safari-cost
+Allow: /blog/best-time-to-visit-tanzania
+Allow: /blog/great-wildebeest-migration
+Allow: /blog/serengeti-national-park
+Allow: /blog/ngorongoro-crater
+Allow: /blog/zanzibar-guide
+
+Allow: /llms.txt
 
 Sitemap: https://tanzaniasafarimagic.com/sitemap.xml
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
