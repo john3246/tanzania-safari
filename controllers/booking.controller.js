@@ -50,21 +50,21 @@ class BookingController {
                 // 1. Send confirmation to the client/booker
                 emailService.sendEmail({
                     to: bookingData.email,
-                    subject: 'Your Tanzania Safari Magic Booking is Confirmed!',
+                    subject: 'We received your Tanzania safari quote request',
                     html: getClientBookingEmailHTML(bookingData)
                 }).catch(e => console.error('Failed to send client booking email:', e)),
                 
                 // 2. Send notification to Admin
                 emailService.sendEmail({
                     to: process.env.ADMIN_EMAIL || 'info@tanzaniasafarimagic.com',
-                    subject: `New Safari Booking: ${bookingData.customer_name}`,
+                    subject: `New safari quote request: ${bookingData.customer_name || bookingData.full_name || 'Guest'}`,
                     html: getAdminBookingEmailHTML(bookingData)
                 }).catch(e => console.error('Failed to send admin booking email:', e))
             ]);
             
             res.status(201).json({
                 success: true,
-                message: 'Booking request submitted successfully',
+                message: 'Quote request received. Our Team will reply with next steps — no payment was taken online.',
                 data: result
             });
         } catch (error) {

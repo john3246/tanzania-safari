@@ -1,53 +1,72 @@
 const jwt = require('jsonwebtoken');
 const db = require('../config/db');
-const JWT_SECRET = process.env.JWT_SECRET || 'tanzania-safari-admin-secret-key-2024';
+
+function getJwtSecret() {
+    const secret = process.env.JWT_SECRET;
+    if (!secret || secret.length < 16) {
+        if (process.env.NODE_ENV === 'production') {
+            throw new Error('JWT_SECRET must be set to a strong value in production');
+        }
+        console.warn('[auth] JWT_SECRET missing or weak — using ephemeral dev secret');
+        return 'dev-only-insecure-jwt-secret';
+    }
+    return secret;
+}
 
 module.exports = async (req, res, next) => {
     const token = req.headers.authorization?.split(' ')[1] || req.cookies?.jwt;
-    if (!token) return res.status(401).json({ success: false, message: 'Unauthorized' });
+    if (!token) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
+
     try {
-        const secret = process.env.JWT_SECRET || 'tanzania-safari-admin-secret-key-2024';
+        const secret = getJwtSecret();
         let decoded;
         try {
             decoded = jwt.verify(token, secret);
         } catch (e) {
-            decoded = jwt.decode(token);
+            return res.status(401).json({ success: false, message: 'Invalid or expired token' });
         }
-
-        if (!decoded) return res.status(401).json({ success: false, message: 'Invalid token' });
 
         const targetId = decoded.userId || decoded.id || decoded.sub;
-        let userRow = null;
-
-        if (targetId) {
-            const userQuery = await db.query(
-                `SELECT u.*, ur.role_name, ur.permissions FROM users u 
-                 LEFT JOIN user_roles ur ON u.role_id = ur.role_id 
-                 WHERE u.user_id = $1 AND u.is_active = true`,
-                [targetId]
-            );
-            if (userQuery.rows.length) {
-                userRow = userQuery.rows[0];
-            }
+        if (!targetId) {
+            return res.status(401).json({ success: false, message: 'Invalid token payload' });
         }
 
-        if (!userRow) {
-            // Fallback for valid token admin session
-            userRow = {
-                user_id: targetId || 'admin',
-                first_name: decoded.name || 'Admin',
-                email: decoded.email || 'admin@tanzaniasafari.com',
-                role_name: decoded.role || 'Super Admin',
-                permissions: ['*']
-            };
+        const userQuery = await db.query(
+            `SELECT u.*, ur.role_name, ur.permissions
+             FROM users u
+             LEFT JOIN user_roles ur ON u.role_id = ur.role_id
+             WHERE u.user_id = $1 AND u.is_active = true`,
+            [targetId]
+        );
+
+        if (!userQuery.rows.length) {
+            return res.status(401).json({ success: false, message: 'User not found or inactive' });
+        }
+
+        const userRow = userQuery.rows[0];
+        const role = userRow.role_name || decoded.role || '';
+        if (!['Admin', 'Super Admin'].includes(role)) {
+            return res.status(403).json({ success: false, message: 'Forbidden' });
+        }
+
+        let permissions = userRow.permissions;
+        if (typeof permissions === 'string') {
+            try { permissions = JSON.parse(permissions); } catch { permissions = []; }
+        }
+        if (!Array.isArray(permissions) || !permissions.length) {
+            permissions = role === 'Super Admin' ? ['*'] : ['admin'];
         }
 
         req.user = userRow;
-        req.user.role = userRow.role_name || decoded.role || 'Super Admin';
-        req.user.permissions = ['*']; // Grant admin dashboard operations
+        req.user.role = role;
+        req.user.permissions = permissions;
         next();
     } catch (err) {
-        console.error('verifyAdmin error:', err);
+        console.error('verifyAdmin error:', err.message);
         return res.status(401).json({ success: false, message: 'Invalid token' });
     }
 };
+
+module.exports.getJwtSecret = getJwtSecret;

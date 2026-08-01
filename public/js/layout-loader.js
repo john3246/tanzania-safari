@@ -34,11 +34,46 @@ document.addEventListener('DOMContentLoaded', () => {
     loadComponent('footer', '/includes/footer.html' + cb, () => {
         initFooter();
         loadChatScripts();
+        initCookieNotice();
     });
     initSEO();
     trackPageView();
 });
 
+/**
+ * Simple first-visit cookie / analytics notice (Privacy Policy link).
+ */
+function initCookieNotice() {
+    try {
+        if (typeof document === 'undefined') return;
+        if (localStorage.getItem('tsm_cookie_ok') === '1') return;
+        if (document.getElementById('tsmCookieNotice')) return;
+        const path = window.location.pathname || '/';
+        if (path.startsWith('/admin')) return;
+
+        const bar = document.createElement('div');
+        bar.id = 'tsmCookieNotice';
+        bar.setAttribute('role', 'dialog');
+        bar.setAttribute('aria-label', 'Cookie notice');
+        bar.style.cssText = [
+            'position:fixed', 'left:1rem', 'right:1rem', 'bottom:1rem', 'z-index:9998',
+            'max-width:32rem', 'margin:0 auto', 'padding:1rem 1.15rem',
+            'background:#1a2a17', 'color:#f5f5f0', 'border-radius:12px',
+            'box-shadow:0 8px 28px rgba(0,0,0,.25)', 'font-size:0.875rem', 'line-height:1.5',
+            'display:flex', 'flex-wrap:wrap', 'gap:0.75rem', 'align-items:center', 'justify-content:space-between'
+        ].join(';');
+        bar.innerHTML = `
+          <p style="margin:0;flex:1 1 12rem">We use essential storage and first-party analytics to improve the site.
+            See our <a href="/privacy" style="color:#c8e6c0;text-decoration:underline">Privacy Policy</a>.</p>
+          <button type="button" id="tsmCookieAccept" style="flex:0 0 auto;border:0;cursor:pointer;background:#c45c26;color:#fff;font-weight:700;padding:0.55rem 1rem;border-radius:8px">OK</button>
+        `;
+        document.body.appendChild(bar);
+        document.getElementById('tsmCookieAccept')?.addEventListener('click', () => {
+            localStorage.setItem('tsm_cookie_ok', '1');
+            bar.remove();
+        });
+    } catch (_) { /* non-blocking */ }
+}
 /**
  * First-party visitor analytics (admin CMS dashboard)
  */

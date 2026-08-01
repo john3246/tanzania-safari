@@ -95,11 +95,33 @@ router.post('/reset-password/:token', validate(resetSchema), async (req, res, ne
     }
 });
 
-// 3. One-Time Admin Registration (Pre-check)
+// 3. One-Time Admin Registration (Pre-check) — only when no admin exists
 router.get('/can-register-admin', async (req, res, next) => {
     try {
-        // Bypass for the user to register right now
-        res.json({ success: true, isOpen: true });
+        // Optional emergency unlock: ALLOW_ADMIN_REGISTER=true (never leave on in prod)
+        if (process.env.ALLOW_ADMIN_REGISTER === 'true') {
+            return res.json({ success: true, isOpen: true });
+        }
+
+        const count = await db.query(`
+            SELECT COUNT(*)::int AS n
+            FROM users u
+            LEFT JOIN user_roles ur ON u.role_id = ur.role_id
+            WHERE u.is_active = true
+              AND (
+                ur.role_name IN ('Admin', 'Super Admin')
+                OR EXISTS (
+                  SELECT 1 FROM roles r
+                  WHERE r.id = u.role_id AND r.name IN ('Admin', 'Super Admin')
+                )
+              )
+        `).catch(async () => {
+            // Fallback if role join shape differs
+            return db.query(`SELECT COUNT(*)::int AS n FROM users WHERE is_active = true`);
+        });
+
+        const n = count.rows[0]?.n || 0;
+        res.json({ success: true, isOpen: n === 0 });
     } catch (error) {
         next(error);
     }
@@ -109,7 +131,16 @@ router.get('/can-register-admin', async (req, res, next) => {
 // 4. One-Time Admin Registration (Submit)
 router.post('/register-admin', validate(registerSchema), async (req, res, next) => {
     try {
-        // Bypass for the user to register right now
+        if (process.env.ALLOW_ADMIN_REGISTER !== 'true') {
+            const count = await db.query(`SELECT COUNT(*)::int AS n FROM users WHERE is_active = true`);
+            if ((count.rows[0]?.n || 0) > 0) {
+                return res.status(403).json({
+                    success: false,
+                    message: 'Admin registration is closed. Ask an existing admin to create accounts.'
+                });
+            }
+        }
+
         const { email, password, firstName, lastName } = req.body;
         
         // Ensure email isn't somehow already taken by a non-admin
@@ -154,8 +185,11 @@ router.post('/register-admin', validate(registerSchema), async (req, res, next) 
     }
 });
 
-// 5. Temporary DB Fix Route
+// 5. Temporary DB Fix Route — disabled in production
 router.get('/fix-db', async (req, res) => {
+    if (process.env.NODE_ENV === 'production') {
+        return res.status(404).end();
+    }
     try {
         await db.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_token VARCHAR(255)');
         await db.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_token_expires TIMESTAMP');

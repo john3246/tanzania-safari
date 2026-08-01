@@ -39,8 +39,9 @@ function updateSummary() {
     <div class="summary-row"><span class="summary-label">Duration</span><span class="summary-value">${selectedPkg.duration_days} Days</span></div>
     <div class="summary-row"><span class="summary-label">${adults} Adult${adults>1?'s':''}</span><span class="summary-value">$${(basePrice*adults).toLocaleString()}</span></div>
     ${children>0?`<div class="summary-row"><span class="summary-label">${children} Child${children>1?'ren':''} (70%)</span><span class="summary-value">$${(childPrice*children).toLocaleString()}</span></div>`:''}
-    <div class="summary-row" style="border-top:2px solid var(--border);margin-top:.5rem;padding-top:.75rem"><span class="summary-label">Total</span><span class="summary-value" style="color:var(--primary);font-size:1.25rem">$${total.toLocaleString()}</span></div>
-    <div class="summary-row"><span class="summary-label">Deposit (20%)</span><span class="summary-value" style="color:var(--success)">$${deposit.toLocaleString()}</span></div>`;
+    <div class="summary-row" style="border-top:2px solid var(--border);margin-top:.5rem;padding-top:.75rem"><span class="summary-label">Estimated total</span><span class="summary-value" style="color:var(--primary);font-size:1.25rem">$${total.toLocaleString()}</span></div>
+    <div class="summary-row"><span class="summary-label">Typical deposit later</span><span class="summary-value" style="color:var(--success)">~$${deposit.toLocaleString()} (20%)</span></div>
+    <p style="font-size:0.75rem;color:var(--text-muted);margin:0.5rem 0 0;line-height:1.45">This form requests a quote — no card charged online. After you accept the itinerary, Our Team sends deposit instructions.</p>`;
 }
 window.updateSummary = updateSummary;
 
@@ -60,7 +61,7 @@ function buildConfirmSummary() {
 document.getElementById('bookingForm')?.addEventListener('submit', async e => {
     e.preventDefault();
     const btn = document.getElementById('submitBtn');
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending request...';
     btn.disabled = true;
     const data = Object.fromEntries(new FormData(e.target));
     const adults = parseInt(data.number_of_adults || 1);
@@ -98,7 +99,7 @@ document.getElementById('bookingForm')?.addEventListener('submit', async e => {
         <div class="summary-row"><span class="summary-label">Total</span><span class="summary-value">$${total.toLocaleString()}</span></div>`;
     } catch (err) {
         toast(err.message || 'Booking failed. Please try again.', 'error');
-        btn.innerHTML = '<i class="fas fa-calendar-check"></i> Confirm Booking';
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Request Free Quote';
         btn.disabled = false;
     }
 });

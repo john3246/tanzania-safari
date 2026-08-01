@@ -128,6 +128,8 @@ router.get('/sitemap.xml', async (req, res) => {
       { path: '/booking', priority: '0.9', changefreq: 'monthly' },
       { path: '/about', priority: '0.7', changefreq: 'monthly' },
       { path: '/contact', priority: '0.85', changefreq: 'monthly' },
+      { path: '/privacy', priority: '0.4', changefreq: 'yearly' },
+      { path: '/terms', priority: '0.4', changefreq: 'yearly' },
       { path: '/blog', priority: '0.9', changefreq: 'daily' }
     ];
     staticPages.forEach(p => {
@@ -442,6 +444,32 @@ router.get('/about', (req, res) => {
   }
 });
 
+router.get('/privacy', (req, res) => {
+  try {
+    seo.sendSeoHtml(res, 'privacy.html', {
+      title: 'Privacy Policy | Tanzania Safari Magic',
+      description: 'How Tanzania Safari Magic collects and uses enquiry, booking, and analytics data for safari quotes from Arusha.',
+      canonical: seo.SITE.url + '/privacy',
+      robots: 'index, follow'
+    });
+  } catch {
+    sendFile(res, 'privacy.html');
+  }
+});
+
+router.get('/terms', (req, res) => {
+  try {
+    seo.sendSeoHtml(res, 'terms.html', {
+      title: 'Terms of Service | Tanzania Safari Magic',
+      description: 'Terms for safari quote requests, deposits, cancellations, and travel with Tanzania Safari Magic from Arusha.',
+      canonical: seo.SITE.url + '/terms',
+      robots: 'index, follow'
+    });
+  } catch {
+    sendFile(res, 'terms.html');
+  }
+});
+
 router.get('/contact', (req, res) => {
   try {
     seo.sendSeoHtml(res, 'contact.html', {
@@ -458,11 +486,11 @@ router.get('/contact', (req, res) => {
 router.get('/booking', (req, res) => {
   try {
     seo.sendSeoHtml(res, 'booking.html', {
-      title: 'Book a Tanzania Safari | Free Quote from Arusha',
-      description: 'Request a free private Tanzania safari quote — Serengeti, Ngorongoro, migration, Kilimanjaro & Zanzibar. Designed by Our Team in Arusha within 24 hours.',
+      title: 'Request a Tanzania Safari Quote | Free from Arusha',
+      description: 'Request a free private Tanzania safari quote — Serengeti, Ngorongoro, migration, Kilimanjaro & Zanzibar. No online payment — Our Team replies within 24 hours.',
       canonical: seo.SITE.url + '/booking',
       keywords: seo.KEYWORD_HUB.booking,
-      h1: 'Book Your Tanzania Safari'
+      h1: 'Request Your Tanzania Safari Quote'
     });
   } catch {
     sendFile(res, 'booking.html');

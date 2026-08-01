@@ -63,8 +63,8 @@ function renderSummary(d) {
         <i class="fas fa-paw"></i> Request this trip
       </button>
       <p class="group-deposit-note">
-        To secure your seat, a <strong>30% deposit</strong> (from $${sampleDeposit.toLocaleString()} USD per traveler)
-        must be paid <strong>within 24 hours</strong> of your request. Seats are held after admin approval of your payment.
+        After approval, a <strong>30% deposit</strong> (from $${sampleDeposit.toLocaleString()} USD per traveler)
+        is typically due <strong>within 24 hours</strong>. Our Team sends <strong>offline payment instructions</strong> — nothing is charged on this page. Seats are held once payment is confirmed.
       </p>
       <form id="requestTripForm" class="group-request-form" onsubmit="return submitGroupRequest(event)">
         <input name="full_name" required placeholder="Full name" autocomplete="name">
@@ -78,7 +78,7 @@ function renderSummary(d) {
           <option value="4">4 travelers</option>
         </select>
         <p id="groupDepositHint" class="group-deposit-note" style="margin-top:0">
-          Estimated deposit due in 24h: <strong>$${sampleDeposit.toLocaleString()} USD</strong> (30%)
+          Estimated deposit (offline, after approval): <strong>$${sampleDeposit.toLocaleString()} USD</strong> (30%)
         </p>
         <textarea name="message" rows="3" placeholder="Notes (optional)"></textarea>
         <button type="submit" class="btn btn-primary" style="min-height:48px;width:100%">Send request</button>
@@ -94,7 +94,7 @@ function updateDepositHint() {
   const deposit = depositFor(price, travelers);
   const el = document.getElementById('groupDepositHint');
   if (el) {
-    el.innerHTML = `Estimated deposit due in 24h: <strong>$${deposit.toLocaleString()} USD</strong> (30% for ${travelers} traveler${travelers > 1 ? 's' : ''})`;
+    el.innerHTML = `Estimated deposit (offline, after approval): <strong>$${deposit.toLocaleString()} USD</strong> (30% for ${travelers} traveler${travelers > 1 ? 's' : ''})`;
   }
 }
 
@@ -147,7 +147,7 @@ async function loadGroupDetail() {
         $${price.toLocaleString()} <span style="font-size:0.95rem;font-weight:500;color:var(--text-muted)">per person</span>
       </p>
       ${data.discount_percent > 0 ? `<p style="color:var(--accent);font-weight:700;margin:0 0 0.75rem">Save up to ${data.discount_percent}%</p>` : ''}
-      <p class="group-deposit-note">A <strong>30% deposit</strong> is required within <strong>24 hours</strong> of your request to secure your seat. The balance is due before departure as confirmed by Our Team.</p>
+      <p class="group-deposit-note">A <strong>30% deposit</strong> is typically required within <strong>24 hours</strong> after your request is approved. Payment is arranged offline with Our Team — this page does not take cards. Balance is due before departure as confirmed in writing.</p>
       <p style="color:var(--text-secondary);margin:0.85rem 0 0;line-height:1.65">Price is based on sharing. Single supplements and optional activities may apply — confirm with Our Team when you request this departure.</p>`;
 
     document.getElementById('groupItinerary').innerHTML = renderItinerary(data.itinerary);

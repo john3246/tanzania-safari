@@ -20,9 +20,10 @@ class AuthService {
 
         const permissions = await userService.getUserPermissions(user.user_id);
 
+        const { getJwtSecret } = require('../middleware/verifyAdmin');
         const token = jwt.sign(
             { userId: user.user_id, email: user.email, role: user.role_name, permissions },
-            process.env.JWT_SECRET || 'tanzania-safari-admin-secret-key-2024',
+            getJwtSecret(),
             { expiresIn: '12h' }
         );
 

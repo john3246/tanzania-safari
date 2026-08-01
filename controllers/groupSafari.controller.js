@@ -176,6 +176,40 @@ class GroupSafariController {
                 }
             } catch (_) { /* optional */ }
 
+            // Guest + admin emails (best-effort)
+            try {
+                const emailService = require('../src/utils/emailService');
+                const {
+                    getClientGroupRequestEmailHTML,
+                    getAdminGroupRequestEmailHTML
+                } = require('../src/utils/bookingTemplates');
+                const payload = {
+                    full_name: String(full_name).trim(),
+                    email: String(email).trim(),
+                    phone: phone ? String(phone).trim() : null,
+                    departure,
+                    seatsRequested,
+                    depositPercent,
+                    depositAmount,
+                    depositDueAt: depositDueAt.toISOString(),
+                    enquiryId: created.enquiry_id
+                };
+                await Promise.all([
+                    emailService.sendEmail({
+                        to: String(email).trim(),
+                        subject: 'Group safari request received — Tanzania Safari Magic',
+                        html: getClientGroupRequestEmailHTML(payload)
+                    }).catch(e => console.error('Group guest email failed:', e)),
+                    emailService.sendEmail({
+                        to: process.env.ADMIN_EMAIL || 'info@tanzaniasafarimagic.com',
+                        subject: `Group request: ${full_name} — ${departure.title}`,
+                        html: getAdminGroupRequestEmailHTML(payload)
+                    }).catch(e => console.error('Group admin email failed:', e))
+                ]);
+            } catch (e) {
+                console.error('Group request emails error:', e.message);
+            }
+
             res.json({
                 success: true,
                 data: {
@@ -185,7 +219,7 @@ class GroupSafariController {
                     deposit_amount_usd: depositAmount,
                     deposit_due_at: depositDueAt.toISOString()
                 },
-                message: `Request received! To secure your seat, please pay a ${depositPercent}% deposit ($${depositAmount} USD) within 24 hours. Our team will confirm payment details shortly.`
+                message: `Request received! Typical seat deposit is ${depositPercent}% ($${depositAmount} USD) within 24 hours after approval. Our Team will send offline payment instructions — nothing was charged online.`
             });
         } catch (error) {
             console.error('requestTrip error:', error);
