@@ -21,7 +21,11 @@ class PackageRepository {
         limit = parseInt(limit) || 9;
         const offset = (parseInt(page) - 1) * limit;
 
-        const conditions = ['sp.is_active = true', '(sp.is_group_tour IS NOT TRUE)'];
+        const conditions = ['sp.is_active = true'];
+        // Hide fixed-date group products from general browse; allow when Group category is requested.
+        if (category !== 'group-safaris') {
+            conditions.push('(sp.is_group_tour IS NOT TRUE)');
+        }
         const params = [];
         let paramIndex = 1;
 
@@ -104,7 +108,10 @@ class PackageRepository {
 
     async count(filters = {}) {
         const { category, destination, duration, difficulty, minPrice, maxPrice, search } = filters;
-        const conditions = ['sp.is_active = true', '(sp.is_group_tour IS NOT TRUE)'];
+        const conditions = ['sp.is_active = true'];
+        if (category !== 'group-safaris') {
+            conditions.push('(sp.is_group_tour IS NOT TRUE)');
+        }
         const params = [];
         let paramIndex = 1;
 

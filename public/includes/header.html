@@ -37,16 +37,43 @@
                 </button>
             </div>
             <a href="/" class="nav-link">Home</a>
-            <div class="nav-dropdown">
+            <div class="nav-dropdown" id="safarisNavDropdown">
               <button type="button" class="nav-link nav-dropdown-toggle" aria-expanded="false" aria-haspopup="true">
                 Safaris <i class="fas fa-chevron-down nav-caret" aria-hidden="true"></i>
               </button>
-              <div class="nav-dropdown-menu" role="menu">
-                <a href="/group-safaris" class="nav-dropdown-item" role="menuitem">Group Safaris</a>
-                <a href="/kilimanjaro" class="nav-dropdown-item" role="menuitem">Kilimanjaro Safaris</a>
-                <a href="/safaris" class="nav-dropdown-item" role="menuitem">Safaris</a>
-                <a href="/migrations" class="nav-dropdown-item" role="menuitem">Migrations</a>
-                <a href="/zanzibar" class="nav-dropdown-item" role="menuitem">Zanzibar Safaris</a>
+              <div class="nav-dropdown-menu nav-mega-menu" role="menu" aria-label="Safari collections">
+                <div class="nav-mega-grid">
+                  <div class="nav-mega-col" data-hub="group-safaris">
+                    <a href="/group-safaris" class="nav-mega-heading" role="menuitem">Group Safaris</a>
+                    <p class="nav-mega-note">Fixed-date shared departures</p>
+                    <div class="nav-mega-tours" data-category="group-safaris"></div>
+                    <a href="/safaris?category=group-safaris" class="nav-mega-all">View all group packages →</a>
+                  </div>
+                  <div class="nav-mega-col" data-hub="kilimanjaro">
+                    <a href="/kilimanjaro" class="nav-mega-heading" role="menuitem">Kilimanjaro Safaris</a>
+                    <p class="nav-mega-note">Climbs &amp; mountain treks</p>
+                    <div class="nav-mega-tours" data-category="kilimanjaro"></div>
+                    <a href="/kilimanjaro" class="nav-mega-all">View all Kilimanjaro →</a>
+                  </div>
+                  <div class="nav-mega-col" data-hub="safaris">
+                    <a href="/safaris" class="nav-mega-heading" role="menuitem">Safaris</a>
+                    <p class="nav-mega-note">Private &amp; classic itineraries</p>
+                    <div class="nav-mega-tours" data-category="safaris"></div>
+                    <a href="/safaris" class="nav-mega-all">Browse all safaris →</a>
+                  </div>
+                  <div class="nav-mega-col" data-hub="migrations">
+                    <a href="/migrations" class="nav-mega-heading" role="menuitem">Migrations</a>
+                    <p class="nav-mega-note">Serengeti &amp; Ndutu seasons</p>
+                    <div class="nav-mega-tours" data-category="migrations"></div>
+                    <a href="/migrations" class="nav-mega-all">View all migrations →</a>
+                  </div>
+                  <div class="nav-mega-col" data-hub="zanzibar">
+                    <a href="/zanzibar" class="nav-mega-heading" role="menuitem">Zanzibar Safaris</a>
+                    <p class="nav-mega-note">Beach &amp; bush-to-beach</p>
+                    <div class="nav-mega-tours" data-category="zanzibar"></div>
+                    <a href="/zanzibar" class="nav-mega-all">View all Zanzibar →</a>
+                  </div>
+                </div>
               </div>
             </div>
             <a href="/destinations" class="nav-link nav-link-emphasis">Destinations</a>

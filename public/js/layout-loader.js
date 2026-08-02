@@ -3,10 +3,55 @@
  * and handles global UI interactions like navbar scrolling and social float.
  */
 
-/**
- * Layout Loader - Dynamically injects shared components (Header, Footer)
- * and handles global UI interactions like navbar scrolling and social float.
- */
+let __safariMegaMenuLoaded = false;
+
+function escapeNavHtml(str) {
+    return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+}
+
+async function loadSafariMegaMenuTours() {
+    if (__safariMegaMenuLoaded) return;
+    const nodes = document.querySelectorAll('.nav-mega-tours[data-category]');
+    if (!nodes.length) return;
+    __safariMegaMenuLoaded = true;
+
+    const categories = [...new Set([...nodes].map((n) => n.getAttribute('data-category')).filter(Boolean))];
+
+    await Promise.all(
+        categories.map(async (category) => {
+            const targets = document.querySelectorAll(`.nav-mega-tours[data-category="${category}"]`);
+            try {
+                const res = await fetch(`/api/packages?category=${encodeURIComponent(category)}&limit=4&sort=featured`);
+                const json = await res.json();
+                const packages = Array.isArray(json?.data) ? json.data : json?.data?.packages || [];
+                const html = packages.length
+                    ? packages
+                          .slice(0, 4)
+                          .map((p) => {
+                              const days = p.duration_days ? `${p.duration_days} days` : '';
+                              const price = p.base_price_usd
+                                  ? `From $${Number(p.base_price_usd).toLocaleString()}`
+                                  : '';
+                              const meta = [days, price].filter(Boolean).join(' · ');
+                              return `<a class="nav-mega-tour" role="menuitem" href="/safaris/${encodeURIComponent(p.package_slug)}">${escapeNavHtml(p.package_name)}${meta ? `<span>${escapeNavHtml(meta)}</span>` : ''}</a>`;
+                          })
+                          .join('')
+                    : '<span class="nav-mega-empty">Packages updating…</span>';
+                targets.forEach((el) => {
+                    el.innerHTML = html;
+                });
+            } catch (err) {
+                targets.forEach((el) => {
+                    el.innerHTML = '<span class="nav-mega-empty">View collection →</span>';
+                });
+            }
+        })
+    );
+}
 
 /* Inject fluid responsive CSS immediately (all public pages) */
 (function injectFluidCss() {
@@ -239,8 +284,8 @@ function initHeader() {
             closeDrawer();
         });
 
-        // Close when a nav link / CTA is tapped
-        mainNav.querySelectorAll('a.nav-link, a.nav-cta, a.nav-dropdown-item').forEach((link) => {
+        // Close when a nav link / CTA / mega tour link is tapped
+        mainNav.querySelectorAll('a.nav-link, a.nav-cta, a.nav-dropdown-item, a.nav-mega-heading, a.nav-mega-tour, a.nav-mega-all').forEach((link) => {
             link.addEventListener('click', () => closeDrawer());
         });
 
@@ -258,9 +303,17 @@ function initHeader() {
                 if (!open) {
                     parent?.classList.add('open');
                     btn.setAttribute('aria-expanded', 'true');
+                    loadSafariMegaMenuTours();
                 }
             });
         });
+
+        // Prefetch mega-menu tours on desktop hover intent
+        const safarisDropdown = document.getElementById('safarisNavDropdown');
+        if (safarisDropdown) {
+            safarisDropdown.addEventListener('mouseenter', () => loadSafariMegaMenuTours(), { once: false });
+        }
+        loadSafariMegaMenuTours();
 
         // Keep submenu closed unless hovered/toggled — same on every page
         document.addEventListener('click', (e) => {
