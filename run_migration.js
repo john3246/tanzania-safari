@@ -245,6 +245,28 @@ async function migrate() {
         ALTER TABLE newsletter_subscribers ADD COLUMN IF NOT EXISTS full_name varchar(150);
     `);
 
+    await runStep('hub category seeds (day-trips / fly-in / budget)', `
+        INSERT INTO public.package_categories (category_name, category_slug, category_description, icon_class, display_order, is_active)
+        VALUES
+          ('Day Trips', 'day-trips', 'One-day safari and cultural experiences', 'fa-sun', 6, true),
+          ('Fly-In Safaris', 'fly-in', 'Exclusive fly-in safari experiences', 'fa-plane', 7, true),
+          ('Budget Safaris', 'budget', 'Affordable safari packages', 'fa-wallet', 8, true)
+        ON CONFLICT (category_slug) DO UPDATE SET
+          category_name = EXCLUDED.category_name,
+          category_description = EXCLUDED.category_description,
+          icon_class = EXCLUDED.icon_class,
+          is_active = true;
+    `);
+
+    // Idempotent content seed: inserts Glad of Africa tour packages only when
+    // package_slug is not already present (safe on every Render deploy/restart).
+    try {
+        const seedGladoTours = require('./seed_glado_tours');
+        await seedGladoTours();
+    } catch (seedErr) {
+        console.error('Glado tours seed failed:', seedErr.message);
+    }
+
     console.log('Database migrations completed.');
 }
 
