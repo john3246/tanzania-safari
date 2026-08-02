@@ -115,6 +115,9 @@ async function loadDestinationDetails(slug) {
             } else if (isSerengetiDestination(slug, displayName)) {
                 applySerengetiSeo(currentDestination);
                 injectSerengetiSchemas(currentDestination);
+            } else if (isKilimanjaroDestination(slug, displayName)) {
+                applyKilimanjaroSeo(currentDestination);
+                injectKilimanjaroSchemas(currentDestination);
             } else {
                 updatePageTitle(displayName);
                 updateMetaDescription(currentDestination.park_description || currentDestination.description);
@@ -127,6 +130,8 @@ async function loadDestinationDetails(slug) {
                 await enhanceNgorongoroPackageSection();
             } else if (isSerengetiDestination(slug, displayName)) {
                 await enhanceSerengetiPackageSection();
+            } else if (isKilimanjaroDestination(slug, displayName)) {
+                await enhanceKilimanjaroPackageSection();
             }
         } else {
             showError('Destination not found');
@@ -147,10 +152,13 @@ function renderDestinationDetails(destination) {
     
     const isNgorongoro = isNgorongoroDestination(slug, name);
     const isSerengeti = isSerengetiDestination(slug, name);
-    const isGuideDest = isNgorongoro || isSerengeti;
+    const isKilimanjaro = isKilimanjaroDestination(slug, name);
+    const isGuideDest = isNgorongoro || isSerengeti || isKilimanjaro;
     const guide = isNgorongoro && window.NgorongoroDestinationGuide
         ? window.NgorongoroDestinationGuide
-        : (isSerengeti && window.SerengetiDestinationGuide ? window.SerengetiDestinationGuide : null);
+        : (isSerengeti && window.SerengetiDestinationGuide
+            ? window.SerengetiDestinationGuide
+            : (isKilimanjaro && window.KilimanjaroDestinationGuide ? window.KilimanjaroDestinationGuide : null));
     
     // Determine destination type and features
     const isUnesco = destination.is_unesco_heritage || name.toLowerCase().includes('ngorongoro') || 
@@ -158,7 +166,9 @@ function renderDestinationDetails(destination) {
                      name.toLowerCase().includes('kilimanjaro');
     
     const heroTitle = guide ? guide.META.h1 : name;
-    const eyebrow = isGuideDest ? 'UNESCO World Heritage · Northern Circuit' : 'Safari Destination · Tanzania';
+    const eyebrow = isKilimanjaro
+        ? 'UNESCO World Heritage · Highest Peak in Africa'
+        : (isGuideDest ? 'UNESCO World Heritage · Northern Circuit' : 'Safari Destination · Tanzania');
     
     // Get icon based on name
     let iconClass = 'fa-tree';
@@ -182,6 +192,11 @@ function renderDestinationDetails(destination) {
         { icon: 'fa-paw', label: 'Wildebeest', value: '1.5M+' },
         { icon: 'fa-calendar', label: 'UNESCO', value: '1981' },
         { icon: 'fa-star', label: 'Famous For', value: 'Great Migration' }
+    ] : isKilimanjaro ? [
+        { icon: 'fa-mountain', label: 'Uhuru Peak', value: '5,895 m' },
+        { icon: 'fa-ruler', label: 'Park Area', value: '~1,688 sq km' },
+        { icon: 'fa-calendar', label: 'UNESCO', value: '1987' },
+        { icon: 'fa-star', label: 'Famous For', value: 'Roof of Africa' }
     ] : [
         { icon: 'fa-ruler', label: 'Size', value: destination.size_sq_km ? `${Number(destination.size_sq_km).toLocaleString()} sq km` : 'Varies' },
         { icon: 'fa-calendar', label: 'Established', value: destination.established_year || 'Various' },
@@ -193,7 +208,8 @@ function renderDestinationDetails(destination) {
         destination.featured_image_url || destination.image_url || (destination.image_urls && destination.image_urls[0]) || (destination.gallery_urls && destination.gallery_urls[0]),
         isNgorongoro ? '/images/optimized/mbugani.webp'
             : (isSerengeti ? '/images/optimized/serengeti-national-park.webp'
-                : (slug ? `/images/optimized/${slug}.webp` : '/images/optimized/serengeti-national-park.webp'))
+                : (isKilimanjaro ? '/images/optimized/mount-kilimanjaro-national-park.webp'
+                    : (slug ? `/images/optimized/${slug}.webp` : '/images/optimized/serengeti-national-park.webp')))
     );
     
     const html = `
@@ -248,6 +264,15 @@ function renderDestinationDetails(destination) {
                                         '/images/destinations/serengeti-national-park/serengeti.jpg',
                                         '/images/destinations/serengeti-national-park/serengeti2.jpeg',
                                         'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Wildebeest_Migration_Masai_Mara.jpg/1280px-Wildebeest_Migration_Masai_Mara.jpg'
+                                    ];
+                                    extras.forEach(u => { if (u && !images.includes(u)) images.push(u); });
+                                }
+                                if (isKilimanjaro) {
+                                    const extras = [
+                                        '/images/optimized/mount-kilimanjaro-national-park.webp',
+                                        '/images/optimized/6-day-machame-route-kilimanjaro.webp',
+                                        'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Kilimanjaro_from_Amboseli.jpg/1280px-Kilimanjaro_from_Amboseli.jpg',
+                                        'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Mount_Kilimanjaro.jpg/1280px-Mount_Kilimanjaro.jpg'
                                     ];
                                     extras.forEach(u => { if (u && !images.includes(u)) images.push(u); });
                                 }
@@ -348,10 +373,15 @@ function renderDestinationDetails(destination) {
                             <h3 style="margin:0 0 0.75rem;font-size:1rem">Plan This Trip</h3>
                             <ul style="margin:0;padding-left:1.1rem;line-height:1.85;font-size:0.92rem">
                               <li><a href="/safaris">All safari packages</a></li>
+                              <li><a href="/kilimanjaro">Kilimanjaro climb packages</a></li>
                               <li><a href="/blog/great-wildebeest-migration">Great Migration guide</a></li>
                               <li><a href="/blog/tanzania-safari-cost">Safari cost guide</a></li>
                               <li><a href="/blog/tanzania-safari">Ultimate safari guide</a></li>
-                              ${isSerengeti ? '<li><a href="/destinations/ngorongoro-conservation-area">Combine with Ngorongoro</a></li>' : '<li><a href="/destinations/serengeti-national-park">Combine with Serengeti</a></li>'}
+                              ${isKilimanjaro
+                                ? '<li><a href="/destinations/serengeti-national-park">Add a Serengeti safari</a></li><li><a href="/destinations/ngorongoro-conservation-area">Add Ngorongoro Crater</a></li><li><a href="/zanzibar">Zanzibar after the climb</a></li>'
+                                : (isSerengeti
+                                  ? '<li><a href="/destinations/ngorongoro-conservation-area">Combine with Ngorongoro</a></li><li><a href="/destinations/mount-kilimanjaro-national-park">Climb Kilimanjaro</a></li>'
+                                  : '<li><a href="/destinations/serengeti-national-park">Combine with Serengeti</a></li><li><a href="/destinations/mount-kilimanjaro-national-park">Climb Kilimanjaro</a></li>')}
                               <li><a href="/booking">Inquire / free quote</a></li>
                               <li><a href="/contact">Contact Us Now</a></li>
                             </ul>
@@ -376,7 +406,10 @@ function renderDestinationDetails(destination) {
     
     mainContent.innerHTML = html;
     document.body.classList.add('has-mobile-book-bar');
-    if (isGuideDest) mountGuideSideToc(isNgorongoro ? 'ngoro-toc' : 'serengeti-toc');
+    if (isGuideDest) {
+        const tocId = isNgorongoro ? 'ngoro-toc' : (isSerengeti ? 'serengeti-toc' : 'kilimanjaro-toc');
+        mountGuideSideToc(tocId);
+    }
 }
 
 function mountGuideSideToc(tocId) {
@@ -407,6 +440,155 @@ function isSerengetiDestination(slug, name) {
     if (window.SerengetiDestinationGuide?.matchesSlug?.(slug)) return true;
     const s = `${slug || ''} ${name || ''}`.toLowerCase();
     return s.includes('serengeti');
+}
+
+function isKilimanjaroDestination(slug, name) {
+    if (window.KilimanjaroDestinationGuide?.matchesSlug?.(slug)) return true;
+    const s = `${slug || ''} ${name || ''}`.toLowerCase();
+    return s.includes('kilimanjaro');
+}
+
+function applyKilimanjaroSeo(destination) {
+    const guide = window.KilimanjaroDestinationGuide;
+    const meta = guide?.META || {};
+    const name = destination.park_name || destination.name || 'Kilimanjaro National Park';
+    const title = (meta.title || `${name} Climb Guide | Tanzania Safari Magic`).slice(0, 70);
+    const description = (meta.meta_description || destination.park_description || '').slice(0, 160);
+    const image = destination.featured_image_url || destination.image_urls?.[0] || meta.image;
+
+    if (window.SafariSEO) {
+        SafariSEO.applyPageSeo({ title, description, image, noindex: false });
+        SafariSEO.setRobots?.('index, follow');
+    } else {
+        document.title = title;
+        updateMetaDescription(description);
+    }
+
+    ensureDestMeta('name', 'keywords', meta.keywords || 'kilimanjaro national park, climb kilimanjaro, tanzania safari magic');
+    ensureDestMeta('name', 'author', 'John Raphael Shayo');
+    ensureDestMeta('property', 'og:type', 'article');
+    const canonical = document.querySelector('link[rel="canonical"]') || (() => {
+        const l = document.createElement('link');
+        l.rel = 'canonical';
+        document.head.appendChild(l);
+        return l;
+    })();
+    canonical.href = `https://tanzaniasafarimagic.com/destinations/${destination.park_slug || destination.slug || 'mount-kilimanjaro-national-park'}`;
+}
+
+function injectKilimanjaroSchemas(destination) {
+    const guide = window.KilimanjaroDestinationGuide;
+    const name = destination.park_name || destination.name || 'Kilimanjaro National Park';
+    const description = (guide?.META?.meta_description || destination.park_description || '').slice(0, 300);
+    const image = destination.featured_image_url || destination.image_urls?.[0] || guide?.META?.image || '/images/optimized/mount-kilimanjaro-national-park.webp';
+    const url = `https://tanzaniasafarimagic.com/destinations/${destination.park_slug || destination.slug || 'mount-kilimanjaro-national-park'}`;
+
+    const tourist = {
+        '@context': 'https://schema.org',
+        '@type': 'TouristDestination',
+        name,
+        alternateName: ['Mount Kilimanjaro', 'Kilimanjaro National Park', 'Uhuru Peak'],
+        description,
+        image: image.startsWith('http') ? image : `https://tanzaniasafarimagic.com${image}`,
+        url,
+        touristType: ['Trekking', 'Mountain Climbing', 'Nature', 'Safari Combo'],
+        geo: {
+            '@type': 'GeoCoordinates',
+            latitude: -3.067,
+            longitude: 37.367
+        },
+        containedInPlace: { '@type': 'Country', name: 'Tanzania' },
+        provider: {
+            '@type': 'TravelAgency',
+            name: 'Tanzania Safari Magic',
+            telephone: '+255695108009',
+            url: 'https://tanzaniasafarimagic.com'
+        }
+    };
+
+    const faqSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: (guide?.FAQS || []).map((f) => ({
+            '@type': 'Question',
+            name: f.q,
+            acceptedAnswer: { '@type': 'Answer', text: f.a }
+        }))
+    };
+
+    const breadcrumb = {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://tanzaniasafarimagic.com/' },
+            { '@type': 'ListItem', position: 2, name: 'Destinations', item: 'https://tanzaniasafarimagic.com/destinations' },
+            { '@type': 'ListItem', position: 3, name, item: url }
+        ]
+    };
+
+    if (window.SafariSEO?.injectJsonLd) {
+        SafariSEO.injectJsonLd('kilimanjaro-destination-jsonld', tourist);
+        SafariSEO.injectJsonLd('kilimanjaro-faq-jsonld', faqSchema);
+        SafariSEO.injectJsonLd('kilimanjaro-breadcrumb-jsonld', breadcrumb);
+    } else {
+        [tourist, faqSchema, breadcrumb].forEach((obj, i) => {
+            const el = document.createElement('script');
+            el.type = 'application/ld+json';
+            el.id = `kilimanjaro-schema-${i}`;
+            el.textContent = JSON.stringify(obj);
+            document.head.appendChild(el);
+        });
+    }
+}
+
+async function enhanceKilimanjaroPackageSection() {
+    const anchor = document.getElementById('packages-kilimanjaro');
+    if (!anchor) return;
+    try {
+        const result = await API.getPackages({ limit: 24 });
+        const pkgs = (result.data || []).filter((pkg) => {
+            const blob = JSON.stringify(pkg).toLowerCase();
+            return blob.includes('kilimanjaro') || blob.includes('machame') || blob.includes('lemosho') || blob.includes('marangu')
+                || (pkg.destinations || []).some((d) =>
+                    String(d.park_name || d.name || d.park_slug || d.slug || '').toLowerCase().includes('kilimanjaro')
+                );
+        });
+        let list = pkgs.slice(0, 6);
+        if (!list.length) {
+            try {
+                const hub = await API.get('/packages?category=kilimanjaro&limit=6');
+                list = (hub.data || hub || []).slice(0, 6);
+            } catch (_) { /* ignore */ }
+        }
+        if (!list.length) {
+            anchor.innerHTML = `
+              <h2>Our Kilimanjaro Climb Packages</h2>
+              <p>Private Machame, Lemosho, and Marangu climbs from Arusha — request a custom quote or browse the climb hub.</p>
+              <p><a href="/kilimanjaro">View Kilimanjaro packages →</a> · <a href="/booking">Free climb quote →</a> · <a href="/safaris">All safaris →</a></p>`;
+            return;
+        }
+
+        anchor.innerHTML = `
+          <h2>Our Kilimanjaro Climb Packages</h2>
+          <p>Guided treks and climb + safari combos — compare days, then request a custom quote from our Arusha team.</p>
+          <div class="guide-pkg-grid">
+            ${list.map((p) => {
+                const slug = p.package_slug || p.slug;
+                const pname = p.package_name || p.name || 'Kilimanjaro Trek';
+                const img = imgSrc(p.featured_image_url || p.image_url || p.image_urls?.[0], '/images/optimized/mount-kilimanjaro-national-park.webp');
+                const days = p.duration_days ? `${p.duration_days} days` : '';
+                const price = p.base_price_usd ? `From $${Number(p.base_price_usd).toLocaleString()}` : 'Request quote';
+                return `<a class="guide-pkg-card" href="/safaris/${slug}">
+                  <img src="${img}" alt="${escapeHtml(pname)}" width="480" height="300" loading="lazy" onerror="this.src='/images/optimized/6-day-machame-route-kilimanjaro.webp'">
+                  <div class="body"><div class="meta">${days}</div><h3>${escapeHtml(pname)}</h3><div class="price">${price}</div></div>
+                </a>`;
+            }).join('')}
+          </div>
+          <p><a href="/kilimanjaro">All Kilimanjaro packages →</a> · <a href="/booking">Free climb quote →</a> · <a href="/destinations/serengeti-national-park">Add Serengeti →</a> · <a href="/blog/tanzania-safari-cost">Cost guide →</a></p>
+        `;
+    } catch (e) {
+        console.warn('Kilimanjaro package enhance skipped', e);
+    }
 }
 
 function applyNgorongoroSeo(destination) {
@@ -1034,6 +1216,10 @@ function applyDestinationSeo(destination) {
     }
     if (isSerengetiDestination(slug, name)) {
         applySerengetiSeo(destination);
+        return;
+    }
+    if (isKilimanjaroDestination(slug, name)) {
+        applyKilimanjaroSeo(destination);
         return;
     }
     const count = Number(destination.safari_count || destination.tour_count || 0);

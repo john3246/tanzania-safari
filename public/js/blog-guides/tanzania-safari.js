@@ -80,7 +80,7 @@
 <p>Over a million wildebeest, zebra, and gazelle move through the <a href="/destinations/serengeti-national-park">Serengeti</a> in a continuous cycle. Peak drama includes Mara River crossings (roughly July–October), calving on the southern plains (January–March), and western corridor crossings around May–July. Pair this with our <a href="/safaris">migration safari packages</a> for the right sector and month.</p>
 
 <h3>2. Hiking Kilimanjaro</h3>
-<p><a href="/destinations/mount-kilimanjaro-national-park">Mount Kilimanjaro</a> (5,895 m) is a natural add-on after — or before — a safari. Machame, Lemosho, and Marangu routes are among the most requested; we coordinate treks with private safari days so logistics stay simple from Arusha or Moshi.</p>
+<p><a href="/destinations/mount-kilimanjaro-national-park">Kilimanjaro National Park</a> protects Africa’s highest peak — <strong>Uhuru Peak at 5,895 m</strong>, a UNESCO World Heritage Site. Machame, Lemosho, Marangu, Rongai, and Northern Circuit routes are among the most requested. We coordinate private climbs with safari days so logistics stay simple from Arusha or Moshi. See <a href="/kilimanjaro">Kilimanjaro climb packages</a> or the full <a href="/destinations/mount-kilimanjaro-national-park">Kilimanjaro destination guide</a>.</p>
 
 <h3>3. Maasai &amp; Hadzabe Culture</h3>
 <p>Respectful cultural visits near the northern circuit add depth beyond game drives — especially when paced into a private itinerary rather than rushed stopovers.</p>

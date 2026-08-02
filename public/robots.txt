@@ -24,6 +24,8 @@ Allow: /blog/great-wildebeest-migration
 Allow: /blog/serengeti-national-park
 Allow: /blog/ngorongoro-crater
 Allow: /blog/zanzibar-guide
+Allow: /destinations/mount-kilimanjaro-national-park
+Allow: /kilimanjaro
 
 Allow: /llms.txt
 

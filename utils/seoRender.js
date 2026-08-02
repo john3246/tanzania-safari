@@ -170,12 +170,13 @@ function sendSeoHtml(res, viewRelativePath, seo, status = 200) {
 }
 
 const KEYWORD_HUB = {
-  home: 'tanzania safari, private tanzania safari, serengeti safari, ngorongoro crater, wildebeest migration, tanzania safari from arusha, safari packages tanzania',
-  safaris: 'tanzania safari packages, private safari tours tanzania, serengeti safari package, ngorongoro safari, kilimanjaro trek packages, bush to beach tanzania',
-  destinations: 'tanzania national parks, serengeti national park, ngorongoro conservation area, tarangire, lake manyara, arusha national park, zanzibar',
-  blog: 'tanzania safari guide, best time to visit tanzania, tanzania safari cost, great wildebeest migration, zanzibar guide, serengeti guide',
-  group: 'group safari tanzania, shared safari tours, open group departure tanzania, affordable group safari',
-  booking: 'book tanzania safari, safari quote arusha, inquire tanzania tour, private safari booking'
+  home: 'tanzania safari, private tanzania safari, serengeti safari, ngorongoro crater, wildebeest migration, kilimanjaro climb, mount kilimanjaro, tanzania safari from arusha, safari packages tanzania',
+  safaris: 'tanzania safari packages, private safari tours tanzania, serengeti safari package, ngorongoro safari, kilimanjaro trek packages, climb kilimanjaro, machame route, bush to beach tanzania',
+  destinations: 'tanzania national parks, serengeti national park, ngorongoro conservation area, kilimanjaro national park, mount kilimanjaro, tarangire, lake manyara, arusha national park, zanzibar',
+  blog: 'tanzania safari guide, best time to visit tanzania, tanzania safari cost, great wildebeest migration, kilimanjaro trek guide, zanzibar guide, serengeti guide',
+  group: 'group safari tanzania, shared safari tours, open group departure tanzania, affordable group safari, group kilimanjaro climb',
+  booking: 'book tanzania safari, climb kilimanjaro quote, safari quote arusha, inquire tanzania tour, private safari booking, kilimanjaro trek booking',
+  kilimanjaro: 'kilimanjaro national park, climb kilimanjaro, mount kilimanjaro, kilimanjaro trek, machame route, lemosho route, marangu route, uhuru peak, africa highest mountain, kilimanjaro from arusha'
 };
 
 module.exports = {

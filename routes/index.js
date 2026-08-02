@@ -14,7 +14,7 @@ router.get('/', (req, res) => {
   try {
     seo.sendSeoHtml(res, 'index.html', {
       title: 'Tanzania Safari Magic | Private Safaris from Arusha 2026',
-      description: 'Book private Tanzania safaris from Arusha: Serengeti, Ngorongoro Crater, Great Migration, Kilimanjaro & Zanzibar. Local guides, free quotes, mid-range to luxury.',
+      description: 'Book private Tanzania safaris from Arusha: Serengeti, Ngorongoro Crater, Great Migration, Kilimanjaro climbs & Zanzibar. Local guides, free quotes, mid-range to luxury.',
       canonical: seo.SITE.url + '/',
       image: '/images/optimized/serengeti-national-park.webp',
       keywords: seo.KEYWORD_HUB.home,
@@ -337,8 +337,8 @@ router.get(['/kilimanjaro', '/migrations', '/zanzibar'], (req, res) => {
   const hub = {
     '/kilimanjaro': {
       title: 'Kilimanjaro Climb Packages 2026 | Treks from Arusha',
-      description: 'Climb Mount Kilimanjaro with local Arusha experts — Machame, Lemosho & more. Combine with a Serengeti safari. Free trek quote from Tanzania Safari Magic.',
-      keywords: 'kilimanjaro climb, kilimanjaro trek, machame route, climb kilimanjaro from arusha',
+      description: 'Climb Mount Kilimanjaro (5,895 m) with Tanzania Safari Magic — Machame, Lemosho & Marangu routes. Combine with Serengeti safari. Free trek quote from Arusha.',
+      keywords: seo.KEYWORD_HUB.kilimanjaro,
       image: '/images/optimized/mount-kilimanjaro-national-park.webp',
       h1: 'Kilimanjaro Climb Packages'
     },
@@ -424,8 +424,8 @@ router.get('/safaris/:slug', async (req, res) => {
 router.get('/destinations', (req, res) => {
   try {
     seo.sendSeoHtml(res, 'destinations.html', {
-      title: 'Tanzania Destinations | Serengeti, Ngorongoro, Zanzibar & More',
-      description: 'Explore Tanzania safari destinations: Serengeti National Park, Ngorongoro Crater, Tarangire, Manyara, Kilimanjaro, Arusha National Park, and Zanzibar beaches.',
+      title: 'Tanzania Destinations | Serengeti, Ngorongoro, Kilimanjaro & Zanzibar',
+      description: 'Explore Tanzania safari destinations: Serengeti National Park, Ngorongoro Crater, Kilimanjaro climbs, Tarangire, Manyara, Arusha National Park, and Zanzibar beaches.',
       canonical: seo.SITE.url + '/destinations',
       image: '/images/optimized/balloon.webp',
       keywords: seo.KEYWORD_HUB.destinations,
@@ -453,24 +453,34 @@ router.get('/destinations/:slug', async (req, res) => {
     } catch (_) { /* fall through */ }
 
     const name = row?.park_name || slug.replace(/-/g, ' ');
-    const title = (row?.meta_title || `${name} Safari Guide | Tanzania Safari Magic`).slice(0, 70);
-    const description = row?.meta_description
-      || seo.truncate(row?.short_description || row?.detailed_description
-        || `Plan your ${name} safari with Tanzania Safari Magic in Arusha — wildlife, best time, and private packages.`, 160);
+    const isKili = /kilimanjaro/i.test(slug) || /kilimanjaro/i.test(name || '');
+    const kiliMeta = {
+      title: 'Kilimanjaro National Park Guide | Climb & Trek | Tanzania Safari Magic',
+      description: 'Climb Mount Kilimanjaro (5,895 m) with Tanzania Safari Magic. UNESCO park, Machame, Lemosho & Marangu routes, best time, costs, and safari + trek combos from Arusha.',
+      keywords: seo.KEYWORD_HUB.kilimanjaro,
+      image: '/images/optimized/mount-kilimanjaro-national-park.webp',
+      h1: 'Kilimanjaro National Park — Climb Africa’s Highest Peak'
+    };
+    const title = (isKili ? kiliMeta.title : (row?.meta_title || `${name} Safari Guide | Tanzania Safari Magic`)).slice(0, 70);
+    const description = isKili
+      ? kiliMeta.description
+      : (row?.meta_description
+        || seo.truncate(row?.short_description || row?.detailed_description
+          || `Plan your ${name} safari with Tanzania Safari Magic in Arusha — wildlife, best time, and private packages.`, 160));
 
     seo.sendSeoHtml(res, 'destination-detail.html', {
       title,
       description,
       canonical: `${seo.SITE.url}/destinations/${encodeURIComponent(slug)}`,
-      image: row?.featured_image_url || '/images/optimized/serengeti-national-park.webp',
-      keywords: `${name}, tanzania safari, ${slug.replace(/-/g, ' ')}, wildlife safari arusha`,
+      image: row?.featured_image_url || (isKili ? kiliMeta.image : '/images/optimized/serengeti-national-park.webp'),
+      keywords: isKili ? kiliMeta.keywords : `${name}, tanzania safari, ${slug.replace(/-/g, ' ')}, wildlife safari arusha`,
       type: 'article',
-      h1: name,
+      h1: isKili ? kiliMeta.h1 : name,
       jsonLd: [
         seo.breadcrumbSchema([
           { name: 'Home', url: '/' },
           { name: 'Destinations', url: '/destinations' },
-          { name: name, url: `/destinations/${slug}` }
+          { name: isKili ? 'Kilimanjaro National Park' : name, url: `/destinations/${slug}` }
         ])
       ]
     });

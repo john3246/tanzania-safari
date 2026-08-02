@@ -2,9 +2,9 @@ const HUBS = {
   kilimanjaro: {
     category: 'kilimanjaro',
     title: 'Kilimanjaro Climbs & Treks',
-    eyebrow: 'Mount Kilimanjaro',
-    lead: 'Guided Kilimanjaro routes from Arusha — scenic camps, experienced mountain crews, and flexible private departures.',
-    image: '/images/optimized/balloon.webp',
+    eyebrow: 'Mount Kilimanjaro · 5,895 m',
+    lead: 'Guided Kilimanjaro routes from Arusha — Machame, Lemosho & Marangu. Read the full <a href="/destinations/mount-kilimanjaro-national-park">Kilimanjaro National Park guide</a>, then book a private climb or climb + safari combo.',
+    image: '/images/optimized/mount-kilimanjaro-national-park.webp',
     path: '/kilimanjaro'
   },
   migrations: {
