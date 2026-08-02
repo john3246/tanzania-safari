@@ -5,9 +5,21 @@
 const fs = require('fs');
 const path = require('path');
 
+/** Normalize SITE_URL — strip trailing slash and accidental markdown link wrappers */
+function normalizeSiteUrl(raw) {
+  let url = String(raw || 'https://tanzaniasafarimagic.com').trim();
+  const md = url.match(/^\[([^\]]+)\]\((https?:\/\/[^)]+)\)$/i);
+  if (md) url = md[2];
+  else {
+    const bare = url.match(/https?:\/\/[^\s\]\)]+/i);
+    if (bare && (url.includes('](') || url.startsWith('['))) url = bare[0];
+  }
+  return url.replace(/\/$/, '');
+}
+
 const SITE = {
   name: 'Tanzania Safari Magic',
-  url: (process.env.SITE_URL || 'https://tanzaniasafarimagic.com').replace(/\/$/, ''),
+  url: normalizeSiteUrl(process.env.SITE_URL),
   phone: '+255695108009',
   email: 'info@tanzaniasafarimagic.com',
   logo: 'https://tanzaniasafarimagic.com/images/logo.png',

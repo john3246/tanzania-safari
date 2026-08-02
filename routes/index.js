@@ -32,8 +32,34 @@ router.get('/sitemap.xml', async (req, res) => {
     const db = require('../config/db');
     const baseUrl = seo.SITE.url;
 
+    const escapeXml = (s) =>
+      String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+
+    /** Build absolute, XML-safe sitemap loc from a path (e.g. /safaris/my-slug) */
+    const toLoc = (pathPart) => {
+      const raw = String(pathPart || '').trim();
+      if (!raw || raw === '/') return escapeXml(baseUrl);
+      const path = raw.startsWith('/') ? raw : `/${raw}`;
+      const encoded = path
+        .split('/')
+        .map((seg, i) => {
+          if (i === 0) return '';
+          let decoded = seg;
+          try {
+            decoded = decodeURIComponent(seg);
+          } catch (_) { /* keep raw segment */ }
+          return encodeURIComponent(decoded);
+        })
+        .join('/');
+      return escapeXml(`${baseUrl}${encoded}`);
+    };
+
     const urlEntry = (loc, { changefreq = 'weekly', priority = '0.8', lastmod } = {}) => {
-      let xml = `<url><loc>${baseUrl}${loc}</loc><changefreq>${changefreq}</changefreq><priority>${priority}</priority>`;
+      let xml = `<url><loc>${toLoc(loc)}</loc><changefreq>${changefreq}</changefreq><priority>${priority}</priority>`;
       if (lastmod) xml += `<lastmod>${new Date(lastmod).toISOString().split('T')[0]}</lastmod>`;
       xml += `</url>`;
       return xml;
@@ -171,12 +197,23 @@ router.get('/sitemap.xml', async (req, res) => {
       });
     });
 
+    const blogSlugs = new Set();
     blogs.rows.forEach(blog => {
       if (!blog.slug) return;
+      blogSlugs.add(blog.slug);
       xml += urlEntry(`/blog/${blog.slug}`, {
         priority: blogPriority[blog.slug] || '0.8',
         changefreq: 'weekly',
         lastmod: blog.updated_at || blog.published_at
+      });
+    });
+
+    // Ensure high-value pillar guides are listed even if not yet in blog_posts
+    Object.keys(blogPriority).forEach(slug => {
+      if (blogSlugs.has(slug)) return;
+      xml += urlEntry(`/blog/${slug}`, {
+        priority: blogPriority[slug],
+        changefreq: 'weekly'
       });
     });
 
