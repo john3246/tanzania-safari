@@ -197,7 +197,7 @@ class PackageRepository {
 
     async getItinerary(packageId) {
         try {
-            const query = 'SELECT day_number as day, title, description FROM package_itinerary WHERE package_id = $1 ORDER BY day_number ASC';
+            const query = 'SELECT day_number as day, day_title as title, day_description as description FROM package_itinerary WHERE package_id = $1 ORDER BY day_number ASC';
             const result = await db.query(query, [packageId]);
             if (result.rows && result.rows.length > 0) return result.rows;
         } catch (e) {}

@@ -162,15 +162,26 @@ function renderSafariDetails(safari) {
     
     const heroTitle = document.getElementById('heroTitle');
     if(heroTitle) heroTitle.textContent = safari.package_name;
-    
+
+    const hub = hubMeta(safari.category_slug);
     const breadcrumbName = document.getElementById('breadcrumbName');
     if(breadcrumbName) breadcrumbName.textContent = safari.package_name;
+    const breadcrumbHub = document.getElementById('breadcrumbHub');
+    if (breadcrumbHub) {
+        breadcrumbHub.href = hub.path;
+        breadcrumbHub.textContent = hub.label;
+    }
+    const eyebrow = document.getElementById('heroEyebrow');
+    if (eyebrow) eyebrow.textContent = hub.eyebrow;
     
     const heroBadge = document.getElementById('heroBadge');
     if(heroBadge) {
         let badges = [];
         if(safari.is_featured) badges.push('<span class="badge" style="background:var(--accent);color:#fff"><i class="fas fa-star"></i> Featured</span>');
-        badges.push('<span class="badge" style="background:var(--primary);color:#fff"><i class="fas fa-tag"></i> ' + escapeHtml(safari.category_name || 'Safari') + '</span>');
+        badges.push(
+            '<a href="' + escapeHtml(hub.path) + '" class="badge" style="background:var(--primary);color:#fff;text-decoration:none"><i class="fas fa-tag"></i> ' +
+            escapeHtml(safari.category_name || hub.label) + '</a>'
+        );
         heroBadge.innerHTML = badges.join(' ');
     }
     
@@ -188,11 +199,18 @@ function renderSafariDetails(safari) {
     if(packageDest && safari.destinations && safari.destinations.length > 0) {
         packageDest.innerHTML = '<h3 style="font-family:var(--font-heading);margin-bottom:1rem;margin-top:2rem;">Destinations Visited</h3>' + 
             safari.destinations.map(d => {
-                let name = d.park_name || d;
-                let slug = d.slug || (typeof name === "string" ? name.toLowerCase().replace(/\s+/g, '-') : "");
+                const name = d.park_name || d.name || 'Destination';
+                const slug = d.park_slug || d.slug || '';
+                if (!slug) {
+                    return '<span class="badge" style="background:var(--bg-secondary);color:var(--primary);padding:0.5rem 1rem;border-radius:20px;margin-right:0.5rem;font-size:0.9rem;display:inline-block;margin-bottom:0.5rem"><i class="fas fa-map-marker-alt" style="margin-right:0.5rem"></i>' + escapeHtml(name) + '</span>';
+                }
                 return '<a href="/destinations/' + escapeHtml(slug) + '" class="badge" style="background:var(--bg-secondary);color:var(--primary);padding:0.5rem 1rem;border-radius:20px;margin-right:0.5rem;font-size:0.9rem;display:inline-block;margin-bottom:0.5rem;text-decoration:none;transition:var(--transition)"><i class="fas fa-map-marker-alt" style="margin-right:0.5rem"></i>' + escapeHtml(name) + '</a>';
             }).join('');
+    } else if (packageDest) {
+        packageDest.innerHTML = '';
     }
+
+    renderInternalLinkBlock(safari);
     
     const galleryEl = document.getElementById('gallery');
     if(galleryEl) {
@@ -224,45 +242,116 @@ function renderSafariDetails(safari) {
     applySafariSeo(safari);
 }
 
+function hubMeta(categorySlug) {
+    const map = {
+        'group-safaris': { path: '/group-safaris', label: 'Group Safaris', eyebrow: 'Fixed-Date Group Safari' },
+        kilimanjaro: { path: '/kilimanjaro', label: 'Kilimanjaro Safaris', eyebrow: 'Kilimanjaro Trek from Arusha' },
+        migrations: { path: '/migrations', label: 'Migrations', eyebrow: 'Great Migration Safari' },
+        zanzibar: { path: '/zanzibar', label: 'Zanzibar Safaris', eyebrow: 'Safari & Zanzibar Package' },
+        safaris: { path: '/safaris', label: 'Safaris', eyebrow: 'Private Safari from Arusha' }
+    };
+    return map[categorySlug] || map.safaris;
+}
+
+function renderInternalLinkBlock(safari) {
+    const el = document.getElementById('safariInternalLinks');
+    if (!el) return;
+    const hub = hubMeta(safari.category_slug);
+    const links = [];
+
+    links.push({ href: hub.path, label: `Browse all ${hub.label}` });
+    links.push({ href: '/destinations', label: 'Tanzania Destinations Hub' });
+
+    (safari.destinations || []).forEach((d) => {
+        const slug = d.park_slug || d.slug;
+        const name = d.park_name || d.name;
+        if (slug && name) links.push({ href: `/destinations/${slug}`, label: `${name} Guide` });
+    });
+
+    const cat = safari.category_slug || '';
+    if (cat === 'migrations') {
+        links.push({ href: '/blog/great-wildebeest-migration', label: 'Great Wildebeest Migration Guide' });
+        links.push({ href: '/destinations/serengeti-national-park', label: 'Serengeti National Park' });
+    } else if (cat === 'kilimanjaro') {
+        links.push({ href: '/destinations/mount-kilimanjaro-national-park', label: 'Kilimanjaro National Park Guide' });
+        links.push({ href: '/blog/tanzania-safari', label: 'Tanzania Safari Guide' });
+    } else if (cat === 'zanzibar') {
+        links.push({ href: '/destinations/zanzibar', label: 'Zanzibar Destination Guide' });
+        links.push({ href: '/blog/zanzibar-guide', label: 'Zanzibar Beach Guide' });
+    } else if (cat === 'group-safaris') {
+        links.push({ href: '/group-safaris', label: 'Group Safari Calendar' });
+        links.push({ href: '/safaris', label: 'Private Safari Packages' });
+    } else {
+        links.push({ href: '/blog/tanzania-safari', label: 'Ultimate Tanzania Safari Guide' });
+        links.push({ href: '/blog/best-time-to-visit-tanzania', label: 'Best Time to Visit Tanzania' });
+    }
+
+    links.push({ href: '/blog/tanzania-safari-cost', label: 'Tanzania Safari Cost 2026' });
+    links.push({ href: '/booking', label: 'Request a Custom Safari Quote' });
+
+    const seen = new Set();
+    el.innerHTML = links
+        .filter((l) => {
+            if (seen.has(l.href)) return false;
+            seen.add(l.href);
+            return true;
+        })
+        .map((l) => `<li><a href="${escapeHtml(l.href)}">${escapeHtml(l.label)}</a></li>`)
+        .join('');
+}
+
 function applySafariSeo(safari) {
     if (!window.SafariSEO) return;
     const days = safari.duration_days ? `${safari.duration_days}-Day ` : '';
     const name = safari.package_name || 'Tanzania Safari';
-    const lower = name.toLowerCase();
-    let title = `${name} | Tanzania Safari Magic`;
-    let description = safari.short_description || safari.detailed_description || '';
+    const hub = hubMeta(safari.category_slug);
+    let title = safari.meta_title || `${name} | Tanzania Safari Magic`;
+    let description = safari.meta_description || safari.short_description || safari.detailed_description || '';
 
-    // High-intent keyword overlays for known package themes
-    if (/migration|serengeti/i.test(lower)) {
-        title = `${name} | 9 Day Serengeti Migration Safari & Great Migration Tour`;
-        if (!description || description.length < 80) {
-            description = `Book a ${days || ''}Serengeti migration safari and great migration tour in Tanzania with private guides from Arusha. Inquire for a free quote.`;
-        }
-    } else if (/zanzibar|beach|bush.?to.?beach/i.test(lower)) {
-        title = `${name} | Tanzania Safari and Zanzibar Package`;
-        if (!description || description.length < 80) {
-            description = `Bush-to-beach Tanzania tour combining safari game drives with Zanzibar beaches. Custom Tanzania safari and Zanzibar packages from Arusha.`;
-        }
-    } else {
-        title = `${days}${name} | Private Tanzania Safari from Arusha`;
-        if (!description || description.length < 80) {
-            description = `Private ${name} with expert local guides. Mid-range to luxury Tanzania safari experiences from Arusha — WhatsApp for a free quote.`;
+    if (!safari.meta_title) {
+        if (safari.category_slug === 'migrations') {
+            title = `${name} | Serengeti Migration Safari Tanzania`;
+        } else if (safari.category_slug === 'kilimanjaro') {
+            title = `${name} | Kilimanjaro Trek from Arusha`;
+        } else if (safari.category_slug === 'zanzibar') {
+            title = `${name} | Tanzania Safari and Zanzibar Package`;
+        } else if (safari.category_slug === 'group-safaris') {
+            title = `${name} | Group Safari Tanzania`;
+        } else {
+            title = `${days}${name} | Private Tanzania Safari from Arusha`;
         }
     }
+
+    if (!description || description.length < 80) {
+        description = `Private ${name} with expert local guides from Arusha. Inquire for a free quote with Tanzania Safari Magic.`;
+    }
+
+    const parkKeywords = (safari.destinations || [])
+        .map((d) => d.park_name)
+        .filter(Boolean)
+        .join(', ');
 
     SafariSEO.applyPageSeo({
         title: title.slice(0, 70),
         description: String(description).replace(/\s+/g, ' ').trim().slice(0, 160),
         image: safari.featured_image_url || safari.image_urls?.[0],
         type: 'product',
-        keywords: `tanzania safari, ${name}, serengeti safari, ngorongoro, private safari arusha`,
+        keywords: [
+            'tanzania safari',
+            name,
+            safari.category_name,
+            parkKeywords,
+            'private safari arusha',
+            'serengeti',
+            'ngorongoro'
+        ].filter(Boolean).join(', '),
         canonical: `https://tanzaniasafarimagic.com/safaris/${safari.package_slug || ''}`
     });
 
     if (window.SafariSEO?.breadcrumbSchema) {
         SafariSEO.injectJsonLd('breadcrumb-jsonld', SafariSEO.breadcrumbSchema([
             { name: 'Home', url: '/' },
-            { name: 'Safaris', url: '/safaris' },
+            { name: hub.label, url: hub.path },
             { name: name, url: `/safaris/${safari.package_slug || ''}` }
         ]));
     }
@@ -321,12 +410,19 @@ function renderItinerary(items) {
     if (!items || items.length === 0) {
         return '<p>Detailed itinerary coming soon.</p>';
     }
-    items.sort((a, b) => a.day_number - b.day_number);
+    const normalized = items.map((item, idx) => ({
+        day: item.day || item.day_number || (idx + 1),
+        title: item.title || item.day_title || `Day ${idx + 1}`,
+        description: item.description || item.day_description || '',
+        accommodation: item.accommodation || item.accommodation_type,
+        meals_included: item.meals_included
+    }));
+    normalized.sort((a, b) => a.day - b.day);
     let html = '<div class="itinerary-timeline">';
-    items.forEach(item => {
+    normalized.forEach(item => {
         html += `
         <div class="itinerary-item">
-            <div class="itinerary-day">Day ${item.day_number}</div>
+            <div class="itinerary-day">Day ${item.day}</div>
             <div class="itinerary-title">${escapeHtml(item.title)}</div>
             <div class="itinerary-desc">${escapeHtml(item.description).replace(/\n/g, '<br>')}</div>
             <div class="itinerary-meta">
@@ -516,18 +612,25 @@ function renderItinerary(items) {
     if (!Array.isArray(items)) {
         return '<p>Detailed itinerary coming soon.</p>';
     }
-    items.sort((a, b) => a.day_number - b.day_number);
+    const normalized = items.map((item, idx) => ({
+        day: item.day || item.day_number || (idx + 1),
+        title: item.title || item.day_title || `Day ${idx + 1}`,
+        description: item.description || item.day_description || '',
+        accommodation: item.accommodation || item.accommodation_type,
+        meals_included: item.meals_included
+    }));
+    normalized.sort((a, b) => a.day - b.day);
     let html = '<div class="itinerary-timeline">';
-    items.forEach(item => {
+    normalized.forEach(item => {
         html += `
         <div class="itinerary-item">
-            <div class="itinerary-day">Day ${item.day_number}</div>
-            <div class="itinerary-title">${escapeHtml(item.day_title || item.title)}</div>
-            <div class="itinerary-desc">${escapeHtml(item.day_description || item.description).replace(/\n/g, '<br>')}</div>
+            <div class="itinerary-day">Day ${item.day}</div>
+            <div class="itinerary-title">${escapeHtml(item.title)}</div>
+            <div class="itinerary-desc">${escapeHtml(item.description).replace(/\n/g, '<br>')}</div>
             <div class="itinerary-meta">
         `;
-        if (item.accommodation_type || item.accommodation) {
-            html += `<span><i class="fas fa-bed"></i> ${escapeHtml(item.accommodation_type || item.accommodation)}</span>`;
+        if (item.accommodation) {
+            html += `<span><i class="fas fa-bed"></i> ${escapeHtml(item.accommodation)}</span>`;
         }
         if (item.meals_included) {
             html += `<span><i class="fas fa-utensils"></i> ${escapeHtml(item.meals_included)}</span>`;
@@ -541,45 +644,43 @@ function renderItinerary(items) {
 async function loadRelatedSafaris(categorySlug, currentPackageId) {
     const relatedGrid = document.getElementById('relatedGrid');
     if (!relatedGrid) return;
-    
+
     try {
-        const params = {
-            category: categorySlug,
-            limit: 3
-        };
-        
-        const result = await API.getPackages(params);
-        
-        if (result && result.success && result.data && result.data.length > 0) {
-            // Filter out current package
-            const related = result.data.filter(pkg => pkg.package_id !== currentPackageId).slice(0, 3);
-            
-            if (related.length > 0) {
-                relatedGrid.innerHTML = related.map(pkg => {
-                    const avgRating = parseFloat(pkg.avg_rating || 0).toFixed(1);
-                    const categoryIcon = getCategoryIcon(pkg.category_slug);
-                    
-                    return `
-                        <div class="related-card" onclick="window.location.href='/safaris/${pkg.package_slug}'">
-                            <div class="related-card-image">
-                                <i class="fas ${categoryIcon}" style="font-size: 48px;"></i>
-                            </div>
-                            <div class="related-card-content">
-                                <h3>${escapeHtml(pkg.package_name)}</h3>
-                                <p>${escapeHtml(pkg.short_description || 'Experience Tanzania\'s wildlife')}</p>
-                                <div class="related-card-meta">
-                                    <span class="related-price">$${parseInt(pkg.base_price_usd || 0).toLocaleString()}</span>
-                                    <span class="related-duration"><i class="fas fa-clock"></i> ${pkg.duration_days} days</span>
-                                </div>
+        const hub = hubMeta(categorySlug);
+        const result = await API.getPackages({
+            category: categorySlug === 'group-safaris' ? undefined : categorySlug,
+            limit: 6
+        });
+
+        const list = Array.isArray(result?.data)
+            ? result.data
+            : (result?.data?.packages || result?.packages || []);
+
+        const related = list
+            .filter((pkg) => pkg.package_id !== currentPackageId)
+            .slice(0, 3);
+
+        if (related.length > 0) {
+            relatedGrid.innerHTML = related.map((pkg) => {
+                const img = pkg.featured_image_url || pkg.image_url || (pkg.image_urls && pkg.image_urls[0]) || '/images/optimized/balloon.webp';
+                const href = pkg.is_group_tour ? `/group-safaris` : `/safaris/${pkg.package_slug}`;
+                return `
+                    <a href="${escapeHtml(href)}" class="related-card" style="display:block;text-decoration:none;color:inherit;border:1px solid var(--border-light);border-radius:8px;overflow:hidden;background:#fff">
+                        <div class="related-card-image" style="height:140px;overflow:hidden">
+                            <img src="${escapeHtml(img)}" alt="${escapeHtml(pkg.package_name || '')}" style="width:100%;height:100%;object-fit:cover" loading="lazy" onerror="this.src='/images/optimized/balloon.webp'">
+                        </div>
+                        <div class="related-card-content" style="padding:0.85rem 1rem 1rem">
+                            <h3 style="font-size:1rem;margin:0 0 0.4rem;font-family:var(--font-heading);color:var(--earth-dark)">${escapeHtml(pkg.package_name)}</h3>
+                            <p style="font-size:0.85rem;color:var(--text-secondary);margin:0 0 0.65rem;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${escapeHtml((pkg.short_description || '').slice(0, 120))}</p>
+                            <div class="related-card-meta" style="display:flex;justify-content:space-between;font-size:0.85rem">
+                                <span class="related-price" style="font-weight:700;color:var(--primary)">From $${parseInt(pkg.base_price_usd || 0).toLocaleString()}</span>
+                                <span class="related-duration" style="color:var(--text-muted)"><i class="fas fa-clock"></i> ${pkg.duration_days || ''} days</span>
                             </div>
                         </div>
-                    `;
-                }).join('');
-            } else {
-                relatedGrid.innerHTML = '<p>No related safaris found.</p>';
-            }
+                    </a>`;
+            }).join('') + `<p style="grid-column:1/-1;margin:0.5rem 0 0"><a href="${escapeHtml(hub.path)}">View all ${escapeHtml(hub.label)} →</a></p>`;
         } else {
-            relatedGrid.innerHTML = '<p>No related safaris found.</p>';
+            relatedGrid.innerHTML = `<p style="color:var(--text-muted)">Explore more on our <a href="${escapeHtml(hub.path)}">${escapeHtml(hub.label)}</a> page.</p>`;
         }
     } catch (error) {
         console.error('Error loading related safaris:', error);

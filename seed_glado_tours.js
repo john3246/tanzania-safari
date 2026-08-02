@@ -1,9 +1,10 @@
 /**
- * Idempotent seed of Glad of Africa tour packages into safari_packages.
- * Skips any package_slug that already exists (safe for Render restarts).
+ * Idempotent seed/enrichment of Glad of Africa tour packages.
+ * - Maps every tour to a Safaris-nav hub category
+ * - Links national parks via package_destinations (SEO internal links)
+ * - Upserts content (insert new OR update existing by package_slug)
  *
- * Usage:
- *   node seed_glado_tours.js
+ * Usage: node seed_glado_tours.js
  * Also invoked from run_migration.js on server startup.
  */
 const path = require('path');
@@ -13,37 +14,85 @@ const db = require('./config/db');
 
 const DATA_PATH = path.join(__dirname, 'scripts', 'glado_tours_scraped.json');
 
-const EXTRA_CATEGORIES = [
+/** Nav-aligned hubs only (matches header Safaris dropdown). */
+const NAV_CATEGORIES = [
   {
-    category_name: 'Day Trips',
-    category_slug: 'day-trips',
-    category_description: 'One-day safari and cultural experiences',
-    icon_class: 'fa-sun',
-    display_order: 6,
+    category_name: 'Classic Safaris',
+    category_slug: 'safaris',
+    category_description: 'Private Tanzania safari packages from Arusha',
+    icon_class: 'fa-binoculars',
+    display_order: 1,
+    hub_path: '/safaris',
   },
   {
-    category_name: 'Fly-In Safaris',
-    category_slug: 'fly-in',
-    category_description: 'Exclusive fly-in safari experiences',
-    icon_class: 'fa-plane',
-    display_order: 7,
+    category_name: 'Kilimanjaro',
+    category_slug: 'kilimanjaro',
+    category_description: 'Kilimanjaro climbs and mountain treks',
+    icon_class: 'fa-mountain',
+    display_order: 2,
+    hub_path: '/kilimanjaro',
   },
   {
-    category_name: 'Budget Safaris',
-    category_slug: 'budget',
-    category_description: 'Affordable safari packages',
-    icon_class: 'fa-wallet',
-    display_order: 8,
+    category_name: 'Migration Safaris',
+    category_slug: 'migrations',
+    category_description: 'Great Wildebeest Migration safaris',
+    icon_class: 'fa-paw',
+    display_order: 3,
+    hub_path: '/migrations',
   },
+  {
+    category_name: 'Zanzibar',
+    category_slug: 'zanzibar',
+    category_description: 'Zanzibar beach holidays and bush-to-beach packages',
+    icon_class: 'fa-umbrella-beach',
+    display_order: 4,
+    hub_path: '/zanzibar',
+  },
+  {
+    category_name: 'Group Safaris',
+    category_slug: 'group-safaris',
+    category_description: 'Fixed-date shared group safaris',
+    icon_class: 'fa-users',
+    display_order: 5,
+    hub_path: '/group-safaris',
+  },
+];
+
+const HUB_PATH = Object.fromEntries(NAV_CATEGORIES.map((c) => [c.category_slug, c.hub_path]));
+
+/** Canonical park slugs used on /destinations/:slug */
+const PARK_RULES = [
+  { re: /serengeti|mara.?river|ndutu|seronera|wildebeest/i, slug: 'serengeti-national-park' },
+  { re: /ngorongoro|crater/i, slug: 'ngorongoro-conservation-area' },
+  { re: /tarangire/i, slug: 'tarangire-national-park' },
+  { re: /manyara/i, slug: 'lake-manyara-national-park' },
+  { re: /arusha.?national|mount.?meru|meru.?trek|meru.?summit/i, slug: 'arusha-national-park' },
+  {
+    re: /kilimanjaro|machame|marangu|lemosho|materuni|chemka|uhuru/i,
+    slug: 'mount-kilimanjaro-national-park',
+  },
+  { re: /zanzibar|nungwi|stone.?town|mnemba|mafia|chumbe|chole/i, slug: 'zanzibar' },
 ];
 
 function resolveCategorySlug(tour) {
   const title = `${tour.package_name || ''} ${tour.package_slug || ''}`.toLowerCase();
-  const scraped = (tour.category_name || '').toLowerCase();
 
-  if (/day-trip|day trip/.test(title) || tour.duration_days === 1) return 'day-trips';
-  if (/\bgroup\b/.test(title) || /joining group/.test(scraped)) return 'group-safaris';
-  if (/fly-in|fly-out|fly in|fly out/.test(title)) return 'fly-in';
+  if (/\bgroup\b/.test(title)) return 'group-safaris';
+
+  if (
+    /kilimanjaro|machame|marangu|lemosho|mount.?meru|ol.?don|lengai|uhuru/.test(title) &&
+    !/wildebeest.?migration.?safari/.test(title)
+  ) {
+    // Pure mountain products → Kilimanjaro hub; combo with migration stays migrations below
+    if (/serengeti|migration|ngorongoro|safari/.test(title) && /kilimanjaro|kili/.test(title)) {
+      if (/migration|wildebeest/.test(title)) return 'migrations';
+      return 'safaris';
+    }
+    return 'kilimanjaro';
+  }
+
+  if (/zanzibar/.test(title)) return 'zanzibar';
+
   if (
     /migration|ndutu|calving|mara.?river|wildebeest|western.?serengeti|central.?serengeti|northern.?serengeti|black.?rhino/.test(
       title
@@ -51,15 +100,79 @@ function resolveCategorySlug(tour) {
   ) {
     return 'migrations';
   }
-  if (
-    /kilimanjaro|mount.?meru|ol.?don|lengai|machame|marangu|lemosho/.test(title) ||
-    (/\btrek\b|\bhiking\b/.test(title) && /meru|lengai|kili/.test(title))
-  ) {
-    return 'kilimanjaro';
-  }
-  if (/budget/.test(scraped) || /budget/.test(title)) return 'budget';
-  if (/migration/.test(scraped)) return 'migrations';
+
+  // Fly-in, budget, day trips, classic northern circuit → Safaris hub (nav "Safaris")
   return 'safaris';
+}
+
+function detectParkSlugs(tour) {
+  const blob = [
+    tour.package_name,
+    tour.package_slug,
+    tour.short_description,
+    tour.detailed_description,
+    ...(tour.highlights || []),
+    ...(tour.itinerary || []).map((d) => `${d.title || ''} ${d.description || ''}`),
+  ]
+    .join(' ')
+    .toLowerCase();
+
+  const found = [];
+  for (const rule of PARK_RULES) {
+    if (rule.re.test(blob) && !found.includes(rule.slug)) found.push(rule.slug);
+  }
+  return found;
+}
+
+function buildSeo(tour, categorySlug) {
+  const name = tour.package_name || 'Tanzania Safari';
+  const days = tour.duration_days ? `${tour.duration_days}-Day ` : '';
+  const hub = HUB_PATH[categorySlug] || '/safaris';
+  const parks = detectParkSlugs(tour);
+  const parkLabels = parks
+    .map((s) =>
+      s
+        .replace(/-national-park|-conservation-area/g, '')
+        .replace(/-/g, ' ')
+        .replace(/\b\w/g, (c) => c.toUpperCase())
+    )
+    .slice(0, 3);
+
+  let metaTitle;
+  if (categorySlug === 'migrations') {
+    metaTitle = `${name} | Serengeti Migration Safari Tanzania`;
+  } else if (categorySlug === 'kilimanjaro') {
+    metaTitle = `${name} | Kilimanjaro Trek from Arusha`;
+  } else if (categorySlug === 'zanzibar') {
+    metaTitle = `${name} | Tanzania Safari & Zanzibar`;
+  } else if (categorySlug === 'group-safaris') {
+    metaTitle = `${name} | Group Safari Tanzania`;
+  } else {
+    metaTitle = `${days}${name} | Private Tanzania Safari`;
+  }
+  metaTitle = metaTitle.slice(0, 70);
+
+  const overview = (tour.short_description || tour.detailed_description || '').replace(/\s+/g, ' ').trim();
+  let metaDescription = overview.slice(0, 155);
+  if (metaDescription.length < 80) {
+    const where = parkLabels.length ? ` Visiting ${parkLabels.join(', ')}.` : '';
+    metaDescription = `${days}${name} with expert guides from Arusha.${where} Free quote from Tanzania Safari Magic.`.slice(
+      0,
+      160
+    );
+  }
+
+  const keywords = [
+    'tanzania safari',
+    name.toLowerCase(),
+    categorySlug,
+    ...parkLabels.map((p) => p.toLowerCase()),
+    'arusha',
+    'private safari',
+    hub.replace('/', ''),
+  ].filter(Boolean);
+
+  return { metaTitle, metaDescription, keywords: [...new Set(keywords)].slice(0, 12), hub, parks };
 }
 
 function loadTours() {
@@ -82,14 +195,12 @@ async function ensureCategory(c) {
 
   if (found.rowCount > 0) {
     const row = found.rows[0];
-    // Only retarget slug if the desired slug is free or already ours
     const slugTaken = await db.query(
       `SELECT category_id FROM package_categories
        WHERE category_slug = $1 AND category_id <> $2 LIMIT 1`,
       [c.category_slug, row.category_id]
     );
     const nextSlug = slugTaken.rowCount ? row.category_slug : c.category_slug;
-
     await db.query(
       `UPDATE package_categories SET
          category_description = COALESCE($1, category_description),
@@ -98,13 +209,7 @@ async function ensureCategory(c) {
          category_slug = $4,
          is_active = true
        WHERE category_id = $5`,
-      [
-        c.category_description || null,
-        c.icon_class || null,
-        c.display_order ?? null,
-        nextSlug,
-        row.category_id,
-      ]
+      [c.category_description || null, c.icon_class || null, c.display_order ?? null, nextSlug, row.category_id]
     );
     return { category_id: row.category_id, category_slug: nextSlug };
   }
@@ -119,12 +224,10 @@ async function ensureCategory(c) {
     );
     return inserted.rows[0];
   } catch (err) {
-    // Race / unique race: re-select and continue
     if (err.code === '23505') {
       const again = await db.query(
         `SELECT category_id, category_slug FROM package_categories
-         WHERE category_slug = $1 OR LOWER(category_name) = LOWER($2)
-         LIMIT 1`,
+         WHERE category_slug = $1 OR LOWER(category_name) = LOWER($2) LIMIT 1`,
         [c.category_slug, c.category_name]
       );
       if (again.rowCount) return again.rows[0];
@@ -134,58 +237,65 @@ async function ensureCategory(c) {
 }
 
 async function ensureCategories() {
-  const base = [
-    {
-      category_name: 'Classic Safaris',
-      category_slug: 'safaris',
-      category_description: 'Private and classic northern-circuit safari tours',
-      icon_class: 'fa-binoculars',
-      display_order: 1,
-    },
-    {
-      category_name: 'Kilimanjaro',
-      category_slug: 'kilimanjaro',
-      category_description: 'Kilimanjaro climbs and trek packages',
-      icon_class: 'fa-mountain',
-      display_order: 2,
-    },
-    {
-      category_name: 'Migration Safaris',
-      category_slug: 'migrations',
-      category_description: 'Great Wildebeest Migration seasonal safaris',
-      icon_class: 'fa-paw',
-      display_order: 3,
-    },
-    {
-      category_name: 'Zanzibar',
-      category_slug: 'zanzibar',
-      category_description: 'Zanzibar beach and island extensions',
-      icon_class: 'fa-umbrella-beach',
-      display_order: 4,
-    },
-    {
-      category_name: 'Group Safaris',
-      category_slug: 'group-safaris',
-      category_description: 'Fixed-date shared group safaris',
-      icon_class: 'fa-users',
-      display_order: 5,
-    },
-    ...EXTRA_CATEGORIES,
-  ];
-
   const map = {};
-  for (const c of base) {
+  for (const c of NAV_CATEGORIES) {
     const row = await ensureCategory(c);
     map[c.category_slug] = row.category_id;
     map[row.category_slug] = row.category_id;
   }
-
   const rows = await db.query(`SELECT category_id, category_slug FROM package_categories`);
   for (const r of rows.rows) map[r.category_slug] = r.category_id;
   return map;
 }
 
-async function insertItinerary(packageId, itinerary) {
+async function loadParkIdMap() {
+  const res = await db.query(`SELECT park_id, park_slug, park_name FROM national_parks`);
+  const bySlug = {};
+  for (const r of res.rows) bySlug[r.park_slug] = r.park_id;
+
+  // Fuzzy aliases if DB uses slightly different slugs
+  const aliases = {
+    'serengeti-national-park': ['serengeti', 'serengeti-np'],
+    'ngorongoro-conservation-area': ['ngorongoro', 'ngorongoro-crater', 'ngorongoro-national-park'],
+    'tarangire-national-park': ['tarangire', 'tarangire-np'],
+    'lake-manyara-national-park': ['lake-manyara', 'manyara', 'manyara-national-park'],
+    'arusha-national-park': ['arusha', 'arusha-np', 'mount-meru'],
+    'mount-kilimanjaro-national-park': ['kilimanjaro', 'kilimanjaro-national-park', 'mt-kilimanjaro'],
+    zanzibar: ['zanzibar-island', 'zanzibar-beaches'],
+  };
+
+  for (const r of res.rows) {
+    const slug = (r.park_slug || '').toLowerCase();
+    const name = (r.park_name || '').toLowerCase();
+    for (const [canonical, alts] of Object.entries(aliases)) {
+      if (slug === canonical || alts.includes(slug) || alts.some((a) => name.includes(a.replace(/-/g, ' ')))) {
+        if (!bySlug[canonical]) bySlug[canonical] = r.park_id;
+      }
+    }
+  }
+  return bySlug;
+}
+
+async function syncDestinations(packageId, parkSlugs, parkIdMap) {
+  await db.query(`DELETE FROM package_destinations WHERE package_id = $1`, [packageId]);
+  let day = 1;
+  for (const slug of parkSlugs) {
+    const parkId = parkIdMap[slug];
+    if (!parkId) {
+      console.log(`    warn: park not in DB: ${slug}`);
+      continue;
+    }
+    await db.query(
+      `INSERT INTO package_destinations (mapping_id, package_id, park_id, visit_day, is_highlight)
+       VALUES ($1, $2, $3, $4, $5)`,
+      [crypto.randomUUID(), packageId, parkId, day, day === 1]
+    );
+    day += 1;
+  }
+}
+
+async function syncItinerary(packageId, itinerary) {
+  await db.query(`DELETE FROM package_itinerary WHERE package_id = $1`, [packageId]);
   if (!Array.isArray(itinerary) || !itinerary.length) return;
   for (let i = 0; i < itinerary.length; i++) {
     const item = itinerary[i];
@@ -203,108 +313,185 @@ async function insertItinerary(packageId, itinerary) {
   }
 }
 
-async function seedGladoTours() {
-  const tours = loadTours();
-  if (!tours.length) {
-    console.log('No Glado tours to seed.');
-    return { inserted: 0, skipped: 0 };
-  }
-
-  console.log(`Seeding Glado tours (${tours.length} in data file)…`);
-  const categories = await ensureCategories();
-
-  let inserted = 0;
-  let skipped = 0;
-
-  for (const tour of tours) {
-    const slug = String(tour.package_slug).toLowerCase().trim();
-    const existing = await db.query(
-      `SELECT package_id FROM safari_packages WHERE package_slug = $1 LIMIT 1`,
-      [slug]
-    );
-
-    if (existing.rowCount > 0) {
-      skipped += 1;
-      console.log(`  skip (exists): ${slug}`);
-      continue;
-    }
-
-    const categorySlug = resolveCategorySlug(tour);
-    const categoryId = categories[categorySlug] || categories.safaris || null;
-    const isGroup = categorySlug === 'group-safaris';
-    const durationDays = Math.max(1, parseInt(tour.duration_days, 10) || tour.itinerary?.length || 1);
-    const durationNights = Math.max(0, parseInt(tour.duration_nights, 10) || durationDays - 1);
-    const highlights = Array.isArray(tour.highlights) ? tour.highlights : [];
-    const included = Array.isArray(tour.included_features) ? tour.included_features : [];
-    const excluded = Array.isArray(tour.excluded_features) ? tour.excluded_features : [];
-    const itinerary = Array.isArray(tour.itinerary) ? tour.itinerary : [];
-    const images = Array.isArray(tour.image_urls) ? tour.image_urls.filter(Boolean) : [];
-    const packageId = crypto.randomUUID();
-    const price = tour.base_price_usd != null ? Number(tour.base_price_usd) : null;
-
-    await db.query(
-      `INSERT INTO safari_packages (
-        package_id, package_name, package_slug, category_id,
-        short_description, detailed_description,
-        duration_days, duration_nights,
-        base_price_usd, featured_image_url, image_urls,
-        highlights, included_features, excluded_features, itinerary,
-        inclusions_html, exclusions_html,
-        is_group_tour, is_private, is_active, is_featured,
-        minimum_pax, maximum_pax, difficulty_level,
-        meta_title, meta_description, meta_keywords
-      ) VALUES (
-        $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15::jsonb,
-        $16,$17,
-        $18,false,true,$19,
-        1,6,'Easy',
-        $20,$21,$22
-      )`,
-      [
-        packageId,
-        tour.package_name.slice(0, 200),
-        slug,
-        categoryId,
-        tour.short_description || '',
-        tour.detailed_description || tour.short_description || '',
-        durationDays,
-        durationNights,
-        price,
-        tour.featured_image_url || images[0] || null,
-        images,
-        highlights,
-        included,
-        excluded,
-        JSON.stringify(itinerary),
-        included.length
-          ? `<ul>${included.map((i) => `<li>${escapeHtml(i)}</li>`).join('')}</ul>`
-          : null,
-        excluded.length
-          ? `<ul>${excluded.map((i) => `<li>${escapeHtml(i)}</li>`).join('')}</ul>`
-          : null,
-        isGroup,
-        /^(migrations|fly-in)$/.test(categorySlug) && durationDays >= 6,
-        tour.package_name.slice(0, 200),
-        (tour.short_description || '').slice(0, 300),
-        ['glado-import', categorySlug, slug],
-      ]
-    );
-
-    await insertItinerary(packageId, itinerary);
-    inserted += 1;
-    console.log(`  inserted: ${slug} (${itinerary.length} days)`);
-  }
-
-  console.log(`Glado seed done. inserted=${inserted} skipped=${skipped}`);
-  return { inserted, skipped };
-}
-
 function escapeHtml(s) {
   return String(s)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
+}
+
+function packagePayload(tour, categoryId, categorySlug) {
+  const durationDays = Math.max(1, parseInt(tour.duration_days, 10) || tour.itinerary?.length || 1);
+  const durationNights = Math.max(0, parseInt(tour.duration_nights, 10) || durationDays - 1);
+  const highlights = Array.isArray(tour.highlights) ? tour.highlights : [];
+  const included = Array.isArray(tour.included_features) ? tour.included_features : [];
+  const excluded = Array.isArray(tour.excluded_features) ? tour.excluded_features : [];
+  const itinerary = Array.isArray(tour.itinerary) ? tour.itinerary : [];
+  const images = Array.isArray(tour.image_urls) ? tour.image_urls.filter(Boolean) : [];
+  const price = tour.base_price_usd != null ? Number(tour.base_price_usd) : null;
+  const seo = buildSeo(tour, categorySlug);
+  const isGroup = categorySlug === 'group-safaris';
+
+  return {
+    durationDays,
+    durationNights,
+    highlights,
+    included,
+    excluded,
+    itinerary,
+    images,
+    price,
+    seo,
+    isGroup,
+    isFeatured: categorySlug === 'migrations' || (categorySlug === 'kilimanjaro' && durationDays >= 6),
+    categoryId,
+    categorySlug,
+    inclusionsHtml: included.length
+      ? `<ul>${included.map((i) => `<li>${escapeHtml(i)}</li>`).join('')}</ul>`
+      : null,
+    exclusionsHtml: excluded.length
+      ? `<ul>${excluded.map((i) => `<li>${escapeHtml(i)}</li>`).join('')}</ul>`
+      : null,
+  };
+}
+
+async function seedGladoTours() {
+  const tours = loadTours();
+  if (!tours.length) {
+    console.log('No Glado tours to seed.');
+    return { inserted: 0, updated: 0, skipped: 0 };
+  }
+
+  console.log(`Enriching Glado tours (${tours.length}) with nav categories + park links…`);
+  const categories = await ensureCategories();
+  const parkIdMap = await loadParkIdMap();
+  console.log(`  parks available: ${Object.keys(parkIdMap).length}`);
+
+  let inserted = 0;
+  let updated = 0;
+
+  for (const tour of tours) {
+    const slug = String(tour.package_slug).toLowerCase().trim();
+    const categorySlug = resolveCategorySlug(tour);
+    const categoryId = categories[categorySlug] || categories.safaris || null;
+    const p = packagePayload(tour, categoryId, categorySlug);
+    const parkSlugs = p.seo.parks;
+
+    const existing = await db.query(
+      `SELECT package_id FROM safari_packages WHERE package_slug = $1 LIMIT 1`,
+      [slug]
+    );
+
+    let packageId;
+    if (existing.rowCount > 0) {
+      packageId = existing.rows[0].package_id;
+      await db.query(
+        `UPDATE safari_packages SET
+          package_name = $1,
+          category_id = $2,
+          short_description = $3,
+          detailed_description = $4,
+          duration_days = $5,
+          duration_nights = $6,
+          base_price_usd = COALESCE($7, base_price_usd),
+          featured_image_url = COALESCE($8, featured_image_url),
+          image_urls = CASE WHEN cardinality($9::text[]) > 0 THEN $9 ELSE image_urls END,
+          highlights = $10,
+          included_features = $11,
+          excluded_features = $12,
+          itinerary = $13::jsonb,
+          inclusions_html = $14,
+          exclusions_html = $15,
+          is_group_tour = $16,
+          is_private = false,
+          is_active = true,
+          is_featured = $17,
+          minimum_pax = 1,
+          maximum_pax = 6,
+          meta_title = $18,
+          meta_description = $19,
+          meta_keywords = $20,
+          updated_at = NOW()
+        WHERE package_id = $21`,
+        [
+          tour.package_name.slice(0, 200),
+          p.categoryId,
+          tour.short_description || '',
+          tour.detailed_description || tour.short_description || '',
+          p.durationDays,
+          p.durationNights,
+          p.price,
+          tour.featured_image_url || p.images[0] || null,
+          p.images,
+          p.highlights,
+          p.included,
+          p.excluded,
+          JSON.stringify(p.itinerary),
+          p.inclusionsHtml,
+          p.exclusionsHtml,
+          p.isGroup,
+          p.isFeatured,
+          p.seo.metaTitle,
+          p.seo.metaDescription,
+          p.seo.keywords,
+          packageId,
+        ]
+      );
+      updated += 1;
+      console.log(`  updated: ${slug} → ${categorySlug} parks=[${parkSlugs.join(',')}]`);
+    } else {
+      packageId = crypto.randomUUID();
+      await db.query(
+        `INSERT INTO safari_packages (
+          package_id, package_name, package_slug, category_id,
+          short_description, detailed_description,
+          duration_days, duration_nights,
+          base_price_usd, featured_image_url, image_urls,
+          highlights, included_features, excluded_features, itinerary,
+          inclusions_html, exclusions_html,
+          is_group_tour, is_private, is_active, is_featured,
+          minimum_pax, maximum_pax, difficulty_level,
+          meta_title, meta_description, meta_keywords
+        ) VALUES (
+          $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15::jsonb,
+          $16,$17,$18,false,true,$19,1,6,'Easy',$20,$21,$22
+        )`,
+        [
+          packageId,
+          tour.package_name.slice(0, 200),
+          slug,
+          p.categoryId,
+          tour.short_description || '',
+          tour.detailed_description || tour.short_description || '',
+          p.durationDays,
+          p.durationNights,
+          p.price,
+          tour.featured_image_url || p.images[0] || null,
+          p.images,
+          p.highlights,
+          p.included,
+          p.excluded,
+          JSON.stringify(p.itinerary),
+          p.inclusionsHtml,
+          p.exclusionsHtml,
+          p.isGroup,
+          p.isFeatured,
+          p.seo.metaTitle,
+          p.seo.metaDescription,
+          p.seo.keywords,
+        ]
+      );
+      inserted += 1;
+      console.log(`  inserted: ${slug} → ${categorySlug}`);
+    }
+
+    await syncItinerary(packageId, p.itinerary);
+    await syncDestinations(packageId, parkSlugs, parkIdMap);
+  }
+
+  console.log(`Glado enrich done. inserted=${inserted} updated=${updated}`);
+  return { inserted, updated, skipped: 0 };
 }
 
 module.exports = seedGladoTours;
