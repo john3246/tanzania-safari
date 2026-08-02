@@ -246,16 +246,39 @@ async function migrate() {
     `);
 
     await runStep('hub category seeds (day-trips / fly-in / budget)', `
+        -- Insert only when neither name nor slug already exists
         INSERT INTO public.package_categories (category_name, category_slug, category_description, icon_class, display_order, is_active)
-        VALUES
-          ('Day Trips', 'day-trips', 'One-day safari and cultural experiences', 'fa-sun', 6, true),
-          ('Fly-In Safaris', 'fly-in', 'Exclusive fly-in safari experiences', 'fa-plane', 7, true),
-          ('Budget Safaris', 'budget', 'Affordable safari packages', 'fa-wallet', 8, true)
-        ON CONFLICT (category_slug) DO UPDATE SET
-          category_name = EXCLUDED.category_name,
-          category_description = EXCLUDED.category_description,
-          icon_class = EXCLUDED.icon_class,
-          is_active = true;
+        SELECT v.category_name, v.category_slug, v.category_description, v.icon_class, v.display_order, true
+        FROM (VALUES
+          ('Day Trips', 'day-trips', 'One-day safari and cultural experiences', 'fa-sun', 6),
+          ('Fly-In Safaris', 'fly-in', 'Exclusive fly-in safari experiences', 'fa-plane', 7),
+          ('Budget Safaris', 'budget', 'Affordable safari packages', 'fa-wallet', 8)
+        ) AS v(category_name, category_slug, category_description, icon_class, display_order)
+        WHERE NOT EXISTS (
+          SELECT 1 FROM public.package_categories pc
+          WHERE pc.category_slug = v.category_slug
+             OR LOWER(pc.category_name) = LOWER(v.category_name)
+        );
+
+        -- Align existing rows matched by name (keep slug if target slug is taken elsewhere)
+        UPDATE public.package_categories pc SET
+          category_description = v.category_description,
+          icon_class = v.icon_class,
+          display_order = v.display_order,
+          is_active = true,
+          category_slug = CASE
+            WHEN NOT EXISTS (
+              SELECT 1 FROM public.package_categories x
+              WHERE x.category_slug = v.category_slug AND x.category_id <> pc.category_id
+            ) THEN v.category_slug
+            ELSE pc.category_slug
+          END
+        FROM (VALUES
+          ('Day Trips', 'day-trips', 'One-day safari and cultural experiences', 'fa-sun', 6),
+          ('Fly-In Safaris', 'fly-in', 'Exclusive fly-in safari experiences', 'fa-plane', 7),
+          ('Budget Safaris', 'budget', 'Affordable safari packages', 'fa-wallet', 8)
+        ) AS v(category_name, category_slug, category_description, icon_class, display_order)
+        WHERE LOWER(pc.category_name) = LOWER(v.category_name);
     `);
 
     // Idempotent content seed: inserts Glad of Africa tour packages only when

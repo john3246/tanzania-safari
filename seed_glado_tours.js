@@ -72,29 +72,115 @@ function loadTours() {
   return raw.filter((t) => t && t.package_slug && t.package_name);
 }
 
-async function ensureCategories() {
-  await db.query(`
-    INSERT INTO package_categories (category_name, category_slug, category_description, icon_class, display_order, is_active)
-    VALUES
-      ('Classic Safaris', 'safaris', 'Private and classic northern-circuit safari tours', 'fa-binoculars', 1, true),
-      ('Kilimanjaro', 'kilimanjaro', 'Kilimanjaro climbs and trek packages', 'fa-mountain', 2, true),
-      ('Migration Safaris', 'migrations', 'Great Wildebeest Migration seasonal safaris', 'fa-paw', 3, true),
-      ('Zanzibar', 'zanzibar', 'Zanzibar beach and island extensions', 'fa-umbrella-beach', 4, true),
-      ('Group Safaris', 'group-safaris', 'Fixed-date shared group safaris', 'fa-users', 5, true)
-    ON CONFLICT (category_slug) DO UPDATE SET is_active = true
-  `);
+async function ensureCategory(c) {
+  const found = await db.query(
+    `SELECT category_id, category_slug FROM package_categories
+     WHERE category_slug = $1 OR LOWER(category_name) = LOWER($2)
+     LIMIT 1`,
+    [c.category_slug, c.category_name]
+  );
 
-  for (const c of EXTRA_CATEGORIES) {
+  if (found.rowCount > 0) {
+    const row = found.rows[0];
+    // Only retarget slug if the desired slug is free or already ours
+    const slugTaken = await db.query(
+      `SELECT category_id FROM package_categories
+       WHERE category_slug = $1 AND category_id <> $2 LIMIT 1`,
+      [c.category_slug, row.category_id]
+    );
+    const nextSlug = slugTaken.rowCount ? row.category_slug : c.category_slug;
+
     await db.query(
-      `INSERT INTO package_categories (category_name, category_slug, category_description, icon_class, display_order, is_active)
+      `UPDATE package_categories SET
+         category_description = COALESCE($1, category_description),
+         icon_class = COALESCE($2, icon_class),
+         display_order = COALESCE($3, display_order),
+         category_slug = $4,
+         is_active = true
+       WHERE category_id = $5`,
+      [
+        c.category_description || null,
+        c.icon_class || null,
+        c.display_order ?? null,
+        nextSlug,
+        row.category_id,
+      ]
+    );
+    return { category_id: row.category_id, category_slug: nextSlug };
+  }
+
+  try {
+    const inserted = await db.query(
+      `INSERT INTO package_categories
+         (category_name, category_slug, category_description, icon_class, display_order, is_active)
        VALUES ($1, $2, $3, $4, $5, true)
-       ON CONFLICT (category_slug) DO UPDATE SET is_active = true`,
+       RETURNING category_id, category_slug`,
       [c.category_name, c.category_slug, c.category_description, c.icon_class, c.display_order]
     );
+    return inserted.rows[0];
+  } catch (err) {
+    // Race / unique race: re-select and continue
+    if (err.code === '23505') {
+      const again = await db.query(
+        `SELECT category_id, category_slug FROM package_categories
+         WHERE category_slug = $1 OR LOWER(category_name) = LOWER($2)
+         LIMIT 1`,
+        [c.category_slug, c.category_name]
+      );
+      if (again.rowCount) return again.rows[0];
+    }
+    throw err;
+  }
+}
+
+async function ensureCategories() {
+  const base = [
+    {
+      category_name: 'Classic Safaris',
+      category_slug: 'safaris',
+      category_description: 'Private and classic northern-circuit safari tours',
+      icon_class: 'fa-binoculars',
+      display_order: 1,
+    },
+    {
+      category_name: 'Kilimanjaro',
+      category_slug: 'kilimanjaro',
+      category_description: 'Kilimanjaro climbs and trek packages',
+      icon_class: 'fa-mountain',
+      display_order: 2,
+    },
+    {
+      category_name: 'Migration Safaris',
+      category_slug: 'migrations',
+      category_description: 'Great Wildebeest Migration seasonal safaris',
+      icon_class: 'fa-paw',
+      display_order: 3,
+    },
+    {
+      category_name: 'Zanzibar',
+      category_slug: 'zanzibar',
+      category_description: 'Zanzibar beach and island extensions',
+      icon_class: 'fa-umbrella-beach',
+      display_order: 4,
+    },
+    {
+      category_name: 'Group Safaris',
+      category_slug: 'group-safaris',
+      category_description: 'Fixed-date shared group safaris',
+      icon_class: 'fa-users',
+      display_order: 5,
+    },
+    ...EXTRA_CATEGORIES,
+  ];
+
+  const map = {};
+  for (const c of base) {
+    const row = await ensureCategory(c);
+    map[c.category_slug] = row.category_id;
+    map[row.category_slug] = row.category_id;
   }
 
   const rows = await db.query(`SELECT category_id, category_slug FROM package_categories`);
-  const map = {};
   for (const r of rows.rows) map[r.category_slug] = r.category_id;
   return map;
 }
