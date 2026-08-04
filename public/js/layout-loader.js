@@ -303,15 +303,30 @@ function initHeader() {
                 if (!open) {
                     parent?.classList.add('open');
                     btn.setAttribute('aria-expanded', 'true');
+                    document.getElementById('header')?.classList.add('mega-open');
+                    document.getElementById('siteHeader')?.classList.add('mega-open');
                     loadSafariMegaMenuTours();
+                } else {
+                    document.getElementById('header')?.classList.remove('mega-open');
+                    document.getElementById('siteHeader')?.classList.remove('mega-open');
                 }
             });
         });
 
-        // Prefetch mega-menu tours on desktop hover intent
+        // Prefetch mega-menu tours on desktop hover intent; solidify header for contrast
         const safarisDropdown = document.getElementById('safarisNavDropdown');
         if (safarisDropdown) {
-            safarisDropdown.addEventListener('mouseenter', () => loadSafariMegaMenuTours(), { once: false });
+            safarisDropdown.addEventListener('mouseenter', () => {
+                document.getElementById('header')?.classList.add('mega-open');
+                document.getElementById('siteHeader')?.classList.add('mega-open');
+                loadSafariMegaMenuTours();
+            });
+            safarisDropdown.addEventListener('mouseleave', () => {
+                if (!safarisDropdown.classList.contains('open')) {
+                    document.getElementById('header')?.classList.remove('mega-open');
+                    document.getElementById('siteHeader')?.classList.remove('mega-open');
+                }
+            });
         }
         loadSafariMegaMenuTours();
 
@@ -322,6 +337,8 @@ function initHeader() {
                 d.classList.remove('open');
                 d.querySelector('.nav-dropdown-toggle')?.setAttribute('aria-expanded', 'false');
             });
+            document.getElementById('header')?.classList.remove('mega-open');
+            document.getElementById('siteHeader')?.classList.remove('mega-open');
         });
 
         // Escape key

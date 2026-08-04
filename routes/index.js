@@ -340,21 +340,27 @@ router.get(['/kilimanjaro', '/migrations', '/zanzibar'], (req, res) => {
       description: 'Climb Mount Kilimanjaro (5,895 m) with Tanzania Safari Magic — Machame, Lemosho & Marangu routes. Combine with Serengeti safari. Free trek quote from Arusha.',
       keywords: seo.KEYWORD_HUB.kilimanjaro,
       image: '/images/optimized/mount-kilimanjaro-national-park.webp',
-      h1: 'Kilimanjaro Climb Packages'
+      h1: 'Kilimanjaro Climbs & Treks',
+      eyebrow: 'Mount Kilimanjaro · 5,895 m',
+      crumb: 'Kilimanjaro'
     },
     '/migrations': {
       title: 'Great Wildebeest Migration Safaris 2026 | Serengeti',
       description: 'Witness the Great Migration in Serengeti — calving, Grumeti & Mara River crossings. Private migration safari packages timed to the herds from Arusha.',
       keywords: 'great wildebeest migration, serengeti migration safari, mara river crossing, ndutu calving',
       image: '/images/optimized/8-day-northern-serengeti-mara-river-crossing.webp',
-      h1: 'Great Migration Safaris'
+      h1: 'Great Migration Safaris',
+      eyebrow: 'Wildebeest Migration',
+      crumb: 'Migrations'
     },
     '/zanzibar': {
       title: 'Zanzibar Safari Packages | Bush to Beach Tanzania',
       description: 'Combine Serengeti or Ngorongoro with Zanzibar beaches — spice island extensions, Stone Town, and private bush-to-beach packages from Tanzania Safari Magic.',
       keywords: 'zanzibar safari package, bush to beach tanzania, safari and zanzibar, spice island holiday',
       image: '/images/optimized/zanzibar.webp',
-      h1: 'Zanzibar & Bush-to-Beach'
+      h1: 'Zanzibar Beach Extensions',
+      eyebrow: 'Spice Island',
+      crumb: 'Zanzibar'
     }
   };
   const meta = hub[req.path] || hub['/kilimanjaro'];

@@ -80,11 +80,11 @@ function buildHeadTags({
 
   return `
 <!-- SSR SEO -->
-<title>${t}</title>
-<meta name="description" content="${d}">
+<title id="pageTitle">${t}</title>
+<meta id="metaDesc" name="description" content="${d}">
 <meta name="robots" content="${escapeHtml(robots)}">
 ${kw ? `<meta name="keywords" content="${kw}">` : ''}
-<link rel="canonical" href="${canon}">
+<link id="canonicalLink" rel="canonical" href="${canon}">
 <meta property="og:type" content="${escapeHtml(type)}">
 <meta property="og:site_name" content="${escapeHtml(SITE.name)}">
 <meta property="og:title" content="${t}">
@@ -153,10 +153,26 @@ function injectSeoIntoHtml(html, seo) {
     out = block + out;
   }
 
-  // Prefer meaningful H1 fallback for crawlers (replace Loading…)
+  // Prefer meaningful H1 fallback for crawlers (replace Loading… / generic hub title)
   if (seo.h1) {
     out = out.replace(/>Loading[.…]*</gi, `>${escapeHtml(seo.h1)}<`);
     out = out.replace(/>Loading departure[.…]*</gi, `>${escapeHtml(seo.h1)}<`);
+    out = out.replace(
+      /(<h1[^>]*id=["']hubTitle["'][^>]*>)([\s\S]*?)(<\/h1>)/i,
+      `$1${escapeHtml(seo.h1)}$3`
+    );
+  }
+  if (seo.eyebrow) {
+    out = out.replace(
+      /(<span[^>]*id=["']hubEyebrow["'][^>]*>)([\s\S]*?)(<\/span>)/i,
+      `$1${escapeHtml(seo.eyebrow)}$3`
+    );
+  }
+  if (seo.crumb) {
+    out = out.replace(
+      /(<span[^>]*id=["']hubCrumb["'][^>]*>)([\s\S]*?)(<\/span>)/i,
+      `$1${escapeHtml(seo.crumb)}$3`
+    );
   }
 
   return out;

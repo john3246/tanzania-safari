@@ -38,8 +38,22 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;');
 }
 
+function setText(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = value;
+}
+
+function setHtml(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.innerHTML = value;
+}
+
 function packageCard(p) {
-  const img = p.image_url || p.featured_image_url || (p.image_urls && p.image_urls[0]) || '/images/optimized/serengeti-national-park.webp';
+  const img =
+    p.image_url ||
+    p.featured_image_url ||
+    (p.image_urls && p.image_urls[0]) ||
+    '/images/optimized/serengeti-national-park.webp';
   const price = Number(p.base_price_usd || 0);
   const dest = Array.isArray(p.destinations)
     ? p.destinations
@@ -72,16 +86,50 @@ async function loadHub() {
   const hub = key ? HUBS[key] : null;
   if (!hub) return;
 
-  document.getElementById('hubPageTitle').textContent = `${hub.title} | Tanzania Safari Magic`;
-  document.getElementById('hubMetaDesc').setAttribute('content', hub.lead.replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim().slice(0, 160));
-  document.getElementById('hubCanonical').href = `https://tanzaniasafarimagic.com${hub.path}`;
-  document.getElementById('hubCrumb').textContent = hub.title;
-  document.getElementById('hubEyebrow').textContent = hub.eyebrow;
-  document.getElementById('hubTitle').textContent = hub.title;
-  document.getElementById('hubLead').innerHTML = hub.lead;
-  document.getElementById('hubHeroSlide').style.backgroundImage = `url('${hub.image}')`;
+  // SEO inject often strips id="hubPageTitle" from <title> — never crash on that.
+  document.title = `${hub.title} | Tanzania Safari Magic`;
+  const titleEl =
+    document.getElementById('hubPageTitle') ||
+    document.getElementById('pageTitle') ||
+    document.querySelector('title');
+  if (titleEl) titleEl.textContent = document.title;
+
+  const metaDesc =
+    document.getElementById('hubMetaDesc') ||
+    document.getElementById('metaDesc') ||
+    document.querySelector('meta[name="description"]');
+  if (metaDesc) {
+    metaDesc.setAttribute(
+      'content',
+      hub.lead
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/&amp;/g, '&')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .slice(0, 160)
+    );
+  }
+
+  const canonical =
+    document.getElementById('hubCanonical') ||
+    document.getElementById('canonicalLink') ||
+    document.querySelector('link[rel="canonical"]');
+  if (canonical) canonical.setAttribute('href', `https://tanzaniasafarimagic.com${hub.path}`);
+
+  setText('hubCrumb', hub.title);
+  setText('hubEyebrow', hub.eyebrow);
+  setText('hubTitle', hub.title);
+  setHtml('hubLead', hub.lead);
+
+  const slide = document.getElementById('hubHeroSlide');
+  if (slide) slide.style.backgroundImage = `url('${hub.image}')`;
 
   const grid = document.getElementById('hubPackageGrid');
+  if (!grid) return;
+
+  grid.innerHTML =
+    '<div class="skeleton-card" style="height:320px"></div><div class="skeleton-card" style="height:320px"></div><div class="skeleton-card" style="height:320px"></div>';
+
   try {
     const res = await API.get(`/packages?category=${encodeURIComponent(hub.category)}&limit=24&sort=featured`);
     const packages = Array.isArray(res?.data) ? res.data : res?.data?.packages || [];
@@ -96,8 +144,13 @@ async function loadHub() {
     grid.innerHTML = packages.map(packageCard).join('');
   } catch (e) {
     console.error('Hub load failed', e);
-    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--text-muted)">Unable to load packages.</p>';
+    grid.innerHTML =
+      '<p style="grid-column:1/-1;text-align:center;color:var(--text-muted)">Unable to load packages. Please refresh or <a href="/safaris">browse all safaris</a>.</p>';
   }
 }
 
-loadHub();
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', loadHub);
+} else {
+  loadHub();
+}
