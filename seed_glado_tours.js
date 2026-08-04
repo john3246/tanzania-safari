@@ -11,6 +11,11 @@ const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
 const db = require('./config/db');
+const {
+  buildPackageImages,
+  buildDestinationImages,
+  allParkSlugsWithLocalImages,
+} = require('./utils/localImages');
 
 const DATA_PATH = path.join(__dirname, 'scripts', 'glado_tours_scraped.json');
 
@@ -328,10 +333,16 @@ function packagePayload(tour, categoryId, categorySlug) {
   const included = Array.isArray(tour.included_features) ? tour.included_features : [];
   const excluded = Array.isArray(tour.excluded_features) ? tour.excluded_features : [];
   const itinerary = Array.isArray(tour.itinerary) ? tour.itinerary : [];
-  const images = Array.isArray(tour.image_urls) ? tour.image_urls.filter(Boolean) : [];
   const price = tour.base_price_usd != null ? Number(tour.base_price_usd) : null;
   const seo = buildSeo(tour, categorySlug);
   const isGroup = categorySlug === 'group-safaris';
+  const gallery = buildPackageImages({
+    categorySlug,
+    parkSlugs: seo.parks,
+    packageSlug: tour.package_slug,
+    featuredImageUrl: tour.featured_image_url,
+    imageUrls: tour.image_urls,
+  });
 
   return {
     durationDays,
@@ -340,7 +351,8 @@ function packagePayload(tour, categoryId, categorySlug) {
     included,
     excluded,
     itinerary,
-    images,
+    images: gallery.image_urls,
+    featuredImage: gallery.featured_image_url,
     price,
     seo,
     isGroup,
@@ -356,6 +368,41 @@ function packagePayload(tour, categoryId, categorySlug) {
   };
 }
 
+/** Fill national_parks.image_urls from public/images/{park} (+ destinations/optimized). */
+async function seedDestinationImages(parkIdMap) {
+  const slugs = allParkSlugsWithLocalImages();
+  let updated = 0;
+  for (const slug of slugs) {
+    const gallery = buildDestinationImages(slug);
+    if (!gallery.length) continue;
+    const parkId = parkIdMap[slug];
+    if (!parkId) {
+      // Try direct slug match in DB even if not in alias map
+      const res = await db.query(
+        `UPDATE national_parks
+         SET image_urls = $1
+         WHERE park_slug = $2
+         RETURNING park_id`,
+        [gallery, slug]
+      );
+      if (res.rowCount) {
+        updated += 1;
+        console.log(`  destination images: ${slug} (${gallery.length})`);
+      }
+      continue;
+    }
+    await db.query(
+      `UPDATE national_parks
+       SET image_urls = $1
+       WHERE park_id = $2`,
+      [gallery, parkId]
+    );
+    updated += 1;
+    console.log(`  destination images: ${slug} (${gallery.length})`);
+  }
+  return updated;
+}
+
 async function seedGladoTours() {
   const tours = loadTours();
   if (!tours.length) {
@@ -363,10 +410,17 @@ async function seedGladoTours() {
     return { inserted: 0, updated: 0, skipped: 0 };
   }
 
-  console.log(`Enriching Glado tours (${tours.length}) with nav categories + park links…`);
+  console.log(`Enriching Glado tours (${tours.length}) with nav categories + park links + local images…`);
   const categories = await ensureCategories();
   const parkIdMap = await loadParkIdMap();
   console.log(`  parks available: ${Object.keys(parkIdMap).length}`);
+
+  try {
+    const destImgCount = await seedDestinationImages(parkIdMap);
+    console.log(`  destination galleries updated: ${destImgCount}`);
+  } catch (e) {
+    console.error('  destination image seed failed:', e.message);
+  }
 
   let inserted = 0;
   let updated = 0;
@@ -395,8 +449,8 @@ async function seedGladoTours() {
           duration_days = $5,
           duration_nights = $6,
           base_price_usd = COALESCE($7, base_price_usd),
-          featured_image_url = COALESCE($8, featured_image_url),
-          image_urls = CASE WHEN cardinality($9::text[]) > 0 THEN $9 ELSE image_urls END,
+          featured_image_url = $8,
+          image_urls = $9,
           highlights = $10,
           included_features = $11,
           excluded_features = $12,
@@ -422,7 +476,7 @@ async function seedGladoTours() {
           p.durationDays,
           p.durationNights,
           p.price,
-          tour.featured_image_url || p.images[0] || null,
+          p.featuredImage,
           p.images,
           p.highlights,
           p.included,
@@ -467,7 +521,7 @@ async function seedGladoTours() {
           p.durationDays,
           p.durationNights,
           p.price,
-          tour.featured_image_url || p.images[0] || null,
+          p.featuredImage,
           p.images,
           p.highlights,
           p.included,

@@ -20,7 +20,7 @@ const HUBS = {
     title: 'Zanzibar Beach Extensions',
     eyebrow: 'Spice Island',
     lead: 'Bush-to-beach combinations and Zanzibar stays — white-sand beaches after your northern circuit safari. See the <a href="/destinations/zanzibar">Zanzibar destination guide</a>.',
-    image: '/images/optimized/boat%20zanzibar.webp',
+    image: '/images/zanzibar/zanzibar%20(1).jpeg',
     path: '/zanzibar'
   }
 };

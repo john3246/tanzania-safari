@@ -357,7 +357,7 @@ router.get(['/kilimanjaro', '/migrations', '/zanzibar'], (req, res) => {
       title: 'Zanzibar Safari Packages | Bush to Beach Tanzania',
       description: 'Combine Serengeti or Ngorongoro with Zanzibar beaches — spice island extensions, Stone Town, and private bush-to-beach packages from Tanzania Safari Magic.',
       keywords: 'zanzibar safari package, bush to beach tanzania, safari and zanzibar, spice island holiday',
-      image: '/images/optimized/zanzibar.webp',
+      image: '/images/zanzibar/zanzibar%20(1).jpeg',
       h1: 'Zanzibar Beach Extensions',
       eyebrow: 'Spice Island',
       crumb: 'Zanzibar'

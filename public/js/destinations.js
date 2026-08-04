@@ -14,14 +14,21 @@ function destName(d) {
     return d.park_name || d.name || 'Destination';
 }
 
+const PARK_LOCAL_COVER = {
+    zanzibar: '/images/zanzibar/zanzibar%20(1).jpeg',
+    'serengeti-national-park': '/images/serengeti/Serengeti%20(1).jpeg',
+    'ngorongoro-conservation-area': '/images/ngorongoro/Ngorongoro%20(1).jpeg',
+    'lake-manyara-national-park': '/images/manyara/manyara%20(1).jpeg',
+};
+
 function destImage(d) {
     const slug = destSlug(d);
     const fromApi = d.featured_image_url || d.image_url
         || (Array.isArray(d.gallery_urls) && d.gallery_urls[0])
         || (Array.isArray(d.image_urls) && d.image_urls[0]);
     if (fromApi) return (typeof imgSrc === 'function' ? imgSrc(fromApi) : fromApi);
+    if (PARK_LOCAL_COVER[slug]) return PARK_LOCAL_COVER[slug];
     if (slug) {
-        // Prefer optimized webp, then destinations folder
         return `/images/optimized/${slug}.webp`;
     }
     return '/images/optimized/balloon.webp';
@@ -30,6 +37,7 @@ function destImage(d) {
 function destImageFallback(d) {
     const slug = destSlug(d);
     if (!slug) return '/images/optimized/balloon.webp';
+    if (PARK_LOCAL_COVER[slug]) return PARK_LOCAL_COVER[slug];
     return `/images/destinations/${slug}/main.jpg`;
 }
 
