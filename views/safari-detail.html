@@ -108,9 +108,9 @@
   <div class="corp-page-hero-inner">
     <div class="container">
       <div class="corp-breadcrumb" id="packageBreadcrumb">
-        <a href="/">Home</a><span>/</span><a href="/safaris" id="breadcrumbHub">Safaris</a><span>/</span><span id="breadcrumbName">...</span>
+        <a href="/" data-i18n="common.home">Home</a><span>/</span><a href="/safaris" id="breadcrumbHub" data-i18n="common.safaris">Safaris</a><span>/</span><span id="breadcrumbName">...</span>
       </div>
-      <span class="corp-eyebrow" id="heroEyebrow">Private Safari from Arusha</span>
+      <span class="corp-eyebrow" id="heroEyebrow" data-i18n="detail.privateFromArusha">Private Safari from Arusha</span>
       <div id="heroBadge" style="margin-bottom:0.75rem"></div>
       <h1 class="page-hero-title" id="heroTitle" style="color:#fff;margin:0;">Loading...</h1>
     </div>
@@ -131,10 +131,10 @@
           
           <!-- Tab Navigation -->
           <div class="tab-nav corp-tabs">
-            <button class="tab-btn corp-tab active" data-tab="overview">Overview</button>
-            <button class="tab-btn corp-tab" data-tab="itinerary">Itinerary</button>
-            <button class="tab-btn corp-tab" data-tab="includes">Inclusions</button>
-            <button class="tab-btn corp-tab" data-tab="reviews">Reviews</button>
+            <button class="tab-btn corp-tab active" data-tab="overview" data-i18n="detail.overview">Overview</button>
+            <button class="tab-btn corp-tab" data-tab="itinerary" data-i18n="detail.itinerary">Itinerary</button>
+            <button class="tab-btn corp-tab" data-tab="includes" data-i18n="detail.inclusions">Inclusions</button>
+            <button class="tab-btn corp-tab" data-tab="reviews" data-i18n="detail.reviews">Reviews</button>
           </div>
           
           <!-- Tab Panels -->
@@ -151,11 +151,11 @@
           <div class="tab-panel" id="tab-includes">
             <div class="inc-exc">
               <div>
-                <h3 style="font-size:1.1rem; color:var(--earth-dark); border-bottom:2px solid var(--success); padding-bottom:0.5rem; margin-bottom:1rem; text-transform:uppercase; letter-spacing:1px; font-weight:600;">Included</h3>
+                <h3 style="font-size:1.1rem; color:var(--earth-dark); border-bottom:2px solid var(--success); padding-bottom:0.5rem; margin-bottom:1rem; text-transform:uppercase; letter-spacing:1px; font-weight:600;" data-i18n="detail.included">Included</h3>
                 <ul class="inc-list" id="includesList"></ul>
               </div>
               <div>
-                <h3 style="font-size:1.1rem; color:var(--earth-dark); border-bottom:2px solid var(--error); padding-bottom:0.5rem; margin-bottom:1rem; text-transform:uppercase; letter-spacing:1px; font-weight:600;">Excluded</h3>
+                <h3 style="font-size:1.1rem; color:var(--earth-dark); border-bottom:2px solid var(--error); padding-bottom:0.5rem; margin-bottom:1rem; text-transform:uppercase; letter-spacing:1px; font-weight:600;" data-i18n="detail.excluded">Excluded</h3>
                 <ul class="exc-list" id="excludesList"></ul>
               </div>
             </div>
@@ -163,36 +163,36 @@
           
           <div class="tab-panel" id="tab-reviews">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-light);">
-              <h3 style="font-size:1.25rem; font-weight:600; margin:0; color:var(--earth-dark);">Guest Reviews</h3>
-              <button onclick="document.getElementById('reviewFormContainer').style.display='block'" class="btn btn-outline btn-sm" style="border-radius:4px;"><i class="fas fa-pen"></i> Write a Review</button>
+              <h3 style="font-size:1.25rem; font-weight:600; margin:0; color:var(--earth-dark);" data-i18n="detail.guestReviews">Guest Reviews</h3>
+              <button onclick="document.getElementById('reviewFormContainer').style.display='block'" class="btn btn-outline btn-sm" style="border-radius:4px;"><i class="fas fa-pen"></i> <span data-i18n="detail.writeReview">Write a Review</span></button>
             </div>
             
             <div id="reviewFormContainer" style="display: none; background: #f9fafb; padding: 1.5rem; border: 1px solid var(--border-light); margin-bottom: 2rem;">
-              <h4 style="margin-bottom: 1rem; font-weight: 600; color: var(--earth-dark);">Share Your Experience</h4>
+              <h4 style="margin-bottom: 1rem; font-weight: 600; color: var(--earth-dark);" data-i18n="detail.shareExperience">Share Your Experience</h4>
               <form id="submitReviewForm" onsubmit="submitReview(event)">
                 <div class="review-form-grid">
                   <div>
-                    <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-muted);">Your Name</label>
+                    <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-muted);" data-i18n="detail.yourName">Your Name</label>
                     <input type="text" id="reviewAuthor" required style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-light); background: #fff;">
                   </div>
                   <div>
-                    <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-muted);">Rating</label>
+                    <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-muted);" data-i18n="detail.rating">Rating</label>
                     <select id="reviewRating" required style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-light); background: #fff;">
-                      <option value="5">5 - Excellent</option>
-                      <option value="4">4 - Very Good</option>
-                      <option value="3">3 - Average</option>
-                      <option value="2">2 - Poor</option>
-                      <option value="1">1 - Terrible</option>
+                      <option value="5" data-i18n-value="detail.excellent">5 - Excellent</option>
+                      <option value="4" data-i18n-value="detail.veryGood">4 - Very Good</option>
+                      <option value="3" data-i18n-value="detail.average">3 - Average</option>
+                      <option value="2" data-i18n-value="detail.poor">2 - Poor</option>
+                      <option value="1" data-i18n-value="detail.terrible">1 - Terrible</option>
                     </select>
                   </div>
                 </div>
                 <div style="margin-bottom: 1rem;">
-                  <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-muted);">Your Review</label>
+                  <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-muted);" data-i18n="detail.yourReview">Your Review</label>
                   <textarea id="reviewContent" required rows="4" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-light); background: #fff; resize: vertical;"></textarea>
                 </div>
                 <div style="display: flex; gap: 1rem;">
-                  <button type="submit" class="btn btn-primary" style="border-radius:4px;">Submit Review</button>
-                  <button type="button" onclick="document.getElementById('reviewFormContainer').style.display='none'" class="btn btn-ghost">Cancel</button>
+                  <button type="submit" class="btn btn-primary" style="border-radius:4px;" data-i18n="detail.submitReview">Submit Review</button>
+                  <button type="button" onclick="document.getElementById('reviewFormContainer').style.display='none'" class="btn btn-ghost" data-i18n="detail.cancel">Cancel</button>
                 </div>
               </form>
             </div>
@@ -207,7 +207,7 @@
           </div>
 
           <div id="relatedSafarisSection" style="margin:2.5rem 0 1rem">
-            <h2 style="font-size:1.25rem;margin:0 0 1rem;font-family:var(--font-heading)">Related Safari Packages</h2>
+            <h2 style="font-size:1.25rem;margin:0 0 1rem;font-family:var(--font-heading)" data-i18n="detail.relatedSafaris">Related Safari Packages</h2>
             <div id="relatedGrid" class="safari-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.25rem"></div>
           </div>
 
@@ -218,23 +218,23 @@
         <div class="layout-sidebar">
           <div class="detail-card corp-book-card desktop-only">
           <div class="price-display">
-            <div class="price-from corp-price-label">From</div>
+            <div class="price-from corp-price-label" data-i18n="detail.from">From</div>
             <div class="price-amount corp-price" id="cardPrice">$0</div>
-            <div class="price-per">per person</div>
+            <div class="price-per" data-i18n="detail.perPerson">per person</div>
           </div>
           <div class="detail-meta corp-meta-list" id="cardMeta"></div>
-          <a id="bookBtn" href="/booking" class="btn btn-primary btn-block btn-lg" style="margin-bottom:.75rem"><i class="fas fa-calendar-check"></i> Book This Safari</a>
-          <a id="waQuoteBtn" href="https://wa.me/255695108009?text=Hi%20Tanzania%20Safari%20Magic%20team%2C%20I%27m%20interested%20in%20booking%20a%20custom%20safari." class="btn btn-outline btn-block" target="_blank" rel="noopener" style="margin-bottom:.75rem"><i class="fab fa-whatsapp" style="color:#25D366"></i> WhatsApp Our Team</a>
-          <a href="/contact" class="btn btn-ghost btn-block"><i class="fas fa-comments"></i> Ask a Question</a>
+          <a id="bookBtn" href="/booking" class="btn btn-primary btn-block btn-lg" style="margin-bottom:.75rem"><i class="fas fa-calendar-check"></i> <span data-i18n="detail.bookNow">Book Now</span></a>
+          <a id="waQuoteBtn" href="https://wa.me/255695108009?text=Hi%20Tanzania%20Safari%20Magic%20team%2C%20I%27m%20interested%20in%20booking%20a%20custom%20safari." class="btn btn-outline btn-block" target="_blank" rel="noopener" style="margin-bottom:.75rem"><i class="fab fa-whatsapp" style="color:#25D366"></i> <span data-i18n="detail.whatsapp">WhatsApp Our Team</span></a>
+          <a href="/contact" class="btn btn-ghost btn-block"><i class="fas fa-comments"></i> <span data-i18n="detail.askQuestion">Ask a Question</span></a>
           <div class="seo-trust-strip" style="justify-content:flex-start;margin-top:1rem">
             <div class="seo-trust-item"><i class="fab fa-tripadvisor" style="color:#00af87"></i> TripAdvisor</div>
             <div class="seo-trust-item"><i class="fas fa-certificate" style="color:#f59e0b"></i> TATO</div>
             <div class="seo-trust-item"><i class="fas fa-shield-alt" style="color:var(--primary)"></i> Safe Travels</div>
           </div>
           <div class="trust-badges">
-            <div class="trust-badge-item"><i class="fas fa-lock"></i> Secure SSL Booking</div>
-            <div class="trust-badge-item"><i class="fas fa-calendar-check"></i> Free Cancellation Available</div>
-            <div class="trust-badge-item"><i class="fas fa-star"></i> Licensed Operator</div>
+            <div class="trust-badge-item"><i class="fas fa-lock"></i> <span data-i18n="detail.secureBooking">Secure SSL Booking</span></div>
+            <div class="trust-badge-item"><i class="fas fa-calendar-check"></i> <span data-i18n="detail.freeCancellation">Free Cancellation Available</span></div>
+            <div class="trust-badge-item"><i class="fas fa-star"></i> <span data-i18n="detail.expertSupport">24/7 Expert Support</span></div>
           </div>
         </div>
         </div>
@@ -243,10 +243,10 @@
       <!-- Mobile Sticky Booking CTA -->
       <div class="mobile-sticky-booking" id="mobileStickyBooking">
         <div>
-          <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">From</div>
+          <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;" data-i18n="detail.from">From</div>
           <div class="price" id="mobilePrice">$0</div>
         </div>
-        <a href="/booking" id="mobileBookBtn" class="btn btn-primary">Book Now</a>
+        <a href="/booking" id="mobileBookBtn" class="btn btn-primary" data-i18n="detail.bookNow">Book Now</a>
       </div>
 
     </div>

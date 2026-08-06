@@ -208,9 +208,25 @@
         };
     }
 
+    function seoT(key, vars) {
+        if (global.TSM_i18n && typeof global.TSM_i18n.t === 'function') {
+            const val = global.TSM_i18n.t(key, vars);
+            if (val && val !== key) return val;
+        }
+        return null;
+    }
+
     function defaultSafariFaqs(safari) {
         const name = safari.package_name || 'this safari';
         const days = safari.duration_days || 'multi-day';
+        const fromLocale = [1, 2, 3, 4, 5].map((n) => {
+            const q = seoT('seoFaqs.q' + n, { name, days });
+            const a = seoT('seoFaqs.a' + n, { name, days });
+            if (q && a) return { q, a };
+            return null;
+        }).filter(Boolean);
+        if (fromLocale.length) return fromLocale;
+
         return [
             {
                 q: `What is the best time to do ${name}?`,
@@ -237,9 +253,11 @@
 
     function renderFaqSection(container, faqs) {
         if (!container || !faqs?.length) return;
+        const heading = seoT('seoFaqs.heading') || 'Safari FAQs';
+        const intro = seoT('seoFaqs.intro') || 'Answers to common questions travelers ask before booking.';
         container.innerHTML = `
-            <h2 style="font-family:var(--font-heading);margin:2.5rem 0 1rem;font-size:1.5rem">Safari FAQs</h2>
-            <p style="color:var(--text-muted);margin-bottom:1.25rem;font-size:.95rem">Answers to common questions travelers ask before booking.</p>
+            <h2 style="font-family:var(--font-heading);margin:2.5rem 0 1rem;font-size:1.5rem">${escapeHtml(heading)}</h2>
+            <p style="color:var(--text-muted);margin-bottom:1.25rem;font-size:.95rem">${escapeHtml(intro)}</p>
             <div class="seo-faq-list">
                 ${faqs.map((f, i) => `
                     <details class="seo-faq-item" ${i === 0 ? 'open' : ''}>
@@ -268,7 +286,14 @@
         ensureMeta('property', 'og:url', (canonical || window.location.href).split('?')[0]);
         ensureMeta('property', 'og:type', type || 'website');
         ensureMeta('property', 'og:site_name', SITE.name);
-        ensureMeta('property', 'og:locale', 'en_US');
+        const ogLocales = { en: 'en_US', it: 'it_IT', fr: 'fr_FR', es: 'es_ES' };
+        let lang = 'en';
+        try {
+            if (global.TSM_i18n && typeof global.TSM_i18n.getLanguage === 'function') {
+                lang = global.TSM_i18n.getLanguage() || 'en';
+            }
+        } catch (_) {}
+        ensureMeta('property', 'og:locale', ogLocales[lang] || 'en_US');
         if (keywords) ensureMeta('name', 'keywords', keywords);
         if (noindex) setNoIndexFollow();
         else setRobots('index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');

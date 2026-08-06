@@ -308,9 +308,18 @@
 
 <!-- Map Section -->
 <section class="section no-padding" style="position: relative;">
-  <div class="map-container" style="position: relative; width: 100%; height: 500px;">
-    <iframe src="https://www.google.com/maps/d/embed?mid=1kXGUhPWV3TNiW4zcgwh_zjNlJklADDQ" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-    <div class="map-overlay container" style="position: absolute; inset: 0; display: flex; pointer-events: none;">
+  <div class="map-container" style="position: relative; width: 100%; height: 500px; overflow: hidden;">
+    <iframe
+      title="Arusha, Tanzania map"
+      src="https://maps.google.com/maps?ll=-3.398144,36.677213&amp;z=13&amp;t=m&amp;hl=en&amp;gl=TZ&amp;q=Arusha&amp;output=embed"
+      width="100%"
+      height="100%"
+      style="border:0; position:absolute; inset:0; width:100%; height:100%; z-index:1;"
+      allowfullscreen=""
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+    ></iframe>
+    <div class="map-overlay container" style="position: absolute; inset: 0; display: flex; pointer-events: none; z-index: 2;">
       <div class="map-card" style="background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); pointer-events: auto;">
         <h3 style="font-family: var(--font-heading); font-size: 1.5rem; color: var(--earth-dark); margin-bottom: 0.75rem;"><i class="fas fa-map-marker-alt" style="color: var(--primary); margin-right: 0.5rem;"></i> <span data-i18n="home.ourPresence">Our Presence</span></h3>
         <p style="color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.6; font-size: 0.95rem;" data-i18n="home.presenceDesc">Expert local guides stationed in Arusha, Serengeti, and Zanzibar.</p>
@@ -323,9 +332,18 @@
   </div>
 </section>
 
+<!-- SEO keyword hub (crawlable Tanzania tourism copy) -->
+<section class="section" style="background:#f7f8f6;padding:3.5rem 0;border-top:1px solid #e8ebe6">
+  <div class="container" style="max-width:52rem">
+    <h2 style="font-size:1.5rem;margin-bottom:1rem;color:var(--earth-dark)" data-i18n="home.seoHubTitle">Tanzania safari tourism from Arusha</h2>
+    <p style="color:var(--text-secondary);line-height:1.75;margin-bottom:1rem" data-i18n="home.seoHubP1">Tanzania Safari Magic is your local gateway to Tanzania tourism: private Serengeti safaris, Ngorongoro Crater game drives, Great Wildebeest Migration tours, Mount Kilimanjaro climbs, and Zanzibar beach holidays — all planned from Arusha with licensed guides.</p>
+    <p style="color:var(--text-secondary);line-height:1.75;margin:0" data-i18n-html="home.seoHubLinks">Explore <a href="/safaris">safari packages</a>, <a href="/destinations/serengeti-national-park">Serengeti National Park</a>, <a href="/destinations/ngorongoro-conservation-area">Ngorongoro</a>, <a href="/kilimanjaro">Kilimanjaro treks</a>, <a href="/migrations">migration safaris</a>, <a href="/zanzibar">Zanzibar extensions</a>, and our <a href="/blog/tanzania-safari">Tanzania safari guide</a> — or <a href="/booking">request a free quote</a>.</p>
+  </div>
+</section>
+
 <!-- Footer -->
 <div id="footer"></div>
-<script src="/js/layout-loader.js?v=13"></script>
+<script src="/js/layout-loader.js?v=14"></script>
 <script src="/js/api.js"></script>
 <script src="/js/main.js?v=5"></script>
 </body>

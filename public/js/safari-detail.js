@@ -1,5 +1,10 @@
 // safari-detail.js - Dynamic safari details page
 
+function t(key, vars) {
+    if (window.TSM_i18n && typeof window.TSM_i18n.t === 'function') return window.TSM_i18n.t(key, vars);
+    return key;
+}
+
 let currentSafari = null;
 let currentSlug = null;
 
@@ -583,13 +588,13 @@ function initQuickBookingModal() {
                     package_id: document.getElementById('preferredSafari')?.value || null
                 });
                 
-                showNotification('Enquiry sent successfully! We\'ll contact you within 24 hours.', 'success');
+                showNotification(t('detail.enquirySuccess'), 'success');
                 form.reset();
                 modal.classList.remove('show');
                 document.body.style.overflow = '';
             } catch (error) {
                 console.error('Error submitting enquiry:', error);
-                showNotification(error.message || 'Failed to send enquiry. Please try again.', 'error');
+                showNotification(error.message || t('detail.enquiryFail'), 'error');
             } finally {
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
@@ -783,13 +788,13 @@ function initQuickBookingModal() {
                     package_id: document.getElementById('preferredSafari')?.value || null
                 });
                 
-                showNotification('Enquiry sent successfully! We\'ll contact you within 24 hours.', 'success');
+                showNotification(t('detail.enquirySuccess'), 'success');
                 form.reset();
                 modal.classList.remove('show');
                 document.body.style.overflow = '';
             } catch (error) {
                 console.error('Error submitting enquiry:', error);
-                showNotification(error.message || 'Failed to send enquiry. Please try again.', 'error');
+                showNotification(error.message || t('detail.enquiryFail'), 'error');
             } finally {
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
@@ -826,10 +831,10 @@ function renderCard(pkg) {
     if (mobileBookBtn) mobileBookBtn.href = `/booking?package=${pkg.package_slug}`;
 
     const meta = [
-        { icon: 'fa-clock', label: 'Duration', value: `${pkg.duration_days} Days / ${pkg.duration_nights || pkg.duration_days - 1} Nights` },
-        { icon: 'fa-tachometer-alt', label: 'Difficulty', value: pkg.difficulty_level || 'Easy' },
+        { icon: 'fa-clock', label: t('detail.duration'), value: `${pkg.duration_days} Days / ${pkg.duration_nights || pkg.duration_days - 1} Nights` },
+        { icon: 'fa-tachometer-alt', label: t('detail.difficulty'), value: pkg.difficulty_level || 'Easy' },
         { icon: 'fa-users', label: 'Group Size', value: `${pkg.minimum_pax || 1}–${pkg.maximum_pax || 12} People` },
-        { icon: 'fa-star', label: 'Rating', value: `${parseFloat(pkg.avg_rating || 0).toFixed(1)} ★ (${pkg.review_count || 0} reviews)` },
+        { icon: 'fa-star', label: t('detail.rating'), value: `${parseFloat(pkg.avg_rating || 0).toFixed(1)} ★ (${pkg.review_count || 0} reviews)` },
     ];
     document.getElementById('cardMeta').innerHTML = meta.map(m => `
     <div class="detail-meta-row">

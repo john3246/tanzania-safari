@@ -12,14 +12,16 @@ function sendFile(res, name) {
 // ── Home ──────────────────────────────────────────────────────
 router.get('/', (req, res) => {
   try {
+    const lang = seo.parseLangFromRequest(req);
     seo.sendSeoHtml(res, 'index.html', {
-      title: 'Tanzania Safari Magic | Private Safaris from Arusha 2026',
-      description: 'Book private Tanzania safaris from Arusha: Serengeti, Ngorongoro Crater, Great Migration, Kilimanjaro climbs & Zanzibar. Local guides, free quotes, mid-range to luxury.',
+      pageKey: 'home',
       canonical: seo.SITE.url + '/',
       image: '/images/optimized/serengeti-national-park.webp',
       keywords: seo.KEYWORD_HUB.home,
       type: 'website',
-      jsonLd: [seo.websiteSchema()]
+      lang,
+      hreflangPath: '/',
+      jsonLd: [seo.websiteSchema(lang), seo.organizationSchema()]
     });
   } catch {
     sendFile(res, 'index.html');
@@ -59,8 +61,22 @@ router.get('/sitemap.xml', async (req, res) => {
     };
 
     const urlEntry = (loc, { changefreq = 'weekly', priority = '0.8', lastmod } = {}) => {
-      let xml = `<url><loc>${toLoc(loc)}</loc><changefreq>${changefreq}</changefreq><priority>${priority}</priority>`;
+      const pathPart = String(loc || '').trim();
+      const abs = toLoc(pathPart);
+      const rawPath = !pathPart || pathPart === '/' || pathPart === '' ? '/' : (pathPart.startsWith('/') ? pathPart : `/${pathPart}`);
+      const cleanUrl = rawPath === '/' ? baseUrl : `${baseUrl}${rawPath}`;
+      let xml = `<url><loc>${abs}</loc><changefreq>${changefreq}</changefreq><priority>${priority}</priority>`;
       if (lastmod) xml += `<lastmod>${new Date(lastmod).toISOString().split('T')[0]}</lastmod>`;
+      // hreflang alternates for multilingual SEO
+      const langs = seo.LOCALES || ['en', 'it', 'fr', 'es'];
+      langs.forEach((lang) => {
+        const href =
+          lang === 'en'
+            ? cleanUrl
+            : `${cleanUrl}${cleanUrl.includes('?') ? '&' : '?'}lang=${lang}`;
+        xml += `<xhtml:link rel="alternate" hreflang="${lang}" href="${escapeXml(href)}"/>`;
+      });
+      xml += `<xhtml:link rel="alternate" hreflang="x-default" href="${escapeXml(cleanUrl)}"/>`;
       xml += `</url>`;
       return xml;
     };
@@ -141,22 +157,29 @@ router.get('/sitemap.xml', async (req, res) => {
     };
 
     let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-    xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
+    xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">`;
 
     const staticPages = [
       { path: '', priority: '1.0', changefreq: 'daily' },
       { path: '/safaris', priority: '0.95', changefreq: 'daily' },
       { path: '/group-safaris', priority: '0.95', changefreq: 'daily' },
-      { path: '/kilimanjaro', priority: '0.9', changefreq: 'weekly' },
-      { path: '/migrations', priority: '0.95', changefreq: 'weekly' },
-      { path: '/zanzibar', priority: '0.9', changefreq: 'weekly' },
-      { path: '/destinations', priority: '0.9', changefreq: 'weekly' },
-      { path: '/booking', priority: '0.9', changefreq: 'monthly' },
-      { path: '/about', priority: '0.7', changefreq: 'monthly' },
-      { path: '/contact', priority: '0.85', changefreq: 'monthly' },
+      { path: '/kilimanjaro', priority: '0.98', changefreq: 'weekly' },
+      { path: '/migrations', priority: '0.98', changefreq: 'weekly' },
+      { path: '/zanzibar', priority: '0.95', changefreq: 'weekly' },
+      { path: '/destinations', priority: '0.95', changefreq: 'weekly' },
+      { path: '/destinations/serengeti-national-park', priority: '0.95', changefreq: 'weekly' },
+      { path: '/destinations/ngorongoro-conservation-area', priority: '0.95', changefreq: 'weekly' },
+      { path: '/destinations/mount-kilimanjaro-national-park', priority: '0.98', changefreq: 'weekly' },
+      { path: '/destinations/tarangire-national-park', priority: '0.85', changefreq: 'weekly' },
+      { path: '/destinations/lake-manyara-national-park', priority: '0.85', changefreq: 'weekly' },
+      { path: '/destinations/arusha-national-park', priority: '0.85', changefreq: 'weekly' },
+      { path: '/destinations/zanzibar', priority: '0.9', changefreq: 'weekly' },
+      { path: '/booking', priority: '0.92', changefreq: 'monthly' },
+      { path: '/about', priority: '0.75', changefreq: 'monthly' },
+      { path: '/contact', priority: '0.88', changefreq: 'monthly' },
       { path: '/privacy', priority: '0.4', changefreq: 'yearly' },
       { path: '/terms', priority: '0.4', changefreq: 'yearly' },
-      { path: '/blog', priority: '0.9', changefreq: 'daily' }
+      { path: '/blog', priority: '0.92', changefreq: 'daily' }
     ];
     staticPages.forEach(p => {
       xml += urlEntry(p.path, { priority: p.priority, changefreq: p.changefreq });
@@ -259,12 +282,12 @@ router.get('/unsubscribe', (req, res) => {
 router.get('/safaris', (req, res) => {
   try {
     seo.sendSeoHtml(res, 'safaris.html', {
-      title: 'Tanzania Safari Packages 2026 | Private Tours from Arusha',
-      description: 'Browse private Tanzania safari packages: Serengeti migration, Ngorongoro Crater, Kilimanjaro climbs, and bush-to-beach Zanzibar. Filter by days & budget — free quote.',
+      pageKey: 'safaris',
       canonical: seo.SITE.url + '/safaris',
       image: '/images/optimized/serengeti-national-park.webp',
       keywords: seo.KEYWORD_HUB.safaris,
-      h1: 'Tanzania Safari Packages'
+      h1: 'Tanzania Safari Packages',
+      hreflangPath: '/safaris'
     });
   } catch {
     sendFile(res, 'safaris.html');
@@ -274,12 +297,12 @@ router.get('/safaris', (req, res) => {
 router.get('/group-safaris', (req, res) => {
   try {
     seo.sendSeoHtml(res, 'group-safaris.html', {
-      title: 'Group Safaris Tanzania 2026 | Shared Open Departures',
-      description: 'Join fixed-date group safaris in Tanzania — shared costs, small groups, Serengeti & Ngorongoro. Ideal for solo travelers and couples. Calendar from Arusha.',
+      pageKey: 'group',
       canonical: seo.SITE.url + '/group-safaris',
       image: '/images/optimized/mbugani.webp',
       keywords: seo.KEYWORD_HUB.group,
-      h1: 'Open Group Safaris Tanzania'
+      h1: 'Open Group Safaris Tanzania',
+      hreflangPath: '/group-safaris'
     });
   } catch {
     sendFile(res, 'group-safaris.html');
@@ -336,8 +359,7 @@ router.get('/group-safaris/:slug', async (req, res) => {
 router.get(['/kilimanjaro', '/migrations', '/zanzibar'], (req, res) => {
   const hub = {
     '/kilimanjaro': {
-      title: 'Kilimanjaro Climb Packages 2026 | Treks from Arusha',
-      description: 'Climb Mount Kilimanjaro (5,895 m) with Tanzania Safari Magic — Machame, Lemosho & Marangu routes. Combine with Serengeti safari. Free trek quote from Arusha.',
+      pageKey: 'kilimanjaro',
       keywords: seo.KEYWORD_HUB.kilimanjaro,
       image: '/images/optimized/mount-kilimanjaro-national-park.webp',
       h1: 'Kilimanjaro Climbs & Treks',
@@ -345,17 +367,15 @@ router.get(['/kilimanjaro', '/migrations', '/zanzibar'], (req, res) => {
       crumb: 'Kilimanjaro'
     },
     '/migrations': {
-      title: 'Great Wildebeest Migration Safaris 2026 | Serengeti',
-      description: 'Witness the Great Migration in Serengeti — calving, Grumeti & Mara River crossings. Private migration safari packages timed to the herds from Arusha.',
-      keywords: 'great wildebeest migration, serengeti migration safari, mara river crossing, ndutu calving',
+      pageKey: 'migrations',
+      keywords: 'great wildebeest migration, serengeti migration safari, mara river crossing, ndutu calving, tanzania tourism',
       image: '/images/optimized/8-day-northern-serengeti-mara-river-crossing.webp',
       h1: 'Great Migration Safaris',
       eyebrow: 'Wildebeest Migration',
       crumb: 'Migrations'
     },
     '/zanzibar': {
-      title: 'Zanzibar Safari Packages | Bush to Beach Tanzania',
-      description: 'Combine Serengeti or Ngorongoro with Zanzibar beaches — spice island extensions, Stone Town, and private bush-to-beach packages from Tanzania Safari Magic.',
+      pageKey: 'zanzibar',
       keywords: 'zanzibar safari package, bush to beach tanzania, safari and zanzibar, spice island holiday',
       image: '/images/zanzibar/zanzibar%20(1).jpeg',
       h1: 'Zanzibar Beach Extensions',
@@ -368,13 +388,15 @@ router.get(['/kilimanjaro', '/migrations', '/zanzibar'], (req, res) => {
     seo.sendSeoHtml(res, 'safari-hub.html', {
       ...meta,
       canonical: seo.SITE.url + req.path,
+      hreflangPath: req.path,
       type: 'website',
       jsonLd: [
         seo.breadcrumbSchema([
           { name: 'Home', url: '/' },
           { name: 'Safaris', url: '/safaris' },
           { name: meta.h1, url: req.path }
-        ])
+        ]),
+        seo.organizationSchema()
       ]
     });
   } catch {
@@ -430,12 +452,12 @@ router.get('/safaris/:slug', async (req, res) => {
 router.get('/destinations', (req, res) => {
   try {
     seo.sendSeoHtml(res, 'destinations.html', {
-      title: 'Tanzania Destinations | Serengeti, Ngorongoro, Kilimanjaro & Zanzibar',
-      description: 'Explore Tanzania safari destinations: Serengeti National Park, Ngorongoro Crater, Kilimanjaro climbs, Tarangire, Manyara, Arusha National Park, and Zanzibar beaches.',
+      pageKey: 'destinations',
       canonical: seo.SITE.url + '/destinations',
       image: '/images/optimized/balloon.webp',
       keywords: seo.KEYWORD_HUB.destinations,
-      h1: 'Tanzania Safari Destinations'
+      h1: 'Tanzania Safari Destinations',
+      hreflangPath: '/destinations'
     });
   } catch {
     sendFile(res, 'destinations.html');
@@ -499,11 +521,10 @@ router.get('/destinations/:slug', async (req, res) => {
 router.get('/about', (req, res) => {
   try {
     seo.sendSeoHtml(res, 'about.html', {
-      title: 'About Tanzania Safari Magic | Local Safari Experts in Arusha',
-      description: 'Meet Tanzania Safari Magic — Arusha-based safari specialists for private Serengeti, Ngorongoro, Kilimanjaro & Zanzibar trips. Local knowledge, honest quotes.',
+      pageKey: 'about',
       canonical: seo.SITE.url + '/about',
       image: '/images/logo.png',
-      keywords: 'tanzania safari magic, safari operator arusha, local tanzania tour company'
+      hreflangPath: '/about'
     });
   } catch {
     sendFile(res, 'about.html');
@@ -513,10 +534,10 @@ router.get('/about', (req, res) => {
 router.get('/privacy', (req, res) => {
   try {
     seo.sendSeoHtml(res, 'privacy.html', {
-      title: 'Privacy Policy | Tanzania Safari Magic',
-      description: 'How Tanzania Safari Magic collects and uses enquiry, booking, and analytics data for safari quotes from Arusha.',
+      pageKey: 'privacy',
       canonical: seo.SITE.url + '/privacy',
-      robots: 'index, follow'
+      robots: 'index, follow',
+      hreflangPath: '/privacy'
     });
   } catch {
     sendFile(res, 'privacy.html');
@@ -526,10 +547,10 @@ router.get('/privacy', (req, res) => {
 router.get('/terms', (req, res) => {
   try {
     seo.sendSeoHtml(res, 'terms.html', {
-      title: 'Terms of Service | Tanzania Safari Magic',
-      description: 'Terms for safari quote requests, deposits, cancellations, and travel with Tanzania Safari Magic from Arusha.',
+      pageKey: 'terms',
       canonical: seo.SITE.url + '/terms',
-      robots: 'index, follow'
+      robots: 'index, follow',
+      hreflangPath: '/terms'
     });
   } catch {
     sendFile(res, 'terms.html');
@@ -539,10 +560,9 @@ router.get('/terms', (req, res) => {
 router.get('/contact', (req, res) => {
   try {
     seo.sendSeoHtml(res, 'contact.html', {
-      title: 'Contact Us | Tanzania Safari Magic Arusha (+255 695 108 009)',
-      description: 'Contact Tanzania Safari Magic in Arusha — WhatsApp +255 695 108 009, email info@tanzaniasafarimagic.com. Free safari quotes for Serengeti, Ngorongoro & Zanzibar.',
+      pageKey: 'contact',
       canonical: seo.SITE.url + '/contact',
-      keywords: 'contact tanzania safari, safari quote arusha, whatsapp safari tanzania'
+      hreflangPath: '/contact'
     });
   } catch {
     sendFile(res, 'contact.html');
@@ -552,11 +572,11 @@ router.get('/contact', (req, res) => {
 router.get('/booking', (req, res) => {
   try {
     seo.sendSeoHtml(res, 'booking.html', {
-      title: 'Request a Tanzania Safari Quote | Free from Arusha',
-      description: 'Request a free private Tanzania safari quote — Serengeti, Ngorongoro, migration, Kilimanjaro & Zanzibar. No online payment — Our Team replies within 24 hours.',
+      pageKey: 'booking',
       canonical: seo.SITE.url + '/booking',
       keywords: seo.KEYWORD_HUB.booking,
-      h1: 'Request Your Tanzania Safari Quote'
+      h1: 'Request Your Tanzania Safari Quote',
+      hreflangPath: '/booking'
     });
   } catch {
     sendFile(res, 'booking.html');
@@ -566,12 +586,12 @@ router.get('/booking', (req, res) => {
 router.get('/blog', (req, res) => {
   try {
     seo.sendSeoHtml(res, 'blog.html', {
-      title: 'Tanzania Safari Blog & Guides 2026 | Tips from Arusha',
-      description: 'Expert Tanzania safari guides: best time to visit, safari costs, Great Migration, Serengeti, Ngorongoro, Zanzibar & Arusha National Park — from local Arusha experts.',
+      pageKey: 'blog',
       canonical: seo.SITE.url + '/blog',
       image: '/images/optimized/balloon.webp',
       keywords: seo.KEYWORD_HUB.blog,
-      h1: 'Tanzania Safari Guides & Blog'
+      h1: 'Tanzania Safari Guides & Blog',
+      hreflangPath: '/blog'
     });
   } catch {
     sendFile(res, 'blog.html');

@@ -24,6 +24,14 @@
 
   function getStoredLang() {
     try {
+      var params = new URLSearchParams(window.location.search || '');
+      var q = (params.get('lang') || '').toLowerCase();
+      if (q && SUPPORTED.indexOf(q) !== -1) {
+        try {
+          localStorage.setItem(STORAGE_KEY, q);
+        } catch (_) {}
+        return q;
+      }
       var stored = localStorage.getItem(STORAGE_KEY);
       if (stored && SUPPORTED.indexOf(stored) !== -1) return stored;
     } catch (_) {}
@@ -135,6 +143,19 @@
         if (lang === 'en') state._en = dict;
         applyTranslations(document);
         updateSwitcherUI();
+        try {
+          // Keep shareable ?lang= URLs in sync for SEO / hreflang
+          var url = new URL(window.location.href);
+          if (lang === 'en') url.searchParams.delete('lang');
+          else url.searchParams.set('lang', lang);
+          var next = url.pathname + url.search + url.hash;
+          if (next !== window.location.pathname + window.location.search + window.location.hash) {
+            window.history.replaceState({}, '', next);
+          }
+        } catch (_) {}
+        try {
+          document.cookie = 'tsm_lang=' + lang + ';path=/;max-age=31536000;SameSite=Lax';
+        } catch (_) {}
         try {
           document.dispatchEvent(
             new CustomEvent('tsm:languagechange', { detail: { lang: lang, prev: prev } })

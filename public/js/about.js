@@ -1,6 +1,14 @@
 // about.js - Zara-inspired About page for Tanzania Safari Magic
 
+function t(key, vars) {
+    if (window.TSM_i18n && typeof window.TSM_i18n.t === 'function') return window.TSM_i18n.t(key, vars);
+    return key;
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        if (window.TSM_i18n && window.TSM_i18n.ready) await window.TSM_i18n.ready;
+    } catch (_) {}
     await loadAboutContent();
     await loadTeamMembers();
     await loadBlogPosts();
@@ -34,20 +42,21 @@ async function loadAboutContent() {
         console.warn('About CMS content unavailable, using defaults');
     }
 
-    const story = company || `Tanzania Safari Magic is an Arusha-based tour operator specializing in private safari experiences and adventure travel across Tanzania. Founded with a passion for wildlife and community tourism, we craft bespoke itineraries that create employment for local guides while sharing the natural beauty and cultural richness of East Africa.`;
+    const story = company || t('about.defaultStory');
+    const missionText = mission || t('about.defaultMission');
+    const visionText = vision || t('about.defaultVision');
 
     mainContent.innerHTML = `
     <section class="zara-about">
       <div class="container">
         <nav class="zara-crumb" aria-label="Breadcrumb">
-          <a href="/">Home</a> <span>›</span> <span>About Tanzania Safari Magic</span>
+          <a href="/">${escapeHtml(t('common.home'))}</a> <span>›</span> <span>${escapeHtml(t('about.crumbAbout'))}</span>
         </nav>
 
         <p class="zara-intro">
           ${escapeHtml(story)}
-          Tanzania Safari Magic offers a variety of
-          <a href="/safaris">safari</a> and adventure experiences that allow visitors to explore the natural beauty and cultural richness of Tanzania.
-          Here are some of the experiences we offer:
+          ${t('about.introOffer')}
+          ${escapeHtml(t('about.experiencesIntro'))}
         </p>
 
         <div class="zara-split">
@@ -68,54 +77,45 @@ async function loadAboutContent() {
             <article class="zara-service">
               <div class="zara-service-icon"><i class="fas fa-paw"></i></div>
               <div>
-                <h2>Wildlife Safaris</h2>
-                <p>Private game drives across
-                  <a href="/destinations/serengeti-national-park">Serengeti</a>,
-                  <a href="/destinations/ngorongoro-conservation-area">Ngorongoro</a>,
-                  <a href="/destinations/tarangire-national-park">Tarangire</a>, and
-                  <a href="/destinations/lake-manyara-national-park">Lake Manyara</a>.
-                  Spot the Big Five plus giraffes, zebras, wildebeest, and hippos with expert local guides.</p>
+                <h2>${escapeHtml(t('about.wildlifeTitle'))}</h2>
+                <p>${t('about.wildlifeDesc')}</p>
               </div>
             </article>
             <article class="zara-service">
               <div class="zara-service-icon"><i class="fas fa-mountain"></i></div>
               <div>
-                <h2>Mountain Climbing</h2>
-                <p>Guided treks on
-                  <a href="/destinations/mount-kilimanjaro-national-park">Mount Kilimanjaro</a>
-                  — Africa’s highest peak — plus Mount Meru routes for acclimatization and adventure seekers.</p>
+                <h2>${escapeHtml(t('about.mountainTitle'))}</h2>
+                <p>${t('about.mountainDesc')}</p>
               </div>
             </article>
             <article class="zara-service">
               <div class="zara-service-icon"><i class="fas fa-users"></i></div>
               <div>
-                <h2>Cultural Tours</h2>
-                <p>Authentic visits with Maasai, Hadzabe, and Chaga communities — villages, markets, and living traditions woven into your safari.</p>
+                <h2>${escapeHtml(t('about.culturalTitle'))}</h2>
+                <p>${escapeHtml(t('about.culturalDesc'))}</p>
               </div>
             </article>
             <article class="zara-service">
               <div class="zara-service-icon"><i class="fas fa-umbrella-beach"></i></div>
               <div>
-                <h2>Beach Holidays</h2>
-                <p>Bush-to-beach extensions in
-                  <a href="/destinations/zanzibar">Zanzibar</a>
-                  and coastal Tanzania — white sand, turquoise water, snorkeling, and spice culture after your safari.</p>
+                <h2>${escapeHtml(t('about.beachTitle'))}</h2>
+                <p>${t('about.beachDesc')}</p>
               </div>
             </article>
             <p class="zara-sustain">
-              <strong>Sustainable Tourism:</strong> We partner with locally owned lodges, employ Tanzanian guides, and support conservation where we operate — so your journey benefits communities and wildlife.
+              <strong>${escapeHtml(t('about.sustainableTitle'))}</strong> ${escapeHtml(t('about.sustainableDesc'))}
             </p>
           </div>
         </div>
 
         <div class="zara-mv-grid">
           <a href="/about#mission" class="zara-mv-card" id="mission">
-            <span class="zara-mv-label">Mission</span>
-            <p>“${escapeHtml(mission || 'Our mission is to provide quality sustainable safari services and support responsible tourism by ensuring local community development and environmental sustainability across Tanzania.')}”</p>
+            <span class="zara-mv-label">${escapeHtml(t('about.mission'))}</span>
+            <p>“${escapeHtml(missionText)}”</p>
           </a>
           <a href="/about#vision" class="zara-mv-card vision" id="vision">
-            <span class="zara-mv-label">Vision</span>
-            <p>“${escapeHtml(vision || 'Our vision is to become East Africa’s most trusted private safari operator — delivering exceptional, safe, and unforgettable journeys from Arusha.')}”</p>
+            <span class="zara-mv-label">${escapeHtml(t('about.vision'))}</span>
+            <p>“${escapeHtml(visionText)}”</p>
           </a>
         </div>
 
@@ -123,8 +123,8 @@ async function loadAboutContent() {
           <h2>Hotel Accommodation &amp; Holiday Villas</h2>
           <p>We arrange quality mid-range to luxury lodges, boutique hotels, and beach resorts across Tanzania’s parks and coasts — always tailored to your interests, pacing, and budget.</p>
           <div class="zara-cta-row">
-            <a href="/booking" class="btn btn-primary" style="min-height:48px"><i class="fas fa-calendar-check"></i> Get a Free Quote</a>
-            <a href="https://wa.me/255695108009?text=Hi%20Tanzania%20Safari%20Magic%2C%20I%27m%20interested%20in%20booking%20a%20custom%20safari%20package..." class="btn btn-outline" target="_blank" rel="noopener" style="min-height:48px"><i class="fab fa-whatsapp"></i> WhatsApp Us</a>
+            <a href="/booking" class="btn btn-primary" style="min-height:48px"><i class="fas fa-calendar-check"></i> ${escapeHtml(t('about.bookCta'))}</a>
+            <a href="https://wa.me/255695108009?text=Hi%20Tanzania%20Safari%20Magic%2C%20I%27m%20interested%20in%20booking%20a%20custom%20safari%20package..." class="btn btn-outline" target="_blank" rel="noopener" style="min-height:48px"><i class="fab fa-whatsapp"></i> ${escapeHtml(t('about.contactCta'))}</a>
           </div>
         </div>
 
@@ -172,7 +172,7 @@ function initZaraGallery() {
             const src = btn.getAttribute('data-src');
             if (!src) return;
             main.src = src;
-            thumbs.forEach(t => t.classList.remove('active'));
+            thumbs.forEach(el => el.classList.remove('active'));
             btn.classList.add('active');
         });
     });
@@ -187,7 +187,7 @@ async function loadTeamMembers() {
         wrap.className = 'container';
         wrap.style.paddingBottom = '3rem';
         wrap.innerHTML = `
-          <h2 class="zara-section-title" style="margin-bottom:1.5rem">Meet Our Expert Team</h2>
+          <h2 class="zara-section-title" style="margin-bottom:1.5rem">${escapeHtml(t('about.meetTeam'))}</h2>
           <div class="zara-people-grid">
             ${result.data.map(member => {
                 const fullName = `${member.first_name || ''} ${member.last_name || ''}`.trim() || 'Team Member';
@@ -224,7 +224,7 @@ async function loadBlogPosts() {
                   <div class="body">
                     <h3>${escapeHtml(p.post_title)}</h3>
                     <p class="excerpt">${escapeHtml(p.post_excerpt || '')}</p>
-                    <span class="blog-card-link">Read Articles <i class="fas fa-arrow-right"></i></span>
+                    <span class="blog-card-link">${escapeHtml(t('about.readGuides'))} <i class="fas fa-arrow-right"></i></span>
                   </div>
                 </a>`).join('')}
             </div>

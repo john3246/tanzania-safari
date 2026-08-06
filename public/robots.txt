@@ -8,6 +8,12 @@ Allow: /blog/
 Allow: /safaris/
 Allow: /destinations/
 Allow: /group-safaris/
+Allow: /kilimanjaro
+Allow: /migrations
+Allow: /zanzibar
+Allow: /booking
+Allow: /contact
+Allow: /about
 
 # Keep admin and API out of the public index
 Disallow: /admin
@@ -15,8 +21,9 @@ Disallow: /admin/
 Disallow: /api/
 Disallow: /health
 Disallow: /thank-you
+Disallow: /unsubscribe
 
-# Primary crawl targets (high-value keyword pages)
+# Primary crawl targets (high-value Tanzania tourism keywords)
 Allow: /blog/tanzania-safari
 Allow: /blog/tanzania-safari-cost
 Allow: /blog/best-time-to-visit-tanzania
@@ -24,15 +31,31 @@ Allow: /blog/great-wildebeest-migration
 Allow: /blog/serengeti-national-park
 Allow: /blog/ngorongoro-crater
 Allow: /blog/zanzibar-guide
+Allow: /blog/arusha-national-park
+Allow: /destinations/serengeti-national-park
+Allow: /destinations/ngorongoro-conservation-area
 Allow: /destinations/mount-kilimanjaro-national-park
+Allow: /destinations/tarangire-national-park
+Allow: /destinations/lake-manyara-national-park
+Allow: /destinations/arusha-national-park
+Allow: /destinations/zanzibar
 Allow: /kilimanjaro
+Allow: /migrations
+Allow: /zanzibar
 
 Allow: /llms.txt
+Allow: /sitemap.xml
+Allow: /locales/
 
 Sitemap: https://tanzaniasafarimagic.com/sitemap.xml
 
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 0
 
 User-agent: Bingbot
 Allow: /
+
+User-agent: Googlebot-Image
+Allow: /images/
+Allow: /uploads/
