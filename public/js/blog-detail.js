@@ -1,7 +1,19 @@
 /**
  * Editorial blog detail — pillar guides + CMS posts
  * Author byline: John Raphael Shayo · CTAs: Our Team
+ * Requires: guide-i18n.js loaded BEFORE this file (from blog-detail.html)
  */
+function t(key, vars) {
+  if (window.TSM_i18n && typeof window.TSM_i18n.t === 'function') return window.TSM_i18n.t(key, vars);
+  return key;
+}
+
+function localeTag() {
+  const lang = (window.TSM_i18n && window.TSM_i18n.getLanguage && window.TSM_i18n.getLanguage()) || 'en';
+  const map = { en: 'en-GB', it: 'it-IT', fr: 'fr-FR', es: 'es-ES' };
+  return map[lang] || 'en-GB';
+}
+
 const DEFAULT_AUTHOR = 'John Raphael Shayo';
 const TEAM_WHATSAPP =
   'https://wa.me/255695108009?text=Hi%20Tanzania%20Safari%20Magic%20team%2C%20I%27d%20like%20help%20planning%20a%20safari.';
@@ -17,22 +29,22 @@ const PILLAR_SLUGS = {
   'best-time-to-visit-tanzania': 'BestTimeToVisitTanzaniaGuide'
 };
 
-const RELATED_PILLARS = [
-  { slug: 'tanzania-safari', label: 'Ultimate Safari Guide' },
-  { slug: 'best-time-to-visit-tanzania', label: 'Best Time to Visit' },
-  { slug: 'tanzania-safari-cost', label: 'Safari Cost 2026' },
-  { slug: 'great-wildebeest-migration', label: 'Great Migration' },
-  { slug: 'serengeti-national-park', label: 'Serengeti Guide' },
-  { slug: 'ngorongoro-crater', label: 'Ngorongoro Crater' },
-  { slug: 'arusha-national-park', label: 'Arusha National Park' },
-  { slug: 'zanzibar-guide', label: 'Zanzibar Guide' }
+const RELATED_PILLAR_KEYS = [
+  { slug: 'tanzania-safari', key: 'blogDetail.pillar.ultimateSafari' },
+  { slug: 'best-time-to-visit-tanzania', key: 'blogDetail.pillar.bestTime' },
+  { slug: 'tanzania-safari-cost', key: 'blogDetail.pillar.cost2026' },
+  { slug: 'great-wildebeest-migration', key: 'blogDetail.pillar.migration' },
+  { slug: 'serengeti-national-park', key: 'blogDetail.pillar.serengeti' },
+  { slug: 'ngorongoro-crater', key: 'blogDetail.pillar.ngorongoro' },
+  { slug: 'arusha-national-park', key: 'blogDetail.pillar.arusha' },
+  { slug: 'zanzibar-guide', key: 'blogDetail.pillar.zanzibar' }
 ];
 
 function relatedGuidesHtml(currentSlug) {
-  return RELATED_PILLARS
+  return RELATED_PILLAR_KEYS
     .filter(p => p.slug !== currentSlug)
     .slice(0, 6)
-    .map(p => `<li><a href="/blog/${p.slug}">${p.label}</a></li>`)
+    .map(p => `<li><a href="/blog/${p.slug}">${escapeHtml(t(p.key))}</a></li>`)
     .join('');
 }
 
@@ -42,6 +54,10 @@ function getGuide(slug) {
 }
 
 async function loadPost() {
+  try {
+    if (window.TSM_i18n && window.TSM_i18n.ready) await window.TSM_i18n.ready;
+  } catch (_) {}
+
   const slug = window.location.pathname.split('/').filter(Boolean).pop();
   const container = document.getElementById('postContainer');
   if (!container) return;
@@ -54,7 +70,11 @@ async function loadPost() {
     data = null;
   }
 
-  const guide = getGuide(slug);
+  let guide = getGuide(slug);
+  if (guide && window.TSM_guideI18n && typeof window.TSM_guideI18n.localizeGuide === 'function') {
+    guide = await window.TSM_guideI18n.localizeGuide(guide);
+  }
+
   if (guide) {
     data = {
       ...(data || {}),
@@ -79,8 +99,8 @@ async function loadPost() {
   if (!data || !data.post_title) {
     container.innerHTML = `
       <div style="grid-column:1/-1;text-align:center;padding:4rem 1rem">
-        <h1>Post not found</h1>
-        <p><a href="/blog">Back to Blog</a> · <a href="/blog/tanzania-safari">Ultimate Guide</a> · <a href="/blog/best-time-to-visit-tanzania">Best Time</a> · <a href="/blog/serengeti-national-park">Serengeti</a></p>
+        <h1>${escapeHtml(t('blogDetail.postNotFound'))}</h1>
+        <p><a href="/blog">${escapeHtml(t('blogDetail.backToBlog'))}</a> · <a href="/blog/tanzania-safari">${escapeHtml(t('blogDetail.ultimateGuide'))}</a> · <a href="/blog/best-time-to-visit-tanzania">${escapeHtml(t('blogDetail.bestTime'))}</a> · <a href="/blog/serengeti-national-park">${escapeHtml(t('blogDetail.serengeti'))}</a></p>
       </div>`;
     return;
   }
@@ -96,10 +116,8 @@ async function loadPost() {
   const updated = data.updated_at || data.published_at;
   const gAuthor = data._guide?.AUTHOR || data._guide?.TEAM || {};
   const teamName = gAuthor.displayName || 'Our Team';
-  const teamRole = gAuthor.role || 'Safari Specialists · Arusha';
-  const teamBio =
-    gAuthor.bio ||
-    'Tanzania Safari Magic’s Arusha team designs private mid-range and luxury safaris across Serengeti, Ngorongoro, Tarangire, Kilimanjaro, and Zanzibar.';
+  const teamRole = gAuthor.role || t('blogDetail.defaultTeamRole');
+  const teamBio = gAuthor.bio || t('blogDetail.defaultTeamBio');
   const teamWa = gAuthor.whatsapp || TEAM_WHATSAPP;
   const keywords =
     data.keywords ||
@@ -136,15 +154,15 @@ async function loadPost() {
   container.innerHTML = `
     <article class="blog-article-main">
       <nav class="blog-crumb" aria-label="Breadcrumb">
-        <a href="/">Home</a><span>/</span><a href="/blog">Blog</a><span>/</span><span>${escapeHtml(title.slice(0, 42))}${title.length > 42 ? '…' : ''}</span>
+        <a href="/">${escapeHtml(t('blogDetail.home'))}</a><span>/</span><a href="/blog">${escapeHtml(t('blogDetail.blog'))}</a><span>/</span><span>${escapeHtml(title.slice(0, 42))}${title.length > 42 ? '…' : ''}</span>
       </nav>
       <h1 class="blog-h1">${escapeHtml(title)}</h1>
       <div class="blog-byline">
-        <span>By <a href="/about">${escapeHtml(author)}</a></span>
-        <span>Last updated: ${fmtDate(updated)}</span>
+        <span>${escapeHtml(t('blogDetail.by'))} <a href="/about">${escapeHtml(author)}</a></span>
+        <span>${escapeHtml(t('blogDetail.lastUpdated'))} ${fmtDate(updated)}</span>
         ${data.category_name ? `<span>${escapeHtml(data.category_name)}</span>` : ''}
       </div>
-      <p class="blog-disclaimer">Planning tips from Tanzania Safari Magic in Arusha. Package availability and park fees change seasonally — request a live quote for your dates.</p>
+      <p class="blog-disclaimer">${escapeHtml(t('blogDetail.disclaimer'))}</p>
 
       ${!data._isGuide ? `
         <figure class="guide-figure">
@@ -154,36 +172,36 @@ async function loadPost() {
       <div class="blog-prose" id="articleBody">${content}</div>
 
       <div class="blog-share-row">
-        <a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}" target="_blank" rel="noopener" aria-label="Share on Facebook"><i class="fab fa-facebook-f"></i></a>
-        <a class="share-btn" href="https://twitter.com/intent/tweet?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(title)}" target="_blank" rel="noopener" aria-label="Share on X"><i class="fab fa-twitter"></i></a>
-        <a class="share-btn" href="https://wa.me/?text=${encodeURIComponent(title + ' ' + location.href)}" target="_blank" rel="noopener" aria-label="Share on WhatsApp"><i class="fab fa-whatsapp"></i></a>
-        <a class="btn btn-primary" href="/booking" style="min-height:48px;margin-left:auto"><i class="fas fa-calendar-check"></i> Get Free Quote</a>
+        <a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}" target="_blank" rel="noopener" aria-label="${escapeHtml(t('blogDetail.shareFacebook'))}"><i class="fab fa-facebook-f"></i></a>
+        <a class="share-btn" href="https://twitter.com/intent/tweet?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(title)}" target="_blank" rel="noopener" aria-label="${escapeHtml(t('blogDetail.shareX'))}"><i class="fab fa-twitter"></i></a>
+        <a class="share-btn" href="https://wa.me/?text=${encodeURIComponent(title + ' ' + location.href)}" target="_blank" rel="noopener" aria-label="${escapeHtml(t('blogDetail.shareWhatsApp'))}"><i class="fab fa-whatsapp"></i></a>
+        <a class="btn btn-primary" href="/booking" style="min-height:48px;margin-left:auto"><i class="fas fa-calendar-check"></i> ${escapeHtml(t('blogDetail.getFreeQuote'))}</a>
       </div>
     </article>
 
     <aside class="blog-sidebar">
       <div class="author-card blog-team-card">
-        <img src="${gAuthor.image || '/images/logo.png'}" alt="Tanzania Safari Magic Our Team" width="300" height="300" loading="lazy">
+        <img src="${gAuthor.image || '/images/logo.png'}" alt="${escapeHtml(t('blogDetail.teamAlt'))}" width="300" height="300" loading="lazy">
         <h3>${escapeHtml(teamName)}</h3>
         <div class="role">${escapeHtml(teamRole)}</div>
         <p>${escapeHtml(teamBio)}</p>
         <div class="author-social">
-          <a class="btn btn-primary" href="${teamWa}" target="_blank" rel="noopener" style="min-height:48px;width:100%;justify-content:center"><i class="fab fa-whatsapp"></i> WhatsApp Our Team</a>
-          <a class="btn btn-outline" href="/booking" style="min-height:48px;width:100%;justify-content:center">Free Safari Quote</a>
-          <a class="btn btn-outline" href="/safaris" style="min-height:48px;width:100%;justify-content:center">All Packages</a>
+          <a class="btn btn-primary" href="${teamWa}" target="_blank" rel="noopener" style="min-height:48px;width:100%;justify-content:center"><i class="fab fa-whatsapp"></i> ${escapeHtml(t('blogDetail.whatsappTeam'))}</a>
+          <a class="btn btn-outline" href="/booking" style="min-height:48px;width:100%;justify-content:center">${escapeHtml(t('blogDetail.freeSafariQuote'))}</a>
+          <a class="btn btn-outline" href="/safaris" style="min-height:48px;width:100%;justify-content:center">${escapeHtml(t('blogDetail.allPackages'))}</a>
         </div>
       </div>
       <div class="author-card" style="background:#fff">
-        <h3 style="font-size:1rem;margin-bottom:0.75rem">Plan &amp; Explore</h3>
+        <h3 style="font-size:1rem;margin-bottom:0.75rem">${escapeHtml(t('blogDetail.planExplore'))}</h3>
         <ul style="margin:0;padding-left:1.1rem;line-height:1.9;font-size:0.92rem">
           ${relatedGuides}
-          <li><a href="/destinations/serengeti-national-park">Serengeti</a></li>
-          <li><a href="/destinations/ngorongoro-conservation-area">Ngorongoro</a></li>
-          <li><a href="/destinations/tarangire-national-park">Tarangire</a></li>
-          <li><a href="/destinations/zanzibar">Zanzibar</a></li>
-          <li><a href="/safaris">All Safari Packages</a></li>
-          <li><a href="/destinations">Tour Destinations</a></li>
-          <li><a href="/booking">Inquire / Book</a></li>
+          <li><a href="/destinations/serengeti-national-park">${escapeHtml(t('blogDetail.serengeti'))}</a></li>
+          <li><a href="/destinations/ngorongoro-conservation-area">${escapeHtml(t('blogDetail.ngorongoro'))}</a></li>
+          <li><a href="/destinations/tarangire-national-park">${escapeHtml(t('blogDetail.tarangire'))}</a></li>
+          <li><a href="/destinations/zanzibar">${escapeHtml(t('blogDetail.zanzibar'))}</a></li>
+          <li><a href="/safaris">${escapeHtml(t('blogDetail.allSafariPackages'))}</a></li>
+          <li><a href="/destinations">${escapeHtml(t('blogDetail.tourDestinations'))}</a></li>
+          <li><a href="/booking">${escapeHtml(t('blogDetail.inquireBook'))}</a></li>
         </ul>
       </div>
     </aside>
@@ -212,28 +230,30 @@ async function injectPackageCards() {
   if (!packages.length) return;
 
   const section = `
-    <h2 id="packages">Recommended Safari Packages</h2>
-    <p>These live itineraries from Tanzania Safari Magic pair well with this guide. Tap any package for full day-by-day details, then request a custom quote from Our Team.</p>
+    <h2 id="packages">${escapeHtml(t('blogDetail.recommendedPackages'))}</h2>
+    <p>${escapeHtml(t('blogDetail.recommendedIntro'))}</p>
     <div class="guide-pkg-grid">
       ${packages.slice(0, 6).map(p => {
         const slug = p.package_slug || p.slug;
-        const name = p.package_name || p.name || 'Safari Package';
+        const name = p.package_name || p.name || t('blogDetail.safariPackage');
         const img = imgSrc(p.featured_image_url || p.image_url || p.image_urls?.[0], '/images/optimized/balloon.webp');
-        const days = p.duration_days ? `${p.duration_days} days` : '';
-        const price = p.base_price_usd ? `From $${Number(p.base_price_usd).toLocaleString()}` : 'Request quote';
+        const days = p.duration_days ? t('blogDetail.days', { n: p.duration_days }) : '';
+        const price = p.base_price_usd
+          ? t('blogDetail.fromPrice', { amount: Number(p.base_price_usd).toLocaleString() })
+          : t('blogDetail.requestQuote');
         return `
           <a class="guide-pkg-card" href="/safaris/${slug}">
             <img src="${img}" alt="${escapeHtml(name)}" width="480" height="300" loading="lazy" decoding="async"
                  onerror="this.src='/images/optimized/balloon.webp'">
             <div class="body">
-              <div class="meta">${days}</div>
+              <div class="meta">${escapeHtml(days)}</div>
               <h3>${escapeHtml(name)}</h3>
-              <div class="price">${price} <span style="font-weight:500;color:#888;font-size:0.8rem">pp</span></div>
+              <div class="price">${escapeHtml(price)} <span style="font-weight:500;color:#888;font-size:0.8rem">${escapeHtml(t('blogDetail.pp'))}</span></div>
             </div>
           </a>`;
       }).join('')}
     </div>
-    <p><a href="/safaris">View all Tanzania safari packages →</a></p>
+    <p><a href="/safaris">${escapeHtml(t('blogDetail.viewAllPackages'))}</a></p>
   `;
 
   if (anchor) {
@@ -305,7 +325,7 @@ function ensureMeta(attr, key, content) {
 
 function fmtDate(d) {
   if (!d) return '';
-  return new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  return new Date(d).toLocaleDateString(localeTag(), { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
 function imgSrc(src, fallback = '/images/optimized/balloon.webp') {
@@ -331,4 +351,6 @@ function boot() {
   }
   loadPost();
 }
+
+document.addEventListener('tsm:languagechange', () => boot());
 boot();

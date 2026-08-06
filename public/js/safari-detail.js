@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (window.BookingHandler) {
         window.BookingHandler.initBookingButtons();
     }
+    if (window.TSM_i18n && window.TSM_i18n.ready) await window.TSM_i18n.ready;
     // Get slug from URL
     currentSlug = getSlugFromUrl();
     console.log('Loading safari with slug:', currentSlug);
@@ -26,7 +27,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (currentSlug) {
         await loadSafariDetails(currentSlug);
     } else {
-        showError('No safari specified');
+        showError(t('safariDetail.noSafari'));
     }
 });
 
@@ -102,12 +103,12 @@ function buildGallery(mediaItems) {
     }
     const mainImg = mediaItems[0];
     const mainImgUrl = typeof mainImg === 'string' ? mainImg : mainImg.file_url;
-    let html = `<div class="gallery-main" onclick="openLightbox('${mainImgUrl}')"><img src="${mainImgUrl}" alt="${mainImg.alt_text || 'Safari image'}" loading="lazy" decoding="async" onerror="this.src='/images/optimized/balloon.webp'"></div>`;
+    let html = `<div class="gallery-main" onclick="openLightbox('${mainImgUrl}')"><img src="${mainImgUrl}" alt="${mainImg.alt_text || t('safariDetail.safariImage')}" loading="lazy" decoding="async" onerror="this.src='/images/optimized/balloon.webp'"></div>`;
     if (mediaItems.length > 1) {
         html += '<div class="gallery-thumbs">';
         for (let i = 1; i < Math.min(mediaItems.length, 5); i++) {
             const thumbUrl = typeof mediaItems[i] === 'string' ? mediaItems[i] : mediaItems[i].file_url;
-            html += `<div class="gallery-thumb" onclick="setGalleryMain('${thumbUrl}')"><img src="${thumbUrl}" alt="Thumbnail ${i}" loading="lazy" decoding="async" onerror="this.src='/images/optimized/balloon.webp'"></div>`;
+            html += `<div class="gallery-thumb" onclick="setGalleryMain('${thumbUrl}')"><img src="${thumbUrl}" alt="${t('safariDetail.thumbnail', { n: i })}" loading="lazy" decoding="async" onerror="this.src='/images/optimized/balloon.webp'"></div>`;
         }
         html += '</div>';
     }
@@ -153,11 +154,11 @@ async function loadSafariDetails(slug) {
             }
         } else {
             document.getElementById('loadingState').style.display = 'none';
-            showError('Safari package not found');
+            showError(t('safariDetail.notFound'));
         }
     } catch (error) {
         console.error('Error loading safari details:', error);
-        document.getElementById('loadingState').innerHTML = '<p style="color:var(--error)">Failed to load details.</p>';
+        document.getElementById('loadingState').innerHTML = '<p style="color:var(--error)">' + escapeHtml(t('safariDetail.loadFail')) + '</p>';
     }
 }
 
@@ -182,7 +183,7 @@ function renderSafariDetails(safari) {
     const heroBadge = document.getElementById('heroBadge');
     if(heroBadge) {
         let badges = [];
-        if(safari.is_featured) badges.push('<span class="badge" style="background:var(--accent);color:#fff"><i class="fas fa-star"></i> Featured</span>');
+        if(safari.is_featured) badges.push('<span class="badge" style="background:var(--accent);color:#fff"><i class="fas fa-star"></i> ' + escapeHtml(t('safariDetail.featured')) + '</span>');
         badges.push(
             '<a href="' + escapeHtml(hub.path) + '" class="badge" style="background:var(--primary);color:#fff;text-decoration:none"><i class="fas fa-tag"></i> ' +
             escapeHtml(safari.category_name || hub.label) + '</a>'
@@ -191,18 +192,18 @@ function renderSafariDetails(safari) {
     }
     
     const packageDesc = document.getElementById('packageDescription');
-    if(packageDesc) packageDesc.innerHTML = '<h2 style="font-family:var(--font-heading);margin-bottom:1rem">About this Safari</h2><p style="color:var(--text-secondary);line-height:1.7">' + escapeHtml(safari.detailed_description || safari.short_description || '') + '</p>';
+    if(packageDesc) packageDesc.innerHTML = '<h2 style="font-family:var(--font-heading);margin-bottom:1rem">' + escapeHtml(t('safariDetail.aboutThisSafari')) + '</h2><p style="color:var(--text-secondary);line-height:1.7">' + escapeHtml(safari.detailed_description || safari.short_description || '') + '</p>';
     
     const packageHighlights = document.getElementById('packageHighlights');
     if(packageHighlights && safari.highlights) {
         let hl = Array.isArray(safari.highlights) ? safari.highlights : safari.highlights.split('\n');
-        packageHighlights.innerHTML = '<h3 style="font-family:var(--font-heading);margin:1.5rem 0 1rem 0;">Highlights</h3><ul style="list-style:none;padding:0">' + 
+        packageHighlights.innerHTML = '<h3 style="font-family:var(--font-heading);margin:1.5rem 0 1rem 0;">' + escapeHtml(t('safariDetail.highlights')) + '</h3><ul style="list-style:none;padding:0">' + 
             hl.map(h => '<li style="margin-bottom:0.5rem;color:var(--earth-dark)"><i class="fas fa-check-circle" style="color:var(--primary);margin-right:0.5rem"></i>' + escapeHtml(h) + '</li>').join('') + '</ul>';
     }
     
     const packageDest = document.getElementById('packageDestinations');
     if(packageDest && safari.destinations && safari.destinations.length > 0) {
-        packageDest.innerHTML = '<h3 style="font-family:var(--font-heading);margin-bottom:1rem;margin-top:2rem;">Destinations Visited</h3>' + 
+        packageDest.innerHTML = '<h3 style="font-family:var(--font-heading);margin-bottom:1rem;margin-top:2rem;">' + escapeHtml(t('safariDetail.destinationsVisited')) + '</h3>' + 
             safari.destinations.map(d => {
                 const name = d.park_name || d.name || 'Destination';
                 const slug = d.park_slug || d.slug || '';
@@ -235,9 +236,9 @@ function renderSafariDetails(safari) {
     const reviewsList = document.getElementById('reviewsList');
     if(reviewsList) {
         if(safari.reviews && safari.reviews.length > 0) {
-            reviewsList.innerHTML = safari.reviews.map(r => '<div style="background:#fff;border:1px solid var(--border-light);padding:1.5rem;border-radius:12px;margin-bottom:1rem"><div style="color:var(--warning);margin-bottom:0.5rem">' + Array(5).fill().map((_,i)=>'<i class="fas fa-star' + (i<r.rating?'':'-o') + '"></i>').join('') + '</div><h4 style="margin:0 0 0.5rem 0;color:var(--earth-dark)">' + escapeHtml(r.review_title || 'Great Safari') + '</h4><p style="color:var(--text-secondary);font-size:0.95rem">' + escapeHtml(r.comment) + '</p><div style="font-size:0.85rem;color:var(--text-muted);margin-top:1rem">' + escapeHtml(r.first_name) + ' - ' + new Date(r.created_at).toLocaleDateString() + '</div></div>').join('');
+            reviewsList.innerHTML = safari.reviews.map(r => '<div style="background:#fff;border:1px solid var(--border-light);padding:1.5rem;border-radius:12px;margin-bottom:1rem"><div style="color:var(--warning);margin-bottom:0.5rem">' + Array(5).fill().map((_,i)=>'<i class="fas fa-star' + (i<r.rating?'':'-o') + '"></i>').join('') + '</div><h4 style="margin:0 0 0.5rem 0;color:var(--earth-dark)">' + escapeHtml(r.review_title || t('safariDetail.greatSafari')) + '</h4><p style="color:var(--text-secondary);font-size:0.95rem">' + escapeHtml(r.comment) + '</p><div style="font-size:0.85rem;color:var(--text-muted);margin-top:1rem">' + escapeHtml(r.first_name) + ' - ' + new Date(r.created_at).toLocaleDateString() + '</div></div>').join('');
         } else {
-            reviewsList.innerHTML = '<p style="color:var(--text-muted)">No reviews yet.</p>';
+            reviewsList.innerHTML = '<p style="color:var(--text-muted)">' + escapeHtml(t('safariDetail.noReviews')) + '</p>';
         }
     }
     
@@ -249,11 +250,11 @@ function renderSafariDetails(safari) {
 
 function hubMeta(categorySlug) {
     const map = {
-        'group-safaris': { path: '/group-safaris', label: 'Group Safaris', eyebrow: 'Fixed-Date Group Safari' },
-        kilimanjaro: { path: '/kilimanjaro', label: 'Kilimanjaro Safaris', eyebrow: 'Kilimanjaro Trek from Arusha' },
-        migrations: { path: '/migrations', label: 'Migrations', eyebrow: 'Great Migration Safari' },
-        zanzibar: { path: '/zanzibar', label: 'Zanzibar Safaris', eyebrow: 'Safari & Zanzibar Package' },
-        safaris: { path: '/safaris', label: 'Safaris', eyebrow: 'Private Safari from Arusha' }
+        'group-safaris': { path: '/group-safaris', label: t('safariDetail.hubGroup'), eyebrow: t('safariDetail.hubGroupEyebrow') },
+        kilimanjaro: { path: '/kilimanjaro', label: t('safariDetail.hubKili'), eyebrow: t('safariDetail.hubKiliEyebrow') },
+        migrations: { path: '/migrations', label: t('safariDetail.hubMig'), eyebrow: t('safariDetail.hubMigEyebrow') },
+        zanzibar: { path: '/zanzibar', label: t('safariDetail.hubZan'), eyebrow: t('safariDetail.hubZanEyebrow') },
+        safaris: { path: '/safaris', label: t('safariDetail.hubSafaris'), eyebrow: t('safariDetail.hubSafarisEyebrow') }
     };
     return map[categorySlug] || map.safaris;
 }
@@ -264,35 +265,35 @@ function renderInternalLinkBlock(safari) {
     const hub = hubMeta(safari.category_slug);
     const links = [];
 
-    links.push({ href: hub.path, label: `Browse all ${hub.label}` });
-    links.push({ href: '/destinations', label: 'Tanzania Destinations Hub' });
+    links.push({ href: hub.path, label: t('safariDetail.browseAllHub', { label: hub.label }) });
+    links.push({ href: '/destinations', label: t('safariDetail.destinationsHub') });
 
     (safari.destinations || []).forEach((d) => {
         const slug = d.park_slug || d.slug;
         const name = d.park_name || d.name;
-        if (slug && name) links.push({ href: `/destinations/${slug}`, label: `${name} Guide` });
+        if (slug && name) links.push({ href: `/destinations/${slug}`, label: t('safariDetail.nameGuide', { name }) });
     });
 
     const cat = safari.category_slug || '';
     if (cat === 'migrations') {
-        links.push({ href: '/blog/great-wildebeest-migration', label: 'Great Wildebeest Migration Guide' });
-        links.push({ href: '/destinations/serengeti-national-park', label: 'Serengeti National Park' });
+        links.push({ href: '/blog/great-wildebeest-migration', label: t('safariDetail.migrationGuide') });
+        links.push({ href: '/destinations/serengeti-national-park', label: t('safariDetail.serengetiPark') });
     } else if (cat === 'kilimanjaro') {
-        links.push({ href: '/destinations/mount-kilimanjaro-national-park', label: 'Kilimanjaro National Park Guide' });
-        links.push({ href: '/blog/tanzania-safari', label: 'Tanzania Safari Guide' });
+        links.push({ href: '/destinations/mount-kilimanjaro-national-park', label: t('safariDetail.kiliParkGuide') });
+        links.push({ href: '/blog/tanzania-safari', label: t('safariDetail.tanzaniaSafariGuide') });
     } else if (cat === 'zanzibar') {
-        links.push({ href: '/destinations/zanzibar', label: 'Zanzibar Destination Guide' });
-        links.push({ href: '/blog/zanzibar-guide', label: 'Zanzibar Beach Guide' });
+        links.push({ href: '/destinations/zanzibar', label: t('safariDetail.zanzibarDestGuide') });
+        links.push({ href: '/blog/zanzibar-guide', label: t('safariDetail.zanzibarBeachGuide') });
     } else if (cat === 'group-safaris') {
-        links.push({ href: '/group-safaris', label: 'Group Safari Calendar' });
-        links.push({ href: '/safaris', label: 'Private Safari Packages' });
+        links.push({ href: '/group-safaris', label: t('safariDetail.groupCalendar') });
+        links.push({ href: '/safaris', label: t('safariDetail.privatePackages') });
     } else {
-        links.push({ href: '/blog/tanzania-safari', label: 'Ultimate Tanzania Safari Guide' });
-        links.push({ href: '/blog/best-time-to-visit-tanzania', label: 'Best Time to Visit Tanzania' });
+        links.push({ href: '/blog/tanzania-safari', label: t('safariDetail.ultimateGuide') });
+        links.push({ href: '/blog/best-time-to-visit-tanzania', label: t('safariDetail.bestTimeGuide') });
     }
 
-    links.push({ href: '/blog/tanzania-safari-cost', label: 'Tanzania Safari Cost 2026' });
-    links.push({ href: '/booking', label: 'Request a Custom Safari Quote' });
+    links.push({ href: '/blog/tanzania-safari-cost', label: t('safariDetail.costGuide') });
+    links.push({ href: '/booking', label: t('safariDetail.customQuote') });
 
     const seen = new Set();
     el.innerHTML = links
@@ -413,11 +414,11 @@ function injectJSONLDSchema(safari) {
 
 function renderItinerary(items) {
     if (!items || items.length === 0) {
-        return '<p>Detailed itinerary coming soon.</p>';
+        return '<p>' + escapeHtml(t('safariDetail.itinerarySoon')) + '</p>';
     }
     const normalized = items.map((item, idx) => ({
         day: item.day || item.day_number || (idx + 1),
-        title: item.title || item.day_title || `Day ${idx + 1}`,
+        title: item.title || item.day_title || t('safariDetail.dayN', { n: idx + 1 }),
         description: item.description || item.day_description || '',
         accommodation: item.accommodation || item.accommodation_type,
         meals_included: item.meals_included
@@ -427,7 +428,7 @@ function renderItinerary(items) {
     normalized.forEach(item => {
         html += `
         <div class="itinerary-item">
-            <div class="itinerary-day">Day ${item.day}</div>
+            <div class="itinerary-day">${escapeHtml(t('safariDetail.dayN', { n: item.day }))}</div>
             <div class="itinerary-title">${escapeHtml(item.title)}</div>
             <div class="itinerary-desc">${escapeHtml(item.description).replace(/\n/g, '<br>')}</div>
             <div class="itinerary-meta">
@@ -472,7 +473,7 @@ async function loadRelatedSafaris(categorySlug, currentPackageId) {
                             </div>
                             <div class="related-card-content">
                                 <h3>${escapeHtml(pkg.package_name)}</h3>
-                                <p>${escapeHtml(pkg.short_description || 'Experience Tanzania\'s wildlife')}</p>
+                                <p>${escapeHtml(pkg.short_description || t('safariDetail.relatedDesc'))}</p>
                                 <div class="related-card-meta">
                                     <span class="related-price">$${parseInt(pkg.base_price_usd || 0).toLocaleString()}</span>
                                     <span class="related-duration"><i class="fas fa-clock"></i> ${pkg.duration_days} days</span>
@@ -564,18 +565,18 @@ function initQuickBookingModal() {
             if (!name || !email || !message) return;
             
             if (!name.value.trim() || !email.value.trim() || !message.value.trim()) {
-                showNotification('Please fill in all required fields', 'error');
+                showNotification(t('safariDetail.fillRequired'), 'error');
                 return;
             }
             
             if (!isValidEmail(email.value)) {
-                showNotification('Please enter a valid email address', 'error');
+                showNotification(t('safariDetail.validEmail'), 'error');
                 return;
             }
             
             const submitBtn = form.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + t('safariDetail.sending');
             submitBtn.disabled = true;
             
             try {
@@ -604,22 +605,22 @@ function initQuickBookingModal() {
 }
 function renderItinerary(items) {
     if (!items || items.length === 0) {
-        return '<p>Detailed itinerary coming soon.</p>';
+        return '<p>' + escapeHtml(t('safariDetail.itinerarySoon')) + '</p>';
     }
     if (typeof items === 'string') {
         try {
             items = JSON.parse(items);
         } catch (e) {
             console.error('Failed to parse itinerary', e);
-            return '<p>Detailed itinerary coming soon.</p>';
+            return '<p>' + escapeHtml(t('safariDetail.itinerarySoon')) + '</p>';
         }
     }
     if (!Array.isArray(items)) {
-        return '<p>Detailed itinerary coming soon.</p>';
+        return '<p>' + escapeHtml(t('safariDetail.itinerarySoon')) + '</p>';
     }
     const normalized = items.map((item, idx) => ({
         day: item.day || item.day_number || (idx + 1),
-        title: item.title || item.day_title || `Day ${idx + 1}`,
+        title: item.title || item.day_title || t('safariDetail.dayN', { n: idx + 1 }),
         description: item.description || item.day_description || '',
         accommodation: item.accommodation || item.accommodation_type,
         meals_included: item.meals_included
@@ -629,7 +630,7 @@ function renderItinerary(items) {
     normalized.forEach(item => {
         html += `
         <div class="itinerary-item">
-            <div class="itinerary-day">Day ${item.day}</div>
+            <div class="itinerary-day">${escapeHtml(t('safariDetail.dayN', { n: item.day }))}</div>
             <div class="itinerary-title">${escapeHtml(item.title)}</div>
             <div class="itinerary-desc">${escapeHtml(item.description).replace(/\n/g, '<br>')}</div>
             <div class="itinerary-meta">
@@ -676,7 +677,7 @@ async function loadRelatedSafaris(categorySlug, currentPackageId) {
                         </div>
                         <div class="related-card-content" style="padding:0.85rem 1rem 1rem">
                             <h3 style="font-size:1rem;margin:0 0 0.4rem;font-family:var(--font-heading);color:var(--earth-dark)">${escapeHtml(pkg.package_name)}</h3>
-                            <p style="font-size:0.85rem;color:var(--text-secondary);margin:0 0 0.65rem;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${escapeHtml((pkg.short_description || '').slice(0, 120))}</p>
+                            <p style="font-size:0.85rem;color:var(--text-secondary);margin:0 0 0.65rem;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${escapeHtml((pkg.short_description || t('safariDetail.relatedDesc')).slice(0, 120))}</p>
                             <div class="related-card-meta" style="display:flex;justify-content:space-between;font-size:0.85rem">
                                 <span class="related-price" style="font-weight:700;color:var(--primary)">From $${parseInt(pkg.base_price_usd || 0).toLocaleString()}</span>
                                 <span class="related-duration" style="color:var(--text-muted)"><i class="fas fa-clock"></i> ${pkg.duration_days || ''} days</span>
@@ -764,18 +765,18 @@ function initQuickBookingModal() {
             if (!name || !email || !message) return;
             
             if (!name.value.trim() || !email.value.trim() || !message.value.trim()) {
-                showNotification('Please fill in all required fields', 'error');
+                showNotification(t('safariDetail.fillRequired'), 'error');
                 return;
             }
             
             if (!isValidEmail(email.value)) {
-                showNotification('Please enter a valid email address', 'error');
+                showNotification(t('safariDetail.validEmail'), 'error');
                 return;
             }
             
             const submitBtn = form.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + t('safariDetail.sending');
             submitBtn.disabled = true;
             
             try {
@@ -831,10 +832,10 @@ function renderCard(pkg) {
     if (mobileBookBtn) mobileBookBtn.href = `/booking?package=${pkg.package_slug}`;
 
     const meta = [
-        { icon: 'fa-clock', label: t('detail.duration'), value: `${pkg.duration_days} Days / ${pkg.duration_nights || pkg.duration_days - 1} Nights` },
+        { icon: 'fa-clock', label: t('detail.duration'), value: t('safariDetail.daysNights', { days: pkg.duration_days, nights: pkg.duration_nights || pkg.duration_days - 1 }) },
         { icon: 'fa-tachometer-alt', label: t('detail.difficulty'), value: pkg.difficulty_level || 'Easy' },
-        { icon: 'fa-users', label: 'Group Size', value: `${pkg.minimum_pax || 1}–${pkg.maximum_pax || 12} People` },
-        { icon: 'fa-star', label: t('detail.rating'), value: `${parseFloat(pkg.avg_rating || 0).toFixed(1)} ★ (${pkg.review_count || 0} reviews)` },
+        { icon: 'fa-users', label: t('safariDetail.groupSize'), value: t('safariDetail.peopleRange', { min: pkg.minimum_pax || 1, max: pkg.maximum_pax || 12 }) },
+        { icon: 'fa-star', label: t('detail.rating'), value: t('safariDetail.reviewsLabel', { rating: parseFloat(pkg.avg_rating || 0).toFixed(1), n: pkg.review_count || 0 }) },
     ];
     document.getElementById('cardMeta').innerHTML = meta.map(m => `
     <div class="detail-meta-row">
@@ -862,11 +863,11 @@ async function submitReview(event) {
             rating: parseInt(rating),
             comment: content
         });
-        toast(res.message || 'Review submitted successfully!', 'success');
+        toast(res.message || t('safariDetail.reviewSuccess'), 'success');
         event.target.reset();
         document.getElementById('reviewFormContainer').style.display = 'none';
     } catch(err) {
-        toast(err.message || 'Failed to submit review', 'error');
+        toast(err.message || t('safariDetail.reviewFail'), 'error');
     } finally {
         btn.innerHTML = oldText;
         btn.disabled = false;

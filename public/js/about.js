@@ -120,8 +120,8 @@ async function loadAboutContent() {
         </div>
 
         <div class="zara-hotels">
-          <h2>Hotel Accommodation &amp; Holiday Villas</h2>
-          <p>We arrange quality mid-range to luxury lodges, boutique hotels, and beach resorts across Tanzania’s parks and coasts — always tailored to your interests, pacing, and budget.</p>
+          <h2>${escapeHtml(t('about.hotelsTitle'))}</h2>
+          <p>${escapeHtml(t('about.hotelsDesc'))}</p>
           <div class="zara-cta-row">
             <a href="/booking" class="btn btn-primary" style="min-height:48px"><i class="fas fa-calendar-check"></i> ${escapeHtml(t('about.bookCta'))}</a>
             <a href="https://wa.me/255695108009?text=Hi%20Tanzania%20Safari%20Magic%2C%20I%27m%20interested%20in%20booking%20a%20custom%20safari%20package..." class="btn btn-outline" target="_blank" rel="noopener" style="min-height:48px"><i class="fab fa-whatsapp"></i> ${escapeHtml(t('about.contactCta'))}</a>
@@ -129,32 +129,32 @@ async function loadAboutContent() {
         </div>
 
         <div class="zara-team-roles" id="teamRoles">
-          <h2 class="zara-section-title">Tanzania Safari Magic Team</h2>
+          <h2 class="zara-section-title">${escapeHtml(t('about.teamTitle'))}</h2>
           <div class="zara-roles-grid">
             <div class="zara-role">
-              <h3><i class="fas fa-plane-arrival"></i> Airport</h3>
-              <p>Arrival can be stressful in a new country. Our pickup and airport team greets you and transfers you smoothly to your lodge or hotel.</p>
+              <h3><i class="fas fa-plane-arrival"></i> ${escapeHtml(t('about.roleAirport'))}</h3>
+              <p>${escapeHtml(t('about.roleAirportDesc'))}</p>
             </div>
             <div class="zara-role">
-              <h3><i class="fas fa-concierge-bell"></i> Reception</h3>
-              <p>Friendly front-of-house support during your stay — ready for any inquiry, schedule change, or last-minute request.</p>
+              <h3><i class="fas fa-concierge-bell"></i> ${escapeHtml(t('about.roleReception'))}</h3>
+              <p>${escapeHtml(t('about.roleReceptionDesc'))}</p>
             </div>
             <div class="zara-role">
-              <h3><i class="fas fa-map-marked-alt"></i> Travel Consultant</h3>
-              <p>Experienced planners who know Tanzania’s parks season by season and craft itineraries matched to your dates and interests.</p>
+              <h3><i class="fas fa-map-marked-alt"></i> ${escapeHtml(t('about.roleConsultant'))}</h3>
+              <p>${escapeHtml(t('about.roleConsultantDesc'))}</p>
             </div>
             <div class="zara-role">
-              <h3><i class="fas fa-binoculars"></i> Guides</h3>
-              <p>Licensed safari guides with strong English (and other languages), deep wildlife knowledge, and a passion for safe, memorable game drives.</p>
+              <h3><i class="fas fa-binoculars"></i> ${escapeHtml(t('about.roleGuides'))}</h3>
+              <p>${escapeHtml(t('about.roleGuidesDesc'))}</p>
             </div>
           </div>
         </div>
 
         <div class="corp-stat-row" style="margin-top:2.5rem">
-          <div class="corp-stat"><strong>10+</strong><span>Years Experience</span></div>
-          <div class="corp-stat"><strong>5,000+</strong><span>Guests Hosted</span></div>
-          <div class="corp-stat"><strong>50+</strong><span>Expert Guides</span></div>
-          <div class="corp-stat"><strong>Arusha</strong><span>Based Operator</span></div>
+          <div class="corp-stat"><strong>10+</strong><span>${escapeHtml(t('about.yearsExp'))}</span></div>
+          <div class="corp-stat"><strong>5,000+</strong><span>${escapeHtml(t('about.guestsHosted'))}</span></div>
+          <div class="corp-stat"><strong>50+</strong><span>${escapeHtml(t('about.expertGuides'))}</span></div>
+          <div class="corp-stat"><strong>Arusha</strong><span>${escapeHtml(t('about.basedOperator'))}</span></div>
         </div>
       </div>
     </section>
@@ -190,12 +190,12 @@ async function loadTeamMembers() {
           <h2 class="zara-section-title" style="margin-bottom:1.5rem">${escapeHtml(t('about.meetTeam'))}</h2>
           <div class="zara-people-grid">
             ${result.data.map(member => {
-                const fullName = `${member.first_name || ''} ${member.last_name || ''}`.trim() || 'Team Member';
+                const fullName = `${member.first_name || ''} ${member.last_name || ''}`.trim() || t('about.teamMember');
                 return `
                   <div class="corp-panel zara-person">
                     <div class="zara-person-avatar"><i class="fas fa-user-circle"></i></div>
                     <h3>${escapeHtml(fullName)}</h3>
-                    <p>${member.guide_id ? 'Safari Specialist' : 'Travel Consultant'}</p>
+                    <p>${escapeHtml(member.guide_id ? t('about.safariSpecialist') : t('about.travelConsultant'))}</p>
                   </div>`;
             }).join('')}
           </div>`;
@@ -214,7 +214,7 @@ async function loadBlogPosts() {
         wrap.className = 'corp-section alt';
         wrap.innerHTML = `
           <div class="container">
-            <h2 class="zara-section-title">From Our Blog</h2>
+            <h2 class="zara-section-title">${escapeHtml(t('about.fromBlog'))}</h2>
             <div class="corp-blog-grid" style="margin-top:1.5rem">
               ${posts.slice(0, 3).map(p => `
                 <a class="corp-blog-card" href="/blog/${p.post_slug}">

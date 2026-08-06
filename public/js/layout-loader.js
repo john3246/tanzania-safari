@@ -97,7 +97,7 @@ async function loadSafariMegaMenuTours() {
     if (document.querySelector('link[href*="fluid-responsive.css"]')) return;
     const fluid = document.createElement('link');
     fluid.rel = 'stylesheet';
-    fluid.href = '/css/fluid-responsive.css?v=3';
+    fluid.href = '/css/fluid-responsive.css?v=4';
     const head = document.head || document.getElementsByTagName('head')[0];
     if (head) head.appendChild(fluid);
     else document.addEventListener('DOMContentLoaded', () => document.head.appendChild(fluid));

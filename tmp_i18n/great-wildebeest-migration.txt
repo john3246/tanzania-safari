@@ -1,0 +1,225 @@
+If you’re planning a 
+Tanzania safari
+, there’s a good chance you hope to witness one of the world’s last great wildlife migrations — the circular trek of more than 
+1.5 million wildebeest
+ (plus zebra and gazelle) across the 
+Serengeti
+–Maasai Mara ecosystem.
+This guide from 
+Tanzania Safari Magic
+ in Arusha focuses on the 
+Serengeti chapters
+ of the Great Migration: where the herds move month by month, when to book for calving or river crossings, and how to build a private itinerary that actually puts you in the right place.
+  
+  
+Mara River crossings in northern Serengeti — typically mid-July to October — are the migration’s most dramatic spectacle.
+  
+Plan Your Migration Safari
+  
+Tell 
+Our Team
+ your dates and whether you want calving, Grumeti, or Mara crossings — we match camps and vehicles within 24 hours.
+  
+    
+ Free Migration Quote
+    
+ WhatsApp Our Team
+    
+Serengeti Guide
+  
+  
+In This Migration Guide
+  
+    
+Quick Facts
+    
+Best Time to See the Migration
+    
+Where the Migration Happens
+    
+Serengeti Highlights
+    
+Month-by-Month Map
+    
+Tanzania vs Kenya
+    
+Why the Migration Matters
+    
+How to Book
+    
+Migration Safari Costs
+    
+Live Safari Packages
+    
+FAQs
+  
+Wildebeest Migration Quick Facts
+  
+Herd size:
+ ~1.5 million wildebeest, hundreds of thousands of zebra &amp; gazelle
+  
+Distance:
+ roughly 800 miles / 1,000 km each year
+  
+Driver:
+ seasonal rainfall and fresh grazing
+  
+Calving peak:
+ ~8,000 calves per day in peak southern weeks (Jan–early Mar)
+  
+Signature moments:
+ Ndutu calving, Grumeti crossings, Mara River crossings
+  
+Serengeti role:
+ home stage for most of the annual loop; UNESCO World Heritage (1981)
+  
+  
+Serengeti’s short-grass plains — stage for calving and vast herd panoramas.
+When Is the Best Time to See the Great Migration?
+The migration is a 
+year-round
+ phenomenon, but the “wow” moments need the right region and month. Patterns are fairly consistent — yet rains can push herds early or late. Book the 
+experience
+ you want, then stay flexible on exact camp nights.
+  
+    
+Experience
+Typical months
+Where in Serengeti
+    
+      
+Calving season
+Jan–Mar
+Southern plains / Ndutu
+      
+Grumeti River crossings
+May–Jun
+Western Corridor
+      
+Mara River crossings
+Jul–Oct
+Northern Serengeti
+      
+Vast dry-season herds
+Jun–Oct
+Follow herds + central predators
+    
+  
+Many travellers call July–September the classic Tanzania window: dry roads, clear game viewing, and northern crossing odds. January–February is equally special if newborns and big-cat hunts are your priority.
+  
+  
+Massed herds on the move — the migration’s defining visual.
+Where Does the Wildebeest Migration Happen?
+The loop runs clockwise through 
+northern Tanzania
+ and 
+southern Kenya
+, always chasing rain. Inside Tanzania the main stage is 
+Serengeti National Park
+ (~14,763 km²), contiguous with Ngorongoro’s short-grass calving grounds and bordered to the north by Kenya’s Maasai Mara.
+Wildebeest detect distant rainfall and learn approximate routes in their first year — which is why the path shifts slightly each season even though the overall circle endures.
+Serengeti Migration Highlights
+1. Calving on the Ndutu &amp; southern plains
+Nutrient-rich volcanic soils (linked to the ancient Ngorongoro eruptions) feed mineral-rich grass. Mothers produce rich milk; calves stand within minutes. Predators concentrate on the nursery — intense for photographers.
+2. Grumeti River crossings
+Western Corridor crossings (often May–June) bring crocodile drama with fewer vehicles than the Mara peak. A smart pick for guests who want action without peak-season northern rates.
+3. Mara River crossings
+The iconic leap: strong currents, Nile crocodiles, and tens of thousands of animals choosing when to cross. From the Tanzania side you base in northern Serengeti camps near the river — book early for July–October.
+  
+  
+Zebra travel with the wildebeest — striping the plains beside the herds.
+Month-by-Month Serengeti Migration Map
+  
+    
+Month
+Where herds typically are
+What you’ll notice
+    
+      
+Dec–Mar
+South / Ndutu short-grass plains
+Calving peak Jan–Feb; predator theatre
+      
+Apr–May
+Moving west &amp; through central routes
+Long rains; lush landscapes
+      
+May–Jun
+Western Corridor / Grumeti
+River crossings begin
+      
+Jul–Oct
+Northern Serengeti (↔ Mara)
+Mara River crossings; dry-season clarity
+      
+Nov
+Pushing south again
+Short rains; herds return toward Ndutu
+    
+  
+Central 
+Seronera
+ remains excellent for lions, leopards, and cheetahs even when mega-herds are elsewhere — a reliable backbone for any Serengeti safari.
+Is Tanzania or Kenya Better for the Great Migration?
+Both work. Tanzania usually has the edge for a full migration story:
+  
+Herds spend most of the year in Tanzania
+  
+Calving and Grumeti crossings are Tanzania-only chapters
+  
+Northern Serengeti Mara crossings often feel less congested than the Mara Reserve peak
+  
+Easy combination with 
+Ngorongoro Crater
+ on the same circuit from Arusha
+Kenya wins on shorter road access from Nairobi and a compact reserve. If your trip already centers on northern Tanzania parks, Serengeti is the natural migration base.
+The Migration’s Role in the Serengeti Ecosystem
+Wildebeest are the Serengeti’s gardeners — grazing, trampling, and fertilizing on a massive scale, reducing fuel for catastrophic fires and feeding an extraordinary predator community (lions, hyenas, cheetahs, crocodiles, and more). Tourism revenue funds anti-poaching and habitat protection that keep the route open for future generations.
+  
+  
+Balloon safaris add a sunrise perspective over plains that may hold migrating herds.
+How to Book a Wildebeest Migration Safari
+  
+Choose your highlight
+ — calving, Grumeti, or Mara crossings
+  
+Lock the right region
+ — south, west, or north Serengeti camps
+  
+Add buffer nights
+ — herds don’t keep calendars
+  
+Decide drive-in vs fly-in
+ — north is far by road; flights save time
+  
+Combine parks
+ — Ngorongoro + Serengeti remains the classic pairing
+Share your dates on our 
+booking form
+ or WhatsApp — we reply with lodge options and a clear inclusions list.
+How Much Does a Migration Safari Cost?
+Expect private mid-range northern circuit rates often around the mid-hundreds of USD per person per day; luxury camps and peak northern crossing weeks cost more. Park fees, concession fees, and balloon flights are itemized on quotes. Full ranges: 
+Tanzania safari cost 2026
+.
+Migration Safari FAQs
+  ${FAQS.map((f, i) => `
+    
+      
+${f.q}
+      
+${f.a}
+    
+`).join('')}
+  
+Ready for the Serengeti Migration?
+  
+Licensed local operator · Our Team · Arusha, Tanzania
+  
+    
+Book / Free Quote
+    
+Serengeti Guide
+    
+Best Time
+    
+All Packages

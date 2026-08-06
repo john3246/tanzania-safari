@@ -23,12 +23,12 @@
   <div class="group-hero-bg" id="groupDetailHeroBg" style="background-image:url('/images/optimized/mbugani.webp')"></div>
   <div class="container group-hero-inner">
     <nav class="corp-breadcrumb" aria-label="Breadcrumb">
-      <a href="/">Home</a><span>/</span>
-      <a href="/group-safaris">Group Safaris</a><span>/</span>
-      <span id="groupCrumbTitle">Departure</span>
+      <a href="/" data-i18n="groupDetail.home">Home</a><span>/</span>
+      <a href="/group-safaris" data-i18n="groupDetail.groupSafaris">Group Safaris</a><span>/</span>
+      <span id="groupCrumbTitle" data-i18n="groupDetail.departure">Departure</span>
     </nav>
-    <span class="corp-eyebrow" style="color:rgba(255,255,255,0.85)">Small Group Safari</span>
-    <h1 id="groupDetailTitle">Loading departure…</h1>
+    <span class="corp-eyebrow" style="color:rgba(255,255,255,0.85)" data-i18n="groupDetail.eyebrow">Small Group Safari</span>
+    <h1 id="groupDetailTitle" data-i18n="groupDetail.loading">Loading departure…</h1>
     <p id="groupDetailSubtitle"></p>
   </div>
 </section>
@@ -37,45 +37,45 @@
   <div class="group-detail-layout" id="groupDetailRoot">
     <div class="group-detail-main">
       <nav class="group-tabs" aria-label="Sections">
-        <a href="#overview_section">Overview</a>
-        <a href="#packing_section">Packing</a>
-        <a href="#price_section">Price</a>
-        <a href="#itinerary_section">Itinerary</a>
-        <a href="#inclusions_section">Inclusions</a>
-        <a href="#visa_section">Visa &amp; docs</a>
+        <a href="#overview_section" data-i18n="groupDetail.tabOverview">Overview</a>
+        <a href="#packing_section" data-i18n="groupDetail.tabPacking">Packing</a>
+        <a href="#price_section" data-i18n="groupDetail.tabPrice">Price</a>
+        <a href="#itinerary_section" data-i18n="groupDetail.tabItinerary">Itinerary</a>
+        <a href="#inclusions_section" data-i18n="groupDetail.tabInclusions">Inclusions</a>
+        <a href="#visa_section" data-i18n="groupDetail.tabVisa">Visa &amp; docs</a>
       </nav>
 
       <section class="group-section" id="overview_section">
-        <h2>Tour overview</h2>
+        <h2 data-i18n="groupDetail.tourOverview">Tour overview</h2>
         <div id="groupOverview"></div>
         <div class="group-highlights" id="groupHighlights"></div>
         <div id="groupForMe" style="margin-top:1.25rem;padding:1.1rem 1.25rem;background:#f7f8f6;border-radius:12px"></div>
       </section>
 
       <section class="group-section" id="packing_section">
-        <h2>Safari packing list</h2>
+        <h2 data-i18n="groupDetail.packingList">Safari packing list</h2>
         <div id="groupPacking"></div>
       </section>
 
       <section class="group-section" id="price_section">
-        <h2>Group tour price</h2>
+        <h2 data-i18n="groupDetail.groupPrice">Group tour price</h2>
         <div id="groupPriceBlock"></div>
       </section>
 
       <section class="group-section" id="itinerary_section">
-        <h2>Itinerary</h2>
+        <h2 data-i18n="groupDetail.itinerary">Itinerary</h2>
         <div id="groupItinerary"></div>
       </section>
 
       <section class="group-section" id="inclusions_section">
-        <h2>Inclusions</h2>
+        <h2 data-i18n="groupDetail.inclusions">Inclusions</h2>
         <div id="groupInclusions"></div>
-        <h3 style="margin-top:1.5rem;font-size:1.1rem">Not included</h3>
+        <h3 style="margin-top:1.5rem;font-size:1.1rem" data-i18n="groupDetail.notIncluded">Not included</h3>
         <div id="groupExclusions"></div>
       </section>
 
       <section class="group-section" id="visa_section">
-        <h2>Visa and documents</h2>
+        <h2 data-i18n="groupDetail.visaDocs">Visa and documents</h2>
         <div id="groupVisa"></div>
       </section>
     </div>
@@ -87,8 +87,8 @@
 </div>
 
 <div id="footer"></div>
-<script src="/js/layout-loader.js?v=7"></script>
+<script src="/js/layout-loader.js?v=14"></script>
 <script src="/js/api.js"></script>
-<script src="/js/group-safari-detail.js?v=3"></script>
+<script src="/js/group-safari-detail.js?v=4"></script>
 </body>
 </html>

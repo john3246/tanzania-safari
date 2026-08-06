@@ -1,9 +1,25 @@
 // destination-detail.js - Dynamic destination details page
 
+function t(key, vars){ if(window.TSM_i18n&&typeof window.TSM_i18n.t==='function') return window.TSM_i18n.t(key,vars); return key; }
+
 let currentDestination = null;
 let currentSlug = null;
+let currentGuide = null;
+
+function monthLabels() {
+    return [
+        t('destDetail.monthJan'), t('destDetail.monthFeb'), t('destDetail.monthMar'),
+        t('destDetail.monthApr'), t('destDetail.monthMay'), t('destDetail.monthJun'),
+        t('destDetail.monthJul'), t('destDetail.monthAug'), t('destDetail.monthSep'),
+        t('destDetail.monthOct'), t('destDetail.monthNov'), t('destDetail.monthDec')
+    ];
+}
 
 document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        if (window.TSM_i18n && window.TSM_i18n.ready) await window.TSM_i18n.ready;
+    } catch (_) {}
+
     initLoadingScreen();
     initHeaderScroll();
     initBackToTop();
@@ -18,8 +34,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (currentSlug) {
         await loadDestinationDetails(currentSlug);
     } else {
-        showError('No destination specified');
+        showError(t('destDetail.noDestination'));
     }
+});
+
+document.addEventListener('tsm:languagechange', () => {
+    if (currentSlug) loadDestinationDetails(currentSlug);
 });
 
 function getSlugFromUrl() {
@@ -89,13 +109,17 @@ function initMobileMenu() {
 }
 
 async function loadDestinationDetails(slug) {
+    try {
+        if (window.TSM_i18n && window.TSM_i18n.ready) await window.TSM_i18n.ready;
+    } catch (_) {}
+
     const mainContent = document.getElementById('destinationDetailContent');
     if (!mainContent) return;
     
     mainContent.innerHTML = `
         <div class="loading-container" style="text-align: center; padding: 4rem;">
             <div class="loader-circle" style="margin: 0 auto 1rem;"></div>
-            <p>Loading destination details...</p>
+            <p>${escapeHtml(t('destDetail.loading'))}</p>
         </div>
     `;
     
@@ -106,16 +130,32 @@ async function loadDestinationDetails(slug) {
         if (result && result.success && result.data) {
             currentDestination = result.data;
             
-            renderDestinationDetails(currentDestination);
             const displayName = currentDestination.park_name || currentDestination.name;
-            const slug = currentDestination.park_slug || currentDestination.slug || currentSlug;
-            if (isNgorongoroDestination(slug, displayName)) {
+            const destSlug = currentDestination.park_slug || currentDestination.slug || currentSlug;
+
+            let guide = null;
+            if (isNgorongoroDestination(destSlug, displayName) && window.NgorongoroDestinationGuide) {
+                guide = window.NgorongoroDestinationGuide;
+            } else if (isSerengetiDestination(destSlug, displayName) && window.SerengetiDestinationGuide) {
+                guide = window.SerengetiDestinationGuide;
+            } else if (isKilimanjaroDestination(destSlug, displayName) && window.KilimanjaroDestinationGuide) {
+                guide = window.KilimanjaroDestinationGuide;
+            }
+
+            if (guide && window.TSM_guideI18n && typeof window.TSM_guideI18n.localizeDestinationGuide === 'function') {
+                currentGuide = await window.TSM_guideI18n.localizeDestinationGuide(guide, destSlug);
+            } else {
+                currentGuide = guide;
+            }
+
+            renderDestinationDetails(currentDestination);
+            if (isNgorongoroDestination(destSlug, displayName)) {
                 applyNgorongoroSeo(currentDestination);
                 injectNgorongoroSchemas(currentDestination);
-            } else if (isSerengetiDestination(slug, displayName)) {
+            } else if (isSerengetiDestination(destSlug, displayName)) {
                 applySerengetiSeo(currentDestination);
                 injectSerengetiSchemas(currentDestination);
-            } else if (isKilimanjaroDestination(slug, displayName)) {
+            } else if (isKilimanjaroDestination(destSlug, displayName)) {
                 applyKilimanjaroSeo(currentDestination);
                 injectKilimanjaroSchemas(currentDestination);
             } else {
@@ -124,21 +164,21 @@ async function loadDestinationDetails(slug) {
                 applyDestinationSeo(currentDestination);
                 injectDestinationSchema(currentDestination);
             }
-            await loadSafariPackagesForDestination(displayName, slug);
-            await loadRelatedDestinations(currentDestination.park_id || currentDestination.id, slug);
-            if (isNgorongoroDestination(slug, displayName)) {
+            await loadSafariPackagesForDestination(displayName, destSlug);
+            await loadRelatedDestinations(currentDestination.park_id || currentDestination.id, destSlug);
+            if (isNgorongoroDestination(destSlug, displayName)) {
                 await enhanceNgorongoroPackageSection();
-            } else if (isSerengetiDestination(slug, displayName)) {
+            } else if (isSerengetiDestination(destSlug, displayName)) {
                 await enhanceSerengetiPackageSection();
-            } else if (isKilimanjaroDestination(slug, displayName)) {
+            } else if (isKilimanjaroDestination(destSlug, displayName)) {
                 await enhanceKilimanjaroPackageSection();
             }
         } else {
-            showError('Destination not found');
+            showError(t('destDetail.notFound'));
         }
     } catch (error) {
         console.error('Error loading destination details:', error);
-        showError('Failed to load destination details. Please try again.');
+        showError(t('destDetail.loadFail'));
     }
 }
 
@@ -147,18 +187,14 @@ function renderDestinationDetails(destination) {
     if (!mainContent) return;
     
     const name = destination.park_name || destination.name;
-    const description = destination.park_description || destination.description || `Experience the breathtaking beauty of ${name}. This amazing destination offers incredible wildlife viewing opportunities and stunning landscapes that will leave you in awe.`;
+    const description = destination.park_description || destination.description || t('destDetail.defaultDesc', { name });
     const slug = destination.park_slug || destination.slug || '';
     
     const isNgorongoro = isNgorongoroDestination(slug, name);
     const isSerengeti = isSerengetiDestination(slug, name);
     const isKilimanjaro = isKilimanjaroDestination(slug, name);
     const isGuideDest = isNgorongoro || isSerengeti || isKilimanjaro;
-    const guide = isNgorongoro && window.NgorongoroDestinationGuide
-        ? window.NgorongoroDestinationGuide
-        : (isSerengeti && window.SerengetiDestinationGuide
-            ? window.SerengetiDestinationGuide
-            : (isKilimanjaro && window.KilimanjaroDestinationGuide ? window.KilimanjaroDestinationGuide : null));
+    const guide = currentGuide;
     
     // Determine destination type and features
     const isUnesco = destination.is_unesco_heritage || name.toLowerCase().includes('ngorongoro') || 
@@ -167,8 +203,8 @@ function renderDestinationDetails(destination) {
     
     const heroTitle = guide ? guide.META.h1 : name;
     const eyebrow = isKilimanjaro
-        ? 'UNESCO World Heritage · Highest Peak in Africa'
-        : (isGuideDest ? 'UNESCO World Heritage · Northern Circuit' : 'Safari Destination · Tanzania');
+        ? t('destDetail.eyebrowKili')
+        : (isGuideDest ? t('destDetail.eyebrowUnesco') : t('destDetail.eyebrowDefault'));
     
     // Get icon based on name
     let iconClass = 'fa-tree';
@@ -183,25 +219,25 @@ function renderDestinationDetails(destination) {
     
     // Generate quick facts
     let facts = isNgorongoro ? [
-        { icon: 'fa-ruler', label: 'Crater Floor', value: '~260 sq km' },
-        { icon: 'fa-mountain', label: 'Depth', value: '~600 m' },
-        { icon: 'fa-paw', label: 'Large Mammals', value: '25,000+' },
-        { icon: 'fa-award', label: 'Status', value: 'UNESCO Site' }
+        { icon: 'fa-ruler', label: t('destDetail.factCraterFloor'), value: '~260 sq km' },
+        { icon: 'fa-mountain', label: t('destDetail.factDepth'), value: '~600 m' },
+        { icon: 'fa-paw', label: t('destDetail.factLargeMammals'), value: '25,000+' },
+        { icon: 'fa-award', label: t('destDetail.factStatus'), value: t('destDetail.unescoSite') }
     ] : isSerengeti ? [
-        { icon: 'fa-ruler', label: 'Park Size', value: '~14,763 sq km' },
-        { icon: 'fa-paw', label: 'Wildebeest', value: '1.5M+' },
-        { icon: 'fa-calendar', label: 'UNESCO', value: '1981' },
-        { icon: 'fa-star', label: 'Famous For', value: 'Great Migration' }
+        { icon: 'fa-ruler', label: t('destDetail.factParkSize'), value: '~14,763 sq km' },
+        { icon: 'fa-paw', label: t('destDetail.factWildebeest'), value: '1.5M+' },
+        { icon: 'fa-calendar', label: t('destDetail.factUnesco'), value: '1981' },
+        { icon: 'fa-star', label: t('destDetail.factFamousFor'), value: t('destDetail.famousMigration') }
     ] : isKilimanjaro ? [
-        { icon: 'fa-mountain', label: 'Uhuru Peak', value: '5,895 m' },
-        { icon: 'fa-ruler', label: 'Park Area', value: '~1,688 sq km' },
-        { icon: 'fa-calendar', label: 'UNESCO', value: '1987' },
-        { icon: 'fa-star', label: 'Famous For', value: 'Roof of Africa' }
+        { icon: 'fa-mountain', label: t('destDetail.factUhuruPeak'), value: '5,895 m' },
+        { icon: 'fa-ruler', label: t('destDetail.factParkArea'), value: '~1,688 sq km' },
+        { icon: 'fa-calendar', label: t('destDetail.factUnesco'), value: '1987' },
+        { icon: 'fa-star', label: t('destDetail.factFamousFor'), value: t('destDetail.famousRoof') }
     ] : [
-        { icon: 'fa-ruler', label: 'Size', value: destination.size_sq_km ? `${Number(destination.size_sq_km).toLocaleString()} sq km` : 'Varies' },
-        { icon: 'fa-calendar', label: 'Established', value: destination.established_year || 'Various' },
-        { icon: 'fa-users', label: 'Annual Visitors', value: '350,000+' },
-        { icon: 'fa-star', label: 'Status', value: isUnesco ? 'UNESCO Site' : 'National Park' }
+        { icon: 'fa-ruler', label: t('destDetail.factSize'), value: destination.size_sq_km ? `${Number(destination.size_sq_km).toLocaleString()} sq km` : t('destDetail.factVaries') },
+        { icon: 'fa-calendar', label: t('destDetail.factEstablished'), value: destination.established_year || t('destDetail.factVarious') },
+        { icon: 'fa-users', label: t('destDetail.factAnnualVisitors'), value: '350,000+' },
+        { icon: 'fa-star', label: t('destDetail.factStatus'), value: isUnesco ? t('destDetail.unescoSite') : t('destDetail.nationalPark') }
     ];
     
     const heroImg = imgSrc(
@@ -211,6 +247,12 @@ function renderDestinationDetails(destination) {
                 : (isKilimanjaro ? '/images/optimized/mount-kilimanjaro-national-park.webp'
                     : (slug ? `/images/optimized/${slug}.webp` : '/images/optimized/serengeti-national-park.webp')))
     );
+
+    const months = monthLabels();
+    const pkgCount = destination.safari_count || destination.tour_count || 0;
+    const pkgBadge = pkgCount > 0
+        ? t('destDetail.packagesCount', { n: pkgCount })
+        : t('destDetail.customSafaris');
     
     const html = `
         <section class="corp-page-hero">
@@ -222,14 +264,14 @@ function renderDestinationDetails(destination) {
             <div class="corp-page-hero-inner">
                 <div class="container">
                     <div class="corp-breadcrumb">
-                        <a href="/">Home</a><span>/</span><a href="/destinations">Destinations</a><span>/</span><span>${escapeHtml(name)}</span>
+                        <a href="/">${escapeHtml(t('destDetail.home'))}</a><span>/</span><a href="/destinations">${escapeHtml(t('destDetail.destinations'))}</a><span>/</span><span>${escapeHtml(name)}</span>
                     </div>
-                    <span class="corp-eyebrow">${eyebrow}</span>
+                    <span class="corp-eyebrow">${escapeHtml(eyebrow)}</span>
                     <h1 class="page-hero-title" style="color:#fff;margin:0">${escapeHtml(heroTitle)}</h1>
                     <div style="display:flex;flex-wrap:wrap;gap:0.6rem;margin-top:1rem">
-                        <span class="badge" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;padding:0.4rem 0.85rem;border-radius:999px;font-size:0.8rem;font-weight:600"><i class="fas fa-map-marker-alt"></i> East Africa</span>
-                        ${isUnesco ? '<span class="badge" style="background:var(--accent);color:#fff;padding:0.4rem 0.85rem;border-radius:999px;font-size:0.8rem;font-weight:600"><i class="fas fa-award"></i> UNESCO Site</span>' : ''}
-                        <span class="badge" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;padding:0.4rem 0.85rem;border-radius:999px;font-size:0.8rem;font-weight:600"><i class="fas fa-binoculars"></i> ${(destination.safari_count || destination.tour_count || 0) > 0 ? `${destination.safari_count || destination.tour_count} Packages` : 'Custom Safaris'}</span>
+                        <span class="badge" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;padding:0.4rem 0.85rem;border-radius:999px;font-size:0.8rem;font-weight:600"><i class="fas fa-map-marker-alt"></i> ${escapeHtml(t('destDetail.eastAfrica'))}</span>
+                        ${isUnesco ? `<span class="badge" style="background:var(--accent);color:#fff;padding:0.4rem 0.85rem;border-radius:999px;font-size:0.8rem;font-weight:600"><i class="fas fa-award"></i> ${escapeHtml(t('destDetail.unescoSite'))}</span>` : ''}
+                        <span class="badge" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;padding:0.4rem 0.85rem;border-radius:999px;font-size:0.8rem;font-weight:600"><i class="fas fa-binoculars"></i> ${escapeHtml(pkgBadge)}</span>
                     </div>
                 </div>
             </div>
@@ -241,12 +283,12 @@ function renderDestinationDetails(destination) {
                     <div class="dest-main-col">
                         ${!(isGuideDest && guide) ? `
                         <div class="corp-panel content-section" style="margin-bottom:1.25rem">
-                            <h2>About ${escapeHtml(name)}</h2>
+                            <h2>${escapeHtml(t('destDetail.about', { name }))}</h2>
                             <p style="font-size:1.05rem;line-height:1.8;color:var(--text-secondary);margin:0">${escapeHtml(description)}</p>
                         </div>` : ''}
 
                         <div class="corp-panel content-section" style="margin-bottom:1.25rem">
-                            <h2>Photo Gallery</h2>
+                            <h2>${escapeHtml(t('destDetail.photoGallery'))}</h2>
                             ${(() => {
                                 const images = [];
                                 if (Array.isArray(destination.gallery_urls)) images.push(...destination.gallery_urls);
@@ -282,36 +324,36 @@ function renderDestinationDetails(destination) {
                                     return `
                                         <div class="gallery corp-gallery">
                                             <div class="gallery-main" onclick="openLightbox('${imgSrc(images[0])}')">
-                                                <img src="${imgSrc(images[0])}" alt="${escapeHtml(name)} safari landscape" width="1200" height="675" loading="eager" decoding="async">
+                                                <img src="${imgSrc(images[0])}" alt="${escapeHtml(t('destDetail.galleryAlt', { name }))}" width="1200" height="675" loading="eager" decoding="async">
                                             </div>
                                             ${images.length > 1 ? `
                                             <div class="gallery-thumbs" style="display:contents">
                                                 ${images.slice(1, 5).map((url, i) => `
                                                     <div class="gallery-thumb" onclick="document.querySelector('.gallery-main img').src='${imgSrc(url)}'; document.querySelector('.gallery-main').setAttribute('onclick', 'openLightbox(\\'${imgSrc(url)}\\')')">
-                                                        <img src="${imgSrc(url)}" alt="${escapeHtml(name)} gallery ${i+1}" width="400" height="300" loading="lazy" decoding="async">
+                                                        <img src="${imgSrc(url)}" alt="${escapeHtml(t('destDetail.galleryN', { name, n: i + 1 }))}" width="400" height="300" loading="lazy" decoding="async">
                                                     </div>
                                                 `).join('')}
                                             </div>` : ''}
                                         </div>`;
                                 }
-                                return '<p style="color:var(--text-muted)">Photos of this destination will be available soon.</p>';
+                                return `<p style="color:var(--text-muted)">${escapeHtml(t('destDetail.photosSoon'))}</p>`;
                             })()}
                         </div>
 
                         <div id="lightbox" class="lightbox" onclick="closeLightbox()">
                             <button class="lightbox-close" type="button">&times;</button>
-                            <img id="lightboxImg" src="" alt="Enlarged view">
+                            <img id="lightboxImg" src="" alt="${escapeHtml(t('destDetail.enlargedView'))}">
                         </div>
 
                         <div class="corp-panel content-section" style="margin-bottom:1.25rem">
-                            <h2>Quick Facts</h2>
+                            <h2>${escapeHtml(t('destDetail.quickFacts'))}</h2>
                             <div class="corp-facts">
                                 ${facts.map(fact => `
                                     <div class="corp-fact">
                                         <i class="fas ${fact.icon}"></i>
                                         <div>
-                                            <h4 style="margin:0 0 0.25rem;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">${fact.label}</h4>
-                                            <p style="margin:0;font-weight:700;color:var(--earth-dark)">${fact.value}</p>
+                                            <h4 style="margin:0 0 0.25rem;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">${escapeHtml(fact.label)}</h4>
+                                            <p style="margin:0;font-weight:700;color:var(--earth-dark)">${escapeHtml(fact.value)}</p>
                                         </div>
                                     </div>
                                 `).join('')}
@@ -320,16 +362,16 @@ function renderDestinationDetails(destination) {
 
                         ${!(isGuideDest && guide) ? `
                         <div class="corp-panel content-section" style="margin-bottom:1.25rem">
-                            <h2>Best Time to Visit</h2>
+                            <h2>${escapeHtml(t('destDetail.bestTime'))}</h2>
                             <div class="months-grid">
-                                ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map((month, index) => `
-                                    <div class="month ${bestMonths[index]}">${month}</div>
+                                ${months.map((month, index) => `
+                                    <div class="month ${bestMonths[index]}">${escapeHtml(month)}</div>
                                 `).join('')}
                             </div>
                             <div class="legend">
-                                <div class="legend-item"><div class="legend-color excellent"></div><span>Excellent</span></div>
-                                <div class="legend-item"><div class="legend-color good"></div><span>Good</span></div>
-                                <div class="legend-item"><div class="legend-color poor"></div><span>Poor</span></div>
+                                <div class="legend-item"><div class="legend-color excellent"></div><span>${escapeHtml(t('destDetail.excellent'))}</span></div>
+                                <div class="legend-item"><div class="legend-color good"></div><span>${escapeHtml(t('destDetail.good'))}</span></div>
+                                <div class="legend-item"><div class="legend-color poor"></div><span>${escapeHtml(t('destDetail.poor'))}</span></div>
                             </div>
                         </div>` : ''}
 
@@ -339,55 +381,55 @@ function renderDestinationDetails(destination) {
                         </div>` : ''}
 
                         <div class="corp-panel content-section" id="safariPackagesSection">
-                            <h2 id="packages-heading">Safari Packages Featuring ${escapeHtml(name)}</h2>
+                            <h2 id="packages-heading">${escapeHtml(t('destDetail.packagesFeaturing', { name }))}</h2>
                             <div class="packages-grid" id="packagesGrid">
-                                <div class="loading-card">Loading packages...</div>
+                                <div class="loading-card">${escapeHtml(t('destDetail.loadingPackages'))}</div>
                             </div>
                         </div>
                     </div>
 
                     <aside class="corp-dest-sidebar">
                         <div class="corp-book-card desktop-only">
-                            <h3 style="margin:0 0 1rem;font-size:1.15rem"><i class="fas fa-info-circle" style="color:var(--primary)"></i> At a Glance</h3>
+                            <h3 style="margin:0 0 1rem;font-size:1.15rem"><i class="fas fa-info-circle" style="color:var(--primary)"></i> ${escapeHtml(t('destDetail.atAGlance'))}</h3>
                             <div class="corp-meta-list">
-                                <div class="corp-meta-row"><span><i class="fas fa-map-pin"></i> Location</span><strong>Tanzania</strong></div>
-                                <div class="corp-meta-row"><span><i class="fas fa-calendar"></i> Best Time</span><strong>${getBestTimeText(bestMonths)}</strong></div>
-                                <div class="corp-meta-row"><span><i class="fas fa-clock"></i> Stay</span><strong>${getRecommendedStay(name)} days</strong></div>
-                                <div class="corp-meta-row"><span><i class="fas fa-temperature-high"></i> Climate</span><strong>${getClimate(name)}</strong></div>
+                                <div class="corp-meta-row"><span><i class="fas fa-map-pin"></i> ${escapeHtml(t('destDetail.location'))}</span><strong>${escapeHtml(t('destDetail.tanzania'))}</strong></div>
+                                <div class="corp-meta-row"><span><i class="fas fa-calendar"></i> ${escapeHtml(t('destDetail.bestTime'))}</span><strong>${escapeHtml(getBestTimeText(bestMonths))}</strong></div>
+                                <div class="corp-meta-row"><span><i class="fas fa-clock"></i> ${escapeHtml(t('destDetail.stay'))}</span><strong>${escapeHtml(getRecommendedStay(name))} ${escapeHtml(t('destDetail.days'))}</strong></div>
+                                <div class="corp-meta-row"><span><i class="fas fa-temperature-high"></i> ${escapeHtml(t('destDetail.climate'))}</span><strong>${escapeHtml(getClimate(name))}</strong></div>
                             </div>
                             <button class="btn btn-primary btn-block" style="margin-bottom:0.75rem;min-height:48px" onclick="bookDestination('${escapeHtml(name)}')">
-                                <i class="fas fa-calendar-alt"></i> Plan Your Visit
+                                <i class="fas fa-calendar-alt"></i> ${escapeHtml(t('destDetail.planVisit'))}
                             </button>
                             <a class="btn btn-outline btn-block" style="min-height:48px" target="_blank" rel="noopener"
                                href="https://wa.me/255695108009?text=${encodeURIComponent("Hi Tanzania Safari Magic team, I'm interested in booking a custom safari package to " + name + "...")}">
-                                <i class="fab fa-whatsapp" style="color:#25D366"></i> WhatsApp Our Team
+                                <i class="fab fa-whatsapp" style="color:#25D366"></i> ${escapeHtml(t('destDetail.whatsappTeam'))}
                             </a>
                             <div class="seo-trust-strip" style="justify-content:flex-start;margin-top:1rem">
-                                <div class="seo-trust-item"><i class="fab fa-tripadvisor" style="color:#00af87"></i> TripAdvisor</div>
-                                <div class="seo-trust-item"><i class="fas fa-certificate" style="color:#f59e0b"></i> TATO</div>
-                                <div class="seo-trust-item"><i class="fas fa-shield-alt" style="color:var(--primary)"></i> Licensed</div>
+                                <div class="seo-trust-item"><i class="fab fa-tripadvisor" style="color:#00af87"></i> ${escapeHtml(t('destDetail.tripadvisor'))}</div>
+                                <div class="seo-trust-item"><i class="fas fa-certificate" style="color:#f59e0b"></i> ${escapeHtml(t('destDetail.tato'))}</div>
+                                <div class="seo-trust-item"><i class="fas fa-shield-alt" style="color:var(--primary)"></i> ${escapeHtml(t('destDetail.licensed'))}</div>
                             </div>
                         </div>
                         ${isGuideDest ? `<div id="guideSideTocMount"></div>
                         <div class="corp-panel" style="margin-bottom:1rem">
-                            <h3 style="margin:0 0 0.75rem;font-size:1rem">Plan This Trip</h3>
+                            <h3 style="margin:0 0 0.75rem;font-size:1rem">${escapeHtml(t('destDetail.planThisTrip'))}</h3>
                             <ul style="margin:0;padding-left:1.1rem;line-height:1.85;font-size:0.92rem">
-                              <li><a href="/safaris">All safari packages</a></li>
-                              <li><a href="/kilimanjaro">Kilimanjaro climb packages</a></li>
-                              <li><a href="/blog/great-wildebeest-migration">Great Migration guide</a></li>
-                              <li><a href="/blog/tanzania-safari-cost">Safari cost guide</a></li>
-                              <li><a href="/blog/tanzania-safari">Ultimate safari guide</a></li>
+                              <li><a href="/safaris">${escapeHtml(t('destDetail.allSafariPackages'))}</a></li>
+                              <li><a href="/kilimanjaro">${escapeHtml(t('destDetail.kiliClimbPackages'))}</a></li>
+                              <li><a href="/blog/great-wildebeest-migration">${escapeHtml(t('destDetail.migrationGuide'))}</a></li>
+                              <li><a href="/blog/tanzania-safari-cost">${escapeHtml(t('destDetail.costGuide'))}</a></li>
+                              <li><a href="/blog/tanzania-safari">${escapeHtml(t('destDetail.ultimateGuide'))}</a></li>
                               ${isKilimanjaro
-                                ? '<li><a href="/destinations/serengeti-national-park">Add a Serengeti safari</a></li><li><a href="/destinations/ngorongoro-conservation-area">Add Ngorongoro Crater</a></li><li><a href="/zanzibar">Zanzibar after the climb</a></li>'
+                                ? `<li><a href="/destinations/serengeti-national-park">${escapeHtml(t('destDetail.addSerengeti'))}</a></li><li><a href="/destinations/ngorongoro-conservation-area">${escapeHtml(t('destDetail.addNgorongoro'))}</a></li><li><a href="/zanzibar">${escapeHtml(t('destDetail.zanzibarAfter'))}</a></li>`
                                 : (isSerengeti
-                                  ? '<li><a href="/destinations/ngorongoro-conservation-area">Combine with Ngorongoro</a></li><li><a href="/destinations/mount-kilimanjaro-national-park">Climb Kilimanjaro</a></li>'
-                                  : '<li><a href="/destinations/serengeti-national-park">Combine with Serengeti</a></li><li><a href="/destinations/mount-kilimanjaro-national-park">Climb Kilimanjaro</a></li>')}
-                              <li><a href="/booking">Inquire / free quote</a></li>
-                              <li><a href="/contact">Contact Us Now</a></li>
+                                  ? `<li><a href="/destinations/ngorongoro-conservation-area">${escapeHtml(t('destDetail.combineNgorongoro'))}</a></li><li><a href="/destinations/mount-kilimanjaro-national-park">${escapeHtml(t('destDetail.climbKilimanjaro'))}</a></li>`
+                                  : `<li><a href="/destinations/serengeti-national-park">${escapeHtml(t('destDetail.combineSerengeti'))}</a></li><li><a href="/destinations/mount-kilimanjaro-national-park">${escapeHtml(t('destDetail.climbKilimanjaro'))}</a></li>`)}
+                              <li><a href="/booking">${escapeHtml(t('destDetail.inquireQuote'))}</a></li>
+                              <li><a href="/contact">${escapeHtml(t('destDetail.contactUsNow'))}</a></li>
                             </ul>
                         </div>` : ''}
                         <div class="corp-panel">
-                            <h3 style="margin:0 0 1rem;font-size:1.1rem"><i class="fas fa-lightbulb" style="color:var(--accent)"></i> Travel Tips</h3>
+                            <h3 style="margin:0 0 1rem;font-size:1.1rem"><i class="fas fa-lightbulb" style="color:var(--accent)"></i> ${escapeHtml(t('destDetail.travelTips'))}</h3>
                             <ul id="travelTipsList" style="margin:0;padding-left:1.1rem;color:var(--text-secondary);line-height:1.7">${getTravelTips(name)}</ul>
                         </div>
                     </aside>
@@ -397,10 +439,10 @@ function renderDestinationDetails(destination) {
 
         <div class="mobile-sticky-booking" id="mobileStickyBooking">
             <div>
-                <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase">Plan visit</div>
+                <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase">${escapeHtml(t('destDetail.planVisitShort'))}</div>
                 <div class="price" style="font-size:1.05rem;font-weight:700">${escapeHtml(name)}</div>
             </div>
-            <a href="/booking" class="btn btn-primary" style="min-height:48px">Inquire</a>
+            <a href="/booking" class="btn btn-primary" style="min-height:48px">${escapeHtml(t('destDetail.inquire'))}</a>
         </div>
     `;
     
@@ -421,7 +463,7 @@ function mountGuideSideToc(tocId) {
     toc.classList.add('moved-to-sidebar');
     mount.innerHTML = `
       <div class="guide-toc-side">
-        <h3><i class="fas fa-list" style="color:var(--accent);margin-right:0.35rem"></i> Guide Contents</h3>
+        <h3><i class="fas fa-list" style="color:var(--accent);margin-right:0.35rem"></i> ${escapeHtml(t('destDetail.guideContents'))}</h3>
         ${list.outerHTML}
       </div>`;
 }
@@ -449,7 +491,7 @@ function isKilimanjaroDestination(slug, name) {
 }
 
 function applyKilimanjaroSeo(destination) {
-    const guide = window.KilimanjaroDestinationGuide;
+    const guide = currentGuide || window.KilimanjaroDestinationGuide;
     const meta = guide?.META || {};
     const name = destination.park_name || destination.name || 'Kilimanjaro National Park';
     const title = (meta.title || `${name} Climb Guide | Tanzania Safari Magic`).slice(0, 70);
@@ -477,7 +519,7 @@ function applyKilimanjaroSeo(destination) {
 }
 
 function injectKilimanjaroSchemas(destination) {
-    const guide = window.KilimanjaroDestinationGuide;
+    const guide = currentGuide || window.KilimanjaroDestinationGuide;
     const name = destination.park_name || destination.name || 'Kilimanjaro National Park';
     const description = (guide?.META?.meta_description || destination.park_description || '').slice(0, 300);
     const image = destination.featured_image_url || destination.image_urls?.[0] || guide?.META?.image || '/images/optimized/mount-kilimanjaro-national-park.webp';
@@ -562,29 +604,29 @@ async function enhanceKilimanjaroPackageSection() {
         }
         if (!list.length) {
             anchor.innerHTML = `
-              <h2>Our Kilimanjaro Climb Packages</h2>
-              <p>Private Machame, Lemosho, and Marangu climbs from Arusha — request a custom quote or browse the climb hub.</p>
-              <p><a href="/kilimanjaro">View Kilimanjaro packages →</a> · <a href="/booking">Free climb quote →</a> · <a href="/safaris">All safaris →</a></p>`;
+              <h2>${escapeHtml(t('destDetail.ourKiliPackages'))}</h2>
+              <p>${escapeHtml(t('destDetail.kiliPkgEmpty'))}</p>
+              <p><a href="/kilimanjaro">${escapeHtml(t('destDetail.viewKiliPackages'))}</a> · <a href="/booking">${escapeHtml(t('destDetail.freeClimbQuote'))}</a> · <a href="/safaris">${escapeHtml(t('destDetail.allSafaris'))}</a></p>`;
             return;
         }
 
         anchor.innerHTML = `
-          <h2>Our Kilimanjaro Climb Packages</h2>
-          <p>Guided treks and climb + safari combos — compare days, then request a custom quote from our Arusha team.</p>
+          <h2>${escapeHtml(t('destDetail.ourKiliPackages'))}</h2>
+          <p>${escapeHtml(t('destDetail.kiliPkgIntro'))}</p>
           <div class="guide-pkg-grid">
             ${list.map((p) => {
-                const slug = p.package_slug || p.slug;
-                const pname = p.package_name || p.name || 'Kilimanjaro Trek';
+                const pkgSlug = p.package_slug || p.slug;
+                const pname = p.package_name || p.name || t('destDetail.kilimanjaroTrek');
                 const img = imgSrc(p.featured_image_url || p.image_url || p.image_urls?.[0], '/images/optimized/mount-kilimanjaro-national-park.webp');
-                const days = p.duration_days ? `${p.duration_days} days` : '';
-                const price = p.base_price_usd ? `From $${Number(p.base_price_usd).toLocaleString()}` : 'Request quote';
-                return `<a class="guide-pkg-card" href="/safaris/${slug}">
+                const days = p.duration_days ? t('destDetail.daysN', { n: p.duration_days }) : '';
+                const price = p.base_price_usd ? t('destDetail.fromPrice', { amount: Number(p.base_price_usd).toLocaleString() }) : t('destDetail.requestQuote');
+                return `<a class="guide-pkg-card" href="/safaris/${pkgSlug}">
                   <img src="${img}" alt="${escapeHtml(pname)}" width="480" height="300" loading="lazy" onerror="this.src='/images/optimized/6-day-machame-route-kilimanjaro.webp'">
-                  <div class="body"><div class="meta">${days}</div><h3>${escapeHtml(pname)}</h3><div class="price">${price}</div></div>
+                  <div class="body"><div class="meta">${escapeHtml(days)}</div><h3>${escapeHtml(pname)}</h3><div class="price">${escapeHtml(price)}</div></div>
                 </a>`;
             }).join('')}
           </div>
-          <p><a href="/kilimanjaro">All Kilimanjaro packages →</a> · <a href="/booking">Free climb quote →</a> · <a href="/destinations/serengeti-national-park">Add Serengeti →</a> · <a href="/blog/tanzania-safari-cost">Cost guide →</a></p>
+          <p><a href="/kilimanjaro">${escapeHtml(t('destDetail.allKiliPackages'))}</a> · <a href="/booking">${escapeHtml(t('destDetail.freeClimbQuote'))}</a> · <a href="/destinations/serengeti-national-park">${escapeHtml(t('destDetail.addSerengetiArrow'))}</a> · <a href="/blog/tanzania-safari-cost">${escapeHtml(t('destDetail.costGuideArrow'))}</a></p>
         `;
     } catch (e) {
         console.warn('Kilimanjaro package enhance skipped', e);
@@ -592,7 +634,7 @@ async function enhanceKilimanjaroPackageSection() {
 }
 
 function applyNgorongoroSeo(destination) {
-    const guide = window.NgorongoroDestinationGuide;
+    const guide = currentGuide || window.NgorongoroDestinationGuide;
     const meta = guide?.META || {};
     const name = destination.park_name || destination.name || 'Ngorongoro Crater';
     const title = (meta.title || `${name} Safari Guide | Tanzania Safari Magic`).slice(0, 70);
@@ -621,7 +663,7 @@ function applyNgorongoroSeo(destination) {
 }
 
 function injectNgorongoroSchemas(destination) {
-    const guide = window.NgorongoroDestinationGuide;
+    const guide = currentGuide || window.NgorongoroDestinationGuide;
     const name = destination.park_name || destination.name || 'Ngorongoro Conservation Area';
     const desc = guide?.META?.meta_description || destination.park_description || destination.description || '';
     const image = destination.featured_image_url || destination.image_url || guide?.META?.image || '/images/optimized/mbugani.webp';
@@ -714,10 +756,10 @@ async function enhanceNgorongoroPackageSection() {
     // Mirror packages into the in-guide anchor for SEO internal linking
     if (grid.innerHTML && !grid.innerHTML.includes('loading-card')) {
         anchor.innerHTML = `
-          <h2>Our Ngorongoro Safari Packages</h2>
-          <p>Live itineraries from Tanzania Safari Magic that include Ngorongoro Crater — open any package for full details, then request a custom quote.</p>
+          <h2>${escapeHtml(t('destDetail.ourNgorongoroPackages'))}</h2>
+          <p>${escapeHtml(t('destDetail.ngoroPkgIntro'))}</p>
           <div class="guide-pkg-grid">${grid.innerHTML.replace(/package-card/g, 'guide-pkg-card').replace(/onclick="window.location.href='/g, 'href="').replace(/'"/g, '"')}</div>
-          <p><a href="/safaris">Browse all safari packages →</a> · <a href="/booking">Get a free quote →</a></p>
+          <p><a href="/safaris">${escapeHtml(t('destDetail.browseAllPackages'))}</a> · <a href="/booking">${escapeHtml(t('destDetail.getFreeQuote'))}</a></p>
         `;
         // Simpler: clone clean cards
     }
@@ -733,22 +775,22 @@ async function enhanceNgorongoroPackageSection() {
         if (!list.length) return;
 
         anchor.innerHTML = `
-          <h2>Our Ngorongoro Safari Packages</h2>
-          <p>Private itineraries featuring the crater — linked directly from this guide so you can compare days and pricing, then book with our Arusha team.</p>
+          <h2>${escapeHtml(t('destDetail.ourNgorongoroPackages'))}</h2>
+          <p>${escapeHtml(t('destDetail.ngoroPkgIntro'))}</p>
           <div class="guide-pkg-grid">
             ${list.map(p => {
-                const slug = p.package_slug || p.slug;
-                const pname = p.package_name || p.name || 'Safari Package';
+                const pkgSlug = p.package_slug || p.slug;
+                const pname = p.package_name || p.name || t('destDetail.safariPackage');
                 const img = imgSrc(p.featured_image_url || p.image_url || p.image_urls?.[0], '/images/optimized/mbugani.webp');
-                const days = p.duration_days ? `${p.duration_days} days` : '';
-                const price = p.base_price_usd ? `From $${Number(p.base_price_usd).toLocaleString()}` : 'Request quote';
-                return `<a class="guide-pkg-card" href="/safaris/${slug}">
+                const days = p.duration_days ? t('destDetail.daysN', { n: p.duration_days }) : '';
+                const price = p.base_price_usd ? t('destDetail.fromPrice', { amount: Number(p.base_price_usd).toLocaleString() }) : t('destDetail.requestQuote');
+                return `<a class="guide-pkg-card" href="/safaris/${pkgSlug}">
                   <img src="${img}" alt="${escapeHtml(pname)}" width="480" height="300" loading="lazy" onerror="this.src='/images/optimized/balloon.webp'">
-                  <div class="body"><div class="meta">${days}</div><h3>${escapeHtml(pname)}</h3><div class="price">${price}</div></div>
+                  <div class="body"><div class="meta">${escapeHtml(days)}</div><h3>${escapeHtml(pname)}</h3><div class="price">${escapeHtml(price)}</div></div>
                 </a>`;
             }).join('')}
           </div>
-          <p><a href="/safaris">View all packages →</a> · <a href="/booking">Free Ngorongoro quote →</a> · <a href="/blog/tanzania-safari">Tanzania safari ultimate guide →</a> · <a href="/blog/tanzania-safari-cost">Safari cost guide →</a></p>
+          <p><a href="/safaris">${escapeHtml(t('destDetail.viewAllPackages'))}</a> · <a href="/booking">${escapeHtml(t('destDetail.freeNgorongoroQuote'))}</a> · <a href="/blog/tanzania-safari">${escapeHtml(t('destDetail.ultimateGuideArrow'))}</a> · <a href="/blog/tanzania-safari-cost">${escapeHtml(t('destDetail.costGuideArrow'))}</a></p>
         `;
     } catch (e) {
         console.warn('Ngorongoro package enhance skipped', e);
@@ -756,7 +798,7 @@ async function enhanceNgorongoroPackageSection() {
 }
 
 function applySerengetiSeo(destination) {
-    const guide = window.SerengetiDestinationGuide;
+    const guide = currentGuide || window.SerengetiDestinationGuide;
     const meta = guide?.META || {};
     const name = destination.park_name || destination.name || 'Serengeti National Park';
     const title = (meta.title || `${name} Safari Guide | Tanzania Safari Magic`).slice(0, 70);
@@ -784,7 +826,7 @@ function applySerengetiSeo(destination) {
 }
 
 function injectSerengetiSchemas(destination) {
-    const guide = window.SerengetiDestinationGuide;
+    const guide = currentGuide || window.SerengetiDestinationGuide;
     const name = destination.park_name || destination.name || 'Serengeti National Park';
     const description = (guide?.META?.meta_description || destination.park_description || '').slice(0, 300);
     const image = destination.featured_image_url || destination.image_urls?.[0] || guide?.META?.image || '/images/optimized/serengeti-national-park.webp';
@@ -857,22 +899,22 @@ async function enhanceSerengetiPackageSection() {
         if (!list.length) return;
 
         anchor.innerHTML = `
-          <h2>Our Serengeti Safari Packages</h2>
-          <p>Private itineraries featuring Serengeti plains and migration timing — compare days, then request a custom quote from Arusha.</p>
+          <h2>${escapeHtml(t('destDetail.ourSerengetiPackages'))}</h2>
+          <p>${escapeHtml(t('destDetail.serengetiPkgIntro'))}</p>
           <div class="guide-pkg-grid">
             ${list.map((p) => {
-                const slug = p.package_slug || p.slug;
-                const pname = p.package_name || p.name || 'Safari Package';
+                const pkgSlug = p.package_slug || p.slug;
+                const pname = p.package_name || p.name || t('destDetail.safariPackage');
                 const img = imgSrc(p.featured_image_url || p.image_url || p.image_urls?.[0], '/images/optimized/serengeti-national-park.webp');
-                const days = p.duration_days ? `${p.duration_days} days` : '';
-                const price = p.base_price_usd ? `From $${Number(p.base_price_usd).toLocaleString()}` : 'Request quote';
-                return `<a class="guide-pkg-card" href="/safaris/${slug}">
+                const days = p.duration_days ? t('destDetail.daysN', { n: p.duration_days }) : '';
+                const price = p.base_price_usd ? t('destDetail.fromPrice', { amount: Number(p.base_price_usd).toLocaleString() }) : t('destDetail.requestQuote');
+                return `<a class="guide-pkg-card" href="/safaris/${pkgSlug}">
                   <img src="${img}" alt="${escapeHtml(pname)}" width="480" height="300" loading="lazy" onerror="this.src='/images/optimized/balloon.webp'">
-                  <div class="body"><div class="meta">${days}</div><h3>${escapeHtml(pname)}</h3><div class="price">${price}</div></div>
+                  <div class="body"><div class="meta">${escapeHtml(days)}</div><h3>${escapeHtml(pname)}</h3><div class="price">${escapeHtml(price)}</div></div>
                 </a>`;
             }).join('')}
           </div>
-          <p><a href="/safaris">View all packages →</a> · <a href="/booking">Free Serengeti quote →</a> · <a href="/blog/great-wildebeest-migration">Migration guide →</a> · <a href="/blog/tanzania-safari-cost">Safari cost guide →</a></p>
+          <p><a href="/safaris">${escapeHtml(t('destDetail.viewAllPackages'))}</a> · <a href="/booking">${escapeHtml(t('destDetail.freeSerengetiQuote'))}</a> · <a href="/blog/great-wildebeest-migration">${escapeHtml(t('destDetail.migrationGuideArrow'))}</a> · <a href="/blog/tanzania-safari-cost">${escapeHtml(t('destDetail.costGuideArrow'))}</a></p>
         `;
     } catch (e) {
         console.warn('Serengeti package enhance skipped', e);
@@ -904,7 +946,7 @@ async function loadSafariPackagesForDestination(destinationName, slug) {
     const packagesGrid = document.getElementById('packagesGrid');
     if (!packagesGrid) return;
 
-    packagesGrid.innerHTML = '<div class="loading-card">Loading safari packages...</div>';
+    packagesGrid.innerHTML = `<div class="loading-card">${escapeHtml(t('destDetail.loadingSafariPackages'))}</div>`;
 
     try {
         // Get all packages and filter by destination
@@ -931,26 +973,26 @@ async function loadSafariPackagesForDestination(destinationName, slug) {
                         <div class="package-card" onclick="window.location.href='/safaris/${pkg.package_slug}'">
                             <div class="package-card-image">
                                 <img src="${pkgImg}" alt="${escapeHtml(pkg.package_name)}" loading="lazy" decoding="async">
-                                <div class="package-card-badge">${pkg.category_name || 'Safari'}</div>
+                                <div class="package-card-badge">${escapeHtml(pkg.category_name || t('destDetail.safariPackage'))}</div>
                             </div>
                             <div class="package-card-header">
                                 <h3>${escapeHtml(pkg.package_name)}</h3>
-                                <p>${pkg.duration_days} Days Adventure</p>
+                                <p>${escapeHtml(t('destDetail.daysAdventure', { n: pkg.duration_days }))}</p>
                             </div>
                             <div class="package-card-body">
                                 <div class="package-duration">
                                     <i class="fas fa-clock"></i>
-                                    <span>${pkg.duration_days} days</span>
+                                    <span>${escapeHtml(t('destDetail.daysN', { n: pkg.duration_days }))}</span>
                                 </div>
                                 <div class="package-price">
                                     $${parseInt(pkg.base_price_usd || 0).toLocaleString()}
-                                    <span style="font-size: 0.8rem;">/ person</span>
+                                    <span style="font-size: 0.8rem;">${escapeHtml(t('destDetail.perPerson'))}</span>
                                 </div>
                                 <div class="package-rating">
                                     <i class="fas fa-star" style="color: #ffc107;"></i>
-                                    <span>${avgRating} (${pkg.review_count || 0} reviews)</span>
+                                    <span>${escapeHtml(t('destDetail.reviewsCount', { rating: avgRating, n: pkg.review_count || 0 }))}</span>
                                 </div>
-                                <button class="btn-view-package">View Details</button>
+                                <button class="btn-view-package">${escapeHtml(t('destDetail.viewDetails'))}</button>
                             </div>
                         </div>
                     `;
@@ -958,11 +1000,11 @@ async function loadSafariPackagesForDestination(destinationName, slug) {
             } else {
                 packagesGrid.innerHTML = `
                   <div class="corp-empty-cta">
-                    <h3 style="margin:0 0 0.5rem">No published packages for this park yet</h3>
-                    <p style="margin:0;color:var(--text-secondary)">Our Arusha team can craft a private itinerary for this destination.</p>
+                    <h3 style="margin:0 0 0.5rem">${escapeHtml(t('destDetail.noPackagesTitle'))}</h3>
+                    <p style="margin:0;color:var(--text-secondary)">${escapeHtml(t('destDetail.noPackagesDesc'))}</p>
                     <div class="actions">
-                      <a href="/contact" class="btn btn-outline" style="min-height:48px">Contact Us</a>
-                      <a href="https://wa.me/255695108009?text=Hi%20Tanzania%20Safari%20Magic%20team%2C%20I%27m%20interested%20in%20a%20safari%20to%20this%20destination." class="btn btn-primary" target="_blank" rel="noopener" style="min-height:48px"><i class="fab fa-whatsapp"></i> WhatsApp Our Team</a>
+                      <a href="/contact" class="btn btn-outline" style="min-height:48px">${escapeHtml(t('destDetail.contactUs'))}</a>
+                      <a href="https://wa.me/255695108009?text=Hi%20Tanzania%20Safari%20Magic%20team%2C%20I%27m%20interested%20in%20a%20safari%20to%20this%20destination." class="btn btn-primary" target="_blank" rel="noopener" style="min-height:48px"><i class="fab fa-whatsapp"></i> ${escapeHtml(t('destDetail.whatsappTeam'))}</a>
                     </div>
                   </div>`;
                 if (window.SafariSEO) SafariSEO.setNoIndexFollow();
@@ -970,24 +1012,28 @@ async function loadSafariPackagesForDestination(destinationName, slug) {
         } else {
             packagesGrid.innerHTML = `
               <div class="corp-empty-cta">
-                <h3 style="margin:0 0 0.5rem">Custom safaris available</h3>
-                <p style="margin:0;color:var(--text-secondary)">Ask for a tailored itinerary — park fees, lodges, and pacing matched to your dates.</p>
+                <h3 style="margin:0 0 0.5rem">${escapeHtml(t('destDetail.customSafarisTitle'))}</h3>
+                <p style="margin:0;color:var(--text-secondary)">${escapeHtml(t('destDetail.customSafarisDesc'))}</p>
                 <div class="actions">
-                  <a href="/contact" class="btn btn-outline" style="min-height:48px">Contact Us</a>
-                  <a href="/booking" class="btn btn-primary" style="min-height:48px">Request Quote</a>
+                  <a href="/contact" class="btn btn-outline" style="min-height:48px">${escapeHtml(t('destDetail.contactUs'))}</a>
+                  <a href="/booking" class="btn btn-primary" style="min-height:48px">${escapeHtml(t('destDetail.requestQuoteBtn'))}</a>
                 </div>
               </div>`;
             if (window.SafariSEO) SafariSEO.setNoIndexFollow();
         }
     } catch (error) {
         console.error('Error loading packages:', error);
-        packagesGrid.innerHTML = '<p>Unable to load safari packages.</p>';
+        packagesGrid.innerHTML = `<p>${escapeHtml(t('destDetail.unableLoadPackages'))}</p>`;
     }
 }
 
 async function loadRelatedDestinations(currentId, currentSlug) {
+    document.querySelectorAll('.related-destinations').forEach(el => el.remove());
+
     const relatedGrid = document.getElementById('relatedGrid');
-    if (!relatedGrid) return;
+    if (!relatedGrid) {
+        // related section is injected after main content; continue without relatedGrid
+    }
     
     try {
         const result = await API.getDestinations();
@@ -999,12 +1045,12 @@ async function loadRelatedDestinations(currentId, currentSlug) {
                     <section class="related-destinations">
                         <div class="container">
                             <div class="section-header">
-                                <span class="section-subtitle">You Might Also Like</span>
-                                <h2 class="section-title">Other Amazing Destinations</h2>
+                                <span class="section-subtitle">${escapeHtml(t('destDetail.youMightLike'))}</span>
+                                <h2 class="section-title">${escapeHtml(t('destDetail.otherDestinations'))}</h2>
                             </div>
                             <div class="related-grid">
                                 ${related.map(dest => {
-                                    const rName = dest.park_name || dest.name || 'Destination';
+                                    const rName = dest.park_name || dest.name || t('destDetail.destinations');
                                     const rSlug = dest.park_slug || dest.slug || '';
                                     let iconClass = 'fa-tree';
                                     if (rName.toLowerCase().includes('serengeti')) iconClass = 'fa-paw';
@@ -1018,9 +1064,9 @@ async function loadRelatedDestinations(currentId, currentSlug) {
                                             </div>
                                             <div class="related-card-content">
                                                 <h3>${escapeHtml(rName)}</h3>
-                                                <p>${escapeHtml(dest.park_description || dest.description || dest.short_description || 'Discover this amazing destination')}</p>
+                                                <p>${escapeHtml(dest.park_description || dest.description || dest.short_description || t('destDetail.discoverAmazing'))}</p>
                                                 <div class="related-stats">
-                                                    <span><i class="fas fa-binoculars"></i> ${dest.safari_count || dest.tour_count || 0} safaris</span>
+                                                    <span><i class="fas fa-binoculars"></i> ${escapeHtml(t('destDetail.safarisCount', { n: dest.safari_count || dest.tour_count || 0 }))}</span>
                                                 </div>
                                             </div>
                                         </a>
@@ -1129,10 +1175,10 @@ function getBestTimeForDestination(name, bestSeasonString = null) {
 }
 
 function getBestTimeText(months) {
+    const labels = monthLabels();
     const excellentMonths = months.reduce((acc, month, index) => {
         if (month === 'excellent') {
-            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            acc.push(monthNames[index]);
+            acc.push(labels[index]);
         }
         return acc;
     }, []);
@@ -1140,7 +1186,7 @@ function getBestTimeText(months) {
     if (excellentMonths.length > 0) {
         return `${excellentMonths.slice(0, 3).join(', ')}${excellentMonths.length > 3 ? '...' : ''}`;
     }
-    return 'Year-round';
+    return t('destDetail.yearRound');
 }
 
 function getQuickFacts(name) {
@@ -1148,29 +1194,29 @@ function getQuickFacts(name) {
     
     if (lowerName.includes('serengeti')) {
         return [
-            { icon: 'fa-ruler', label: 'Size', value: '14,750 sq km' },
-            { icon: 'fa-calendar', label: 'Established', value: '1951' },
-            { icon: 'fa-users', label: 'Annual Visitors', value: '350,000+' },
-            { icon: 'fa-star', label: 'Famous For', value: 'Great Migration' }
+            { icon: 'fa-ruler', label: t('destDetail.factSize'), value: '14,750 sq km' },
+            { icon: 'fa-calendar', label: t('destDetail.factEstablished'), value: '1951' },
+            { icon: 'fa-users', label: t('destDetail.factAnnualVisitors'), value: '350,000+' },
+            { icon: 'fa-star', label: t('destDetail.factFamousFor'), value: t('destDetail.famousMigration') }
         ];
     } else if (lowerName.includes('ngorongoro')) {
         return [
-            { icon: 'fa-ruler', label: 'Size', value: '260 sq km (crater)' },
-            { icon: 'fa-calendar', label: 'Established', value: '1959' },
-            { icon: 'fa-users', label: 'Annual Visitors', value: '500,000+' },
-            { icon: 'fa-star', label: 'Famous For', value: 'Crater floor wildlife' }
+            { icon: 'fa-ruler', label: t('destDetail.factSize'), value: '260 sq km (crater)' },
+            { icon: 'fa-calendar', label: t('destDetail.factEstablished'), value: '1959' },
+            { icon: 'fa-users', label: t('destDetail.factAnnualVisitors'), value: '500,000+' },
+            { icon: 'fa-star', label: t('destDetail.factFamousFor'), value: 'Crater floor wildlife' }
         ];
     } else if (lowerName.includes('kilimanjaro')) {
         return [
             { icon: 'fa-ruler', label: 'Height', value: '5,895 m' },
             { icon: 'fa-calendar', label: 'First Ascent', value: '1889' },
             { icon: 'fa-users', label: 'Annual Climbers', value: '50,000+' },
-            { icon: 'fa-star', label: 'Famous For', value: 'Africa\'s highest peak' }
+            { icon: 'fa-star', label: t('destDetail.factFamousFor'), value: 'Africa\'s highest peak' }
         ];
     } else {
         return [
-            { icon: 'fa-ruler', label: 'Size', value: 'Varies' },
-            { icon: 'fa-calendar', label: 'Established', value: 'Various' },
+            { icon: 'fa-ruler', label: t('destDetail.factSize'), value: t('destDetail.factVaries') },
+            { icon: 'fa-calendar', label: t('destDetail.factEstablished'), value: t('destDetail.factVarious') },
             { icon: 'fa-users', label: 'Popularity', value: 'High' },
             { icon: 'fa-star', label: 'Highlights', value: 'Wildlife viewing' }
         ];
@@ -1188,9 +1234,9 @@ function getRecommendedStay(name) {
 
 function getClimate(name) {
     const lowerName = name.toLowerCase();
-    if (lowerName.includes('kilimanjaro')) return 'Alpine to Arctic';
-    if (lowerName.includes('zanzibar')) return 'Tropical, warm year-round';
-    return 'Tropical savanna, warm days, cool nights';
+    if (lowerName.includes('kilimanjaro')) return t('destDetail.climateAlpine');
+    if (lowerName.includes('zanzibar')) return t('destDetail.climateTropical');
+    return t('destDetail.climateSavanna');
 }
 
 function updatePageTitle(title) {
@@ -1240,9 +1286,9 @@ function showError(message) {
             <div style="text-align: center; padding: 4rem;">
                 <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #ef4444; margin-bottom: 1rem;"></i>
                 <h2>${escapeHtml(message)}</h2>
-                <p style="margin-top: 1rem;">The destination you're looking for might not exist.</p>
+                <p style="margin-top: 1rem;">${escapeHtml(t('destDetail.mightNotExist'))}</p>
                 <a href="/destinations" class="btn btn-primary" style="margin-top: 2rem; display: inline-block;">
-                    <i class="fas fa-arrow-left"></i> Browse All Destinations
+                    <i class="fas fa-arrow-left"></i> ${escapeHtml(t('destDetail.browseAll'))}
                 </a>
             </div>
         `;
@@ -1260,11 +1306,11 @@ async function loadPopularSafaris() {
                 <li><a href="/safaris/${pkg.package_slug}">${escapeHtml(pkg.package_name)}</a></li>
             `).join('');
         } else {
-            list.innerHTML = '<li><a href="/safaris">View all safaris</a></li>';
+            list.innerHTML = `<li><a href="/safaris">${escapeHtml(t('destDetail.viewAllSafaris'))}</a></li>`;
         }
     } catch (error) {
         console.error('Error loading popular safaris:', error);
-        list.innerHTML = '<li><a href="/safaris">View all safaris</a></li>';
+        list.innerHTML = `<li><a href="/safaris">${escapeHtml(t('destDetail.viewAllSafaris'))}</a></li>`;
     }
 }
 
@@ -1296,39 +1342,39 @@ function getTravelTips(name) {
     let tips = [];
     if (lowerName.includes('serengeti')) {
         tips = [
-            { icon: 'fa-camera', text: 'Incredible migration photography' },
-            { icon: 'fa-sun', text: 'Very hot at midday, dress in layers' },
-            { icon: 'fa-car', text: 'Expect long game drives' },
-            { icon: 'fa-binoculars', text: 'Binoculars are essential for predators' }
+            { icon: 'fa-camera', text: t('destDetail.tipSerengeti1') },
+            { icon: 'fa-sun', text: t('destDetail.tipSerengeti2') },
+            { icon: 'fa-car', text: t('destDetail.tipSerengeti3') },
+            { icon: 'fa-binoculars', text: t('destDetail.tipSerengeti4') }
         ];
     } else if (lowerName.includes('ngorongoro')) {
         tips = [
-            { icon: 'fa-snowflake', text: 'Crater rim is very cold in mornings' },
-            { icon: 'fa-camera', text: 'Incredible lighting at dawn' },
-            { icon: 'fa-binoculars', text: 'Look out for the Black Rhino' },
-            { icon: 'fa-car', text: 'Steep descent into the crater' }
+            { icon: 'fa-snowflake', text: t('destDetail.tipNgoro1') },
+            { icon: 'fa-camera', text: t('destDetail.tipNgoro2') },
+            { icon: 'fa-binoculars', text: t('destDetail.tipNgoro3') },
+            { icon: 'fa-car', text: t('destDetail.tipNgoro4') }
         ];
     } else if (lowerName.includes('kilimanjaro')) {
         tips = [
-            { icon: 'fa-hiking', text: 'Sturdy hiking boots required' },
-            { icon: 'fa-temperature-low', text: 'Thermal gear is essential' },
-            { icon: 'fa-tint', text: 'Drink 3-4 liters of water daily' },
-            { icon: 'fa-walking', text: '\'Pole pole\' (slowly slowly) is key' }
+            { icon: 'fa-hiking', text: t('destDetail.tipKili1') },
+            { icon: 'fa-temperature-low', text: t('destDetail.tipKili2') },
+            { icon: 'fa-tint', text: t('destDetail.tipKili3') },
+            { icon: 'fa-walking', text: t('destDetail.tipKili4') }
         ];
     } else if (lowerName.includes('zanzibar')) {
         tips = [
-            { icon: 'fa-swimmer', text: 'Reef shoes recommended for low tide' },
-            { icon: 'fa-tshirt', text: 'Dress modestly in Stone Town' },
-            { icon: 'fa-sun', text: 'Reef-safe sunscreen is a must' },
-            { icon: 'fa-camera', text: 'Amazing sunset photography' }
+            { icon: 'fa-swimmer', text: t('destDetail.tipZan1') },
+            { icon: 'fa-tshirt', text: t('destDetail.tipZan2') },
+            { icon: 'fa-sun', text: t('destDetail.tipZan3') },
+            { icon: 'fa-camera', text: t('destDetail.tipZan4') }
         ];
     } else {
         tips = [
-            { icon: 'fa-camera', text: 'Best for photography' },
-            { icon: 'fa-binoculars', text: 'Guided tours available' },
-            { icon: 'fa-car', text: '4x4 vehicles recommended' },
-            { icon: 'fa-umbrella', text: 'Sun protection essential' }
+            { icon: 'fa-camera', text: t('destDetail.tipDefault1') },
+            { icon: 'fa-binoculars', text: t('destDetail.tipDefault2') },
+            { icon: 'fa-car', text: t('destDetail.tipDefault3') },
+            { icon: 'fa-umbrella', text: t('destDetail.tipDefault4') }
         ];
     }
-    return tips.map(t => '<li><i class="fas ' + t.icon + '"></i> ' + t.text + '</li>').join('');
+    return tips.map(tip => '<li><i class="fas ' + tip.icon + '"></i> ' + tip.text + '</li>').join('');
 }
