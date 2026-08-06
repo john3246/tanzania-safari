@@ -1,5 +1,10 @@
 // destinations.js - Corporate Revamp + resilient image/slug mapping
 
+function t(key, vars) {
+  if (window.TSM_i18n && typeof window.TSM_i18n.t === 'function') return window.TSM_i18n.t(key, vars);
+  return key;
+}
+
 const header = document.getElementById('header');
 window.addEventListener('scroll', () => {
     header?.classList.toggle('scrolled', window.scrollY > 50);
@@ -11,7 +16,7 @@ function destSlug(d) {
 }
 
 function destName(d) {
-    return d.park_name || d.name || 'Destination';
+    return d.park_name || d.name || t('common.destination');
 }
 
 const PARK_LOCAL_COVER = {
@@ -49,6 +54,7 @@ function createCorporateCard(d) {
     const fb = destImageFallback(d);
     const count = d.safari_count || d.tour_count || 0;
     const desc = d.park_description || d.description || d.short_description || 'Experience the untamed wilderness of Tanzania.';
+    const ctaLabel = count > 0 ? t('destinationsPage.safaris') : t('destinationsPage.inquire');
 
     return `
     <a href="${href}" class="corp-dest-card">
@@ -65,7 +71,7 @@ function createCorporateCard(d) {
             </div>
             <p class="corp-dest-desc">${desc.substring(0, 90)}${desc.length > 90 ? '…' : ''}</p>
             <div class="corp-dest-footer">
-                <span class="corp-dest-safaris"><i class="fas fa-binoculars"></i> <strong>${count > 0 ? count : '—'}</strong> ${count > 0 ? 'Safaris' : 'Inquire'}</span>
+                <span class="corp-dest-safaris"><i class="fas fa-binoculars"></i> <strong>${count > 0 ? count : '—'}</strong> ${ctaLabel}</span>
                 <span class="corp-dest-action">Explore <i class="fas fa-arrow-right"></i></span>
             </div>
         </div>
@@ -82,13 +88,13 @@ async function loadDestinations() {
         const southern = data.filter(d => !northern.includes(d) && !zanzibar.includes(d));
 
         const nGrid = document.getElementById('northernDestGrid');
-        if (nGrid) nGrid.innerHTML = northern.length ? northern.map(createCorporateCard).join('') : '<p class="text-muted">No northern circuit parks listed yet.</p>';
+        if (nGrid) nGrid.innerHTML = northern.length ? northern.map(createCorporateCard).join('') : `<p class="text-muted">${t('home.noDestinations')}</p>`;
 
         const sGrid = document.getElementById('southernDestGrid');
-        if (sGrid) sGrid.innerHTML = southern.length ? southern.map(createCorporateCard).join('') : '<p class="text-muted">No southern circuit parks listed yet.</p>';
+        if (sGrid) sGrid.innerHTML = southern.length ? southern.map(createCorporateCard).join('') : `<p class="text-muted">${t('home.noDestinations')}</p>`;
 
         const zGrid = document.getElementById('zanzibarDestGrid');
-        if (zGrid) zGrid.innerHTML = zanzibar.length ? zanzibar.map(createCorporateCard).join('') : '<p class="text-muted">Coastal destinations coming soon — <a href="/contact">inquire for Zanzibar</a>.</p>';
+        if (zGrid) zGrid.innerHTML = zanzibar.length ? zanzibar.map(createCorporateCard).join('') : `<p class="text-muted">${t('home.noDestinations')}</p>`;
     } catch (e) {
         console.error('Failed to load destinations:', e);
     }

@@ -1,3 +1,8 @@
+function t(key, vars) {
+  if (window.TSM_i18n && typeof window.TSM_i18n.t === 'function') return window.TSM_i18n.t(key, vars);
+  return key;
+}
+
 const DEFAULT_AUTHOR = 'John Raphael Shayo';
 
 const PILLAR_ORDER = [
@@ -90,6 +95,7 @@ function cardHtml(post, index) {
           ${date ? `<time class="blog-mag-date" datetime="${escapeHtml(post.published_at || '')}">${date}</time>` : ''}
         </div>
         <h2 class="blog-mag-title">${escapeHtml(title)}</h2>
+        <span class="blog-mag-more">${t('blog.readMore')}</span>
       </a>
     </article>`;
 }
@@ -110,26 +116,7 @@ async function loadBlog() {
 
   if (!posts.length) {
     container.innerHTML = `
-      <div class="blog-mag-grid">
-        ${cardHtml({
-          post_slug: 'great-wildebeest-migration',
-          post_title: 'Great Wildebeest Migration Safari Guide | Serengeti Tanzania',
-          featured_image_url: '/images/optimized/8-day-northern-serengeti-mara-river-crossing.webp',
-          published_at: '2026-07-28'
-        }, 0)}
-        ${cardHtml({
-          post_slug: 'tanzania-safari',
-          post_title: 'Tanzania Safari: The Ultimate Guide to Planning the Perfect Tour',
-          featured_image_url: '/images/optimized/serengeti-national-park.webp',
-          published_at: '2026-07-01'
-        }, 1)}
-        ${cardHtml({
-          post_slug: 'tanzania-safari-cost',
-          post_title: 'Tanzania Safari Cost 2026: Everything You Need to Know',
-          featured_image_url: '/images/optimized/balloon.webp',
-          published_at: '2026-07-15'
-        }, 2)}
-      </div>
+      <p class="text-muted" style="text-align:center;padding:2rem">${t('blog.noPosts')}</p>
       ${ctaHtml()}`;
     return;
   }

@@ -27,10 +27,10 @@
   </div>
   <div class="corp-page-hero-inner">
     <div class="container">
-      <div class="corp-breadcrumb"><a href="/">Home</a><span>/</span><span>Safaris</span></div>
-      <span class="corp-eyebrow">Browse Private Itineraries</span>
-      <h1 class="page-hero-title" style="color:#fff;margin:0">Tanzania Safari Packages</h1>
-      <p style="max-width:36rem;margin:0.75rem 0 0;color:rgba(255,255,255,0.9)">Serengeti migration, Ngorongoro crater, Kilimanjaro, and bush-to-beach Zanzibar combos — designed from Arusha.</p>
+      <div class="corp-breadcrumb"><a href="/" data-i18n="nav.home">Home</a><span>/</span><span data-i18n="safarisPage.crumb">Safaris</span></div>
+      <span class="corp-eyebrow" data-i18n="safarisPage.eyebrow">Browse Private Itineraries</span>
+      <h1 class="page-hero-title" style="color:#fff;margin:0" data-i18n="safarisPage.title">Tanzania Safari Packages</h1>
+      <p style="max-width:36rem;margin:0.75rem 0 0;color:rgba(255,255,255,0.9)" data-i18n="safarisPage.subtitle">Serengeti migration, Ngorongoro crater, Kilimanjaro, and bush-to-beach Zanzibar combos — designed from Arusha.</p>
     </div>
   </div>
 </section>
@@ -39,62 +39,62 @@
   <div class="container">
     <div class="mobile-filter-bar">
       <button type="button" class="btn btn-primary" id="openFilterDrawer" aria-haspopup="dialog">
-        <i class="fas fa-sliders-h"></i> Filter &amp; Search Packages
+        <i class="fas fa-sliders-h"></i> <span data-i18n="safarisPage.filterSearch">Filter &amp; Search Packages</span>
       </button>
     </div>
 
     <div class="search-filter-section desktop-filters" id="safariFilters" style="background: #fff; padding: 2rem; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); border: 1px solid var(--border-light); margin-bottom: 3rem;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-light);">
-          <h2 style="margin:0; font-size: 1.25rem; font-family: var(--font-heading); color: var(--earth-dark);"><i class="fas fa-sliders-h" style="color:var(--primary); margin-right:0.5rem;"></i> Refine Your Search</h2>
-          <button type="button" onclick="clearFilters()" style="font-size:0.85rem;color:var(--text-muted);background:none;border:none;cursor:pointer;font-weight:500;min-height:48px">Clear All</button>
+          <h2 style="margin:0; font-size: 1.25rem; font-family: var(--font-heading); color: var(--earth-dark);"><i class="fas fa-sliders-h" style="color:var(--primary); margin-right:0.5rem;"></i> <span data-i18n="safarisPage.refine">Refine Your Search</span></h2>
+          <button type="button" onclick="clearFilters()" style="font-size:0.85rem;color:var(--text-muted);background:none;border:none;cursor:pointer;font-weight:500;min-height:48px" data-i18n="common.clearAll">Clear All</button>
       </div>
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.25rem; align-items: end;">
         <div>
-          <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;">Search</label>
-          <input type="text" id="searchInput" placeholder="Search safaris..." style="width: 100%; border: 1px solid var(--border-light); padding: 0.85rem 1rem; border-radius: 8px; font-size: 0.9rem; min-height:48px; outline: none;">
+          <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;" data-i18n="safarisPage.searchLabel">Search</label>
+          <input type="text" id="searchInput" placeholder="Search safaris..." data-i18n-placeholder="safarisPage.searchPlaceholder" style="width: 100%; border: 1px solid var(--border-light); padding: 0.85rem 1rem; border-radius: 8px; font-size: 0.9rem; min-height:48px; outline: none;">
         </div>
         <div>
-          <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;">Category</label>
+          <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;" data-i18n="safarisPage.category">Category</label>
           <select id="categorySelect" onchange="applyFilters()" style="width: 100%; border: 1px solid var(--border-light); padding: 0.85rem 1rem; border-radius: 8px; font-size: 0.9rem; background: #fff; min-height:48px; cursor: pointer;">
-            <option value="all">All Categories</option>
+            <option value="all" data-i18n="safarisPage.allCategories">All Categories</option>
           </select>
         </div>
         <div>
-          <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;">Destination</label>
+          <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;" data-i18n="safarisPage.destination">Destination</label>
           <select id="destinationSelect" onchange="applyFilters()" style="width: 100%; border: 1px solid var(--border-light); padding: 0.85rem 1rem; border-radius: 8px; font-size: 0.9rem; background: #fff; min-height:48px; cursor: pointer;">
-            <option value="all">All Destinations</option>
+            <option value="all" data-i18n="safarisPage.allDestinations">All Destinations</option>
           </select>
         </div>
         <div>
-          <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;">Duration</label>
+          <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;" data-i18n="safarisPage.duration">Duration</label>
           <select id="durationSelect" onchange="applyFilters()" style="width: 100%; border: 1px solid var(--border-light); padding: 0.85rem 1rem; border-radius: 8px; font-size: 0.9rem; background: #fff; min-height:48px; cursor: pointer;">
-            <option value="all">Any Duration</option>
-            <option value="1-3">1–3 Days</option>
-            <option value="4-6">4–6 Days</option>
-            <option value="7-9">7–9 Days</option>
-            <option value="10+">10+ Days</option>
+            <option value="all" data-i18n="safarisPage.anyDuration">Any Duration</option>
+            <option value="1-3" data-i18n="safarisPage.days1to3">1–3 Days</option>
+            <option value="4-6" data-i18n="safarisPage.days4to6">4–6 Days</option>
+            <option value="7-9" data-i18n="safarisPage.days7to9">7–9 Days</option>
+            <option value="10+" data-i18n="safarisPage.days10plus">10+ Days</option>
           </select>
         </div>
         <div>
-          <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;">Budget ($)</label>
+          <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;" data-i18n="safarisPage.budget">Budget ($)</label>
           <div style="display: flex; gap: 0.5rem; align-items: center;">
-            <input type="number" id="minPrice" placeholder="Min" min="0" style="width: 50%; border: 1px solid var(--border-light); padding: 0.85rem; border-radius: 8px; font-size: 0.9rem; min-height:48px; outline: none;">
+            <input type="number" id="minPrice" placeholder="Min" data-i18n-placeholder="safarisPage.min" min="0" style="width: 50%; border: 1px solid var(--border-light); padding: 0.85rem; border-radius: 8px; font-size: 0.9rem; min-height:48px; outline: none;">
             <span style="color:var(--text-muted)">-</span>
-            <input type="number" id="maxPrice" placeholder="Max" min="0" style="width: 50%; border: 1px solid var(--border-light); padding: 0.85rem; border-radius: 8px; font-size: 0.9rem; min-height:48px; outline: none;">
+            <input type="number" id="maxPrice" placeholder="Max" data-i18n-placeholder="safarisPage.max" min="0" style="width: 50%; border: 1px solid var(--border-light); padding: 0.85rem; border-radius: 8px; font-size: 0.9rem; min-height:48px; outline: none;">
           </div>
         </div>
         <div>
-          <button class="btn btn-primary" type="button" onclick="applyFilters(); closeFilterDrawer && closeFilterDrawer();" style="width: 100%; padding: 0.85rem; border-radius: 8px; font-weight: 600;"><i class="fas fa-search"></i> Search</button>
+          <button class="btn btn-primary" type="button" onclick="applyFilters(); closeFilterDrawer && closeFilterDrawer();" style="width: 100%; padding: 0.85rem; border-radius: 8px; font-weight: 600;"><i class="fas fa-search"></i> <span data-i18n="common.search">Search</span></button>
         </div>
       </div>
     </div>
 
     <div class="filter-drawer-backdrop" id="filterDrawerBackdrop" hidden></div>
-    <div class="filter-drawer" id="filterDrawer" role="dialog" aria-modal="true" aria-label="Filter safaris" hidden>
+    <div class="filter-drawer" id="filterDrawer" role="dialog" aria-modal="true" aria-label="Filter safaris" data-i18n-aria="safarisPage.filterAria" hidden>
       <div class="filter-drawer-handle"></div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
-        <h3 style="margin:0;font-size:1.1rem">Filters</h3>
-        <button type="button" class="btn btn-ghost" id="closeFilterDrawer" style="min-height:48px">Close</button>
+        <h3 style="margin:0;font-size:1.1rem" data-i18n="common.filters">Filters</h3>
+        <button type="button" class="btn btn-ghost" id="closeFilterDrawer" style="min-height:48px" data-i18n="common.close">Close</button>
       </div>
       <div id="filterDrawerBody"></div>
     </div>
@@ -102,13 +102,13 @@
     <!-- Results -->
     <div>
       <div class="results-header">
-        <div class="results-count">Showing <strong id="resultCount">0</strong> safaris</div>
+        <div class="results-count"><span data-i18n="safarisPage.showing">Showing</span> <strong id="resultCount">0</strong> <span data-i18n="safarisPage.safarisCount">safaris</span></div>
         <select class="sort-select" id="sortSelect" onchange="applyFilters()" style="min-height:48px">
-          <option value="featured">Featured</option>
-          <option value="price-asc">Price: Low to High</option>
-          <option value="price-desc">Price: High to Low</option>
-          <option value="duration-asc">Shortest First</option>
-          <option value="rating">Highest Rated</option>
+          <option value="featured" data-i18n="safarisPage.featured">Featured</option>
+          <option value="price-asc" data-i18n="safarisPage.priceLowHigh">Price: Low to High</option>
+          <option value="price-desc" data-i18n="safarisPage.priceHighLow">Price: High to Low</option>
+          <option value="duration-asc" data-i18n="safarisPage.shortestFirst">Shortest First</option>
+          <option value="rating" data-i18n="safarisPage.highestRated">Highest Rated</option>
         </select>
       </div>
         <div class="safari-grid" id="safarisGrid">
@@ -142,7 +142,7 @@
 <!-- Footer -->
 <div id="footer"></div>
 
-<script src="/js/layout-loader.js?v=12"></script>
+<script src="/js/layout-loader.js?v=13"></script>
 <script src="/js/api.js"></script>
 <script src="/js/safaris.js"></script>
 <script>

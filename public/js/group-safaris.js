@@ -1,3 +1,8 @@
+function t(key, vars) {
+  if (window.TSM_i18n && typeof window.TSM_i18n.t === 'function') return window.TSM_i18n.t(key, vars);
+  return key;
+}
+
 function fmtRange(start, end) {
   const opts = { day: '2-digit', month: 'short', year: 'numeric' };
   const s = start ? new Date(start).toLocaleDateString('en-GB', opts) : '';
@@ -18,7 +23,12 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;');
 }
 
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+function monthLabels() {
+  const lang = (window.TSM_i18n && window.TSM_i18n.getLanguage && window.TSM_i18n.getLanguage()) || 'en';
+  return Array.from({ length: 12 }, (_, i) =>
+    new Date(2000, i, 1).toLocaleString(lang, { month: 'short' })
+  );
+}
 
 let allDepartures = [];
 let calYear = new Date().getFullYear();
@@ -57,6 +67,7 @@ function cardHtml(d) {
   const img = d.featured_image_url || '/images/optimized/serengeti-national-park.webp';
   const dayNum = new Date(d.start_date).getDate();
   const tags = (d.highlights || []).slice(0, 3);
+  const seatsText = d.seats_left != null ? t('group.seatsLeft', { n: d.seats_left }) : t('group.full');
   return `
     <a class="group-dep-card" href="/group-safaris/${encodeURIComponent(d.departure_slug)}">
       <div class="group-dep-media">
@@ -68,18 +79,18 @@ function cardHtml(d) {
         <div class="group-dep-dates"><i class="fas fa-calendar-alt"></i> ${fmtRange(d.start_date, d.end_date)}</div>
         <h3 class="group-dep-title">${escapeHtml(d.title)}</h3>
         <div class="group-dep-meta">
-          <span><i class="fas fa-clock"></i> ${d.duration_days || '—'} days</span>
-          <span><i class="fas fa-users"></i> ${d.seats_left} seats left</span>
+          <span><i class="fas fa-clock"></i> ${d.duration_days || '—'} ${t('common.days')}</span>
+          <span><i class="fas fa-users"></i> ${seatsText}</span>
           <span>${statusBadge(d.status)}</span>
         </div>
-        ${tags.length ? `<div class="group-dep-tags">${tags.map(t => `<span>${escapeHtml(t)}</span>`).join('')}</div>` : ''}
+        ${tags.length ? `<div class="group-dep-tags">${tags.map(tag => `<span>${escapeHtml(tag)}</span>`).join('')}</div>` : ''}
         <div class="group-dep-side">
           <div class="group-dep-price">
             ${showWas ? `<s>$${was.toLocaleString()}</s>` : ''}
             $${price.toLocaleString()}
             ${d.discount_percent > 0 ? `<em class="group-dep-off">${d.discount_percent}% off</em>` : ''}
           </div>
-          <span class="btn btn-primary btn-sm" style="pointer-events:none">Join group</span>
+          <span class="btn btn-primary btn-sm" style="pointer-events:none">${t('group.requestSeat')}</span>
         </div>
       </div>
     </a>`;
@@ -108,6 +119,7 @@ function renderMonthButtons() {
   const el = document.getElementById('groupCalMonths');
   if (!el) return;
   const months = monthsWithData(allDepartures, calYear);
+  const MONTHS = monthLabels();
   if (calMonth == null && months.size) {
     // Default to first upcoming month in selected year
     const now = new Date();
@@ -138,9 +150,10 @@ function renderCalendarControls() {
   renderMonthButtons();
   const label = document.getElementById('groupCalFilterLabel');
   if (label) {
+    const MONTHS = monthLabels();
     label.textContent = calMonth
       ? `${MONTHS[calMonth - 1]} ${calYear}`
-      : `All months · ${calYear}`;
+      : `${t('group.month')} · ${calYear}`;
   }
 }
 
@@ -151,9 +164,9 @@ function renderCalendarList() {
   if (!data.length) {
     el.innerHTML = `
       <div class="group-empty">
-        <p style="margin:0 0 1rem">No open-group departures for this period. Try another month, or ask Our Team for the next available join-in safari.</p>
-        <a class="btn btn-primary" href="/booking" style="min-height:48px">Request dates</a>
-        <a class="btn btn-outline" href="/safaris" style="min-height:48px;margin-left:0.5rem">Browse private safaris</a>
+        <p style="margin:0 0 1rem">${t('group.noDepartures')}</p>
+        <a class="btn btn-primary" href="/booking" style="min-height:48px">${t('group.privateQuote')}</a>
+        <a class="btn btn-outline" href="/safaris" style="min-height:48px;margin-left:0.5rem">${t('hub.browseAll')}</a>
       </div>`;
     return;
   }
@@ -170,16 +183,16 @@ async function loadGroupCalendar() {
       document.getElementById('groupCalControls')?.classList.add('is-empty');
       el.innerHTML = `
         <div class="group-empty">
-          <p style="margin:0 0 1rem">New open-group dates are being scheduled. Check back soon, or ask Our Team for the next available join-in safari.</p>
-          <a class="btn btn-primary" href="/booking" style="min-height:48px">Request dates</a>
-          <a class="btn btn-outline" href="/safaris" style="min-height:48px;margin-left:0.5rem">Browse private safaris</a>
+          <p style="margin:0 0 1rem">${t('group.noDepartures')}</p>
+          <a class="btn btn-primary" href="/booking" style="min-height:48px">${t('group.privateQuote')}</a>
+          <a class="btn btn-outline" href="/safaris" style="min-height:48px;margin-left:0.5rem">${t('hub.browseAll')}</a>
         </div>`;
       return;
     }
     renderCalendarControls();
     renderCalendarList();
   } catch (e) {
-    el.innerHTML = '<div class="group-empty">Unable to load the group safari calendar right now.</div>';
+    el.innerHTML = `<div class="group-empty">${t('group.noDepartures')}</div>`;
   }
 }
 

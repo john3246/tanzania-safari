@@ -10,28 +10,38 @@
 <body>
 <div id="header"></div>
 <section class="corp-section" style="padding:4rem 1rem;text-align:center;max-width:36rem;margin:0 auto">
-  <h1 style="margin-bottom:0.75rem">Newsletter</h1>
-  <p id="unsubMsg" style="color:var(--text-muted);line-height:1.6">Updating your preference…</p>
-  <p style="margin-top:1.5rem"><a class="btn btn-primary" href="/">Back to home</a></p>
+  <h1 style="margin-bottom:0.75rem" data-i18n="unsubscribe.title">Newsletter</h1>
+  <p id="unsubMsg" style="color:var(--text-muted);line-height:1.6" data-i18n="unsubscribe.updating">Updating your preference…</p>
+  <p style="margin-top:1.5rem"><a class="btn btn-primary" href="/" data-i18n="unsubscribe.back">Back to home</a></p>
 </section>
 <div id="footer"></div>
-<script src="/js/layout-loader.js"></script>
+<script src="/js/layout-loader.js?v=13"></script>
 <script>
 (async function () {
   const params = new URLSearchParams(location.search);
   const email = params.get('email');
   const token = params.get('token');
   const el = document.getElementById('unsubMsg');
+  const translate = (key, fallback) => {
+    if (typeof window.t === 'function') {
+      const v = window.t(key);
+      if (v && v !== key) return v;
+    }
+    return fallback;
+  };
   try {
+    if (window.TSM_i18n && window.TSM_i18n.ready) await window.TSM_i18n.ready;
     const res = await fetch('/api/newsletter/unsubscribe', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, token })
     });
     const data = await res.json();
-    el.textContent = data.message || (res.ok ? 'You have been unsubscribed.' : 'Could not update subscription.');
+    el.textContent = res.ok
+      ? translate('unsubscribe.success', data.message || 'You have been unsubscribed. We\'re sorry to see you go.')
+      : translate('unsubscribe.error', data.message || 'We could not update your preference. Please try again or contact us.');
   } catch {
-    el.textContent = 'Could not update subscription. Please email info@tanzaniasafarimagic.com.';
+    el.textContent = translate('unsubscribe.error', 'We could not update your preference. Please try again or contact us.');
   }
 })();
 </script>

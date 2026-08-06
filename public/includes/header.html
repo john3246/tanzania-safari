@@ -6,8 +6,11 @@
         <span><i class="fas fa-envelope" style="margin-right: 0.3rem; color: var(--accent);"></i> info@tanzaniasafarimagic.com</span>
         <span><a href="https://wa.me/255695108009" style="color: inherit; text-decoration: none;"><i class="fab fa-whatsapp" style="margin-right: 0.3rem; color: var(--accent);"></i> +255 695 108 009</a></span>
       </div>
-      <div class="top-bar-location">
-        <span><i class="fas fa-map-marker-alt" style="margin-right: 0.3rem; color: var(--accent);"></i> Arusha, Tanzania</span>
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <div class="top-bar-location">
+          <span><i class="fas fa-map-marker-alt" style="margin-right: 0.3rem; color: var(--accent);"></i> Arusha, Tanzania</span>
+        </div>
+        <div id="langSwitcherMount" aria-label="Language"></div>
       </div>
     </div>
   </div>
@@ -17,72 +20,72 @@
         <img src="/images/logo.png" alt="Tanzania Safari Magic" class="logo-img" width="48" height="48" decoding="async">
         <div class="logo-text">
             <span class="brand">TANZANIA</span>
-            <span class="sub">SAFARI &amp; TOURS</span>
+            <span class="sub" data-i18n="nav.logoSub">SAFARI &amp; TOURS</span>
         </div>
       </a>
       <div class="header-right" style="display: flex; align-items: center; gap: 1.25rem;">
-        <div class="header-trust" aria-label="Trust certifications">
+        <div class="header-trust" data-i18n-aria="nav.trustAria" aria-label="Trust certifications">
           <span><i class="fab fa-tripadvisor" style="color:#00af87"></i> TripAdvisor</span>
           <span><i class="fas fa-certificate" style="color:#f59e0b"></i> TATO</span>
-          <span><i class="fas fa-shield-alt" style="color:var(--accent)"></i> Licensed</span>
+          <span><i class="fas fa-shield-alt" style="color:var(--accent)"></i> <span data-i18n="nav.licensed">Licensed</span></span>
         </div>
-        <button id="headerLiveChatBtn" class="pulse-anim header-chat-btn" aria-label="Chat with Our Team">
-            <i class="fas fa-comments"></i> <span>Our Team</span>
+        <button id="headerLiveChatBtn" class="pulse-anim header-chat-btn" data-i18n-aria="nav.chatAria" aria-label="Chat with Our Team">
+            <i class="fas fa-comments"></i> <span data-i18n="nav.ourTeam">Our Team</span>
         </button>
         <nav class="nav" id="mainNav">
             <div class="drawer-header">
                 <span class="brand">TANZANIA SAFARI</span>
-                <button class="drawer-close" id="drawerClose" aria-label="Close menu">
+                <button class="drawer-close" id="drawerClose" data-i18n-aria="nav.closeMenu" aria-label="Close menu">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
             </div>
-            <a href="/" class="nav-link">Home</a>
+            <a href="/" class="nav-link" data-i18n="nav.home">Home</a>
             <div class="nav-dropdown" id="safarisNavDropdown">
               <button type="button" class="nav-link nav-dropdown-toggle" aria-expanded="false" aria-haspopup="true">
-                Safaris <i class="fas fa-chevron-down nav-caret" aria-hidden="true"></i>
+                <span data-i18n="nav.safaris">Safaris</span> <i class="fas fa-chevron-down nav-caret" aria-hidden="true"></i>
               </button>
-              <div class="nav-dropdown-menu nav-mega-menu" role="menu" aria-label="Safari collections">
+              <div class="nav-dropdown-menu nav-mega-menu" role="menu" data-i18n-aria="nav.safariCollections" aria-label="Safari collections">
                 <div class="nav-mega-grid">
                   <div class="nav-mega-col" data-hub="group-safaris">
-                    <a href="/group-safaris" class="nav-mega-heading" role="menuitem">Group Safaris</a>
-                    <p class="nav-mega-note">Fixed-date shared departures</p>
+                    <a href="/group-safaris" class="nav-mega-heading" role="menuitem" data-i18n="nav.groupSafaris">Group Safaris</a>
+                    <p class="nav-mega-note" data-i18n="nav.groupNote">Fixed-date shared departures</p>
                     <div class="nav-mega-tours" data-category="group-safaris"></div>
-                    <a href="/safaris?category=group-safaris" class="nav-mega-all">View all group packages →</a>
+                    <a href="/safaris?category=group-safaris" class="nav-mega-all" data-i18n="nav.viewAllGroup">View all group packages →</a>
                   </div>
                   <div class="nav-mega-col" data-hub="kilimanjaro">
-                    <a href="/kilimanjaro" class="nav-mega-heading" role="menuitem">Kilimanjaro Safaris</a>
-                    <p class="nav-mega-note">Climbs &amp; mountain treks</p>
+                    <a href="/kilimanjaro" class="nav-mega-heading" role="menuitem" data-i18n="nav.kilimanjaro">Kilimanjaro Safaris</a>
+                    <p class="nav-mega-note" data-i18n="nav.kilimanjaroNote">Climbs &amp; mountain treks</p>
                     <div class="nav-mega-tours" data-category="kilimanjaro"></div>
-                    <a href="/kilimanjaro" class="nav-mega-all">View all Kilimanjaro →</a>
+                    <a href="/kilimanjaro" class="nav-mega-all" data-i18n="nav.viewAllKili">View all Kilimanjaro →</a>
                   </div>
                   <div class="nav-mega-col" data-hub="safaris">
-                    <a href="/safaris" class="nav-mega-heading" role="menuitem">Safaris</a>
-                    <p class="nav-mega-note">Private &amp; classic itineraries</p>
+                    <a href="/safaris" class="nav-mega-heading" role="menuitem" data-i18n="nav.safarisCol">Safaris</a>
+                    <p class="nav-mega-note" data-i18n="nav.safarisNote">Private &amp; classic itineraries</p>
                     <div class="nav-mega-tours" data-category="safaris"></div>
-                    <a href="/safaris" class="nav-mega-all">Browse all safaris →</a>
+                    <a href="/safaris" class="nav-mega-all" data-i18n="nav.browseAllSafaris">Browse all safaris →</a>
                   </div>
                   <div class="nav-mega-col" data-hub="migrations">
-                    <a href="/migrations" class="nav-mega-heading" role="menuitem">Migrations</a>
-                    <p class="nav-mega-note">Serengeti &amp; Ndutu seasons</p>
+                    <a href="/migrations" class="nav-mega-heading" role="menuitem" data-i18n="nav.migrations">Migrations</a>
+                    <p class="nav-mega-note" data-i18n="nav.migrationsNote">Serengeti &amp; Ndutu seasons</p>
                     <div class="nav-mega-tours" data-category="migrations"></div>
-                    <a href="/migrations" class="nav-mega-all">View all migrations →</a>
+                    <a href="/migrations" class="nav-mega-all" data-i18n="nav.viewAllMigrations">View all migrations →</a>
                   </div>
                   <div class="nav-mega-col" data-hub="zanzibar">
-                    <a href="/zanzibar" class="nav-mega-heading" role="menuitem">Zanzibar Safaris</a>
-                    <p class="nav-mega-note">Beach &amp; bush-to-beach</p>
+                    <a href="/zanzibar" class="nav-mega-heading" role="menuitem" data-i18n="nav.zanzibar">Zanzibar Safaris</a>
+                    <p class="nav-mega-note" data-i18n="nav.zanzibarNote">Beach &amp; bush-to-beach</p>
                     <div class="nav-mega-tours" data-category="zanzibar"></div>
-                    <a href="/zanzibar" class="nav-mega-all">View all Zanzibar →</a>
+                    <a href="/zanzibar" class="nav-mega-all" data-i18n="nav.viewAllZanzibar">View all Zanzibar →</a>
                   </div>
                 </div>
               </div>
             </div>
-            <a href="/destinations" class="nav-link nav-link-emphasis">Destinations</a>
-            <a href="/blog" class="nav-link nav-link-emphasis">Blog</a>
-            <a href="/about" class="nav-link">About</a>
-            <a href="/booking" class="nav-link nav-link-inquire">Inquire</a>
-            <a href="/contact" class="nav-cta">Contact Us Now</a>
+            <a href="/destinations" class="nav-link nav-link-emphasis" data-i18n="nav.destinations">Destinations</a>
+            <a href="/blog" class="nav-link nav-link-emphasis" data-i18n="nav.blog">Blog</a>
+            <a href="/about" class="nav-link" data-i18n="nav.about">About</a>
+            <a href="/booking" class="nav-link nav-link-inquire" data-i18n="nav.inquire">Inquire</a>
+            <a href="/contact" class="nav-cta" data-i18n="nav.contactCta">Contact Us Now</a>
         </nav>
-        <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation menu">
+        <button class="mobile-toggle" id="mobileToggle" data-i18n-aria="nav.toggleMenu" aria-label="Toggle navigation menu">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
         </button>
       </div>

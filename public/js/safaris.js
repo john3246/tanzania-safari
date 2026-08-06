@@ -1,5 +1,10 @@
 // Global UI interactions handled in layout-loader.js
 
+function t(key, vars) {
+  if (window.TSM_i18n && typeof window.TSM_i18n.t === 'function') return window.TSM_i18n.t(key, vars);
+  return key;
+}
+
 // Mobile filter toggle
 document.getElementById('mobileFilterBtn')?.addEventListener('click', () => {
     document.getElementById('filterSidebar')?.classList.add('open'); document.getElementById('filterOverlay')?.classList.add('open');
@@ -21,8 +26,8 @@ function buildSafariCard(p) {
     <a href="/safaris/${p.package_slug}" class="safari-card">
       <div class="safari-card-img">
         <img src="${img}" alt="${p.package_name}" loading="lazy" decoding="async" onerror="this.src='/images/optimized/balloon.webp'">
-        ${p.is_featured ? '<span class="safari-card-badge"><i class="ph-fill ph-star"></i> Featured</span>' : ''}
-        <span class="safari-card-duration"><i class="ph ph-clock"></i> ${p.duration_days} Days</span>
+        ${p.is_featured ? `<span class="safari-card-badge"><i class="ph-fill ph-star"></i> ${t('safarisPage.featured')}</span>` : ''}
+        <span class="safari-card-duration"><i class="ph ph-clock"></i> ${p.duration_days} ${t('common.days')}</span>
       </div>
       <div class="safari-card-body">
         <div class="safari-card-category">${p.category_name || 'Safari'}</div>
@@ -30,7 +35,7 @@ function buildSafariCard(p) {
         ${dest ? `<div class="safari-card-location"><i class="ph ph-map-pin"></i>${dest}</div>` : ''}
         <div class="safari-card-rating"><span class="stars">${stars(parseFloat(p.avg_rating||0))}</span><span>${rating} ${p.review_count>0?'('+p.review_count+')':''}</span></div>
         <div class="safari-card-footer">
-          <div class="safari-card-price"><div class="from">From</div><div class="amount">$${Number(p.base_price_usd).toLocaleString()}</div><div class="per">per person</div></div>
+          <div class="safari-card-price"><div class="from">${t('common.from')}</div><div class="amount">$${Number(p.base_price_usd).toLocaleString()}</div><div class="per">${t('common.perPerson')}</div></div>
           <span class="btn btn-primary btn-sm">View Details</span>
         </div>
       </div>
@@ -68,14 +73,14 @@ async function applyFilters(page = 1) {
         const { data, pagination } = await API.get('/packages?' + params);
         document.getElementById('resultCount').textContent = pagination?.total || 0;
         if (!data?.length) {
-            grid.innerHTML = '<p style="color:var(--text-muted);grid-column:1/-1;text-align:center;padding:3rem">No safaris found matching your filters.</p>';
+            grid.innerHTML = `<p style="color:var(--text-muted);grid-column:1/-1;text-align:center;padding:3rem">${t('safarisPage.noResults')}</p>`;
             document.getElementById('pagination').innerHTML = '';
             return;
         }
         grid.innerHTML = data.map(buildSafariCard).join('');
         renderPagination(pagination);
     } catch {
-        grid.innerHTML = '<p style="color:var(--error);grid-column:1/-1;text-align:center;padding:3rem">Failed to load safaris. Please refresh.</p>';
+        grid.innerHTML = `<p style="color:var(--error);grid-column:1/-1;text-align:center;padding:3rem">${t('safarisPage.loadError')}</p>`;
     }
 }
 
@@ -116,7 +121,7 @@ async function loadFilters() {
         const { data: cats } = await API.get('/categories');
         const catEl = document.getElementById('categorySelect');
         if (catEl && cats?.length) {
-            catEl.innerHTML = `<option value="all">All Categories</option>` +
+            catEl.innerHTML = `<option value="all">${t('safarisPage.allCategories')}</option>` +
                 cats.map(c => `<option value="${c.category_slug}">${c.category_name} (${c.safari_count||0})</option>`).join('');
         }
     } catch {}
@@ -124,7 +129,7 @@ async function loadFilters() {
         const { data: dests } = await API.get('/destinations');
         const destEl = document.getElementById('destinationSelect');
         if (destEl && dests?.length) {
-            destEl.innerHTML = `<option value="all">All Destinations</option>` +
+            destEl.innerHTML = `<option value="all">${t('safarisPage.allDestinations')}</option>` +
                 dests.map(d => `<option value="${d.park_slug || d.slug}">${d.park_name || d.name}</option>`).join('');
         }
     } catch {}

@@ -1,6 +1,14 @@
+function t(key, vars) {
+  if (window.TSM_i18n && typeof window.TSM_i18n.t === 'function') return window.TSM_i18n.t(key, vars);
+  return key;
+}
+
 const HUBS = {
   kilimanjaro: {
     category: 'kilimanjaro',
+    titleKey: 'hub.kiliTitle',
+    eyebrowKey: 'hub.kiliEyebrow',
+    leadKey: 'hub.kiliLead',
     title: 'Kilimanjaro Climbs & Treks',
     eyebrow: 'Mount Kilimanjaro · 5,895 m',
     lead: 'Guided Kilimanjaro routes from Arusha — Machame, Lemosho &amp; Marangu. Read the full <a href="/destinations/mount-kilimanjaro-national-park">Kilimanjaro National Park guide</a>, then book a private climb or climb + safari combo.',
@@ -9,6 +17,9 @@ const HUBS = {
   },
   migrations: {
     category: 'migrations',
+    titleKey: 'hub.migTitle',
+    eyebrowKey: 'hub.migEyebrow',
+    leadKey: 'hub.migLead',
     title: 'Great Migration Safaris',
     eyebrow: 'Wildebeest Migration',
     lead: 'Seasonal Serengeti &amp; Ndutu itineraries timed for calving, river crossings, and predator action. Explore the <a href="/destinations/serengeti-national-park">Serengeti</a> and <a href="/destinations/ngorongoro-conservation-area">Ngorongoro</a>.',
@@ -17,6 +28,9 @@ const HUBS = {
   },
   zanzibar: {
     category: 'zanzibar',
+    titleKey: 'hub.zanTitle',
+    eyebrowKey: 'hub.zanEyebrow',
+    leadKey: 'hub.zanLead',
     title: 'Zanzibar Beach Extensions',
     eyebrow: 'Spice Island',
     lead: 'Bush-to-beach combinations and Zanzibar stays — white-sand beaches after your northern circuit safari. See the <a href="/destinations/zanzibar">Zanzibar destination guide</a>.',
@@ -74,8 +88,8 @@ function packageCard(p) {
         ${dest ? `<p style="margin:0 0 0.5rem;font-size:0.8rem;color:var(--text-muted)"><i class="fas fa-map-marker-alt" style="color:var(--primary)"></i> ${escapeHtml(dest)}</p>` : ''}
         <p class="excerpt" style="margin:0 0 0.75rem">${escapeHtml((p.short_description || '').slice(0, 140))}</p>
         <div style="margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:0.75rem">
-          <strong style="color:var(--primary)">From $${price.toLocaleString()}</strong>
-          <span class="blog-card-link">View <i class="fas fa-arrow-right"></i></span>
+          <strong style="color:var(--primary)">${t('hub.from') || 'From'} $${price.toLocaleString()}</strong>
+          <span class="blog-card-link">${t('hub.view') || 'View'} <i class="fas fa-arrow-right"></i></span>
         </div>
       </div>
     </a>`;
@@ -86,8 +100,13 @@ async function loadHub() {
   const hub = key ? HUBS[key] : null;
   if (!hub) return;
 
+  const title = t(hub.titleKey) !== hub.titleKey ? t(hub.titleKey) : hub.title;
+  const eyebrow = t(hub.eyebrowKey) !== hub.eyebrowKey ? t(hub.eyebrowKey) : hub.eyebrow;
+  const leadT = t(hub.leadKey);
+  const lead = leadT !== hub.leadKey ? leadT : hub.lead;
+
   // SEO inject often strips id="hubPageTitle" from <title> — never crash on that.
-  document.title = `${hub.title} | Tanzania Safari Magic`;
+  document.title = `${title} | Tanzania Safari Magic`;
   const titleEl =
     document.getElementById('hubPageTitle') ||
     document.getElementById('pageTitle') ||
@@ -101,7 +120,7 @@ async function loadHub() {
   if (metaDesc) {
     metaDesc.setAttribute(
       'content',
-      hub.lead
+      String(lead)
         .replace(/<[^>]+>/g, ' ')
         .replace(/&amp;/g, '&')
         .replace(/\s+/g, ' ')
@@ -116,10 +135,10 @@ async function loadHub() {
     document.querySelector('link[rel="canonical"]');
   if (canonical) canonical.setAttribute('href', `https://tanzaniasafarimagic.com${hub.path}`);
 
-  setText('hubCrumb', hub.title);
-  setText('hubEyebrow', hub.eyebrow);
-  setText('hubTitle', hub.title);
-  setHtml('hubLead', hub.lead);
+  setText('hubCrumb', title);
+  setText('hubEyebrow', eyebrow);
+  setText('hubTitle', title);
+  setHtml('hubLead', lead);
 
   const slide = document.getElementById('hubHeroSlide');
   if (slide) slide.style.backgroundImage = `url('${hub.image}')`;
@@ -136,8 +155,8 @@ async function loadHub() {
     if (!packages.length) {
       grid.innerHTML = `
         <div style="grid-column:1/-1;text-align:center;padding:2.5rem;color:var(--text-muted)">
-          <p>Packages for this collection are being updated. Browse all safaris or request a custom itinerary.</p>
-          <a class="btn btn-primary" href="/safaris" style="min-height:48px;margin-top:0.75rem">All safaris</a>
+          <p>${t('hub.empty')}</p>
+          <a class="btn btn-primary" href="/safaris" style="min-height:48px;margin-top:0.75rem">${t('hub.allSafaris')}</a>
         </div>`;
       return;
     }
@@ -145,12 +164,21 @@ async function loadHub() {
   } catch (e) {
     console.error('Hub load failed', e);
     grid.innerHTML =
-      '<p style="grid-column:1/-1;text-align:center;color:var(--text-muted)">Unable to load packages. Please refresh or <a href="/safaris">browse all safaris</a>.</p>';
+      `<p style="grid-column:1/-1;text-align:center;color:var(--text-muted)">${t('hub.loadError')} <a href="/safaris">${t('hub.allSafaris')}</a>.</p>`;
   }
 }
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', loadHub);
+  document.addEventListener('DOMContentLoaded', () => {
+    const run = async () => {
+      try { if (window.TSM_i18n?.ready) await window.TSM_i18n.ready; } catch (_) {}
+      loadHub();
+    };
+    run();
+  });
 } else {
-  loadHub();
+  (async () => {
+    try { if (window.TSM_i18n?.ready) await window.TSM_i18n.ready; } catch (_) {}
+    loadHub();
+  })();
 }

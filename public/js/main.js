@@ -1,5 +1,10 @@
 // Global UI interactions are handled in layout-loader.js
 
+function t(key, vars) {
+  if (window.TSM_i18n && typeof window.TSM_i18n.t === 'function') return window.TSM_i18n.t(key, vars);
+  return key;
+}
+
 // ── Mobile nav ─────────────────────────────────────────────
 const toggle = document.getElementById('mobileToggle');
 const nav = document.getElementById('mainNav');
@@ -24,8 +29,8 @@ function buildSafariCard(p) {
     <a href="/safaris/${p.package_slug}" class="safari-card fade-up">
       <div class="safari-card-img">
         <img src="${img}" alt="${p.package_name}" width="800" height="600" loading="lazy" decoding="async" onerror="this.src='/images/optimized/balloon.webp'">
-        ${p.is_featured ? '<span class="safari-card-badge"><i class="fas fa-star"></i> Featured</span>' : ''}
-        <span class="safari-card-duration"><i class="fas fa-clock"></i> ${p.duration_days} Days</span>
+        ${p.is_featured ? `<span class="safari-card-badge"><i class="fas fa-star"></i> ${t('safarisPage.featured')}</span>` : ''}
+        <span class="safari-card-duration"><i class="fas fa-clock"></i> ${p.duration_days} ${t('common.days')}</span>
       </div>
       <div class="safari-card-body">
         <div class="safari-card-category">${p.category_name || 'Safari'}</div>
@@ -37,9 +42,9 @@ function buildSafariCard(p) {
         </div>
         <div class="safari-card-footer">
           <div class="safari-card-price">
-            <div class="from">From</div>
+            <div class="from">${t('common.from')}</div>
             <div class="amount">$${Number(p.base_price_usd).toLocaleString()}</div>
-            <div class="per">per person</div>
+            <div class="per">${t('common.perPerson')}</div>
           </div>
           <span class="btn btn-primary btn-sm">View Details</span>
         </div>
@@ -50,7 +55,7 @@ function buildSafariCard(p) {
 // ── Destination card builder ───────────────────────────────
 function buildDestCard(d) {
     const slug = d.park_slug || d.slug || '';
-    const name = d.park_name || d.name || 'Destination';
+    const name = d.park_name || d.name || t('common.destination');
     const img = d.featured_image_url || d.image_url
         || (d.gallery_urls && d.gallery_urls[0])
         || (d.image_urls && d.image_urls[0])
@@ -63,7 +68,7 @@ function buildDestCard(d) {
       <div class="corp-dest-img">
         <img src="${typeof imgSrc === 'function' ? imgSrc(img) : img}" alt="${name}" loading="lazy" decoding="async"
              onerror="this.onerror=null;this.src='${fb}';this.onerror=function(){this.src='/images/optimized/balloon.webp'}">
-        <div class="corp-dest-badge">${count > 0 ? `${count} Tours` : 'Custom Safaris'}</div>
+        <div class="corp-dest-badge">${count > 0 ? `${count} ${t('common.tours')}` : t('common.customSafaris')}</div>
       </div>
       <div class="corp-dest-content">
         <h3 class="corp-dest-title">${name}</h3>
@@ -126,11 +131,11 @@ async function loadHomepage() {
         if (grid && data?.length) {
             grid.innerHTML = data.slice(0, 4).map(buildDestCard).join('');
         } else if (grid) {
-            grid.innerHTML = '<p style="text-align:center;color:var(--text-muted);grid-column:1/-1">No destinations found.</p>';
+            grid.innerHTML = `<p style="text-align:center;color:var(--text-muted);grid-column:1/-1">${t('home.noDestinations')}</p>`;
         }
     } catch (e) {
         const grid = document.getElementById('destinationsGrid');
-        if (grid) grid.innerHTML = '<p style="color:var(--text-muted);grid-column:1/-1;text-align:center">Unable to load destinations.</p>';
+        if (grid) grid.innerHTML = `<p style="color:var(--text-muted);grid-column:1/-1;text-align:center">${t('home.unableDestinations')}</p>`;
     }
 
     // Categories (filters only) + Group Safaris homepage entry
@@ -168,31 +173,31 @@ async function loadHomepage() {
                     const start = new Date(d.start_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
                     const img = d.featured_image_url || '/images/optimized/serengeti-national-park.webp';
                     const price = Number(d.sale_price_usd || d.price_usd || 0);
-                    const seats = d.seats_left != null ? `${d.seats_left} seats left` : 'Open';
+                    const seats = d.seats_left != null ? t('group.seatsLeft', { n: d.seats_left }) : 'Open';
                     return `<a href="/group-safaris/${encodeURIComponent(d.departure_slug)}" class="group-home-card">
                       <div class="group-home-card-media">
-                        <img src="${img}" alt="${(d.title || 'Group safari').replace(/"/g, '&quot;')}" loading="lazy" decoding="async"
+                        <img src="${img}" alt="${(d.title || t('common.groupSafari')).replace(/"/g, '&quot;')}" loading="lazy" decoding="async"
                              onerror="this.src='/images/optimized/serengeti-national-park.webp'">
-                        <span class="group-home-card-badge">${d.duration_days || '—'} days</span>
+                        <span class="group-home-card-badge">${d.duration_days || '—'} ${t('common.days')}</span>
                       </div>
                       <div class="group-home-card-body">
                         <div class="group-home-card-meta">
                           <span><i class="fas fa-calendar-alt"></i> ${start}</span>
                           <span><i class="fas fa-users"></i> ${seats}</span>
                         </div>
-                        <h3>${d.title || 'Group safari'}</h3>
-                        <p>${(d.short_description || 'Fixed-date shared safari with expert local guides from Arusha.').slice(0, 120)}${(d.short_description || '').length > 120 ? '…' : ''}</p>
+                        <h3>${d.title || t('common.groupSafari')}</h3>
+                        <p>${(d.short_description || t('home.groupDefaultDesc')).slice(0, 120)}${(d.short_description || '').length > 120 ? '…' : ''}</p>
                         <div class="group-home-card-foot">
-                          <div class="group-home-card-price">$${price.toLocaleString()}<small>per person</small></div>
-                          <span class="btn btn-primary btn-sm">Join group</span>
+                          <div class="group-home-card-price">$${price.toLocaleString()}<small>${t('common.perPerson')}</small></div>
+                          <span class="btn btn-primary btn-sm">${t('group.requestSeat')}</span>
                         </div>
                       </div>
                     </a>`;
                 }).join('');
             } else {
                 teaser.innerHTML = `<div class="group-home-empty" style="grid-column:1/-1">
-                  <p style="margin:0 0 1rem;color:var(--text-secondary)">New open-group dates are being scheduled. Browse the calendar or request a custom date.</p>
-                  <a href="/group-safaris" class="btn btn-primary">View group calendar</a>
+                  <p style="margin:0 0 1rem;color:var(--text-secondary)">${t('home.noGroupTeaser')}</p>
+                  <a href="/group-safaris" class="btn btn-primary">${t('home.viewAllGroupLink')}</a>
                 </div>`;
             }
         }
@@ -222,7 +227,7 @@ async function loadHomepage() {
         }
     } catch (e) {
         const grid = document.getElementById('safarisGrid');
-        if (grid) grid.innerHTML = '<p style="color:var(--text-muted);grid-column:1/-1;text-align:center">Unable to load safari packages.</p>';
+        if (grid) grid.innerHTML = `<p style="color:var(--text-muted);grid-column:1/-1;text-align:center">${t('home.unablePackages')}</p>`;
     }
 
     // Testimonials
@@ -232,7 +237,7 @@ async function loadHomepage() {
         if (grid && data?.length) {
             grid.innerHTML = data.map(buildTestimonialCard).join('');
         } else if (grid) {
-            grid.innerHTML = '<p style="color:var(--text-muted);grid-column:1/-1;text-align:center">No testimonials yet.</p>';
+            grid.innerHTML = `<p style="color:var(--text-muted);grid-column:1/-1;text-align:center">${t('home.noTestimonials')}</p>`;
         }
     } catch {}
 }
@@ -241,7 +246,7 @@ function renderSafaris(packages) {
     const grid = document.getElementById('safarisGrid');
     if (!grid) return;
     if (!packages?.length) {
-        grid.innerHTML = '<p style="color:var(--text-muted);grid-column:1/-1;text-align:center;padding:2rem">No safari packages found.</p>';
+        grid.innerHTML = `<p style="color:var(--text-muted);grid-column:1/-1;text-align:center;padding:2rem">${t('home.noPackages')}</p>`;
         return;
     }
     grid.innerHTML = packages.slice(0, 4).map(buildSafariCard).join('');
@@ -260,18 +265,18 @@ modal?.addEventListener('click', e => { if (e.target === modal) modal.classList.
 document.getElementById('quickBookForm')?.addEventListener('submit', async e => {
     e.preventDefault();
     const btn = document.getElementById('quickBookSubmit');
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${t('common.sending')}`;
     btn.disabled = true;
     const formData = Object.fromEntries(new FormData(e.target));
     try {
         await API.post('/contact', { ...formData, enquiry_type: 'Quick Booking' });
         modal.classList.remove('active');
-        toast('Your inquiry has been sent! We\'ll respond within 24 hours.', 'success');
+        toast(t('toast.inquirySuccess'), 'success');
         e.target.reset();
     } catch (err) {
-        toast(err.message || 'Failed to send. Please try again.', 'error');
+        toast(err.message || t('toast.sendFail'), 'error');
     } finally {
-        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Inquiry';
+        btn.innerHTML = `<i class="fas fa-paper-plane"></i> ${t('common.sendInquiry')}`;
         btn.disabled = false;
     }
 });
@@ -282,15 +287,20 @@ document.getElementById('newsletterForm')?.addEventListener('submit', async e =>
     const email = document.getElementById('newsletterEmail').value;
     try {
         await API.post('/newsletter', { email });
-        toast('Thank you for subscribing!', 'success');
+        toast(t('toast.subscribeSuccess'), 'success');
         e.target.reset();
     } catch {
-        toast('Subscription failed. Please try again.', 'error');
+        toast(t('toast.subscribeFail'), 'error');
     }
 });
 
 // ── Init ───────────────────────────────────────────────────
-loadHomepage();
+(async () => {
+  try {
+    if (window.TSM_i18n && window.TSM_i18n.ready) await window.TSM_i18n.ready;
+  } catch (_) {}
+  loadHomepage();
+})();
 
 // -- Reveal Animations --
 const revealObserver = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('revealed'); } }); }, { threshold: 0.1 });

@@ -2,6 +2,11 @@
  * Corporate Live Chat Widget
  * Pre-chat name/email gate + Socket.IO realtime messaging.
  */
+function t(key, vars) {
+    if (window.TSM_i18n && typeof window.TSM_i18n.t === 'function') return window.TSM_i18n.t(key, vars);
+    return key;
+}
+
 class LiveChat {
     constructor() {
         this.socket = null;
@@ -23,6 +28,7 @@ class LiveChat {
         if (oldWidget) oldWidget.remove();
 
         this.initUI();
+        document.addEventListener('tsm:languagechange', () => this.applyI18n());
     }
 
     escapeHtml(str) {
@@ -39,6 +45,26 @@ class LiveChat {
         return !!(this.visitorName && this.visitorEmail);
     }
 
+    applyI18n() {
+        if (!this.window) return;
+        const title = this.window.querySelector('.chat-title');
+        if (title) title.textContent = t('chat.title');
+        const closeBtn = this.window.querySelector('.chat-close');
+        if (closeBtn) closeBtn.setAttribute('aria-label', t('chat.close'));
+        const intro = this.window.querySelector('.chat-preform-intro');
+        if (intro) intro.textContent = t('chat.intro');
+        if (this.nameInput) this.nameInput.placeholder = t('chat.namePlaceholder');
+        if (this.emailInput) this.emailInput.placeholder = t('chat.emailPlaceholder');
+        if (this.startBtn) this.startBtn.textContent = t('chat.start');
+        if (this.input) this.input.placeholder = t('chat.messagePlaceholder');
+        if (this.sendBtn) this.sendBtn.setAttribute('aria-label', t('chat.sendAria'));
+        const welcome = this.body && this.body.querySelector('.chat-message.system');
+        if (welcome && !this.joined) welcome.textContent = t('chat.welcome');
+        if (this.statusEl && !this.socket) {
+            this.setStatus(t('chat.online'));
+        }
+    }
+
     initUI() {
         this.container = document.createElement('div');
         this.container.className = 'chat-widget';
@@ -51,24 +77,24 @@ class LiveChat {
                 <div class="chat-header-info">
                     <div class="chat-avatar"><i class="fas fa-user-tie"></i></div>
                     <div>
-                        <h3 class="chat-title">Our Team</h3>
-                        <div class="chat-status" id="chatConnStatus"><span class="status-dot" style="background:#999"></span> Online</div>
+                        <h3 class="chat-title">${t('chat.title')}</h3>
+                        <div class="chat-status" id="chatConnStatus"><span class="status-dot" style="background:#999"></span> ${t('chat.online')}</div>
                     </div>
                 </div>
-                <button class="chat-close" type="button" aria-label="Close chat"><i class="fas fa-times"></i></button>
+                <button class="chat-close" type="button" aria-label="${t('chat.close')}"><i class="fas fa-times"></i></button>
             </div>
             <div class="chat-preform" id="chatPreForm">
-                <p class="chat-preform-intro">Please share your details so our team can assist you.</p>
-                <input type="text" id="chatVisitorName" class="chat-input" placeholder="Your name *" maxlength="100" autocomplete="name">
-                <input type="email" id="chatVisitorEmail" class="chat-input" placeholder="Your email *" maxlength="255" autocomplete="email">
-                <button type="button" class="chat-send chat-preform-btn" id="chatStartBtn">Start Chat</button>
+                <p class="chat-preform-intro">${t('chat.intro')}</p>
+                <input type="text" id="chatVisitorName" class="chat-input" placeholder="${t('chat.namePlaceholder')}" maxlength="100" autocomplete="name">
+                <input type="email" id="chatVisitorEmail" class="chat-input" placeholder="${t('chat.emailPlaceholder')}" maxlength="255" autocomplete="email">
+                <button type="button" class="chat-send chat-preform-btn" id="chatStartBtn">${t('chat.start')}</button>
             </div>
             <div class="chat-body" id="chatBody" style="display:none">
-                <div class="chat-message system">Welcome to Tanzania Safari Magic! How can we help you plan your dream safari today?</div>
+                <div class="chat-message system">${t('chat.welcome')}</div>
             </div>
             <div class="chat-input-area" id="chatInputArea" style="display:none">
-                <input type="text" id="chatInput" class="chat-input" placeholder="Type a message..." autocomplete="off" maxlength="2000">
-                <button class="chat-send" id="chatSend" type="button" aria-label="Send message"><i class="fas fa-paper-plane"></i></button>
+                <input type="text" id="chatInput" class="chat-input" placeholder="${t('chat.messagePlaceholder')}" autocomplete="off" maxlength="2000">
+                <button class="chat-send" id="chatSend" type="button" aria-label="${t('chat.sendAria')}"><i class="fas fa-paper-plane"></i></button>
             </div>
         `;
 
@@ -197,7 +223,7 @@ class LiveChat {
     connectSocket() {
         if (typeof io === 'undefined') {
             console.error('Socket.IO is not loaded');
-            this.setStatus('Offline — chat unavailable');
+            this.setStatus(t('chat.offline'));
             return;
         }
         if (!this.hasVisitorInfo()) return;
@@ -210,17 +236,17 @@ class LiveChat {
         });
 
         this.socket.on('connect', () => {
-            this.setStatus('Online — We reply instantly', true);
+            this.setStatus(t('chat.onlineInstant'), true);
             this.emitJoin();
         });
 
         this.socket.on('disconnect', () => {
             this.joined = false;
-            this.setStatus('Reconnecting...');
+            this.setStatus(t('chat.connecting'));
         });
 
         this.socket.on('connect_error', () => {
-            this.setStatus('Connection issue...');
+            this.setStatus(t('chat.connecting'));
         });
 
         this.socket.on('chat_joined', (data) => {
@@ -232,14 +258,14 @@ class LiveChat {
             }
 
             if (data.chat && data.chat.messages && data.chat.messages.length > 0) {
-                this.body.innerHTML = '<div class="chat-message system">Welcome to Tanzania Safari Magic! How can we help you plan your dream safari today?</div>';
+                this.body.innerHTML = `<div class="chat-message system">${t('chat.welcome')}</div>`;
                 this.seenMessageIds.clear();
                 data.chat.messages.forEach(msg => this.handleIncoming(msg, true));
             }
 
             if (data.chat && data.chat.status === 'closed') {
                 this.chatClosed = true;
-                this.appendMessage('This conversation has been closed. Start a new chat to continue.', 'system', new Date().toISOString());
+                this.appendMessage(t('chat.closed'), 'system', new Date().toISOString());
             }
 
             this.flushPending();
@@ -252,12 +278,12 @@ class LiveChat {
 
         this.socket.on('chat_closed', () => {
             this.chatClosed = true;
-            this.appendMessage('An agent closed this conversation.', 'system', new Date().toISOString());
+            this.appendMessage(t('chat.closed'), 'system', new Date().toISOString());
         });
 
         this.socket.on('chat_error', (data) => {
             console.warn('Chat error:', data?.message);
-            this.setStatus(data?.message || 'Chat error');
+            this.setStatus(data?.message || t('chat.offline'));
         });
     }
 

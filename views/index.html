@@ -105,12 +105,12 @@
       
       <div class="hero-content">
         <div class="container">
-            <span class="section-tag">Private Safaris from Arusha</span>
-            <h1 class="hero-title">Private &amp; Bespoke Tanzania Safaris</h1>
-            <p class="hero-subtitle">Custom Serengeti migration tours, Ngorongoro crater safaris, and Zanzibar beach holidays — crafted by expert local guides.</p>
+            <span class="section-tag" data-i18n="home.tag">Private Safaris from Arusha</span>
+            <h1 class="hero-title" data-i18n="home.title">Private &amp; Bespoke Tanzania Safaris</h1>
+            <p class="hero-subtitle" data-i18n="home.subtitle">Custom Serengeti migration tours, Ngorongoro crater safaris, and Zanzibar beach holidays — crafted by expert local guides.</p>
             <div class="hero-actions">
-              <a href="/safaris" class="btn btn-primary">Explore Safari Packages</a>
-              <a href="https://wa.me/255695108009?text=Hi%20Tanzania%20Safari%20Magic%2C%20I%27m%20interested%20in%20booking%20a%20custom%20safari." class="btn btn-secondary" target="_blank" rel="noopener">WhatsApp Free Quote</a>
+              <a href="/safaris" class="btn btn-primary" data-i18n="home.explorePackages">Explore Safari Packages</a>
+              <a href="https://wa.me/255695108009?text=Hi%20Tanzania%20Safari%20Magic%2C%20I%27m%20interested%20in%20booking%20a%20custom%20safari." class="btn btn-secondary" target="_blank" rel="noopener" data-i18n="home.whatsappQuote">WhatsApp Free Quote</a>
             </div>
 
             <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 3rem; opacity: 0.9; margin-top: 5rem;">
@@ -124,15 +124,15 @@
                 <div style="display: flex; align-items: center; gap: 0.5rem; color: #fff;">
                     <i class="fas fa-shield-alt" style="font-size: 1.75rem; color: var(--primary);"></i>
                     <div style="display: flex; flex-direction: column; line-height: 1.2; text-align: left;">
-                        <span style="font-weight: 700; font-size: 0.9rem; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">Safe Travels</span>
-                        <span style="font-size: 0.75rem; color: rgba(255,255,255,0.9); text-shadow: 0 1px 2px rgba(0,0,0,0.8);">Certified Operator</span>
+                        <span style="font-weight: 700; font-size: 0.9rem; text-shadow: 0 2px 4px rgba(0,0,0,0.8);" data-i18n="home.safeTravels">Safe Travels</span>
+                        <span style="font-size: 0.75rem; color: rgba(255,255,255,0.9); text-shadow: 0 1px 2px rgba(0,0,0,0.8);" data-i18n="home.certifiedOperator">Certified Operator</span>
                     </div>
                 </div>
                 <div style="display: flex; align-items: center; gap: 0.5rem; color: #fff;">
                     <i class="fas fa-certificate" style="font-size: 1.75rem; color: #f59e0b;"></i>
                     <div style="display: flex; flex-direction: column; line-height: 1.2; text-align: left;">
-                        <span style="font-weight: 700; font-size: 0.9rem; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">TATO Member</span>
-                        <span style="font-size: 0.75rem; color: rgba(255,255,255,0.9); text-shadow: 0 1px 2px rgba(0,0,0,0.8);">Licensed & Verified</span>
+                        <span style="font-weight: 700; font-size: 0.9rem; text-shadow: 0 2px 4px rgba(0,0,0,0.8);" data-i18n="home.tatoMember">TATO Member</span>
+                        <span style="font-size: 0.75rem; color: rgba(255,255,255,0.9); text-shadow: 0 1px 2px rgba(0,0,0,0.8);" data-i18n="home.licensedVerified">Licensed & Verified</span>
                     </div>
                 </div>
             </div>
@@ -150,7 +150,7 @@
     <form class="search-filter-form" style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: center;" action="/safaris" method="GET">
       <div class="form-group" style="flex: 1; min-width: 200px; margin: 0;">
         <select class="form-control" name="destination" style="background: var(--bg-secondary); border: none; padding: 0.875rem 1.25rem; border-radius: var(--radius-md);">
-          <option value="">Any Destination</option>
+          <option value="" data-i18n="home.anyDestination">Any Destination</option>
           <option value="Serengeti">Serengeti</option>
           <option value="Ngorongoro">Ngorongoro</option>
           <option value="Tarangire">Tarangire</option>
@@ -159,13 +159,13 @@
       </div>
       <div class="form-group" style="flex: 1; min-width: 200px; margin: 0;">
         <select class="form-control" name="duration" style="background: var(--bg-secondary); border: none; padding: 0.875rem 1.25rem; border-radius: var(--radius-md);">
-          <option value="">Any Duration</option>
-          <option value="1-3">1 - 3 Days</option>
-          <option value="4-7">4 - 7 Days</option>
-          <option value="8+">8+ Days</option>
+          <option value="" data-i18n="home.anyDuration">Any Duration</option>
+          <option value="1-3" data-i18n="home.days1to3">1 - 3 Days</option>
+          <option value="4-7" data-i18n="home.days4to7">4 - 7 Days</option>
+          <option value="8+" data-i18n="home.days8plus">8+ Days</option>
         </select>
       </div>
-      <button type="submit" class="btn btn-primary" style="padding: 0.875rem 2rem; min-width: 150px;"><i class="fas fa-search"></i> Search</button>
+      <button type="submit" class="btn btn-primary" style="padding: 0.875rem 2rem; min-width: 150px;"><i class="fas fa-search"></i> <span data-i18n="common.search">Search</span></button>
     </form>
   </div>
 </section>
@@ -176,10 +176,10 @@
 <section class="section" style="background-color: #fcfcfc; border-top: 1px solid #f0f0f0; border-bottom: 1px solid #f0f0f0; padding-top: 6rem; padding-bottom: 6rem;">
   <div class="container">
     <div class="section-header" style="max-width: 700px; margin: 0 auto 4rem;">
-      <span class="section-eyebrow" style="background: transparent; border: 1px solid #dcdcdc; color: #555; border-radius: 4px; padding: 0.4rem 1.2rem; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase;">Locations</span>
-      <h2 class="section-title" style="font-size: 2.75rem; font-weight: 800; color: #111; margin: 1.25rem 0; font-family: var(--font-heading);">Iconic Destinations</h2>
+      <span class="section-eyebrow" style="background: transparent; border: 1px solid #dcdcdc; color: #555; border-radius: 4px; padding: 0.4rem 1.2rem; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase;" data-i18n="home.locations">Locations</span>
+      <h2 class="section-title" style="font-size: 2.75rem; font-weight: 800; color: #111; margin: 1.25rem 0; font-family: var(--font-heading);" data-i18n="home.iconicDestinations">Iconic Destinations</h2>
       <div style="width: 60px; height: 3px; background: var(--primary); margin: 0 auto 1.5rem;"></div>
-      <p class="section-desc" style="color: #666; font-size: 1.1rem; line-height: 1.8;">Experience the finest wilderness reserves with our tailored safari itineraries designed for uncompromising comfort and adventure.</p>
+      <p class="section-desc" style="color: #666; font-size: 1.1rem; line-height: 1.8;" data-i18n="home.destinationsDesc">Experience the finest wilderness reserves with our tailored safari itineraries designed for uncompromising comfort and adventure.</p>
     </div>
     <div class="dest-grid" id="destinationsGrid">
       <div class="skeleton-card"><div class="skeleton skeleton-img" style="aspect-ratio:4/3"></div><div style="padding: 1.5rem"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
@@ -188,7 +188,7 @@
       <div class="skeleton-card"><div class="skeleton skeleton-img" style="aspect-ratio:4/3"></div><div style="padding: 1.5rem"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
     </div>
     <div class="text-center" style="margin-top: 3.5rem;">
-      <a href="/destinations" class="btn btn-primary" style="padding: 1rem 2.5rem; border-radius: 4px; font-weight: 600; letter-spacing: 1.5px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">Explore All Regions</a>
+      <a href="/destinations" class="btn btn-primary" style="padding: 1rem 2.5rem; border-radius: 4px; font-weight: 600; letter-spacing: 1.5px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" data-i18n="home.exploreAllRegions">Explore All Regions</a>
     </div>
   </div>
 </section>
@@ -197,12 +197,12 @@
 <section class="section bg-sand">
   <div class="container">
     <div class="section-header">
-      <span class="section-eyebrow"><i class="fas fa-star"></i> Top Rated</span>
-      <h2 class="section-title">Popular <span>Safari Packages</span></h2>
-      <p class="section-desc">Handpicked experiences designed for every type of traveler — from thrilling game drives to serene cultural encounters.</p>
+      <span class="section-eyebrow"><i class="fas fa-star"></i> <span data-i18n="home.topRated">Top Rated</span></span>
+      <h2 class="section-title" data-i18n-html="home.popularPackagesHtml">Popular <span>Safari Packages</span></h2>
+      <p class="section-desc" data-i18n="home.popularDesc">Handpicked experiences designed for every type of traveler — from thrilling game drives to serene cultural encounters.</p>
     </div>
     <div class="filter-bar" id="categoryFilters">
-      <button class="filter-btn active" data-filter="all">All Safaris</button>
+      <button class="filter-btn active" data-filter="all" data-i18n="home.allSafaris">All Safaris</button>
     </div>
     <div class="safari-grid" id="safarisGrid">
       <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line medium"></div><div class="skeleton skeleton-line short"></div></div></div>
@@ -210,7 +210,7 @@
       <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line medium"></div><div class="skeleton skeleton-line short"></div></div></div>
     </div>
     <div class="text-center" style="margin-top:2.5rem">
-      <a href="/safaris" class="btn btn-outline"><i class="fas fa-binoculars"></i> View All Safaris</a>
+      <a href="/safaris" class="btn btn-outline"><i class="fas fa-binoculars"></i> <span data-i18n="home.viewAllSafaris">View All Safaris</span></a>
     </div>
   </div>
 </section>
@@ -220,37 +220,37 @@
   <div style="position: absolute; inset: 0; background: rgba(0,0,0,0);"></div>
   <div class="container home-glass-panel" style="position: relative; z-index: 2; background: rgba(255,255,255,0.92); backdrop-filter: blur(10px); border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); display: flex; flex-direction: column; align-items: center; text-align: center; margin-top: 2rem; margin-bottom: 2rem;">
     <div class="section-header" style="max-width: 800px; margin: 0 auto 3rem auto;">
-      <span class="section-eyebrow"><i class="fas fa-award"></i> Why Choose Us</span>
-      <h2 class="section-title">Your Trusted <span>Safari Partner</span></h2>
-      <p class="section-desc">Over a decade of crafting extraordinary safari experiences with unmatched expertise, safety, and passion.</p>
+      <span class="section-eyebrow"><i class="fas fa-award"></i> <span data-i18n="home.whyChoose">Why Choose Us</span></span>
+      <h2 class="section-title" data-i18n-html="home.trustedPartnerHtml">Your Trusted <span>Safari Partner</span></h2>
+      <p class="section-desc" data-i18n="home.whyDesc">Over a decade of crafting extraordinary safari experiences with unmatched expertise, safety, and passion.</p>
     </div>
     <div class="features-grid">
       <div class="feature-card">
         <div class="feature-icon"><i class="fas fa-users"></i></div>
         <div class="feature-card-body">
-          <h3>Expert Local Guides</h3>
-          <p>Certified professionals with deep knowledge of Tanzanian wildlife and habitats.</p>
+          <h3 data-i18n="home.expertGuides">Expert Local Guides</h3>
+          <p data-i18n="home.expertGuidesDesc">Certified professionals with deep knowledge of Tanzanian wildlife and habitats.</p>
         </div>
       </div>
       <div class="feature-card">
         <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
         <div class="feature-card-body">
-          <h3>Safety First</h3>
-          <p>Well-maintained 4x4 vehicles and comprehensive emergency protocols for your peace of mind.</p>
+          <h3 data-i18n="home.safetyFirst">Safety First</h3>
+          <p data-i18n="home.safetyFirstDesc">Well-maintained 4x4 vehicles and comprehensive emergency protocols for your peace of mind.</p>
         </div>
       </div>
       <div class="feature-card">
         <div class="feature-icon"><i class="fas fa-leaf"></i></div>
         <div class="feature-card-body">
-          <h3>Eco-Responsible</h3>
-          <p>We support conservation efforts and local communities through responsible travel practices.</p>
+          <h3 data-i18n="home.ecoResponsible">Eco-Responsible</h3>
+          <p data-i18n="home.ecoResponsibleDesc">We support conservation efforts and local communities through responsible travel practices.</p>
         </div>
       </div>
       <div class="feature-card">
         <div class="feature-icon"><i class="fas fa-headset"></i></div>
         <div class="feature-card-body">
-          <h3>24/7 Support</h3>
-          <p>Round-the-clock assistance from booking through your entire safari journey.</p>
+          <h3 data-i18n="home.support247">24/7 Support</h3>
+          <p data-i18n="home.support247Desc">Round-the-clock assistance from booking through your entire safari journey.</p>
         </div>
       </div>
     </div>
@@ -263,13 +263,13 @@
     <div class="group-home-showcase">
       <div class="group-home-head">
         <div>
-          <span class="section-eyebrow"><i class="fas fa-users"></i> Open group departures</span>
-          <h2 class="section-title">Join a <span>Group Safari</span></h2>
-          <p class="section-desc">Fixed dates, shared costs, small groups — perfect for solo travelers and couples. Pick a departure and request your seat.</p>
+          <span class="section-eyebrow"><i class="fas fa-users"></i> <span data-i18n="home.openGroup">Open group departures</span></span>
+          <h2 class="section-title" data-i18n-html="home.joinGroupHtml">Join a <span>Group Safari</span></h2>
+          <p class="section-desc" data-i18n="home.groupDesc">Fixed dates, shared costs, small groups — perfect for solo travelers and couples. Pick a departure and request your seat.</p>
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:0.75rem">
-          <a href="/group-safaris" class="btn btn-primary" style="min-height:48px">View full calendar</a>
-          <a href="/safaris" class="btn btn-outline" style="min-height:48px">Private safaris</a>
+          <a href="/group-safaris" class="btn btn-primary" style="min-height:48px" data-i18n="home.viewCalendar">View full calendar</a>
+          <a href="/safaris" class="btn btn-outline" style="min-height:48px" data-i18n="home.privateSafaris">Private safaris</a>
         </div>
       </div>
       <div id="groupHomeTeaser" class="group-home-grid" aria-live="polite"></div>
@@ -282,9 +282,9 @@
   <div style="position: absolute; inset: 0; background: rgba(0,0,0,0);"></div>
   <div class="container home-glass-panel" style="position: relative; z-index: 2; background: rgba(255,255,255,0.92); backdrop-filter: blur(10px); border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); display: flex; flex-direction: column; align-items: center; text-align: center; margin-top: 2rem; margin-bottom: 2rem;">
     <div class="section-header" style="max-width: 800px; margin: 0 auto 3rem auto;">
-      <span class="section-eyebrow"><i class="fas fa-quote-left"></i> Traveler Stories</span>
-      <h2 class="section-title">What Our <span>Guests Say</span></h2>
-      <p class="section-desc">Real experiences from adventurers who explored Tanzania with us.</p>
+      <span class="section-eyebrow"><i class="fas fa-quote-left"></i> <span data-i18n="home.travelerStories">Traveler Stories</span></span>
+      <h2 class="section-title" data-i18n-html="home.guestsSayHtml">What Our <span>Guests Say</span></h2>
+      <p class="section-desc" data-i18n="home.testimonialsDesc">Real experiences from adventurers who explored Tanzania with us.</p>
     </div>
     <div class="testimonials-grid" id="testimonialsGrid">
       <div class="testimonial-card skeleton-card" style="height:200px"></div>
@@ -297,11 +297,11 @@
 <!-- CTA Band -->
 <section class="cta-band">
   <div class="container text-center">
-    <h2>Ready for Your African Adventure?</h2>
-    <p>Let our experts craft the perfect safari experience for you and your family.</p>
+    <h2 data-i18n="home.ctaTitle">Ready for Your African Adventure?</h2>
+    <p data-i18n="home.ctaDesc">Let our experts craft the perfect safari experience for you and your family.</p>
     <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
-      <a href="/booking" class="btn btn-white btn-lg"><i class="fas fa-calendar-alt"></i> Book Your Safari</a>
-      <a href="/contact" class="btn btn-ghost btn-lg"><i class="fas fa-comments"></i> Get Free Consultation</a>
+      <a href="/booking" class="btn btn-white btn-lg"><i class="fas fa-calendar-alt"></i> <span data-i18n="home.bookSafari">Book Your Safari</span></a>
+      <a href="/contact" class="btn btn-ghost btn-lg"><i class="fas fa-comments"></i> <span data-i18n="home.freeConsultation">Get Free Consultation</span></a>
     </div>
   </div>
 </section>
@@ -312,11 +312,11 @@
     <iframe src="https://www.google.com/maps/d/embed?mid=1kXGUhPWV3TNiW4zcgwh_zjNlJklADDQ" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     <div class="map-overlay container" style="position: absolute; inset: 0; display: flex; pointer-events: none;">
       <div class="map-card" style="background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); pointer-events: auto;">
-        <h3 style="font-family: var(--font-heading); font-size: 1.5rem; color: var(--earth-dark); margin-bottom: 0.75rem;"><i class="fas fa-map-marker-alt" style="color: var(--primary); margin-right: 0.5rem;"></i> Our Presence</h3>
-        <p style="color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.6; font-size: 0.95rem;">Expert local guides stationed in Arusha, Serengeti, and Zanzibar.</p>
+        <h3 style="font-family: var(--font-heading); font-size: 1.5rem; color: var(--earth-dark); margin-bottom: 0.75rem;"><i class="fas fa-map-marker-alt" style="color: var(--primary); margin-right: 0.5rem;"></i> <span data-i18n="home.ourPresence">Our Presence</span></h3>
+        <p style="color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.6; font-size: 0.95rem;" data-i18n="home.presenceDesc">Expert local guides stationed in Arusha, Serengeti, and Zanzibar.</p>
         <div class="map-stats" style="display: flex; gap: 2rem; border-top: 1px solid var(--border-light); padding-top: 1.5rem;">
-          <div><strong style="display: block; font-size: 2rem; color: var(--primary); font-family: var(--font-heading); line-height: 1;">12</strong><span style="color: var(--text-muted); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Parks</span></div>
-          <div><strong style="display: block; font-size: 2rem; color: var(--primary); font-family: var(--font-heading); line-height: 1;">24/7</strong><span style="color: var(--text-muted); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Support</span></div>
+          <div><strong style="display: block; font-size: 2rem; color: var(--primary); font-family: var(--font-heading); line-height: 1;">12</strong><span style="color: var(--text-muted); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;" data-i18n="home.parks">Parks</span></div>
+          <div><strong style="display: block; font-size: 2rem; color: var(--primary); font-family: var(--font-heading); line-height: 1;">24/7</strong><span style="color: var(--text-muted); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;" data-i18n="home.support">Support</span></div>
         </div>
       </div>
     </div>
@@ -325,7 +325,7 @@
 
 <!-- Footer -->
 <div id="footer"></div>
-<script src="/js/layout-loader.js?v=12"></script>
+<script src="/js/layout-loader.js?v=13"></script>
 <script src="/js/api.js"></script>
 <script src="/js/main.js?v=5"></script>
 </body>

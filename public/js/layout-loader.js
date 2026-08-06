@@ -5,12 +5,46 @@
 
 let __safariMegaMenuLoaded = false;
 
+function tsmT(key, vars) {
+    if (typeof window.t === 'function') return window.t(key, vars);
+    if (window.TSM_i18n && typeof window.TSM_i18n.t === 'function') return window.TSM_i18n.t(key, vars);
+    return key;
+}
+
 function escapeNavHtml(str) {
     return String(str || '')
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;');
+}
+
+function ensureI18nLoaded() {
+    if (window.TSM_i18n && window.TSM_i18n.ready) return window.TSM_i18n.ready;
+    return new Promise((resolve) => {
+        if (document.querySelector('script[src*="/js/i18n.js"]')) {
+            const wait = () => {
+                if (window.TSM_i18n && window.TSM_i18n.ready) window.TSM_i18n.ready.then(resolve);
+                else setTimeout(wait, 30);
+            };
+            wait();
+            return;
+        }
+        const s = document.createElement('script');
+        s.src = '/js/i18n.js?v=1';
+        s.onload = () => {
+            if (window.TSM_i18n && window.TSM_i18n.ready) window.TSM_i18n.ready.then(resolve);
+            else resolve();
+        };
+        s.onerror = () => resolve();
+        (document.head || document.documentElement).appendChild(s);
+    });
+}
+
+function applyPageI18n(root) {
+    if (window.TSM_i18n && typeof window.TSM_i18n.applyTranslations === 'function') {
+        window.TSM_i18n.applyTranslations(root || document);
+    }
 }
 
 async function loadSafariMegaMenuTours() {
@@ -20,6 +54,10 @@ async function loadSafariMegaMenuTours() {
     __safariMegaMenuLoaded = true;
 
     const categories = [...new Set([...nodes].map((n) => n.getAttribute('data-category')).filter(Boolean))];
+    const daysLabel = tsmT('common.days');
+    const fromLabel = tsmT('common.from');
+    const updating = tsmT('common.packagesUpdating');
+    const viewCol = tsmT('common.viewCollection');
 
     await Promise.all(
         categories.map(async (category) => {
@@ -32,21 +70,21 @@ async function loadSafariMegaMenuTours() {
                     ? packages
                           .slice(0, 4)
                           .map((p) => {
-                              const days = p.duration_days ? `${p.duration_days} days` : '';
+                              const days = p.duration_days ? `${p.duration_days} ${daysLabel}` : '';
                               const price = p.base_price_usd
-                                  ? `From $${Number(p.base_price_usd).toLocaleString()}`
+                                  ? `${fromLabel} $${Number(p.base_price_usd).toLocaleString()}`
                                   : '';
                               const meta = [days, price].filter(Boolean).join(' · ');
                               return `<a class="nav-mega-tour" role="menuitem" href="/safaris/${encodeURIComponent(p.package_slug)}">${escapeNavHtml(p.package_name)}${meta ? `<span>${escapeNavHtml(meta)}</span>` : ''}</a>`;
                           })
                           .join('')
-                    : '<span class="nav-mega-empty">Packages updating…</span>';
+                    : `<span class="nav-mega-empty">${escapeNavHtml(updating)}</span>`;
                 targets.forEach((el) => {
                     el.innerHTML = html;
                 });
             } catch (err) {
                 targets.forEach((el) => {
-                    el.innerHTML = '<span class="nav-mega-empty">View collection →</span>';
+                    el.innerHTML = `<span class="nav-mega-empty">${escapeNavHtml(viewCol)}</span>`;
                 });
             }
         })
@@ -65,8 +103,12 @@ async function loadSafariMegaMenuTours() {
     else document.addEventListener('DOMContentLoaded', () => document.head.appendChild(fluid));
 })();
 
-document.addEventListener('DOMContentLoaded', () => {
+/* Start loading i18n as early as possible */
+ensureI18nLoaded();
+
+document.addEventListener('DOMContentLoaded', async () => {
     const cb = '?v=' + Date.now();
+    await ensureI18nLoaded();
 
     // Load shared SEO helpers early
     if (!document.querySelector('script[src^="/js/seo.js"]')) {
@@ -75,9 +117,19 @@ document.addEventListener('DOMContentLoaded', () => {
         seo.onload = () => { if (typeof initSEO === 'function') initSEO(); };
         document.head.appendChild(seo);
     }
-    loadComponent('header', '/includes/header.html' + cb, initHeader);
+
+    applyPageI18n(document);
+
+    loadComponent('header', '/includes/header.html' + cb, () => {
+        initHeader();
+        if (window.TSM_i18n && typeof window.TSM_i18n.initSwitcher === 'function') {
+            window.TSM_i18n.initSwitcher();
+        }
+        applyPageI18n(document.getElementById('header') || document);
+    });
     loadComponent('footer', '/includes/footer.html' + cb, () => {
         initFooter();
+        applyPageI18n(document.getElementById('footer') || document);
         loadChatScripts();
         initCookieNotice();
     });
@@ -99,7 +151,7 @@ function initCookieNotice() {
         const bar = document.createElement('div');
         bar.id = 'tsmCookieNotice';
         bar.setAttribute('role', 'dialog');
-        bar.setAttribute('aria-label', 'Cookie notice');
+        bar.setAttribute('aria-label', tsmT('cookie.aria'));
         bar.style.cssText = [
             'position:fixed', 'left:1rem', 'right:1rem', 'bottom:1rem', 'z-index:9998',
             'max-width:32rem', 'margin:0 auto', 'padding:1rem 1.15rem',
@@ -108,9 +160,8 @@ function initCookieNotice() {
             'display:flex', 'flex-wrap:wrap', 'gap:0.75rem', 'align-items:center', 'justify-content:space-between'
         ].join(';');
         bar.innerHTML = `
-          <p style="margin:0;flex:1 1 12rem">We use essential storage and first-party analytics to improve the site.
-            See our <a href="/privacy" style="color:#c8e6c0;text-decoration:underline">Privacy Policy</a>.</p>
-          <button type="button" id="tsmCookieAccept" style="flex:0 0 auto;border:0;cursor:pointer;background:#c45c26;color:#fff;font-weight:700;padding:0.55rem 1rem;border-radius:8px">OK</button>
+          <p style="margin:0;flex:1 1 12rem">${tsmT('cookie.html')}</p>
+          <button type="button" id="tsmCookieAccept" style="flex:0 0 auto;border:0;cursor:pointer;background:#c45c26;color:#fff;font-weight:700;padding:0.55rem 1rem;border-radius:8px">${tsmT('common.ok')}</button>
         `;
         document.body.appendChild(bar);
         document.getElementById('tsmCookieAccept')?.addEventListener('click', () => {
@@ -472,7 +523,7 @@ function initFooter() {
             
             try {
                 btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Subscribing...';
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + tsmT('common.subscribing');
                 
                 const response = await fetch('/api/newsletter/subscribe', {
                     method: 'POST',
@@ -483,13 +534,13 @@ function initFooter() {
                 const result = await response.json();
                 
                 if (result.success) {
-                    showToast('Success!', 'Thank you for subscribing to our newsletter.', 'success');
+                    showToast(tsmT('toast.newsletterSuccessTitle'), tsmT('toast.newsletterSuccessBody'), 'success');
                     newsletterForm.reset();
                 } else {
-                    showToast('Error', result.message || 'Failed to subscribe.', 'error');
+                    showToast(tsmT('toast.errorTitle'), result.message || tsmT('toast.newsletterFail'), 'error');
                 }
             } catch (error) {
-                showToast('Error', 'An error occurred. Please try again later.', 'error');
+                showToast(tsmT('toast.errorTitle'), tsmT('toast.genericError'), 'error');
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = originalText;
