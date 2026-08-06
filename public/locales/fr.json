@@ -201,7 +201,7 @@
     "viewAllGroupLink": "Voir le calendrier de groupe",
     "seoHubTitle": "Tourisme safari en Tanzanie depuis Arusha",
     "seoHubP1": "Tanzania Safari Magic est votre porte d’entrée locale au tourisme en Tanzanie : safaris privés au Serengeti, game drives au cratère Ngorongoro, tours de la Grande Migration, ascensions du Kilimandjaro et séjours à Zanzibar — le tout planifié depuis Arusha avec des guides licenciés.",
-    "seoHubLinks": "Explorez les <a href=\"/safaris\">forfaits safari</a>, le <a href=\"/destinations/serengeti-national-park\">parc national du Serengeti</a>, <a href=\"/destinations/ngorongoro-conservation-area\">Ngorongoro</a>, les <a href=\"/kilimanjaro\">treks Kilimandjaro</a>, les <a href=\"/migrations\">safaris migration</a>, les <a href=\"/zanzibar\">extensions Zanzibar</a> et notre <a href=\"/blog/tanzania-safari\">guide safari Tanzanie</a> — ou <a href=\"/booking\">demandez un devis gratuit</a>."
+    "seoHubLinks": "Explorez les <a href=\"/safaris\">forfaits safari</a>, le <a href=\"/destinations/serengeti-national-park\">parc national du Serengeti</a>, <a href=\"/destinations/ngorongoro-conservation-area\">Ngorongoro</a>, les <a href=\"/kilimanjaro\">treks Kilimandjaro</a>, les <a href=\"/migrations\">safaris migration</a>, les <a href=\"/zanzibar\">extensions Zanzibar</a>, notre <a href=\"/blog/tanzania-safari\">guide safari Tanzanie</a>, <a href=\"/blog/first-tanzania-safari\">préparer un premier safari</a> et le <a href=\"/blog/kilimanjaro-cost\">guide des coûts Kilimandjaro</a> — ou <a href=\"/booking\">demandez un devis gratuit</a>."
   },
   "safarisPage": {
     "crumb": "Safaris",
@@ -640,7 +640,19 @@
       "serengeti": "Guide Serengeti",
       "ngorongoro": "Cratère Ngorongoro",
       "arusha": "Parc national d’Arusha",
-      "zanzibar": "Guide Zanzibar"
+      "zanzibar": "Guide Zanzibar",
+      "firstSafari": "Premier safari en Tanzanie",
+      "soloTravel": "Voyager seul en Tanzanie",
+      "arushaThings": "Que faire à Arusha",
+      "visa": "Guide visa Tanzanie",
+      "kiliDifficulty": "Difficulté du Kilimandjaro",
+      "kiliCost": "Coût du Kilimandjaro",
+      "kiliBestTime": "Meilleure période pour grimper",
+      "kiliRoutes": "Voies du Kilimandjaro",
+      "kiliPacking": "Liste d’équipement Kilimandjaro",
+      "kiliTrain": "S’entraîner pour le Kilimandjaro",
+      "kiliTipping": "Guide des pourboires",
+      "kiliAcclimatization": "Acclimatation Kilimandjaro"
     }
   },
   "destDetail": {

@@ -201,7 +201,7 @@
     "viewAllGroupLink": "View group calendar",
     "seoHubTitle": "Tanzania safari tourism from Arusha",
     "seoHubP1": "Tanzania Safari Magic is your local gateway to Tanzania tourism: private Serengeti safaris, Ngorongoro Crater game drives, Great Wildebeest Migration tours, Mount Kilimanjaro climbs, and Zanzibar beach holidays — all planned from Arusha with licensed guides.",
-    "seoHubLinks": "Explore <a href=\"/safaris\">safari packages</a>, <a href=\"/destinations/serengeti-national-park\">Serengeti National Park</a>, <a href=\"/destinations/ngorongoro-conservation-area\">Ngorongoro</a>, <a href=\"/kilimanjaro\">Kilimanjaro treks</a>, <a href=\"/migrations\">migration safaris</a>, <a href=\"/zanzibar\">Zanzibar extensions</a>, and our <a href=\"/blog/tanzania-safari\">Tanzania safari guide</a> — or <a href=\"/booking\">request a free quote</a>."
+    "seoHubLinks": "Explore <a href=\"/safaris\">safari packages</a>, <a href=\"/destinations/serengeti-national-park\">Serengeti National Park</a>, <a href=\"/destinations/ngorongoro-conservation-area\">Ngorongoro</a>, <a href=\"/kilimanjaro\">Kilimanjaro treks</a>, <a href=\"/migrations\">migration safaris</a>, <a href=\"/zanzibar\">Zanzibar extensions</a>, our <a href=\"/blog/tanzania-safari\">Tanzania safari guide</a>, <a href=\"/blog/first-tanzania-safari\">first-safari prep</a>, and <a href=\"/blog/kilimanjaro-cost\">Kilimanjaro cost guide</a> — or <a href=\"/booking\">request a free quote</a>."
   },
   "safarisPage": {
     "crumb": "Safaris",
@@ -640,7 +640,19 @@
       "serengeti": "Serengeti Guide",
       "ngorongoro": "Ngorongoro Crater",
       "arusha": "Arusha National Park",
-      "zanzibar": "Zanzibar Guide"
+      "zanzibar": "Zanzibar Guide",
+      "firstSafari": "First Tanzania Safari",
+      "soloTravel": "Solo Travel Tanzania",
+      "arushaThings": "Things to Do in Arusha",
+      "visa": "Tanzania Visa Guide",
+      "kiliDifficulty": "Kilimanjaro Difficulty",
+      "kiliCost": "Kilimanjaro Cost",
+      "kiliBestTime": "Best Time to Climb Kili",
+      "kiliRoutes": "Kilimanjaro Routes",
+      "kiliPacking": "Kilimanjaro Packing List",
+      "kiliTrain": "Train for Kilimanjaro",
+      "kiliTipping": "Tipping Guide",
+      "kiliAcclimatization": "Kilimanjaro Acclimatization"
     }
   },
   "destDetail": {

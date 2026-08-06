@@ -26,7 +26,19 @@ const PILLAR_SLUGS = {
   'ngorongoro-crater': 'NgorongoroCraterGuide',
   'serengeti-national-park': 'SerengetiNationalParkGuide',
   'arusha-national-park': 'ArushaNationalParkGuide',
-  'best-time-to-visit-tanzania': 'BestTimeToVisitTanzaniaGuide'
+  'best-time-to-visit-tanzania': 'BestTimeToVisitTanzaniaGuide',
+  'first-tanzania-safari': 'FirstTanzaniaSafariGuide',
+  'tanzania-solo-travel': 'TanzaniaSoloTravelGuide',
+  'things-to-do-in-arusha': 'ThingsToDoInArushaGuide',
+  'tanzania-visa-guide': 'TanzaniaVisaGuide',
+  'climbing-kilimanjaro-difficulty': 'ClimbingKilimanjaroDifficultyGuide',
+  'kilimanjaro-cost': 'KilimanjaroCostGuide',
+  'best-time-to-climb-kilimanjaro': 'BestTimeClimbKilimanjaroGuide',
+  'kilimanjaro-routes-guide': 'KilimanjaroRoutesGuide',
+  'kilimanjaro-packing-list': 'KilimanjaroPackingListGuide',
+  'train-for-kilimanjaro': 'TrainForKilimanjaroGuide',
+  'kilimanjaro-tipping-guide': 'KilimanjaroTippingGuide',
+  'kilimanjaro-acclimatization': 'KilimanjaroAcclimatizationGuide'
 };
 
 const RELATED_PILLAR_KEYS = [
@@ -37,14 +49,53 @@ const RELATED_PILLAR_KEYS = [
   { slug: 'serengeti-national-park', key: 'blogDetail.pillar.serengeti' },
   { slug: 'ngorongoro-crater', key: 'blogDetail.pillar.ngorongoro' },
   { slug: 'arusha-national-park', key: 'blogDetail.pillar.arusha' },
-  { slug: 'zanzibar-guide', key: 'blogDetail.pillar.zanzibar' }
+  { slug: 'zanzibar-guide', key: 'blogDetail.pillar.zanzibar' },
+  { slug: 'first-tanzania-safari', key: 'blogDetail.pillar.firstSafari' },
+  { slug: 'tanzania-solo-travel', key: 'blogDetail.pillar.soloTravel' },
+  { slug: 'things-to-do-in-arusha', key: 'blogDetail.pillar.arushaThings' },
+  { slug: 'tanzania-visa-guide', key: 'blogDetail.pillar.visa' },
+  { slug: 'climbing-kilimanjaro-difficulty', key: 'blogDetail.pillar.kiliDifficulty' },
+  { slug: 'kilimanjaro-cost', key: 'blogDetail.pillar.kiliCost' },
+  { slug: 'best-time-to-climb-kilimanjaro', key: 'blogDetail.pillar.kiliBestTime' },
+  { slug: 'kilimanjaro-routes-guide', key: 'blogDetail.pillar.kiliRoutes' },
+  { slug: 'kilimanjaro-packing-list', key: 'blogDetail.pillar.kiliPacking' },
+  { slug: 'train-for-kilimanjaro', key: 'blogDetail.pillar.kiliTrain' },
+  { slug: 'kilimanjaro-tipping-guide', key: 'blogDetail.pillar.kiliTipping' },
+  { slug: 'kilimanjaro-acclimatization', key: 'blogDetail.pillar.kiliAcclimatization' }
 ];
 
+const KILI_SLUGS = new Set([
+  'climbing-kilimanjaro-difficulty',
+  'kilimanjaro-cost',
+  'best-time-to-climb-kilimanjaro',
+  'kilimanjaro-routes-guide',
+  'kilimanjaro-packing-list',
+  'train-for-kilimanjaro',
+  'kilimanjaro-tipping-guide',
+  'kilimanjaro-acclimatization'
+]);
+
+function relatedLabel(p) {
+  const translated = p.key ? t(p.key) : '';
+  if (translated && translated !== p.key) return translated;
+  const g = getGuide(p.slug);
+  if (g && g.META && g.META.title) return g.META.title;
+  return p.slug;
+}
+
 function relatedGuidesHtml(currentSlug) {
-  return RELATED_PILLAR_KEYS
+  const preferKili = KILI_SLUGS.has(currentSlug);
+  const ranked = RELATED_PILLAR_KEYS
     .filter(p => p.slug !== currentSlug)
+    .slice()
+    .sort((a, b) => {
+      const aw = preferKili ? (KILI_SLUGS.has(a.slug) ? 0 : 1) : (KILI_SLUGS.has(a.slug) ? 1 : 0);
+      const bw = preferKili ? (KILI_SLUGS.has(b.slug) ? 0 : 1) : (KILI_SLUGS.has(b.slug) ? 1 : 0);
+      return aw - bw;
+    });
+  return ranked
     .slice(0, 6)
-    .map(p => `<li><a href="/blog/${p.slug}">${escapeHtml(t(p.key))}</a></li>`)
+    .map(p => `<li><a href="/blog/${p.slug}">${escapeHtml(relatedLabel(p))}</a></li>`)
     .join('');
 }
 

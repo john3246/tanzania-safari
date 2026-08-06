@@ -201,7 +201,7 @@
     "viewAllGroupLink": "Ver calendario de grupo",
     "seoHubTitle": "Turismo safari en Tanzania desde Arusha",
     "seoHubP1": "Tanzania Safari Magic es tu puerta local al turismo en Tanzania: safaris privados en Serengeti, game drives en el cráter Ngorongoro, tours de la Gran Migración, ascensos al Kilimanjaro y vacaciones en Zanzíbar — todo planificado desde Arusha con guías licenciados.",
-    "seoHubLinks": "Explora <a href=\"/safaris\">paquetes safari</a>, <a href=\"/destinations/serengeti-national-park\">Parque Nacional Serengeti</a>, <a href=\"/destinations/ngorongoro-conservation-area\">Ngorongoro</a>, <a href=\"/kilimanjaro\">trekkings Kilimanjaro</a>, <a href=\"/migrations\">safaris de migración</a>, <a href=\"/zanzibar\">extensiones Zanzíbar</a> y nuestra <a href=\"/blog/tanzania-safari\">guía safari Tanzania</a> — o <a href=\"/booking\">solicita un presupuesto gratis</a>."
+    "seoHubLinks": "Explora <a href=\"/safaris\">paquetes safari</a>, <a href=\"/destinations/serengeti-national-park\">Parque Nacional Serengeti</a>, <a href=\"/destinations/ngorongoro-conservation-area\">Ngorongoro</a>, <a href=\"/kilimanjaro\">trekkings Kilimanjaro</a>, <a href=\"/migrations\">safaris de migración</a>, <a href=\"/zanzibar\">extensiones Zanzíbar</a>, nuestra <a href=\"/blog/tanzania-safari\">guía safari Tanzania</a>, <a href=\"/blog/first-tanzania-safari\">preparación del primer safari</a> y la <a href=\"/blog/kilimanjaro-cost\">guía de costes Kilimanjaro</a> — o <a href=\"/booking\">solicita un presupuesto gratis</a>."
   },
   "safarisPage": {
     "crumb": "Safaris",
@@ -640,7 +640,19 @@
       "serengeti": "Guía Serengeti",
       "ngorongoro": "Cráter Ngorongoro",
       "arusha": "Parque Nacional Arusha",
-      "zanzibar": "Guía Zanzíbar"
+      "zanzibar": "Guía Zanzíbar",
+      "firstSafari": "Primer safari en Tanzania",
+      "soloTravel": "Viajar solo en Tanzania",
+      "arushaThings": "Qué hacer en Arusha",
+      "visa": "Guía de visado Tanzania",
+      "kiliDifficulty": "Dificultad del Kilimanjaro",
+      "kiliCost": "Coste del Kilimanjaro",
+      "kiliBestTime": "Mejor época para subir",
+      "kiliRoutes": "Rutas del Kilimanjaro",
+      "kiliPacking": "Lista de equipaje Kilimanjaro",
+      "kiliTrain": "Entrenar para el Kilimanjaro",
+      "kiliTipping": "Guía de propinas",
+      "kiliAcclimatization": "Aclimatación Kilimanjaro"
     }
   },
   "destDetail": {

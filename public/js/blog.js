@@ -13,7 +13,19 @@ const PILLAR_ORDER = [
   'zanzibar-guide',
   'arusha-national-park',
   'tanzania-safari',
-  'tanzania-safari-cost'
+  'tanzania-safari-cost',
+  'first-tanzania-safari',
+  'tanzania-solo-travel',
+  'things-to-do-in-arusha',
+  'tanzania-visa-guide',
+  'climbing-kilimanjaro-difficulty',
+  'kilimanjaro-cost',
+  'best-time-to-climb-kilimanjaro',
+  'kilimanjaro-routes-guide',
+  'kilimanjaro-packing-list',
+  'train-for-kilimanjaro',
+  'kilimanjaro-tipping-guide',
+  'kilimanjaro-acclimatization'
 ];
 
 function pillarFromWindow(slug) {
@@ -25,7 +37,19 @@ function pillarFromWindow(slug) {
     'ngorongoro-crater': window.NgorongoroCraterGuide?.META,
     'serengeti-national-park': window.SerengetiNationalParkGuide?.META,
     'arusha-national-park': window.ArushaNationalParkGuide?.META,
-    'best-time-to-visit-tanzania': window.BestTimeToVisitTanzaniaGuide?.META
+    'best-time-to-visit-tanzania': window.BestTimeToVisitTanzaniaGuide?.META,
+    'first-tanzania-safari': window.FirstTanzaniaSafariGuide?.META,
+    'tanzania-solo-travel': window.TanzaniaSoloTravelGuide?.META,
+    'things-to-do-in-arusha': window.ThingsToDoInArushaGuide?.META,
+    'tanzania-visa-guide': window.TanzaniaVisaGuide?.META,
+    'climbing-kilimanjaro-difficulty': window.ClimbingKilimanjaroDifficultyGuide?.META,
+    'kilimanjaro-cost': window.KilimanjaroCostGuide?.META,
+    'best-time-to-climb-kilimanjaro': window.BestTimeClimbKilimanjaroGuide?.META,
+    'kilimanjaro-routes-guide': window.KilimanjaroRoutesGuide?.META,
+    'kilimanjaro-packing-list': window.KilimanjaroPackingListGuide?.META,
+    'train-for-kilimanjaro': window.TrainForKilimanjaroGuide?.META,
+    'kilimanjaro-tipping-guide': window.KilimanjaroTippingGuide?.META,
+    'kilimanjaro-acclimatization': window.KilimanjaroAcclimatizationGuide?.META
   };
   return map[slug] || null;
 }

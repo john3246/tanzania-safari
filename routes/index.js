@@ -153,7 +153,19 @@ router.get('/sitemap.xml', async (req, res) => {
       'serengeti-national-park': '0.9',
       'ngorongoro-crater': '0.9',
       'zanzibar-guide': '0.9',
-      'arusha-national-park': '0.85'
+      'arusha-national-park': '0.85',
+      'first-tanzania-safari': '0.9',
+      'tanzania-solo-travel': '0.85',
+      'things-to-do-in-arusha': '0.85',
+      'tanzania-visa-guide': '0.9',
+      'climbing-kilimanjaro-difficulty': '0.95',
+      'kilimanjaro-cost': '0.95',
+      'best-time-to-climb-kilimanjaro': '0.95',
+      'kilimanjaro-routes-guide': '0.95',
+      'kilimanjaro-packing-list': '0.9',
+      'train-for-kilimanjaro': '0.9',
+      'kilimanjaro-tipping-guide': '0.85',
+      'kilimanjaro-acclimatization': '0.9'
     };
 
     let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
