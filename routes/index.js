@@ -9,6 +9,39 @@ function sendFile(res, name) {
   res.sendFile(path.join(VIEWS, name));
 }
 
+// Real, answerable questions travelers ask before booking a Tanzania trip.
+// English is used in schema (crawlers/LLMs index the primary language).
+const HOME_FAQS = [
+  {
+    q: 'When is the best time to visit Tanzania for a safari?',
+    a: 'The best time for wildlife viewing in northern Tanzania is the dry season from June to October, plus January and February. The Great Wildebeest Migration moves year-round — calving is in the southern Serengeti and Ndutu in January–February, and the dramatic Mara River crossings usually happen from July to September.'
+  },
+  {
+    q: 'How much does a Tanzania safari cost?',
+    a: 'A private guided Tanzania safari typically ranges from about $250 to $600+ per person per day, depending on season, accommodation level and group size. Mid-range lodge safaris are the most popular. Share your dates and party size with us for a free tailored quote from Arusha.'
+  },
+  {
+    q: 'Do I need a visa to travel to Tanzania?',
+    a: 'Most international visitors need a tourist visa, which many nationalities can obtain online as an e-visa before travel or on arrival. Requirements vary by nationality, so check the official Tanzania immigration portal or ask our Arusha team for current guidance.'
+  },
+  {
+    q: 'How many days do I need for a Tanzania safari?',
+    a: 'A rewarding northern-circuit safari (Tarangire, Ngorongoro Crater and Serengeti) usually takes 5 to 7 days. Add 2 to 3 nights for a Zanzibar beach extension, or 6 to 9 days for a Mount Kilimanjaro or Mount Meru climb.'
+  },
+  {
+    q: 'Is it safe to visit Tanzania?',
+    a: 'Tanzania is one of Africa\u2019s most popular and welcoming safari destinations. On safari you travel with a licensed professional guide, and our team supports you throughout. Follow standard travel precautions and your guide\u2019s advice in parks and towns.'
+  },
+  {
+    q: 'Can I combine a safari with climbing Kilimanjaro or a Zanzibar beach holiday?',
+    a: 'Yes. We specialize in tailor-made itineraries from Arusha that combine a Serengeti and Ngorongoro safari with a Mount Kilimanjaro or Mount Meru climb and a bush-to-beach Zanzibar extension, all in one seamless trip.'
+  },
+  {
+    q: 'How do I book a Tanzania safari with Tanzania Safari Magic?',
+    a: 'Request a free, no-obligation quote through our booking page or message us on WhatsApp at +255 695 108 009. We\u2019ll design a custom itinerary, confirm availability, and secure your trip with a deposit — no payment is required just to enquire.'
+  }
+];
+
 // ── Home ──────────────────────────────────────────────────────
 router.get('/', (req, res) => {
   try {
@@ -21,10 +54,117 @@ router.get('/', (req, res) => {
       type: 'website',
       lang,
       hreflangPath: '/',
-      jsonLd: [seo.websiteSchema(lang), seo.organizationSchema()]
+      jsonLd: [
+        seo.websiteSchema(lang),
+        seo.organizationSchema(),
+        seo.faqPageSchema(HOME_FAQS),
+        seo.breadcrumbSchema([{ name: 'Home', url: '/' }])
+      ]
     });
   } catch {
     sendFile(res, 'index.html');
+  }
+});
+
+// FAQ copy mirrors the visible questions on views/visit-tanzania.html
+// so the FAQPage rich result stays eligible (schema must match on-page content).
+const VISIT_TZ_FAQS = [
+  {
+    q: 'Is Tanzania safe to visit?',
+    a: 'Yes. Tanzania is one of Africa\u2019s most stable, welcoming destinations and safari areas are very safe with professional guides. Use normal travel precautions in towns, and your guide handles logistics throughout.'
+  },
+  {
+    q: 'Do I need a visa to visit Tanzania?',
+    a: 'Most visitors need a tourist visa, available online as an e-visa or on arrival at major airports. See our Tanzania visa guide for costs and step-by-step instructions.'
+  },
+  {
+    q: 'What is the best time to visit Tanzania?',
+    a: 'June to October is best for general wildlife and Mara River crossings, while January to February is ideal for the calving season. Read our full best time to visit Tanzania guide for month-by-month advice.'
+  },
+  {
+    q: 'How much does a Tanzania safari cost?',
+    a: 'Costs vary by season, accommodation and park fees. Mid-range safaris typically start around $250 to $450 per person per day. See our Tanzania safari cost guide for detailed 2026 budgets.'
+  },
+  {
+    q: 'How many days do I need in Tanzania?',
+    a: 'A great northern-circuit safari takes 5 to 7 days. Add 2 to 4 days for Zanzibar or 6 to 8 days for a Kilimanjaro climb. Most first-timers spend 8 to 12 days combining safari and beach.'
+  },
+  {
+    q: 'Do I need vaccinations for Tanzania?',
+    a: 'Yellow fever proof may be required if arriving from an at-risk country, and malaria prophylaxis is recommended. Always confirm current requirements with a travel clinic before you go.'
+  },
+  {
+    q: 'Can I combine a safari with Zanzibar or Kilimanjaro?',
+    a: 'Absolutely — that\u2019s our specialty. We build bush-to-beach trips with Zanzibar and combined Kilimanjaro climb-and-safari itineraries, all from Arusha.'
+  },
+  {
+    q: 'What is the best time to climb Kilimanjaro?',
+    a: 'The clearest months are January to March and June to October. Explore our Kilimanjaro routes to pick the trail that fits your fitness and schedule.'
+  },
+  {
+    q: 'What currency and language are used in Tanzania?',
+    a: 'The currency is the Tanzanian Shilling (TZS); US dollars are widely accepted for tourism. Swahili and English are both official languages, so communication is easy.'
+  },
+  {
+    q: 'How do I get to Tanzania and the safari parks?',
+    a: 'Most safari travelers fly into Kilimanjaro International Airport (JRO) near Arusha, the gateway to the northern circuit. From there we handle all transfers and game drives — just request a quote and we\u2019ll plan the rest.'
+  }
+];
+
+// Featured trips surfaced on the visit-tanzania hub (ItemList of TouristTrip).
+const VISIT_TZ_TRIPS = [
+  {
+    name: 'Serengeti & Ngorongoro Safari',
+    url: '/safaris',
+    image: '/images/optimized/serengeti-national-park.webp',
+    description: 'Classic northern-circuit private safari through the Serengeti and Ngorongoro Crater from Arusha.'
+  },
+  {
+    name: 'Great Wildebeest Migration Safari',
+    url: '/migrations',
+    image: '/images/optimized/8-day-northern-serengeti-mara-river-crossing.webp',
+    description: 'Witness the Great Migration calving season and Mara River crossings in the Serengeti.'
+  },
+  {
+    name: 'Climb Mount Kilimanjaro',
+    url: '/kilimanjaro',
+    image: '/images/optimized/mount-kilimanjaro-national-park.webp',
+    description: 'Guided treks to Uhuru Peak (5,895 m) on the Machame, Lemosho, Marangu and other routes.'
+  },
+  {
+    name: 'Zanzibar Beach Extension',
+    url: '/zanzibar',
+    image: '/images/zanzibar/zanzibar%20(1).jpeg',
+    description: 'Add white-sand beaches, Stone Town and spice tours after your Tanzania safari.'
+  }
+];
+
+// ── Visit Tanzania hub ────────────────────────────────────────
+router.get('/visit-tanzania', (req, res) => {
+  try {
+    const lang = seo.parseLangFromRequest(req);
+    seo.sendSeoHtml(res, 'visit-tanzania.html', {
+      pageKey: 'visitTanzania',
+      canonical: seo.SITE.url + '/visit-tanzania',
+      image: '/images/optimized/serengeti-national-park.webp',
+      keywords: seo.KEYWORD_HUB.visitTanzania,
+      type: 'website',
+      lang,
+      hreflangPath: '/visit-tanzania',
+      h1: 'Visit Tanzania',
+      jsonLd: [
+        seo.websiteSchema(lang),
+        seo.breadcrumbSchema([
+          { name: 'Home', url: '/' },
+          { name: 'Visit Tanzania', url: '/visit-tanzania' }
+        ]),
+        seo.organizationSchema(),
+        seo.faqPageSchema(VISIT_TZ_FAQS),
+        seo.touristTripItemListSchema(VISIT_TZ_TRIPS)
+      ]
+    });
+  } catch {
+    sendFile(res, 'visit-tanzania.html');
   }
 });
 
@@ -173,6 +313,7 @@ router.get('/sitemap.xml', async (req, res) => {
 
     const staticPages = [
       { path: '', priority: '1.0', changefreq: 'daily' },
+      { path: '/visit-tanzania', priority: '0.98', changefreq: 'weekly' },
       { path: '/safaris', priority: '0.95', changefreq: 'daily' },
       { path: '/group-safaris', priority: '0.95', changefreq: 'daily' },
       { path: '/kilimanjaro', priority: '0.98', changefreq: 'weekly' },
