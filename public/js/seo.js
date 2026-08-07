@@ -114,16 +114,41 @@
                 latitude: SITE.geo.lat,
                 longitude: SITE.geo.lng
             },
-            areaServed: {
-                '@type': 'Country',
-                name: 'Tanzania'
-            },
+            areaServed: [
+                { '@type': 'Country', name: 'Tanzania' },
+                { '@type': 'Continent', name: 'Africa' },
+                { '@type': 'Place', name: 'Serengeti National Park' },
+                { '@type': 'Place', name: 'Ngorongoro Conservation Area' },
+                { '@type': 'Place', name: 'Mount Kilimanjaro' },
+                { '@type': 'Place', name: 'Mount Meru' },
+                { '@type': 'Place', name: 'Zanzibar' },
+                { '@type': 'Place', name: 'Arusha' }
+            ],
             sameAs: [
                 'https://facebook.com/tanzaniasafarimagic',
                 'https://instagram.com/tanzaniasafarimagic',
                 'https://wa.me/255695108009'
             ],
-            priceRange: '$$-$$$'
+            priceRange: '$$-$$$',
+            knowsAbout: [
+                'Tanzania safari',
+                'visit Tanzania',
+                'Tanzania holidays',
+                'Tanzania tourism',
+                'Africa safari',
+                'Serengeti National Park',
+                'Serengeti migration',
+                'Ngorongoro Crater',
+                'Great Wildebeest Migration',
+                'Mount Kilimanjaro',
+                'climb Kilimanjaro',
+                'Mount Meru',
+                'Zanzibar beach',
+                'Zanzibar beach holidays',
+                'private safari Tanzania',
+                'group safari Tanzania',
+                'Private safari from Arusha'
+            ]
         };
     }
 
@@ -197,7 +222,7 @@
         return {
             '@context': 'https://schema.org',
             '@type': 'FAQPage',
-            mainEntity: faqs.map(f => ({
+            mainEntity: (faqs || []).filter(f => f && f.q && f.a).map(f => ({
                 '@type': 'Question',
                 name: f.q,
                 acceptedAnswer: {
@@ -206,6 +231,11 @@
                 }
             }))
         };
+    }
+
+    // Alias matching the server-side helper name (utils/seoRender.js).
+    function faqPageSchema(faqs) {
+        return faqSchema(faqs);
     }
 
     function seoT(key, vars) {
@@ -351,6 +381,7 @@
         localBusinessSchema,
         touristTripSchema,
         faqSchema,
+        faqPageSchema,
         defaultSafariFaqs,
         renderFaqSection,
         initGlobalSchemas,
