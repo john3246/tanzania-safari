@@ -290,6 +290,13 @@ async function migrate() {
         console.error('Glado tours seed failed:', seedErr.message);
     }
 
+    try {
+        const seedMeruTreks = require('./seed_meru_treks');
+        await seedMeruTreks();
+    } catch (meruErr) {
+        console.error('Mount Meru seed failed:', meruErr.message);
+    }
+
     console.log('Database migrations completed.');
 }
 
