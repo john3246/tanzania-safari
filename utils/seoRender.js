@@ -87,6 +87,18 @@ function buildHeadTags({
     verification.push(`<meta name="msvalidate.01" content="${escapeHtml(process.env.BING_SITE_VERIFICATION)}">`);
   }
 
+  // Ensure indexable pages advertise rich preview directives to crawlers.
+  let robotsDirective = String(robots || 'index, follow');
+  const isIndexable = /index/i.test(robotsDirective) && !/noindex/i.test(robotsDirective);
+  if (isIndexable) {
+    if (!/max-image-preview/i.test(robotsDirective)) robotsDirective += ', max-image-preview:large';
+    if (!/max-snippet/i.test(robotsDirective)) robotsDirective += ', max-snippet:-1';
+    if (!/max-video-preview/i.test(robotsDirective)) robotsDirective += ', max-video-preview:-1';
+  }
+  const googlebotDirective = isIndexable
+    ? 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1'
+    : robotsDirective;
+
   const pathForHref =
     hreflangPath != null
       ? hreflangPath
@@ -117,7 +129,9 @@ function buildHeadTags({
 <!-- SSR SEO -->
 <title id="pageTitle">${t}</title>
 <meta id="metaDesc" name="description" content="${d}">
-<meta name="robots" content="${escapeHtml(robots)}">
+<meta name="robots" content="${escapeHtml(robotsDirective)}">
+<meta name="googlebot" content="${escapeHtml(googlebotDirective)}">
+<meta name="theme-color" content="#2d5a27">
 <meta name="language" content="${escapeHtml(locale)}">
 <meta name="geo.region" content="${escapeHtml(geoRegion)}">
 <meta name="geo.placename" content="${escapeHtml(geoPlacename)}">
@@ -160,6 +174,21 @@ function breadcrumbSchema(items) {
   };
 }
 
+function faqSchema(faqs) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: (Array.isArray(faqs) ? faqs : []).map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: f.a
+      }
+    }))
+  };
+}
+
 function websiteSchema(lang = 'en') {
   return {
     '@context': 'https://schema.org',
@@ -167,11 +196,57 @@ function websiteSchema(lang = 'en') {
     name: SITE.name,
     url: SITE.url,
     inLanguage: normalizeLang(lang),
+    description:
+      'Plan and book private Tanzania safaris, Serengeti Great Migration tours, Mount Kilimanjaro climbs and Zanzibar beach holidays with a licensed Arusha-based operator.',
+    publisher: { '@id': SITE.url + '/#organization' },
     potentialAction: {
       '@type': 'SearchAction',
       target: SITE.url + '/safaris?q={search_term_string}',
       'query-input': 'required name=search_term_string'
     }
+  };
+}
+
+/**
+ * FAQPage JSON-LD from [{ q, a }, ...]
+ */
+function faqPageSchema(faqs) {
+  const list = (Array.isArray(faqs) ? faqs : []).filter((f) => f && f.q && f.a);
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: list.map((f) => ({
+      '@type': 'Question',
+      name: stripHtml(f.q),
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: stripHtml(f.a)
+      }
+    }))
+  };
+}
+
+/**
+ * ItemList of TouristTrip entries from [{ name, url, image, description }, ...]
+ */
+function touristTripItemListSchema(items) {
+  const list = (Array.isArray(items) ? items : []).filter((it) => it && it.name);
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: list.map((it, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: Object.assign(
+        {
+          '@type': 'TouristTrip',
+          name: it.name,
+          url: absoluteUrl(it.url)
+        },
+        it.description ? { description: stripHtml(it.description) } : {},
+        it.image ? { image: absoluteUrl(it.image) } : {}
+      )
+    }))
   };
 }
 
@@ -199,13 +274,38 @@ function organizationSchema() {
       latitude: -3.3869,
       longitude: 36.6830
     },
+    openingHoursSpecification: [
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+        opens: '08:00',
+        closes: '18:00'
+      }
+    ],
+    contactPoint: [
+      {
+        '@type': 'ContactPoint',
+        telephone: SITE.phone,
+        email: SITE.email,
+        contactType: 'customer service',
+        areaServed: 'Worldwide',
+        availableLanguage: ['English', 'Italian', 'French', 'Spanish', 'German', 'Dutch', 'Swahili']
+      }
+    ],
     areaServed: [
       { '@type': 'Country', name: 'Tanzania' },
+      { '@type': 'Continent', name: 'Africa' },
       { '@type': 'Place', name: 'Serengeti National Park' },
       { '@type': 'Place', name: 'Ngorongoro Conservation Area' },
       { '@type': 'Place', name: 'Mount Kilimanjaro' },
+      { '@type': 'Place', name: 'Mount Meru' },
+      { '@type': 'Place', name: 'Tarangire National Park' },
+      { '@type': 'Place', name: 'Lake Manyara National Park' },
+      { '@type': 'Place', name: 'Arusha National Park' },
       { '@type': 'Place', name: 'Zanzibar' },
-      { '@type': 'Place', name: 'Arusha' }
+      { '@type': 'Place', name: 'Arusha' },
+      { '@type': 'Place', name: 'Kilimanjaro' },
+      { '@type': 'AdministrativeArea', name: 'East Africa' }
     ],
     sameAs: [
       'https://facebook.com/tanzaniasafarimagic',
@@ -215,13 +315,77 @@ function organizationSchema() {
     ],
     knowsAbout: [
       'Tanzania safari',
+      'visit Tanzania',
+      'Tanzania holidays',
+      'Tanzania tourism',
+      'Africa safari',
       'Serengeti National Park',
+      'Serengeti migration',
       'Ngorongoro Crater',
       'Great Wildebeest Migration',
       'Mount Kilimanjaro',
+      'climb Kilimanjaro',
+      'Mount Meru',
+      'Zanzibar beach',
       'Zanzibar beach holidays',
+      'private safari Tanzania',
+      'group safari Tanzania',
       'Private safari from Arusha'
-    ]
+    ],
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Tanzania Safari & Trekking Services',
+      itemListElement: [
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Tanzania Safari Packages',
+            url: SITE.url + '/safaris'
+          }
+        },
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Mount Kilimanjaro Climbs',
+            url: SITE.url + '/kilimanjaro'
+          }
+        },
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Great Migration Safaris',
+            url: SITE.url + '/migrations'
+          }
+        },
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Zanzibar Beach Extensions',
+            url: SITE.url + '/zanzibar'
+          }
+        },
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Group & Shared Safaris',
+            url: SITE.url + '/group-safaris'
+          }
+        },
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Visit Tanzania Travel Planning',
+            url: SITE.url + '/visit-tanzania'
+          }
+        }
+      ]
+    }
   };
 }
 
@@ -307,13 +471,14 @@ function sendSeoHtml(res, viewRelativePath, seo, status = 200) {
 }
 
 const KEYWORD_HUB = {
-  home: 'tanzania safari, private tanzania safari, serengeti safari, ngorongoro crater, wildebeest migration, kilimanjaro climb, mount kilimanjaro, tanzania safari from arusha, safari packages tanzania, tanzania tourism, africa safari',
-  safaris: 'tanzania safari packages, private safari tours tanzania, serengeti safari package, ngorongoro safari, kilimanjaro trek packages, climb kilimanjaro, machame route, bush to beach tanzania',
-  destinations: 'tanzania national parks, serengeti national park, ngorongoro conservation area, kilimanjaro national park, mount kilimanjaro, tarangire, lake manyara, arusha national park, zanzibar, tanzania tourism destinations',
-  blog: 'tanzania safari guide, best time to visit tanzania, tanzania safari cost, great wildebeest migration, kilimanjaro trek guide, zanzibar guide, serengeti guide',
-  group: 'group safari tanzania, shared safari tours, open group departure tanzania, affordable group safari, group kilimanjaro climb',
-  booking: 'book tanzania safari, climb kilimanjaro quote, safari quote arusha, inquire tanzania tour, private safari booking, kilimanjaro trek booking',
-  kilimanjaro: 'kilimanjaro national park, climb kilimanjaro, mount kilimanjaro, kilimanjaro trek, machame route, lemosho route, marangu route, uhuru peak, africa highest mountain, kilimanjaro from arusha'
+  home: 'tanzania safari, visit tanzania, travel to tanzania, tanzania holidays, private tanzania safari, serengeti safari, ngorongoro crater, great wildebeest migration, serengeti migration, climb kilimanjaro, mount kilimanjaro, zanzibar beach, tanzania safari from arusha, safari packages tanzania, tanzania tourism, africa safari packages, best time to visit tanzania',
+  safaris: 'tanzania safari packages, private safari tours tanzania, serengeti safari package, serengeti migration safari, ngorongoro safari, kilimanjaro trek packages, climb kilimanjaro, machame route, bush to beach tanzania, africa safari packages, tanzania safari cost, luxury tanzania safari',
+  destinations: 'tanzania national parks, serengeti national park, ngorongoro conservation area, kilimanjaro national park, mount kilimanjaro, mount meru, tarangire, lake manyara, arusha national park, zanzibar, tanzania tourism destinations, places to visit in tanzania',
+  blog: 'tanzania safari guide, tanzania travel guide, best time to visit tanzania, tanzania safari cost, great wildebeest migration, kilimanjaro trek guide, kilimanjaro climb cost, tanzania visa, zanzibar guide, serengeti guide, when to visit tanzania',
+  group: 'group safari tanzania, shared safari tours, open group departure tanzania, affordable group safari, budget tanzania safari, group kilimanjaro climb, join a safari group tanzania',
+  booking: 'book tanzania safari, climb kilimanjaro quote, safari quote arusha, inquire tanzania tour, private safari booking, kilimanjaro trek booking, tanzania safari free quote',
+  kilimanjaro: 'kilimanjaro national park, climb kilimanjaro, mount kilimanjaro, kilimanjaro trek, kilimanjaro climb cost, machame route, lemosho route, marangu route, uhuru peak, africa highest mountain, kilimanjaro from arusha, best time to climb kilimanjaro',
+  visitTanzania: 'visit tanzania, travel to tanzania, tanzania holidays, tanzania tourism, tanzania travel guide, africa safari packages, serengeti safari cost, when to visit tanzania, best time to visit tanzania, kilimanjaro climb cost, tanzania visa, tanzania vacation, things to do in tanzania, tanzania itinerary, how to plan a tanzania safari'
 };
 
 module.exports = {
@@ -324,8 +489,11 @@ module.exports = {
   stripHtml,
   buildHeadTags,
   breadcrumbSchema,
+  faqSchema,
   websiteSchema,
   organizationSchema,
+  faqPageSchema,
+  touristTripItemListSchema,
   injectSeoIntoHtml,
   sendSeoHtml,
   resolveSeo,
