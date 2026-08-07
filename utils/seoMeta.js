@@ -1,14 +1,16 @@
 /**
- * Multilingual SEO meta for public routes (en primary + it/fr/es).
+ * Multilingual SEO meta for public routes (en primary + it/fr/es/de/nl).
  * Used by seoRender for SSR titles/descriptions that crawlers can index.
  */
-const LOCALES = ['en', 'it', 'fr', 'es'];
+const LOCALES = ['en', 'it', 'fr', 'es', 'de', 'nl'];
 
 const OG_LOCALE = {
   en: 'en_US',
   it: 'it_IT',
   fr: 'fr_FR',
-  es: 'es_ES'
+  es: 'es_ES',
+  de: 'de_DE',
+  nl: 'nl_NL'
 };
 
 /** Per-route SEO copy. Keys match logical page ids. */
@@ -41,6 +43,20 @@ const PAGE_SEO = {
         'Reserva safaris privados en Tanzania desde Arusha: Serengeti, cráter Ngorongoro, Gran Migración, Kilimanjaro y Zanzíbar. Guías locales, presupuestos gratis.',
       keywords:
         'safari tanzania, safari privado tanzania, safari serengeti, cráter ngorongoro, migración ñus, ascenso kilimanjaro, turismo tanzania, safaris áfrica'
+    },
+    de: {
+      title: 'Tanzania Safari Magic | Private Safaris ab Arusha 2026',
+      description:
+        'Buchen Sie private Tansania-Safaris ab Arusha: Serengeti, Ngorongoro-Krater, Große Migration, Kilimanjaro & Sansibar. Einheimische Guides, kostenlose Angebote, Mittelklasse bis Luxus.',
+      keywords:
+        'tansania safari, private tansania safari, serengeti safari, ngorongoro krater, gnu-wanderung, kilimanjaro besteigung, tansania safari ab arusha, safari pakete tansania, tansania tourismus, afrika safari reisen'
+    },
+    nl: {
+      title: 'Tanzania Safari Magic | Privésafari’s vanuit Arusha 2026',
+      description:
+        'Boek privésafari’s in Tanzania vanuit Arusha: Serengeti, Ngorongoro-krater, Grote Trek, Kilimanjaro & Zanzibar. Lokale gidsen, gratis offertes, middenklasse tot luxe.',
+      keywords:
+        'tanzania safari, privésafari tanzania, serengeti safari, ngorongoro krater, gnoetrek, kilimanjaro beklimmen, tanzania safari vanuit arusha, safari pakketten tanzania, tanzania toerisme, afrika safarireizen'
     }
   },
   safaris: {
@@ -68,6 +84,18 @@ const PAGE_SEO = {
       description:
         'Explora paquetes safari privados en Tanzania: migración Serengeti, Ngorongoro, Kilimanjaro y combos Zanzíbar. Filtra por duración, destino y presupuesto.',
       keywords: 'paquetes safari tanzania, tours safari privados, safari serengeti, safari ngorongoro'
+    },
+    de: {
+      title: 'Safari-Pakete | Tansania-Safarireisen ab Arusha',
+      description:
+        'Entdecken Sie private Tansania-Safari-Pakete: Serengeti-Migration, Ngorongoro, Kilimanjaro und Bush-to-Beach-Kombis mit Sansibar. Filtern Sie nach Dauer, Ziel und Budget.',
+      keywords: 'tansania safari pakete, private safarireisen tansania, serengeti safari paket, ngorongoro safari'
+    },
+    nl: {
+      title: 'Safaripakketten | Tanzania-safarireizen vanuit Arusha',
+      description:
+        'Bekijk privé-safaripakketten voor Tanzania: Serengeti-trek, Ngorongoro, Kilimanjaro en bush-to-beach-combinaties met Zanzibar. Filter op duur, bestemming en budget.',
+      keywords: 'tanzania safaripakketten, privésafarireizen tanzania, serengeti safari pakket, ngorongoro safari'
     }
   },
   destinations: {
@@ -95,6 +123,18 @@ const PAGE_SEO = {
       description:
         'Explora los mejores destinos safari de Tanzania — Serengeti, Ngorongoro, Tarangire, lago Manyara, Kilimanjaro y Zanzíbar — con expertos locales de Arusha.',
       keywords: 'parques nacionales tanzania, serengeti, ngorongoro, kilimanjaro, destinos turismo tanzania'
+    },
+    de: {
+      title: 'Reiseziele Tansania | Serengeti, Ngorongoro, Kilimanjaro & mehr',
+      description:
+        'Entdecken Sie Tansanias beste Safari-Reiseziele — Serengeti-Nationalpark, Ngorongoro-Krater, Tarangire, Lake Manyara, Kilimanjaro und Sansibar — mit lokalen Experten aus Arusha.',
+      keywords: 'tansania nationalparks, serengeti nationalpark, ngorongoro schutzgebiet, kilimanjaro nationalpark, reiseziele tansania tourismus'
+    },
+    nl: {
+      title: 'Bestemmingen Tanzania | Serengeti, Ngorongoro, Kilimanjaro & meer',
+      description:
+        'Ontdek de beste safaribestemmingen van Tanzania — Serengeti National Park, Ngorongoro-krater, Tarangire, Lake Manyara, Kilimanjaro en Zanzibar — met lokale experts uit Arusha.',
+      keywords: 'tanzania nationale parken, serengeti national park, ngorongoro natuurgebied, kilimanjaro national park, bestemmingen toerisme tanzania'
     }
   },
   group: {
@@ -121,6 +161,18 @@ const PAGE_SEO = {
       description:
         'Únete a safaris en grupo con fechas fijas en Tanzania — ideal para solos y parejas. Costes compartidos, guías expertos desde Arusha.',
       keywords: 'safari en grupo tanzania, tours compartidos, salidas abiertas safari'
+    },
+    de: {
+      title: 'Gruppensafaris Tansania | Geteilte Safaritouren zu festen Terminen',
+      description:
+        'Nehmen Sie an Gruppensafaris zu festen Terminen in Tansania teil — ideal für Alleinreisende und Paare. Geteilte Kosten, erfahrene Guides aus Arusha, Serengeti bis Ngorongoro.',
+      keywords: 'gruppensafari tansania, geteilte safaritouren, offene gruppenabfahrt tansania, günstige gruppensafari'
+    },
+    nl: {
+      title: 'Groepssafari’s Tanzania | Gedeelde safaritours op vaste data',
+      description:
+        'Sluit u aan bij groepssafari’s op vaste data in Tanzania — ideaal voor alleenreizigers en stellen. Gedeelde kosten, ervaren gidsen uit Arusha, Serengeti tot Ngorongoro.',
+      keywords: 'groepssafari tanzania, gedeelde safaritours, open groepsvertrek tanzania, betaalbare groepssafari'
     }
   },
   kilimanjaro: {
@@ -148,6 +200,18 @@ const PAGE_SEO = {
       description:
         'Trekkings guiados al Kilimanjaro desde Arusha — rutas Machame, Lemosho, Marangu hasta Uhuru Peak (5.895 m). Ascensos privados y combos ascenso + safari.',
       keywords: 'subir kilimanjaro, monte kilimanjaro, trekking kilimanjaro, ruta machame, uhuru peak'
+    },
+    de: {
+      title: 'Kilimanjaro besteigen ab Arusha | Machame, Lemosho & Marangu',
+      description:
+        'Geführte Kilimanjaro-Trekkings ab Arusha — Routen Machame, Lemosho, Marangu bis zum Uhuru Peak (5.895 m). Private Besteigungen und Besteigung-plus-Safari-Kombis.',
+      keywords: 'kilimanjaro besteigen, mount kilimanjaro, kilimanjaro trekking, machame route, uhuru peak'
+    },
+    nl: {
+      title: 'Kilimanjaro beklimmen vanuit Arusha | Machame, Lemosho & Marangu',
+      description:
+        'Begeleide Kilimanjaro-trektochten vanuit Arusha — Machame-, Lemosho- en Marangu-routes naar Uhuru Peak (5.895 m). Privébeklimmingen en beklimming-plus-safari-combinaties.',
+      keywords: 'kilimanjaro beklimmen, mount kilimanjaro, kilimanjaro trektocht, machame route, uhuru peak'
     }
   },
   migrations: {
@@ -175,6 +239,18 @@ const PAGE_SEO = {
       description:
         'Vive la Gran Migración de ñus en Serengeti y Ndutu — temporada de partos, cruces de ríos y depredadores. Safaris privados y de grupo desde Arusha.',
       keywords: 'gran migración ñus, safari migración serengeti, ndutu, cruce mara'
+    },
+    de: {
+      title: 'Safaris zur Großen Migration | Gnu-Touren Serengeti & Ndutu',
+      description:
+        'Erleben Sie die Große Gnu-Wanderung in der Serengeti und in Ndutu — Kalbungssaison, Flussüberquerungen und Raubtiere. Private und Gruppen-Migrationssafaris ab Arusha.',
+      keywords: 'große gnu-wanderung, serengeti migration safari, ndutu kalbung, mara flussüberquerung, tansania migration touren'
+    },
+    nl: {
+      title: 'Safari’s Grote Trek | Gnoetours Serengeti & Ndutu',
+      description:
+        'Beleef de Grote Gnoetrek in de Serengeti en Ndutu — kalfseizoen, rivieroversteken en roofdieren. Privé- en groepssafari’s naar de trek vanuit Arusha.',
+      keywords: 'grote gnoetrek, serengeti trek safari, ndutu kalfseizoen, mara rivieroversteek, tanzania trek tours'
     }
   },
   zanzibar: {
@@ -201,6 +277,18 @@ const PAGE_SEO = {
       description:
         'Añade Zanzíbar tras tu safari en Tanzania — playas de arena blanca, Stone Town, snorkel y tours de especias. Paquetes bush-to-beach desde Arusha.',
       keywords: 'vacaciones zanzíbar, bush to beach tanzania, zanzíbar después safari, stone town'
+    },
+    de: {
+      title: 'Sansibar Strandurlaub | Bush-to-Beach-Safari-Pakete',
+      description:
+        'Ergänzen Sie Sansibar nach Ihrer Tansania-Safari — weiße Sandstrände, Stone Town, Schnorcheln und Gewürztouren. Bush-to-Beach-Pakete ab Arusha.',
+      keywords: 'sansibar strandurlaub, bush to beach tansania, sansibar nach safari, stone town, sansibar pakete'
+    },
+    nl: {
+      title: 'Zanzibar strandvakanties | Bush-to-beach safaripakketten',
+      description:
+        'Voeg Zanzibar toe na uw Tanzania-safari — witte zandstranden, Stone Town, snorkelen en kruidentours. Bush-to-beach-pakketten vanuit Arusha.',
+      keywords: 'zanzibar strandvakantie, bush to beach tanzania, zanzibar na safari, stone town, zanzibar pakketten'
     }
   },
   booking: {
@@ -227,6 +315,18 @@ const PAGE_SEO = {
       description:
         'Solicita un presupuesto gratis o reserva tu safari en Tanzania. Itinerarios privados mid-range y lujo con guías locales. WhatsApp +255 695 108 009.',
       keywords: 'reservar safari tanzania, presupuesto safari arusha, tour tanzania'
+    },
+    de: {
+      title: 'Tansania-Safari buchen | Kostenloses Angebot von Arusha-Experten',
+      description:
+        'Fordern Sie ein kostenloses Angebot an oder buchen Sie Ihre Tansania-Safari online. Private Mittelklasse- und Luxusrouten mit erfahrenen lokalen Guides. WhatsApp +255 695 108 009.',
+      keywords: 'tansania safari buchen, safari angebot arusha, tansania tour anfrage, private safari buchung'
+    },
+    nl: {
+      title: 'Tanzania-safari boeken | Gratis offerte van Arusha-experts',
+      description:
+        'Vraag een gratis offerte aan of boek uw Tanzania-safari online. Privé middenklasse- en luxereizen met ervaren lokale gidsen. WhatsApp +255 695 108 009.',
+      keywords: 'tanzania safari boeken, safari offerte arusha, tanzania tour aanvraag, privésafari boeking'
     }
   },
   contact: {
@@ -253,6 +353,18 @@ const PAGE_SEO = {
       description:
         'Contacta a nuestros expertos safari en Arusha para un itinerario personalizado gratis. WhatsApp +255 695 108 009 o email info@tanzaniasafarimagic.com.',
       keywords: 'contacto safari tanzania, operador safari arusha'
+    },
+    de: {
+      title: 'Kontakt Tanzania Safari Magic | WhatsApp +255 695 108 009',
+      description:
+        'Kontaktieren Sie unsere Safari-Experten in Arusha für ein kostenloses individuelles Reiseangebot. Anruf oder WhatsApp +255 695 108 009 oder E-Mail info@tanzaniasafarimagic.com.',
+      keywords: 'kontakt safari tansania, safari veranstalter arusha, whatsapp safari tansania'
+    },
+    nl: {
+      title: 'Contact Tanzania Safari Magic | WhatsApp +255 695 108 009',
+      description:
+        'Neem contact op met onze safari-experts in Arusha voor een gratis reisofferte op maat. Bel of WhatsApp +255 695 108 009 of e-mail info@tanzaniasafarimagic.com.',
+      keywords: 'contact safari tanzania, safari-operator arusha, whatsapp safari tanzania'
     }
   },
   about: {
@@ -279,6 +391,18 @@ const PAGE_SEO = {
       description:
         'Tanzania Safari Magic es un operador safari con licencia en Arusha, especializado en tours de migración Serengeti, safaris Ngorongoro y vacaciones en Zanzíbar.',
       keywords: 'operador safari tanzania, agencia tours arusha'
+    },
+    de: {
+      title: 'Über uns | Tanzania Safari Magic — Safari-Veranstalter aus Arusha',
+      description:
+        'Tanzania Safari Magic ist ein lizenzierter Safari-Veranstalter aus Arusha, spezialisiert auf private Serengeti-Migrationstouren, Ngorongoro-Safaris und Sansibar-Strandurlaube.',
+      keywords: 'safari veranstalter tansania, tour anbieter arusha, lizenzierte safari tansania'
+    },
+    nl: {
+      title: 'Over ons | Tanzania Safari Magic — Safari-operator uit Arusha',
+      description:
+        'Tanzania Safari Magic is een erkende safari-operator uit Arusha, gespecialiseerd in privé Serengeti-trektours, Ngorongoro-safari’s en strandvakanties op Zanzibar.',
+      keywords: 'safari-operator tanzania, reisorganisatie arusha, erkende safari tanzania'
     }
   },
   blog: {
@@ -306,6 +430,18 @@ const PAGE_SEO = {
       description:
         'Consejos de viaje safari Tanzania, guías de migración, costos e ideas de itinerario de nuestro equipo en Arusha.',
       keywords: 'guía safari tanzania, mejor época tanzania, costo safari tanzania'
+    },
+    de: {
+      title: 'Tansania Reiseblog & Safari-Guides | Tanzania Safari Magic',
+      description:
+        'Reisetipps für Tansania-Safaris, Migrationsguides, Safarikosten und Routenideen von unserem Team in Arusha. Planen Sie Ihre private Safari mit Zuversicht.',
+      keywords: 'tansania safari guide, beste reisezeit tansania, tansania safari kosten, große gnu-wanderung, tansania reiseblog'
+    },
+    nl: {
+      title: 'Tanzania reisblog & safarigidsen | Tanzania Safari Magic',
+      description:
+        'Reistips voor Tanzania-safari’s, trekgidsen, safarikosten en routeideeën van ons team in Arusha. Plan uw privésafari met vertrouwen.',
+      keywords: 'tanzania safarigids, beste reistijd tanzania, tanzania safari kosten, grote gnoetrek, tanzania reisblog'
     }
   },
   privacy: {
@@ -324,6 +460,14 @@ const PAGE_SEO = {
     es: {
       title: 'Política de privacidad | Tanzania Safari Magic',
       description: 'Cómo Tanzania Safari Magic gestiona tu información cuando navegas, consultas o solicitas un presupuesto safari.'
+    },
+    de: {
+      title: 'Datenschutzerklärung | Tanzania Safari Magic',
+      description: 'Wie Tanzania Safari Magic Ihre Informationen verarbeitet, wenn Sie stöbern, anfragen oder ein Safari-Angebot anfordern.'
+    },
+    nl: {
+      title: 'Privacybeleid | Tanzania Safari Magic',
+      description: 'Hoe Tanzania Safari Magic uw gegevens verwerkt wanneer u browst, informeert of een safari-offerte aanvraagt.'
     }
   },
   terms: {
@@ -342,6 +486,14 @@ const PAGE_SEO = {
     es: {
       title: 'Términos de servicio | Tanzania Safari Magic',
       description: 'Condiciones de reserva para tours, presupuestos, depósitos y servicios safari de Tanzania Safari Magic desde Arusha.'
+    },
+    de: {
+      title: 'Nutzungsbedingungen | Tanzania Safari Magic',
+      description: 'Buchungsbedingungen für Touren, Angebote, Anzahlungen und Safari-Leistungen von Tanzania Safari Magic ab Arusha.'
+    },
+    nl: {
+      title: 'Servicevoorwaarden | Tanzania Safari Magic',
+      description: 'Boekingsvoorwaarden voor tours, offertes, aanbetalingen en safaridiensten van Tanzania Safari Magic vanuit Arusha.'
     }
   }
 };

@@ -68,7 +68,7 @@ router.get('/sitemap.xml', async (req, res) => {
       let xml = `<url><loc>${abs}</loc><changefreq>${changefreq}</changefreq><priority>${priority}</priority>`;
       if (lastmod) xml += `<lastmod>${new Date(lastmod).toISOString().split('T')[0]}</lastmod>`;
       // hreflang alternates for multilingual SEO
-      const langs = seo.LOCALES || ['en', 'it', 'fr', 'es'];
+      const langs = seo.LOCALES || ['en', 'it', 'fr', 'es', 'de', 'nl'];
       langs.forEach((lang) => {
         const href =
           lang === 'en'

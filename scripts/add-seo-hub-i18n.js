@@ -21,7 +21,7 @@ const hub = {
   }
 };
 
-for (const lang of ['en', 'it', 'fr', 'es']) {
+for (const lang of ['en', 'it', 'fr', 'es', 'de', 'nl']) {
   const f = `${path}/${lang}.json`;
   const j = JSON.parse(fs.readFileSync(f, 'utf8'));
   j.home = j.home || {};

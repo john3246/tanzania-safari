@@ -1,20 +1,22 @@
 /**
  * Tanzania Safari Magic — client-side i18n
- * Languages: en (primary), it, fr, es
+ * Languages: en (primary), it, fr, es, de, nl
  * Persist choice in localStorage key `tsm_lang`
  */
 (function (global) {
   'use strict';
 
   var STORAGE_KEY = 'tsm_lang';
-  var SUPPORTED = ['en', 'it', 'fr', 'es'];
+  var SUPPORTED = ['en', 'it', 'fr', 'es', 'de', 'nl'];
   var LABELS = {
     en: 'English',
     it: 'Italiano',
     fr: 'Français',
-    es: 'Español'
+    es: 'Español',
+    de: 'Deutsch',
+    nl: 'Nederlands'
   };
-  var FLAGS = { en: '🇬🇧', it: '🇮🇹', fr: '🇫🇷', es: '🇪🇸' };
+  var FLAGS = { en: '🇬🇧', it: '🇮🇹', fr: '🇫🇷', es: '🇪🇸', de: '🇩🇪', nl: '🇳🇱' };
 
   var state = {
     lang: 'en',
