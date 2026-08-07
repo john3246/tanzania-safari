@@ -564,6 +564,13 @@ const KILI_ROUTE_SEO = {
     description:
       'The Umbwe Route is Kilimanjaro’s steepest, most direct and challenging trail. 6–7 day day-by-day overview, who it suits, pros and cons, and free quotes from Tanzania Safari Magic.',
     image: '/images/kilimanjaro/kilimanjaro%20(6).jpeg'
+  },
+  'shira-route': {
+    name: 'Shira Route',
+    title: 'Shira Route Kilimanjaro | High-Start Western Climb, 7–8 Days',
+    description:
+      'The Shira Route drives high onto the Shira Plateau before joining the Lemosho and Machame trail. 7–8 day day-by-day overview, pros and cons, and free quotes from Tanzania Safari Magic.',
+    image: '/images/kilimanjaro/kilimanjaro%20(3).jpeg'
   }
 };
 const KILI_ROUTE_SLUGS = Object.keys(KILI_ROUTE_SEO);
