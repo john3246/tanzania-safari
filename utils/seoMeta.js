@@ -17,55 +17,99 @@ const OG_LOCALE = {
 const PAGE_SEO = {
   home: {
     en: {
-      title: 'Tanzania Safari Magic | Private Safaris from Arusha 2026',
+      title: 'Tanzania Safari 2026 | Private Tours | Tanzania Safari Magic',
       description:
-        'Book private Tanzania safaris from Arusha: Serengeti, Ngorongoro Crater, Great Migration, Kilimanjaro & Zanzibar. Local guides, free quotes, mid-range to luxury.',
+        'Plan your 2026 Tanzania safari from Arusha — Serengeti, Ngorongoro, Great Migration, Kilimanjaro & Zanzibar. Free quote from local safari experts.',
       keywords:
-        'tanzania safari, private tanzania safari, serengeti safari, ngorongoro crater, wildebeest migration, kilimanjaro climb, tanzania safari from arusha, safari packages tanzania, tanzania tourism, africa safari tours'
+        'tanzania safari, visit tanzania, travel to tanzania, tanzania holidays, private tanzania safari, serengeti safari, ngorongoro crater, great wildebeest migration, climb kilimanjaro, tanzania safari from arusha, safari packages tanzania, tanzania tourism, africa safari tours'
     },
     it: {
-      title: 'Tanzania Safari Magic | Safari privati da Arusha 2026',
+      title: 'Safari Tanzania 2026 | Tour privati | Tanzania Safari Magic',
       description:
-        'Prenota safari privati in Tanzania da Arusha: Serengeti, cratere Ngorongoro, Grande Migrazione, Kilimanjaro e Zanzibar. Guide locali, preventivi gratis.',
+        'Pianifica il tuo safari in Tanzania 2026 da Arusha: Serengeti, Ngorongoro, Grande Migrazione, Kilimanjaro e Zanzibar. Preventivo gratis dagli esperti.',
       keywords:
-        'safari tanzania, safari privato tanzania, safari serengeti, cratere ngorongoro, migrazione gnu, salita kilimanjaro, turismo tanzania, tour africa'
+        'safari tanzania, visitare la tanzania, safari privato tanzania, safari serengeti, cratere ngorongoro, migrazione gnu, salita kilimanjaro, turismo tanzania, tour africa'
     },
     fr: {
-      title: 'Tanzania Safari Magic | Safaris privés depuis Arusha 2026',
+      title: 'Safari Tanzanie 2026 | Circuits privés | Tanzania Safari Magic',
       description:
-        'Réservez des safaris privés en Tanzanie depuis Arusha : Serengeti, cratère Ngorongoro, Grande Migration, Kilimandjaro et Zanzibar. Guides locaux, devis gratuits.',
+        'Planifiez votre safari en Tanzanie 2026 depuis Arusha : Serengeti, Ngorongoro, Grande Migration, Kilimandjaro et Zanzibar. Devis gratuit, experts locaux.',
       keywords:
-        'safari tanzanie, safari privé tanzanie, safari serengeti, cratère ngorongoro, migration gnous, ascension kilimandjaro, tourisme tanzanie, safari afrique'
+        'safari tanzanie, visiter la tanzanie, safari privé tanzanie, safari serengeti, cratère ngorongoro, migration gnous, ascension kilimandjaro, tourisme tanzanie, safari afrique'
     },
     es: {
-      title: 'Tanzania Safari Magic | Safaris privados desde Arusha 2026',
+      title: 'Safari Tanzania 2026 | Tours privados | Tanzania Safari Magic',
       description:
-        'Reserva safaris privados en Tanzania desde Arusha: Serengeti, cráter Ngorongoro, Gran Migración, Kilimanjaro y Zanzíbar. Guías locales, presupuestos gratis.',
+        'Planifica tu safari en Tanzania 2026 desde Arusha: Serengeti, Ngorongoro, Gran Migración, Kilimanjaro y Zanzíbar. Presupuesto gratis con expertos locales.',
       keywords:
-        'safari tanzania, safari privado tanzania, safari serengeti, cráter ngorongoro, migración ñus, ascenso kilimanjaro, turismo tanzania, safaris áfrica'
+        'safari tanzania, viajar a tanzania, safari privado tanzania, safari serengeti, cráter ngorongoro, migración ñus, ascenso kilimanjaro, turismo tanzania, safaris áfrica'
     },
     de: {
-      title: 'Tanzania Safari Magic | Private Safaris ab Arusha 2026',
+      title: 'Tansania Safari 2026 | Private Touren | Tanzania Safari Magic',
       description:
-        'Buchen Sie private Tansania-Safaris ab Arusha: Serengeti, Ngorongoro-Krater, Große Migration, Kilimanjaro & Sansibar. Einheimische Guides, kostenlose Angebote, Mittelklasse bis Luxus.',
+        'Planen Sie Ihre Tansania-Safari 2026 ab Arusha: Serengeti, Ngorongoro, Große Migration, Kilimanjaro & Sansibar. Kostenloses Angebot von lokalen Experten.',
       keywords:
-        'tansania safari, private tansania safari, serengeti safari, ngorongoro krater, gnu-wanderung, kilimanjaro besteigung, tansania safari ab arusha, safari pakete tansania, tansania tourismus, afrika safari reisen'
+        'tansania safari, tansania reisen, private tansania safari, serengeti safari, ngorongoro krater, gnu-wanderung, kilimanjaro besteigung, tansania safari ab arusha, safari pakete tansania, tansania tourismus, afrika safari reisen'
     },
     nl: {
-      title: 'Tanzania Safari Magic | Privésafari’s vanuit Arusha 2026',
+      title: 'Tanzania Safari 2026 | Privétours | Tanzania Safari Magic',
       description:
-        'Boek privésafari’s in Tanzania vanuit Arusha: Serengeti, Ngorongoro-krater, Grote Trek, Kilimanjaro & Zanzibar. Lokale gidsen, gratis offertes, middenklasse tot luxe.',
+        'Plan uw Tanzania-safari 2026 vanuit Arusha: Serengeti, Ngorongoro, Grote Trek, Kilimanjaro & Zanzibar. Gratis offerte van lokale safari-experts.',
       keywords:
-        'tanzania safari, privésafari tanzania, serengeti safari, ngorongoro krater, gnoetrek, kilimanjaro beklimmen, tanzania safari vanuit arusha, safari pakketten tanzania, tanzania toerisme, afrika safarireizen'
+        'tanzania safari, tanzania reizen, privésafari tanzania, serengeti safari, ngorongoro krater, gnoetrek, kilimanjaro beklimmen, tanzania safari vanuit arusha, safari pakketten tanzania, tanzania toerisme, afrika safarireizen'
+    }
+  },
+  visitTanzania: {
+    en: {
+      title: 'Visit Tanzania 2026 | Safaris, Kilimanjaro & Beach Holidays',
+      description:
+        'Planning to visit Tanzania? Safaris, Kilimanjaro climbs & Zanzibar beaches from Arusha. Best time to go, costs, visas & top experiences. Get a free quote today.',
+      keywords:
+        'visit tanzania, travel to tanzania, tanzania holidays, tanzania tourism, best time to visit tanzania, tanzania safari packages, africa safari tanzania, tanzania travel guide, tanzania vacation'
+    },
+    it: {
+      title: 'Visitare la Tanzania 2026 | Safari, Kilimanjaro e Spiagge',
+      description:
+        'Vuoi visitare la Tanzania? Safari, salita al Kilimanjaro e spiagge di Zanzibar da Arusha. Periodo migliore, costi, visti ed esperienze top. Preventivo gratis.',
+      keywords:
+        'visitare tanzania, viaggio in tanzania, vacanze tanzania, turismo tanzania, quando visitare la tanzania, pacchetti safari tanzania, safari africa tanzania, guida viaggio tanzania'
+    },
+    fr: {
+      title: 'Visiter la Tanzanie 2026 | Safaris, Kilimandjaro & Plages',
+      description:
+        'Envie de visiter la Tanzanie ? Safaris, Kilimandjaro et plages de Zanzibar depuis Arusha. Meilleure période, coûts et visas. Devis gratuit.',
+      keywords:
+        'visiter tanzanie, voyage en tanzanie, vacances tanzanie, tourisme tanzanie, meilleure période tanzanie, forfaits safari tanzanie, safari afrique tanzanie, guide voyage tanzanie'
+    },
+    es: {
+      title: 'Visitar Tanzania 2026 | Safaris, Kilimanjaro y Playas',
+      description:
+        '¿Quieres visitar Tanzania? Safaris, Kilimanjaro y playas de Zanzíbar desde Arusha. Mejor época, costes y visados. Presupuesto gratis.',
+      keywords:
+        'visitar tanzania, viajar a tanzania, vacaciones tanzania, turismo tanzania, mejor época para visitar tanzania, paquetes safari tanzania, safari áfrica tanzania, guía de viaje tanzania'
+    },
+    de: {
+      title: 'Tansania besuchen 2026 | Safaris, Kilimanjaro & Strandurlaub',
+      description:
+        'Sie möchten Tansania besuchen? Safaris, Kilimanjaro & Sansibar-Strände ab Arusha. Beste Reisezeit, Kosten, Visa & Highlights. Kostenloses Angebot.',
+      keywords:
+        'tansania besuchen, reise nach tansania, tansania urlaub, tansania tourismus, beste reisezeit tansania, tansania safari pakete, afrika safari tansania, tansania reiseführer'
+    },
+    nl: {
+      title: 'Tanzania bezoeken 2026 | Safari’s, Kilimanjaro & Stranden',
+      description:
+        'Tanzania bezoeken? Safari’s, Kilimanjaro & Zanzibar-stranden vanuit Arusha. Beste reistijd, kosten & visa. Gratis offerte van lokale experts.',
+      keywords:
+        'tanzania bezoeken, reizen naar tanzania, tanzania vakantie, tanzania toerisme, beste reistijd tanzania, tanzania safaripakketten, afrika safari tanzania, tanzania reisgids'
     }
   },
   safaris: {
     en: {
-      title: 'Safari Packages | Tanzania Safari Tours from Arusha',
+      title: 'Tanzania Safari Packages 2026 | Private Tours from Arusha',
       description:
-        'Browse private Tanzania safari packages: Serengeti migration, Ngorongoro, Kilimanjaro, and bush-to-beach Zanzibar combos. Filter by duration, destination, and budget.',
+        'Compare 2026 Tanzania safari packages — Serengeti Migration, Ngorongoro, Kilimanjaro & Zanzibar combos. Filter by days & budget. Free quote from Arusha.',
       keywords:
-        'tanzania safari packages, private safari tours tanzania, serengeti safari package, ngorongoro safari, kilimanjaro trek packages, africa wildlife tours'
+        'tanzania safari packages, tanzania safari 2026, private safari tours tanzania, serengeti safari package, ngorongoro safari, kilimanjaro trek packages, africa safari packages, tanzania safari cost'
     },
     it: {
       title: 'Pacchetti safari | Tour safari Tanzania da Arusha',
@@ -177,11 +221,11 @@ const PAGE_SEO = {
   },
   kilimanjaro: {
     en: {
-      title: 'Climb Kilimanjaro from Arusha | Machame, Lemosho & Marangu',
+      title: 'Climb Kilimanjaro 2026 | Machame, Lemosho & Marangu Routes',
       description:
-        'Guided Mount Kilimanjaro treks from Arusha — Machame, Lemosho, Marangu routes to Uhuru Peak (5,895 m). Private climbs and climb + safari combos.',
+        'Guided Mount Kilimanjaro climbs in 2026 from Arusha — Machame, Lemosho & Marangu routes to Uhuru Peak (5,895 m). Free quote & climb + safari combos.',
       keywords:
-        'climb kilimanjaro, mount kilimanjaro, kilimanjaro trek, machame route, lemosho route, marangu route, uhuru peak, kilimanjaro from arusha'
+        'climb kilimanjaro, kilimanjaro 2026, mount kilimanjaro, kilimanjaro climb cost, kilimanjaro trek, machame route, lemosho route, marangu route, uhuru peak, kilimanjaro from arusha'
     },
     it: {
       title: 'Sali il Kilimanjaro da Arusha | Machame, Lemosho e Marangu',
