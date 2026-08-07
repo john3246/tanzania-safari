@@ -1,6 +1,6 @@
 /**
- * Kilimanjaro route detail — parses the slug from /kilimanjaro/routes/:slug,
- * finds the route in window.TSM_KiliRoutes, localizes it, and renders the page.
+ * Kilimanjaro route detail — safari-detail-style layout
+ * Hero + gallery + tabs + sticky booking sidebar
  */
 (function () {
   'use strict';
@@ -31,20 +31,51 @@
   }
 
   function findRoute(all, slug) {
-    // Exact match first, then tolerate the "-route" suffix in either direction.
     var exact = all.filter(function (r) { return r.slug === slug; })[0];
     if (exact) return exact;
     var withSuffix = all.filter(function (r) { return r.slug === slug + '-route'; })[0];
     if (withSuffix) return withSuffix;
-    return all.filter(function (r) { return r.slug.replace(/-route$/, '') === slug.replace(/-route$/, ''); })[0] || null;
+    return all.filter(function (r) {
+      return r.slug.replace(/-route$/, '') === slug.replace(/-route$/, '');
+    })[0] || null;
+  }
+
+  function bookingUrl(route) {
+    var interest = route.bookingInterest || ('Kilimanjaro ' + route.name + ' Climb');
+    return (
+      '/booking?route=' +
+      encodeURIComponent(route.slug) +
+      '&interest=' +
+      encodeURIComponent(interest) +
+      '&name=' +
+      encodeURIComponent(interest)
+    );
+  }
+
+  function waUrl(route) {
+    return (
+      'https://wa.me/255695108009?text=' +
+      encodeURIComponent("Hi Tanzania Safari Magic, I'd like a quote for the " + (route.bookingInterest || route.name) + '.')
+    );
+  }
+
+  function galleryImages(route) {
+    var imgs = [];
+    if (route.image) imgs.push(route.image);
+    var n = 1;
+    while (imgs.length < 4 && n <= 10) {
+      var candidate = '/images/kilimanjaro/kilimanjaro%20(' + n + ').jpeg';
+      if (imgs.indexOf(candidate) === -1) imgs.push(candidate);
+      n += 1;
+    }
+    return imgs;
   }
 
   function applySeo(route) {
     var title = (route.meta_title || route.name) + '';
-    if (title.indexOf('Tanzania Safari Magic') === -1) title = title + ' | Tanzania Safari Magic';
+    if (title.indexOf('Tanzania Safari Magic') === -1) title += ' | Tanzania Safari Magic';
     document.title = title;
-
-    var titleEl = document.getElementById('routePageTitle') || document.getElementById('pageTitle') || document.querySelector('title');
+    var titleEl = document.getElementById('routePageTitle') || document.querySelector('title');
     if (titleEl) titleEl.textContent = title;
 
     var desc = route.meta_description || route.summary || '';
@@ -64,119 +95,283 @@
       if (canon) canon.setAttribute('href', 'https://tanzaniasafarimagic.com/kilimanjaro/routes/' + route.slug);
     }
 
-    if (window.SafariSEO && typeof window.SafariSEO.injectJsonLd === 'function' && typeof window.SafariSEO.breadcrumbSchema === 'function') {
-      window.SafariSEO.injectJsonLd('route-breadcrumb-jsonld', window.SafariSEO.breadcrumbSchema([
-        { name: 'Home', url: '/' },
-        { name: 'Kilimanjaro', url: '/kilimanjaro' },
-        { name: tf('kiliRoutes.crumbRoutes', 'Routes'), url: '/kilimanjaro/routes' },
-        { name: route.name, url: '/kilimanjaro/routes/' + route.slug }
-      ]));
+    if (window.SafariSEO && window.SafariSEO.injectJsonLd && window.SafariSEO.breadcrumbSchema) {
+      window.SafariSEO.injectJsonLd(
+        'route-breadcrumb-jsonld',
+        window.SafariSEO.breadcrumbSchema([
+          { name: 'Home', url: '/' },
+          { name: 'Kilimanjaro', url: '/kilimanjaro' },
+          { name: tf('kiliRoutes.crumbRoutes', 'Routes'), url: '/kilimanjaro/routes' },
+          { name: route.name, url: '/kilimanjaro/routes/' + route.slug }
+        ])
+      );
+      if (Array.isArray(route.faqs) && route.faqs.length && window.SafariSEO.faqPageSchema) {
+        window.SafariSEO.injectJsonLd('route-faq-jsonld', window.SafariSEO.faqPageSchema(route.faqs));
+      }
     }
   }
 
-  function statBlock(labelKey, labelFallback, value) {
-    if (!value) return '';
-    return '<div class="krd-stat"><span class="k">' + tf(labelKey, labelFallback) + '</span><span class="v">' + escapeHtml(value) + '</span></div>';
+  function bindTabs(root) {
+    root.querySelectorAll('.tab-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var tab = btn.getAttribute('data-tab');
+        root.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
+        root.querySelectorAll('.tab-panel').forEach(function (p) { p.classList.remove('active'); });
+        btn.classList.add('active');
+        var panel = document.getElementById('tab-' + tab);
+        if (panel) panel.classList.add('active');
+      });
+    });
   }
 
-  function relatedCard(r) {
+  function bindGallery(imgs) {
+    var main = document.querySelector('#gallery .gallery-main img');
+    var thumbs = document.querySelectorAll('#gallery .gallery-thumb');
+    thumbs.forEach(function (thumb, i) {
+      thumb.addEventListener('click', function () {
+        thumbs.forEach(function (tEl) { tEl.classList.remove('active'); });
+        thumb.classList.add('active');
+        if (main) main.src = imgs[i];
+      });
+    });
+  }
+
+  function metaRow(icon, label, value) {
+    if (!value) return '';
     return (
-      '<a href="/kilimanjaro/routes/' + encodeURIComponent(r.slug) + '" class="krd-related-card">' +
-      '<img src="' + escapeHtml(r.image) + '" alt="' + escapeHtml(r.name) + '" loading="lazy" ' +
-      'onerror="this.src=\'/images/optimized/mount-kilimanjaro-national-park.webp\'">' +
-      '<div class="b"><h4>' + escapeHtml(r.name) + '</h4>' +
-      '<span style="font-size:0.8rem;color:var(--primary);font-weight:700">' + tf('kiliRoutes.viewRoute', 'View route') + ' <i class="fas fa-arrow-right"></i></span>' +
-      '</div></a>'
+      '<div class="detail-meta-row">' +
+      '<span class="detail-meta-label"><i class="fas ' + icon + '"></i> ' + escapeHtml(label) + '</span>' +
+      '<span class="detail-meta-value">' + escapeHtml(value) + '</span></div>'
     );
   }
 
-  function renderNotFound(container) {
-    container.innerHTML =
-      '<div class="container" style="text-align:center;padding:3rem 0">' +
-      '<h1 style="font-family:var(--font-heading)">' + tf('kiliRoutes.notFoundTitle', 'Route not found') + '</h1>' +
-      '<p style="color:var(--text-muted);margin:1rem 0 1.5rem">' + tf('kiliRoutes.notFoundDesc', 'We couldn\'t find that Kilimanjaro route.') + '</p>' +
-      '<a class="btn btn-primary" href="/kilimanjaro/routes" style="min-height:48px">' + tf('kiliRoutes.allRoutes', 'View all routes') + '</a>' +
+  function renderGallery(imgs, name) {
+    var main = imgs[0];
+    var thumbs = imgs
+      .map(function (src, i) {
+        return (
+          '<div class="gallery-thumb' + (i === 0 ? ' active' : '') + '">' +
+          '<img src="' + escapeHtml(src) + '" alt="' + escapeHtml(name) + ' photo ' + (i + 1) + '" loading="lazy" ' +
+          'onerror="this.src=\'/images/optimized/mount-kilimanjaro-national-park.webp\'"></div>'
+        );
+      })
+      .join('');
+    document.getElementById('gallery').innerHTML =
+      '<div class="gallery-main"><img src="' +
+      escapeHtml(main) +
+      '" alt="' +
+      escapeHtml(name) +
+      '" onerror="this.src=\'/images/optimized/mount-kilimanjaro-national-park.webp\'"></div>' +
+      '<div class="gallery-thumbs">' +
+      thumbs +
       '</div>';
+    bindGallery(imgs);
   }
 
-  function renderRoute(container, route, all) {
-    var related = all.filter(function (r) { return r.slug !== route.slug; }).slice(0, 3);
+  function renderItinerary(days) {
+    var el = document.getElementById('itineraryList');
+    if (!el) return;
+    if (!Array.isArray(days) || !days.length) {
+      el.innerHTML = '<p style="color:var(--text-muted)">' + tf('kiliRoutes.emptyItinerary', 'Day-by-day details coming soon.') + '</p>';
+      return;
+    }
+    el.innerHTML = days
+      .map(function (d) {
+        return (
+          '<div class="itinerary-item">' +
+          '<div class="itinerary-day">' + tf('detail.day', 'Day') + ' ' + escapeHtml(d.day) + '</div>' +
+          '<div class="itinerary-title">' + escapeHtml(d.title || '') + '</div>' +
+          '<div class="itinerary-desc">' + escapeHtml(d.description || '') + '</div>' +
+          '<div class="itinerary-meta">' +
+          (d.altitude ? '<span><i class="fas fa-mountain"></i> ' + escapeHtml(d.altitude) + '</span>' : '') +
+          (d.hiking ? '<span><i class="fas fa-hiking"></i> ' + escapeHtml(d.hiking) + '</span>' : '') +
+          '</div></div>'
+        );
+      })
+      .join('');
+  }
 
-    var highlights = Array.isArray(route.highlights) && route.highlights.length
-      ? '<div class="krd-highlights">' + route.highlights.map(function (h) { return '<span><i class="fas fa-map-pin"></i> ' + escapeHtml(h) + '</span>'; }).join('') + '</div>'
-      : '';
+  function renderList(ulId, items, icon, empty) {
+    var ul = document.getElementById(ulId);
+    if (!ul) return;
+    if (!Array.isArray(items) || !items.length) {
+      ul.innerHTML = '<li><i class="fas ' + icon + '"></i> ' + escapeHtml(empty) + '</li>';
+      return;
+    }
+    ul.innerHTML = items
+      .map(function (item) {
+        return '<li><i class="fas ' + icon + '"></i> ' + escapeHtml(item) + '</li>';
+      })
+      .join('');
+  }
 
-    var stats =
-      statBlock('kiliRoutes.statDays', 'Duration', route.days) +
-      statBlock('kiliRoutes.statDifficulty', 'Difficulty', route.difficulty) +
-      statBlock('kiliRoutes.statSuccess', 'Success rate', route.success) +
-      statBlock('kiliRoutes.statScenery', 'Scenery', route.scenery) +
-      statBlock('kiliRoutes.statAccommodation', 'Sleeping', route.accommodation) +
-      statBlock('kiliRoutes.statBestFor', 'Best for', route.bestFor);
+  function renderFaqs(faqs) {
+    var el = document.getElementById('faqList');
+    if (!el) return;
+    if (!Array.isArray(faqs) || !faqs.length) {
+      el.innerHTML = '<p style="color:var(--text-muted)">' + tf('kiliRoutes.emptyFaqs', 'FAQs coming soon.') + '</p>';
+      return;
+    }
+    el.innerHTML = faqs
+      .map(function (f) {
+        return (
+          '<div class="faq-item"><h4>' +
+          escapeHtml(f.q) +
+          '</h4><p>' +
+          escapeHtml(f.a) +
+          '</p></div>'
+        );
+      })
+      .join('');
+  }
 
-    container.innerHTML =
-      '<div class="container" style="max-width:56rem">' +
-      '<div class="corp-breadcrumb" style="margin-bottom:1rem">' +
-      '<a href="/">' + tf('nav.home', 'Home') + '</a><span>/</span>' +
-      '<a href="/kilimanjaro">' + tf('kiliRoutes.crumbKili', 'Kilimanjaro') + '</a><span>/</span>' +
-      '<a href="/kilimanjaro/routes">' + tf('kiliRoutes.crumbRoutes', 'Routes') + '</a><span>/</span>' +
-      '<span>' + escapeHtml(route.name) + '</span></div>' +
+  function renderRelated(all, current) {
+    var related = all.filter(function (r) { return r.slug !== current.slug; }).slice(0, 4);
+    var section = document.getElementById('relatedSection');
+    var grid = document.getElementById('relatedGrid');
+    if (!section || !grid || !related.length) return;
+    section.hidden = false;
+    grid.innerHTML = related
+      .map(function (r) {
+        return (
+          '<a href="/kilimanjaro/routes/' +
+          encodeURIComponent(r.slug) +
+          '" class="route-related-card">' +
+          '<img src="' +
+          escapeHtml(r.image) +
+          '" alt="' +
+          escapeHtml(r.name) +
+          '" loading="lazy" onerror="this.src=\'/images/optimized/mount-kilimanjaro-national-park.webp\'">' +
+          '<div class="b"><h4>' +
+          escapeHtml(r.name) +
+          '</h4><span style="font-size:0.8rem;color:var(--primary);font-weight:700">' +
+          escapeHtml(r.days || '') +
+          ' · ' +
+          tf('kiliRoutes.viewRoute', 'View route') +
+          ' <i class="fas fa-arrow-right"></i></span></div></a>'
+        );
+      })
+      .join('');
+  }
 
-      '<h1 style="font-family:var(--font-heading);color:var(--earth-dark);margin:0 0 0.75rem">' + escapeHtml(route.name) + '</h1>' +
-      '<p style="font-size:1.1rem;color:var(--text-secondary);line-height:1.7;margin:0 0 1.25rem">' + escapeHtml(route.summary || '') + '</p>' +
+  function renderRoute(route, all) {
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('detailContent').style.display = 'block';
 
-      '<div class="krd-hero"><img src="' + escapeHtml(route.image) + '" alt="' + escapeHtml(route.name) + '" ' +
-      'onerror="this.src=\'/images/optimized/mount-kilimanjaro-national-park.webp\'"></div>' +
+    document.getElementById('breadcrumbName').textContent = route.name;
+    document.getElementById('heroTitle').textContent = route.name;
+    document.getElementById('heroSummary').textContent = route.summary || '';
+    var slide = document.getElementById('heroSlide');
+    if (slide && route.image) slide.style.backgroundImage = "url('" + route.image + "')";
 
-      (stats ? '<div class="krd-meta-grid">' + stats + '</div>' : '') +
-      highlights +
+    var imgs = galleryImages(route);
+    renderGallery(imgs, route.name);
 
-      '<div class="krd-body">' + (route.html || route.bodyHtml || '') + '</div>' +
+    var chips = document.getElementById('routeHighlights');
+    if (chips) {
+      chips.innerHTML = (route.highlights || [])
+        .map(function (h) {
+          return '<span><i class="fas fa-check" style="color:var(--primary);margin-right:0.35rem"></i>' + escapeHtml(h) + '</span>';
+        })
+        .join('');
+    }
 
-      '<div class="krd-cta">' +
-      '<h3 style="font-family:var(--font-heading);margin:0 0 0.5rem">' + tf('kiliRoutes.ctaTitle', 'Ready to climb?') + '</h3>' +
-      '<p style="color:var(--text-muted);margin:0 0 1.25rem">' + tf('kiliRoutes.ctaDesc', 'Get a free, private climb quote from our Arusha team.') + '</p>' +
-      '<div style="display:flex;flex-wrap:wrap;gap:0.6rem;justify-content:center">' +
-      '<a class="btn btn-primary" href="/booking" style="min-height:48px">' + tf('kiliRoutes.ctaBook', 'Get a climb quote') + '</a>' +
-      '<a class="btn btn-outline" href="/kilimanjaro" style="min-height:48px">' + tf('kiliRoutes.ctaKili', 'Kilimanjaro packages') + '</a>' +
-      '<a class="btn btn-outline" href="/safaris/9-day-mount-meru-northern-tanzania-safari" style="min-height:48px">' + tf('kiliRoutes.ctaMeruSafari', 'Meru + safari combo') + '</a>' +
-      '</div></div>' +
+    var pc = document.getElementById('prosCons');
+    if (pc) {
+      var pros = Array.isArray(route.pros) ? route.pros : [];
+      var cons = Array.isArray(route.cons) ? route.cons : [];
+      pc.innerHTML =
+        (pros.length
+          ? '<div class="pros-box"><h3><i class="fas fa-thumbs-up"></i> ' +
+            tf('kiliRoutes.pros', 'Pros') +
+            '</h3><ul>' +
+            pros.map(function (p) { return '<li>' + escapeHtml(p) + '</li>'; }).join('') +
+            '</ul></div>'
+          : '') +
+        (cons.length
+          ? '<div class="cons-box"><h3><i class="fas fa-thumbs-down"></i> ' +
+            tf('kiliRoutes.cons', 'Cons') +
+            '</h3><ul>' +
+            cons.map(function (c) { return '<li>' + escapeHtml(c) + '</li>'; }).join('') +
+            '</ul></div>'
+          : '');
+    }
 
-      (related.length
-        ? '<h2 style="font-family:var(--font-heading);color:var(--earth-dark);margin:2.75rem 0 0.5rem">' + tf('kiliRoutes.relatedTitle', 'Other Kilimanjaro routes') + '</h2>' +
-          '<div class="krd-related-grid">' + related.map(relatedCard).join('') + '</div>'
-        : '') +
-      '</div>';
+    document.getElementById('routeOverviewHtml').innerHTML = route.html || route.bodyHtml || '';
+
+    renderItinerary(route.dayByDay);
+    renderList('includesList', route.included, 'fa-check', tf('kiliRoutes.askIncludes', 'Ask Our Team for a full inclusion list'));
+    renderList('excludesList', route.excluded, 'fa-times', tf('kiliRoutes.askExcludes', 'International flights & personal gear typically excluded'));
+    renderFaqs(route.faqs);
+
+    document.getElementById('sidebarTitle').textContent = route.name;
+    document.getElementById('sidebarDays').textContent = (route.days || '') + (route.accommodation ? ' · ' + route.accommodation : '');
+    document.getElementById('sidebarMeta').innerHTML =
+      metaRow('fa-calendar-alt', tf('kiliRoutes.statDays', 'Duration'), route.days) +
+      metaRow('fa-mountain', tf('kiliRoutes.statDifficulty', 'Difficulty'), route.difficulty) +
+      metaRow('fa-chart-line', tf('kiliRoutes.statSuccess', 'Success rate'), route.success) +
+      metaRow('fa-eye', tf('kiliRoutes.statScenery', 'Scenery'), route.scenery) +
+      metaRow('fa-campground', tf('kiliRoutes.statAccommodation', 'Sleeping'), route.accommodation) +
+      metaRow('fa-route', tf('kiliRoutes.statDistance', 'Distance'), route.distance) +
+      metaRow('fa-arrow-up', tf('kiliRoutes.statAltitude', 'Max altitude'), route.altitudeMax) +
+      metaRow('fa-users', tf('kiliRoutes.statCrowd', 'Crowds'), route.crowdLevel) +
+      metaRow('fa-lungs', tf('kiliRoutes.statAcclimatization', 'Acclimatization'), route.acclimatization) +
+      metaRow('fa-moon', tf('kiliRoutes.statSummitNight', 'Summit night'), route.summitNight) +
+      metaRow('fa-user-friends', tf('kiliRoutes.statBestFor', 'Best for'), route.bestFor);
+
+    var book = bookingUrl(route);
+    var wa = waUrl(route);
+    var bookBtn = document.getElementById('bookBtn');
+    var mobileBookBtn = document.getElementById('mobileBookBtn');
+    var waBtn = document.getElementById('waBtn');
+    if (bookBtn) bookBtn.href = book;
+    if (mobileBookBtn) mobileBookBtn.href = book;
+    if (waBtn) waBtn.href = wa;
+    document.getElementById('mobilePriceLabel').textContent = route.name + (route.days ? ' · ' + route.days : '');
+
+    renderRelated(all, route);
+    bindTabs(document.getElementById('detailContent'));
   }
 
   async function init() {
-    var container = document.getElementById('routeContainer');
-    if (!container) return;
+    try {
+      if (window.TSM_i18n && window.TSM_i18n.ready) await window.TSM_i18n.ready;
+    } catch (_) {}
 
-    try { if (window.TSM_i18n && window.TSM_i18n.ready) await window.TSM_i18n.ready; } catch (_) {}
-
-    var all = window.TSM_KiliRoutes && Array.isArray(window.TSM_KiliRoutes.ROUTES)
-      ? window.TSM_KiliRoutes.ROUTES
-      : [];
-
+    var all =
+      window.TSM_KiliRoutes && Array.isArray(window.TSM_KiliRoutes.ROUTES)
+        ? window.TSM_KiliRoutes.ROUTES
+        : [];
     var slug = slugFromPath();
     var route = findRoute(all, slug);
 
     if (!route) {
-      renderNotFound(container);
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('notFoundState').style.display = 'block';
       return;
     }
 
     var localized = route;
     if (window.TSM_routeI18n && typeof window.TSM_routeI18n.localizeRoute === 'function') {
-      try { localized = await window.TSM_routeI18n.localizeRoute(route); } catch (_) { localized = route; }
+      try {
+        localized = await window.TSM_routeI18n.localizeRoute(route);
+      } catch (_) {
+        localized = route;
+      }
     }
+    // Keep structured arrays from English source if locale overlay omitted them
+    ['dayByDay', 'faqs', 'pros', 'cons', 'included', 'excluded', 'highlights'].forEach(function (key) {
+      if (!localized[key] && route[key]) localized[key] = route[key];
+    });
+    ['distance', 'altitudeMax', 'crowdLevel', 'acclimatization', 'summitNight', 'bookingInterest'].forEach(function (key) {
+      if (!localized[key] && route[key]) localized[key] = route[key];
+    });
 
     applySeo(localized);
-    renderRoute(container, localized, all);
+    renderRoute(localized, all);
 
     if (window.TSM_i18n && typeof window.TSM_i18n.applyTranslations === 'function') {
-      window.TSM_i18n.applyTranslations(container);
+      window.TSM_i18n.applyTranslations(document);
     }
   }
 

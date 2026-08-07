@@ -70,7 +70,19 @@
       meta_title: overlay.meta_title || route.meta_title,
       meta_description: overlay.meta_description || route.meta_description,
       keywords: overlay.keywords || route.keywords,
-      html: overlay.html || route.html
+      html: overlay.html || route.html,
+      distance: overlay.distance || route.distance,
+      altitudeMax: overlay.altitudeMax || route.altitudeMax,
+      crowdLevel: overlay.crowdLevel || route.crowdLevel,
+      acclimatization: overlay.acclimatization || route.acclimatization,
+      summitNight: overlay.summitNight || route.summitNight,
+      pros: overlay.pros || route.pros,
+      cons: overlay.cons || route.cons,
+      dayByDay: overlay.dayByDay || route.dayByDay,
+      faqs: overlay.faqs || route.faqs,
+      included: overlay.included || route.included,
+      excluded: overlay.excluded || route.excluded,
+      bookingInterest: overlay.bookingInterest || route.bookingInterest
     });
   }
 

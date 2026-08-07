@@ -265,7 +265,23 @@
     "statBestFor": "Ideaal voor",
     "relatedTitle": "Andere Kilimanjaro-routes",
     "notFoundTitle": "Route niet gevonden",
-    "notFoundDesc": "We konden die Kilimanjaro-route niet vinden."
+    "notFoundDesc": "We konden die Kilimanjaro-route niet vinden.",
+    "tabFaqs": "FAQ",
+    "planFrom": "Plan vanuit Arusha",
+    "pros": "Voordelen",
+    "cons": "Nadelen",
+    "emptyItinerary": "Dag-tot-dag details volgen.",
+    "emptyFaqs": "FAQ volgen.",
+    "askIncludes": "Vraag Ons Team om de volledige lijst",
+    "askExcludes": "Internationale vluchten & persoonlijke uitrusting meestal uitgesloten",
+    "trustGuides": "Erkende berggidsen",
+    "trustSafety": "Veiligheid eerst",
+    "trustArusha": "Gevestigd in Arusha",
+    "statDistance": "Afstand",
+    "statAltitude": "Max. hoogte",
+    "statCrowd": "Drukte",
+    "statAcclimatization": "Acclimatisatie",
+    "statSummitNight": "Topnacht"
   },
   "safarisPage": {
     "crumb": "Safari's",
@@ -370,7 +386,9 @@
     "secureSsl": "Veilige SSL-boeking",
     "freeCancel": "Gratis annuleren (48u)",
     "expertSupport": "24/7 deskundige ondersteuning",
-    "countryPh": "Nederland"
+    "countryPh": "Nederland",
+    "preselected": "Vooraf geselecteerd vanaf uw pagina",
+    "routePrefill": "Routevoorkeur genoteerd"
   },
   "contact": {
     "crumb": "Contact",

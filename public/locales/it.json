@@ -265,7 +265,23 @@
     "statBestFor": "Ideale per",
     "relatedTitle": "Altre rotte del Kilimanjaro",
     "notFoundTitle": "Rotta non trovata",
-    "notFoundDesc": "Non abbiamo trovato quella rotta del Kilimanjaro."
+    "notFoundDesc": "Non abbiamo trovato quella rotta del Kilimanjaro.",
+    "tabFaqs": "FAQ",
+    "planFrom": "Pianifica da Arusha",
+    "pros": "Pro",
+    "cons": "Contro",
+    "emptyItinerary": "Dettagli giorno per giorno in arrivo.",
+    "emptyFaqs": "FAQ in arrivo.",
+    "askIncludes": "Chiedi al team l’elenco completo",
+    "askExcludes": "Voli internazionali e attrezzatura personale di solito esclusi",
+    "trustGuides": "Guide di montagna con licenza",
+    "trustSafety": "Ritmo orientato alla sicurezza",
+    "trustArusha": "Con sede ad Arusha",
+    "statDistance": "Distanza",
+    "statAltitude": "Quota max",
+    "statCrowd": "Affollamento",
+    "statAcclimatization": "Acclimatazione",
+    "statSummitNight": "Notte di vetta"
   },
   "safarisPage": {
     "crumb": "Safari",
@@ -370,7 +386,9 @@
     "secureSsl": "Prenotazione SSL sicura",
     "freeCancel": "Cancellazione gratuita (48h)",
     "expertSupport": "Supporto esperti 24/7",
-    "countryPh": "Italia"
+    "countryPh": "Italia",
+    "preselected": "Preselezionato dalla tua pagina",
+    "routePrefill": "Preferenza percorso annotata"
   },
   "contact": {
     "crumb": "Contatti",

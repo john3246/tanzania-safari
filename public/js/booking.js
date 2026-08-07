@@ -124,28 +124,132 @@ document.getElementById('bookingForm')?.addEventListener('submit', async e => {
     }
 });
 
+function normalizeSlug(s) {
+    return String(s || '')
+        .toLowerCase()
+        .trim()
+        .replace(/^\/+|\/+$/g, '');
+}
+
+function findPackageFromParams(params) {
+    const slug =
+        params.get('package') ||
+        params.get('package_slug') ||
+        params.get('slug') ||
+        '';
+    const id = params.get('package_id') || params.get('id') || '';
+    const nameHint = (params.get('name') || params.get('interest') || '').toLowerCase();
+    const route = normalizeSlug(params.get('route') || '');
+
+    if (id) {
+        const byId = packages.find((p) => String(p.package_id) === String(id));
+        if (byId) return byId;
+    }
+    if (slug) {
+        const want = normalizeSlug(slug);
+        const bySlug = packages.find((p) => normalizeSlug(p.package_slug) === want);
+        if (bySlug) return bySlug;
+    }
+    if (route) {
+        const routeKey = route.replace(/-route$/, '').replace(/-/g, ' ');
+        const kili = packages.filter(
+            (p) =>
+                /kilimanjaro|machame|marangu|lemosho|rongai|umbwe|northern|shira|meru/i.test(
+                    `${p.package_name || ''} ${p.package_slug || ''} ${p.category_name || ''}`
+                )
+        );
+        const scored = kili
+            .map((p) => {
+                const blob = `${p.package_name || ''} ${p.package_slug || ''}`.toLowerCase();
+                let score = 0;
+                routeKey.split(/\s+/).forEach((w) => {
+                    if (w && blob.includes(w)) score += 2;
+                });
+                if (blob.includes(route.replace(/-/g, ' '))) score += 3;
+                return { p, score };
+            })
+            .sort((a, b) => b.score - a.score);
+        if (scored[0] && scored[0].score > 0) return scored[0].p;
+        // Fall back to any Kilimanjaro-category package so the form is not empty
+        if (kili[0]) return kili[0];
+    }
+    if (nameHint) {
+        const byName = packages.find((p) =>
+            String(p.package_name || '')
+                .toLowerCase()
+                .includes(nameHint.slice(0, 24))
+        );
+        if (byName) return byName;
+    }
+    return null;
+}
+
+function applyBookingPrefill(params, match) {
+    const sel = document.getElementById('packageSelect');
+    const special = document.querySelector('[name="special_requests"]');
+    const interest = params.get('interest') || params.get('name') || '';
+    const route = params.get('route') || '';
+
+    if (match && sel) {
+        sel.value = String(match.package_id);
+        // Keep selection visible & harder to miss
+        sel.setAttribute('data-preselected', '1');
+        try {
+            sel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } catch (_) {}
+        updateSummary();
+    }
+
+    if (special && (interest || route)) {
+        const line = [
+            interest ? `Interested in: ${interest}` : '',
+            route ? `Route preference: ${route.replace(/-/g, ' ')}` : '',
+            match ? `Pre-selected package: ${match.package_name}` : ''
+        ]
+            .filter(Boolean)
+            .join('\n');
+        if (!special.value.trim()) special.value = line;
+        else if (!special.value.includes(interest || route)) special.value = `${line}\n\n${special.value}`;
+    }
+
+    // Banner under package select
+    if ((match || interest || route) && sel && !document.getElementById('preselectNote')) {
+        const note = document.createElement('p');
+        note.id = 'preselectNote';
+        note.style.cssText = 'margin:0.5rem 0 0;font-size:0.85rem;color:var(--primary);font-weight:600';
+        const label = match
+            ? `${t('booking.preselected') !== 'booking.preselected' ? t('booking.preselected') : 'Pre-selected from your page'}: ${match.package_name}`
+            : `${t('booking.routePrefill') !== 'booking.routePrefill' ? t('booking.routePrefill') : 'Route interest noted'}: ${interest || route}`;
+        note.innerHTML = `<i class="fas fa-check-circle"></i> ${label}`;
+        sel.parentElement?.appendChild(note);
+    }
+}
+
 // Load packages
 async function loadPackages() {
     try {
         const { data } = await API.get('/packages?limit=100');
-        packages = data || [];
+        packages = Array.isArray(data) ? data : data?.packages || [];
         const sel = document.getElementById('packageSelect');
-        packages.forEach(p => {
+        if (!sel) return;
+        packages.forEach((p) => {
             const opt = document.createElement('option');
             opt.value = p.package_id;
+            opt.dataset.slug = p.package_slug || '';
             opt.textContent = `${p.package_name} — $${Number(p.base_price_usd).toLocaleString()} (${p.duration_days} ${t('common.days')})`;
             sel.appendChild(opt);
         });
-        // Pre-select from URL
-        const urlPkg = new URLSearchParams(window.location.search).get('package');
-        if (urlPkg) {
-            const match = packages.find(p => p.package_slug === urlPkg);
-            if (match) { sel.value = match.package_id; updateSummary(); }
-        }
+
+        const params = new URLSearchParams(window.location.search);
+        const match = findPackageFromParams(params);
+        applyBookingPrefill(params, match);
+
         // Min date = tomorrow
-        const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
-        document.getElementById('startDate').min = tomorrow.toISOString().split('T')[0];
-    } catch {}
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const startEl = document.getElementById('startDate');
+        if (startEl) startEl.min = tomorrow.toISOString().split('T')[0];
+    } catch (_) {}
 }
 
 loadPackages();

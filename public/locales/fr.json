@@ -265,7 +265,23 @@
     "statBestFor": "Idéal pour",
     "relatedTitle": "Autres voies du Kilimandjaro",
     "notFoundTitle": "Voie introuvable",
-    "notFoundDesc": "Nous n'avons pas trouvé cette voie du Kilimandjaro."
+    "notFoundDesc": "Nous n'avons pas trouvé cette voie du Kilimandjaro.",
+    "tabFaqs": "FAQ",
+    "planFrom": "Planifier depuis Arusha",
+    "pros": "Avantages",
+    "cons": "Inconvénients",
+    "emptyItinerary": "Détails jour par jour bientôt.",
+    "emptyFaqs": "FAQ bientôt.",
+    "askIncludes": "Demandez la liste complète à notre équipe",
+    "askExcludes": "Vols internationaux et équipement perso généralement exclus",
+    "trustGuides": "Guides de montagne licenciés",
+    "trustSafety": "Rythme axé sur la sécurité",
+    "trustArusha": "Basés à Arusha",
+    "statDistance": "Distance",
+    "statAltitude": "Altitude max",
+    "statCrowd": "Affluence",
+    "statAcclimatization": "Acclimatation",
+    "statSummitNight": "Nuit de sommet"
   },
   "safarisPage": {
     "crumb": "Safaris",
@@ -370,7 +386,9 @@
     "secureSsl": "Réservation SSL sécurisée",
     "freeCancel": "Annulation gratuite (48h)",
     "expertSupport": "Support expert 24/7",
-    "countryPh": "France"
+    "countryPh": "France",
+    "preselected": "Présélectionné depuis votre page",
+    "routePrefill": "Intérêt pour la voie noté"
   },
   "contact": {
     "crumb": "Contact",

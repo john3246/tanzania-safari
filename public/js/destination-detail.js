@@ -424,7 +424,7 @@ function renderDestinationDetails(destination) {
                                 : (isSerengeti
                                   ? `<li><a href="/destinations/ngorongoro-conservation-area">${escapeHtml(t('destDetail.combineNgorongoro'))}</a></li><li><a href="/destinations/mount-kilimanjaro-national-park">${escapeHtml(t('destDetail.climbKilimanjaro'))}</a></li>`
                                   : `<li><a href="/destinations/serengeti-national-park">${escapeHtml(t('destDetail.combineSerengeti'))}</a></li><li><a href="/destinations/mount-kilimanjaro-national-park">${escapeHtml(t('destDetail.climbKilimanjaro'))}</a></li>`)}
-                              <li><a href="/booking">${escapeHtml(t('destDetail.inquireQuote'))}</a></li>
+                              <li><a href="/booking?interest=${encodeURIComponent(name)}">${escapeHtml(t('destDetail.inquireQuote'))}</a></li>
                               <li><a href="/contact">${escapeHtml(t('destDetail.contactUsNow'))}</a></li>
                             </ul>
                         </div>` : ''}
@@ -442,7 +442,7 @@ function renderDestinationDetails(destination) {
                 <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase">${escapeHtml(t('destDetail.planVisitShort'))}</div>
                 <div class="price" style="font-size:1.05rem;font-weight:700">${escapeHtml(name)}</div>
             </div>
-            <a href="/booking" class="btn btn-primary" style="min-height:48px">${escapeHtml(t('destDetail.inquire'))}</a>
+            <a href="/booking?interest=${encodeURIComponent(name)}" class="btn btn-primary" style="min-height:48px">${escapeHtml(t('destDetail.inquire'))}</a>
         </div>
     `;
     
@@ -1016,7 +1016,7 @@ async function loadSafariPackagesForDestination(destinationName, slug) {
                 <p style="margin:0;color:var(--text-secondary)">${escapeHtml(t('destDetail.customSafarisDesc'))}</p>
                 <div class="actions">
                   <a href="/contact" class="btn btn-outline" style="min-height:48px">${escapeHtml(t('destDetail.contactUs'))}</a>
-                  <a href="/booking" class="btn btn-primary" style="min-height:48px">${escapeHtml(t('destDetail.requestQuoteBtn'))}</a>
+                  <a href="/booking?interest=${encodeURIComponent(destinationName || '')}" class="btn btn-primary" style="min-height:48px">${escapeHtml(t('destDetail.requestQuoteBtn'))}</a>
                 </div>
               </div>`;
             if (window.SafariSEO) SafariSEO.setNoIndexFollow();
@@ -1320,8 +1320,8 @@ function setCurrentYear() {
 }
 
 function bookDestination(destinationName) {
-    // Redirect to contact page with pre-filled message
-    window.location.href = `/contact?destination=${encodeURIComponent(destinationName)}`;
+    // Prefill booking with destination interest so guests skip re-choosing
+    window.location.href = `/booking?interest=${encodeURIComponent(destinationName)}&name=${encodeURIComponent(destinationName)}`;
 }
 
 function escapeHtml(str) {

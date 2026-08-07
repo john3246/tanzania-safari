@@ -208,11 +208,11 @@ ${fig(IMG(7), 'Barranco Wall scramble on the Machame Route Kilimanjaro', 'The Ba
 
 <div class="guide-cta-box compact">
   <p style="margin:0">Want the 7-day Machame for the best summit chance?</p>
-  <a class="btn btn-primary" href="/booking" style="min-height:48px">Get a Free Quote</a>
+  <a class="btn btn-primary" href="/booking?route=machame-route&interest=${encodeURIComponent('Kilimanjaro Machame Route 7-Day Climb')}" style="min-height:48px">Get a Free Quote</a>
 </div>
 
 <h2 id="machame-arusha">How We Run It from Arusha</h2>
-<p>Your climb is coordinated end-to-end by Tanzania Safari Magic. We collect you in Arusha, brief you the evening before, and handle Kilimanjaro National Park permits, mountain crew, and meals — see park context on our <a href="/destinations/mount-kilimanjaro-national-park">Mount Kilimanjaro National Park</a> page. Guides carry pulse oximeters and check you twice daily. Many climbers pair Machame with a safari or a warm-up trek; ask us about our <a href="/safaris/6-day-mount-meru-tarangire-ngorongoro">6-Day Mount Meru, Tarangire &amp; Ngorongoro</a> package as pre-climb acclimatisation. When you're ready, plan the whole trip on <a href="/kilimanjaro">Kilimanjaro</a> and lock dates via <a href="/booking">booking</a>.</p>
+<p>Your climb is coordinated end-to-end by Tanzania Safari Magic. We collect you in Arusha, brief you the evening before, and handle Kilimanjaro National Park permits, mountain crew, and meals — see park context on our <a href="/destinations/mount-kilimanjaro-national-park">Mount Kilimanjaro National Park</a> page. Guides carry pulse oximeters and check you twice daily. Many climbers pair Machame with a safari or a warm-up trek; ask us about our <a href="/safaris/6-day-mount-meru-tarangire-ngorongoro">6-Day Mount Meru, Tarangire &amp; Ngorongoro</a> package as pre-climb acclimatisation. When you're ready, plan the whole trip on <a href="/kilimanjaro">Kilimanjaro</a> and lock dates via <a href="/booking?route=machame-route&interest=${encodeURIComponent('Kilimanjaro Machame Route 7-Day Climb')}">booking</a>.</p>
 
 ${cta('Machame Route', WA_ROUTE('Machame Route'), 'machame-route', 'Kilimanjaro Machame Route 7-Day Climb')}
 `
@@ -380,7 +380,7 @@ ${fig(IMG(2), 'Marangu Route Kilimanjaro hut trail', 'Marangu is the only Kilima
 ${fig(IMG(8), 'Kilimanjaro summit sunrise near Uhuru Peak', 'Every route shares the same reward: sunrise from the roof of Africa at Uhuru Peak.')}
 
 <h2 id="marangu-arusha">How We Run It from Arusha</h2>
-<p>Tanzania Safari Magic collects you in Arusha, runs a full pre-climb briefing and kit check, and arranges permits, hut bookings, and mountain crew. Our guides monitor oxygen saturation and pace you deliberately slowly on summit night — the single biggest factor in reaching the top. Read park background on <a href="/destinations/mount-kilimanjaro-national-park">Mount Kilimanjaro National Park</a>, budget with our <a href="/blog/kilimanjaro-cost">Kilimanjaro cost guide</a>, and start planning on <a href="/kilimanjaro">Kilimanjaro</a>. Ready to hold a date? Head to <a href="/booking">booking</a>.</p>
+<p>Tanzania Safari Magic collects you in Arusha, runs a full pre-climb briefing and kit check, and arranges permits, hut bookings, and mountain crew. Our guides monitor oxygen saturation and pace you deliberately slowly on summit night — the single biggest factor in reaching the top. Read park background on <a href="/destinations/mount-kilimanjaro-national-park">Mount Kilimanjaro National Park</a>, budget with our <a href="/blog/kilimanjaro-cost">Kilimanjaro cost guide</a>, and start planning on <a href="/kilimanjaro">Kilimanjaro</a>. Ready to hold a date? Head to <a href="/booking?route=marangu-route&interest=${encodeURIComponent('Kilimanjaro Marangu Route 6-Day Hut Climb')}">booking</a>.</p>
 
 ${cta('Marangu Route', WA_ROUTE('Marangu Route'), 'marangu-route', 'Kilimanjaro Marangu Route 6-Day Hut Climb')}
 `
@@ -567,11 +567,11 @@ ${fig(IMG(9), 'Kilimanjaro glaciers and high desert on the Lemosho Route', 'Abov
 
 <div class="guide-cta-box compact">
   <p style="margin:0">Torn between Lemosho and Machame? We'll match one to your dates.</p>
-  <a class="btn btn-primary" href="/booking" style="min-height:48px">Get a Free Quote</a>
+  <a class="btn btn-primary" href="/booking?route=lemosho-route&interest=${encodeURIComponent('Kilimanjaro Lemosho Route 8-Day Climb')}" style="min-height:48px">Get a Free Quote</a>
 </div>
 
 <h2 id="lemosho-arusha">How We Run It from Arusha</h2>
-<p>The Londorossi trailhead is a longer drive, so Tanzania Safari Magic builds the transfer into your Lemosho package from Arusha and handles permits, camping crew, and meals throughout. We time your departure around the <a href="/blog/best-time-to-climb-kilimanjaro">best climbing months</a> and can combine the climb with a wildlife extension — browse our <a href="/safaris">safari packages</a> or read park detail on <a href="/destinations/mount-kilimanjaro-national-park">Mount Kilimanjaro National Park</a>. Start on <a href="/kilimanjaro">Kilimanjaro</a> and request your plan via <a href="/booking">booking</a>.</p>
+<p>The Londorossi trailhead is a longer drive, so Tanzania Safari Magic builds the transfer into your Lemosho package from Arusha and handles permits, camping crew, and meals throughout. We time your departure around the <a href="/blog/best-time-to-climb-kilimanjaro">best climbing months</a> and can combine the climb with a wildlife extension — browse our <a href="/safaris">safari packages</a> or read park detail on <a href="/destinations/mount-kilimanjaro-national-park">Mount Kilimanjaro National Park</a>. Start on <a href="/kilimanjaro">Kilimanjaro</a> and request your plan via <a href="/booking?route=lemosho-route&interest=${encodeURIComponent('Kilimanjaro Lemosho Route 8-Day Climb')}">booking</a>.</p>
 
 ${cta('Lemosho Route', WA_ROUTE('Lemosho Route'), 'lemosho-route', 'Kilimanjaro Lemosho Route 8-Day Climb')}
 `
@@ -747,7 +747,7 @@ ${fig(IMG(10), 'Mawenzi peak seen from the Rongai Route Kilimanjaro', 'The jagge
 </div>
 
 <h2 id="rongai-arusha">How We Run It from Arusha</h2>
-<p>The Nalemuru trailhead sits well to the north, so Tanzania Safari Magic includes the longer transfer from Arusha and manages permits, camping crew, and meals for the full climb. We often recommend Rongai for green-season departures — check timing in our <a href="/blog/best-time-to-climb-kilimanjaro">best time to climb guide</a> — and can bolt on a warm-up trek such as our <a href="/safaris/6-day-mount-meru-tarangire-ngorongoro">6-Day Mount Meru, Tarangire &amp; Ngorongoro</a> package. Read park background on <a href="/destinations/mount-kilimanjaro-national-park">Mount Kilimanjaro National Park</a>, then start on <a href="/kilimanjaro">Kilimanjaro</a> and book via <a href="/booking">booking</a>.</p>
+<p>The Nalemuru trailhead sits well to the north, so Tanzania Safari Magic includes the longer transfer from Arusha and manages permits, camping crew, and meals for the full climb. We often recommend Rongai for green-season departures — check timing in our <a href="/blog/best-time-to-climb-kilimanjaro">best time to climb guide</a> — and can bolt on a warm-up trek such as our <a href="/safaris/6-day-mount-meru-tarangire-ngorongoro">6-Day Mount Meru, Tarangire &amp; Ngorongoro</a> package. Read park background on <a href="/destinations/mount-kilimanjaro-national-park">Mount Kilimanjaro National Park</a>, then start on <a href="/kilimanjaro">Kilimanjaro</a> and book via <a href="/booking?route=rongai-route&interest=${encodeURIComponent('Kilimanjaro Rongai Route 7-Day Climb')}">booking</a>.</p>
 
 ${cta('Rongai Route', WA_ROUTE('Rongai Route'), 'rongai-route', 'Kilimanjaro Rongai Route 7-Day Climb')}
 `
@@ -940,11 +940,11 @@ ${fig(IMG(6), 'Kilimanjaro high camp at dusk on the Northern Circuit', 'Extra ni
 
 <div class="guide-cta-box compact">
   <p style="margin:0">Want the best possible summit odds? Ask us about the 9-day Northern Circuit.</p>
-  <a class="btn btn-primary" href="/booking" style="min-height:48px">Get a Free Quote</a>
+  <a class="btn btn-primary" href="/booking?route=northern-circuit-route&interest=${encodeURIComponent('Kilimanjaro Northern Circuit 9-Day Climb')}" style="min-height:48px">Get a Free Quote</a>
 </div>
 
 <h2 id="northern-arusha">How We Run It from Arusha</h2>
-<p>Tanzania Safari Magic organises the full Northern Circuit from Arusha — Londorossi permits, an experienced camping crew for the longer haul, and careful daily health checks that matter more the longer you're at altitude. Because you're already investing serious time, many guests extend the trip with a northern-Tanzania safari; ask about our <a href="/safaris/9-day-mount-meru-northern-tanzania-safari">9-Day Mount Meru &amp; Northern Tanzania Safari</a> or browse all <a href="/safaris">safari packages</a>. Read park detail on <a href="/destinations/mount-kilimanjaro-national-park">Mount Kilimanjaro National Park</a>, start on <a href="/kilimanjaro">Kilimanjaro</a>, and confirm dates via <a href="/booking">booking</a>.</p>
+<p>Tanzania Safari Magic organises the full Northern Circuit from Arusha — Londorossi permits, an experienced camping crew for the longer haul, and careful daily health checks that matter more the longer you're at altitude. Because you're already investing serious time, many guests extend the trip with a northern-Tanzania safari; ask about our <a href="/safaris/9-day-mount-meru-northern-tanzania-safari">9-Day Mount Meru &amp; Northern Tanzania Safari</a> or browse all <a href="/safaris">safari packages</a>. Read park detail on <a href="/destinations/mount-kilimanjaro-national-park">Mount Kilimanjaro National Park</a>, start on <a href="/kilimanjaro">Kilimanjaro</a>, and confirm dates via <a href="/booking?route=northern-circuit-route&interest=${encodeURIComponent('Kilimanjaro Northern Circuit 9-Day Climb')}">booking</a>.</p>
 
 ${cta('Northern Circuit', WA_ROUTE('Northern Circuit Route'), 'northern-circuit-route', 'Kilimanjaro Northern Circuit 9-Day Climb')}
 `
@@ -1112,7 +1112,7 @@ ${fig(IMG(1), 'Kilimanjaro dramatic ridge scenery on the southern side', 'Umbwe\
 </div>
 
 <h2 id="umbwe-arusha">How We Run It from Arusha</h2>
-<p>Because Umbwe is demanding, Tanzania Safari Magic runs an extra-careful pre-climb assessment and briefing in Arusha, then supports you with an experienced camping crew and vigilant twice-daily health checks — pacing and acclimatisation are everything here. We'll happily suggest a warm-up such as our <a href="/safaris/6-day-mount-meru-tarangire-ngorongoro">6-Day Mount Meru, Tarangire &amp; Ngorongoro</a> package to prime your body first. Read park context on <a href="/destinations/mount-kilimanjaro-national-park">Mount Kilimanjaro National Park</a>, check kit with our <a href="/blog/kilimanjaro-packing-list">Kilimanjaro packing list</a>, start on <a href="/kilimanjaro">Kilimanjaro</a>, and book via <a href="/booking">booking</a>.</p>
+<p>Because Umbwe is demanding, Tanzania Safari Magic runs an extra-careful pre-climb assessment and briefing in Arusha, then supports you with an experienced camping crew and vigilant twice-daily health checks — pacing and acclimatisation are everything here. We'll happily suggest a warm-up such as our <a href="/safaris/6-day-mount-meru-tarangire-ngorongoro">6-Day Mount Meru, Tarangire &amp; Ngorongoro</a> package to prime your body first. Read park context on <a href="/destinations/mount-kilimanjaro-national-park">Mount Kilimanjaro National Park</a>, check kit with our <a href="/blog/kilimanjaro-packing-list">Kilimanjaro packing list</a>, start on <a href="/kilimanjaro">Kilimanjaro</a>, and book via <a href="/booking?route=umbwe-route&interest=${encodeURIComponent('Kilimanjaro Umbwe Route 7-Day Climb')}">booking</a>.</p>
 
 ${cta('Umbwe Route', WA_ROUTE('Umbwe Route'), 'umbwe-route', 'Kilimanjaro Umbwe Route 7-Day Climb')}
 `
@@ -1334,7 +1334,7 @@ ${cta('Shira Route', WA_ROUTE('Shira Route'), 'shira-route', 'Kilimanjaro Shira 
   <h2>Not Sure Which Route Fits?</h2>
   <p>Tell Tanzania Safari Magic your dates and hiking background — we'll recommend the route that gives you the best experience and the best chance of standing on the roof of Africa.</p>
   <div class="guide-cta-actions">
-    <a class="btn btn-primary" href="/booking" style="min-height:48px"><i class="fas fa-calendar-check"></i> Get a Free Quote</a>
+    <a class="btn btn-primary" href="/booking?interest=${encodeURIComponent('Kilimanjaro Climb')}" style="min-height:48px"><i class="fas fa-calendar-check"></i> Get a Free Quote</a>
     <a class="btn btn-outline" href="${WA}?text=Hi%20Tanzania%20Safari%20Magic%2C%20please%20help%20me%20choose%20a%20Kilimanjaro%20route." target="_blank" rel="noopener" style="min-height:48px"><i class="fab fa-whatsapp"></i> WhatsApp Our Team</a>
     <a class="btn btn-outline" href="/safaris" style="min-height:48px;border-color:rgba(255,255,255,0.45);color:#fff">Add a Safari</a>
   </div>

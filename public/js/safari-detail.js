@@ -293,7 +293,12 @@ function renderInternalLinkBlock(safari) {
     }
 
     links.push({ href: '/blog/tanzania-safari-cost', label: t('safariDetail.costGuide') });
-    links.push({ href: '/booking', label: t('safariDetail.customQuote') });
+    links.push({
+        href: safari.package_slug
+            ? `/booking?package=${encodeURIComponent(safari.package_slug)}&name=${encodeURIComponent(safari.package_name || '')}`
+            : '/booking',
+        label: t('safariDetail.customQuote')
+    });
 
     const seen = new Set();
     el.innerHTML = links
