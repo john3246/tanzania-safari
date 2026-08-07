@@ -215,6 +215,132 @@
   </div>
 </section>
 
+<!-- Mountain Climbing + Kilimanjaro Routes -->
+<style>
+  .home-climb-section{padding:5rem 0;background:#0f1a0d;color:#f5f5f0}
+  .home-climb-head{max-width:46rem;margin:0 auto 2.75rem;text-align:center}
+  .home-climb-head .section-eyebrow{color:#e7b980}
+  .home-climb-head .section-title{color:#fff}
+  .home-climb-head .section-desc{color:rgba(255,255,255,0.82)}
+  .home-climb-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:1.25rem}
+  .home-climb-feature{position:relative;border-radius:18px;overflow:hidden;min-height:340px;display:flex;align-items:flex-end;text-decoration:none;color:#fff}
+  .home-climb-feature img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+  .home-climb-feature:hover img{transform:scale(1.06)}
+  .home-climb-feature .hcf-overlay{position:relative;z-index:2;width:100%;padding:1.75rem;background:linear-gradient(to top,rgba(0,0,0,0.78) 0%,rgba(0,0,0,0.15) 70%,transparent 100%)}
+  .home-climb-feature h3{font-family:var(--font-heading);font-size:1.5rem;margin:0 0 0.4rem}
+  .home-climb-feature p{margin:0 0 0.85rem;color:rgba(255,255,255,0.88);font-size:0.95rem;line-height:1.6}
+  .home-climb-side{display:grid;grid-template-rows:1fr 1fr;gap:1.25rem}
+  .home-climb-mini{position:relative;border-radius:18px;overflow:hidden;min-height:160px;display:flex;align-items:flex-end;text-decoration:none;color:#fff}
+  .home-climb-mini img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+  .home-climb-mini:hover img{transform:scale(1.06)}
+  .home-climb-mini .hcm-overlay{position:relative;z-index:2;width:100%;padding:1.1rem 1.25rem;background:linear-gradient(to top,rgba(0,0,0,0.8),transparent)}
+  .home-climb-mini h4{font-family:var(--font-heading);margin:0 0 0.15rem;font-size:1.1rem}
+  .home-climb-mini span{font-size:0.82rem;color:rgba(255,255,255,0.85)}
+  .home-climb-actions{display:flex;flex-wrap:wrap;gap:0.6rem;justify-content:center;margin-top:2.25rem}
+  .home-climb-section .btn-outline-light{background:transparent;color:#fff;border:2px solid rgba(255,255,255,0.65)}
+  .home-climb-section .btn-outline-light:hover{background:rgba(255,255,255,0.12);border-color:#fff}
+
+  .home-routes-section{padding:5rem 0;background:#f7f8f6}
+  .home-routes-head{max-width:44rem;margin:0 auto 2.5rem;text-align:center}
+  .home-routes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem}
+  .home-route-teaser{position:relative;border-radius:14px;overflow:hidden;min-height:170px;display:flex;align-items:flex-end;text-decoration:none;color:#fff}
+  .home-route-teaser img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+  .home-route-teaser:hover img{transform:scale(1.07)}
+  .home-route-teaser .hrt-overlay{position:relative;z-index:2;width:100%;padding:1rem 1.1rem;background:linear-gradient(to top,rgba(0,0,0,0.82),transparent)}
+  .home-route-teaser h4{font-family:var(--font-heading);margin:0 0 0.15rem;font-size:1.1rem}
+  .home-route-teaser span{font-size:0.8rem;color:rgba(255,255,255,0.85)}
+  .home-routes-actions{text-align:center;margin-top:2.25rem}
+  @media (max-width:860px){
+    .home-climb-grid{grid-template-columns:1fr}
+    .home-climb-side{grid-template-rows:none;grid-template-columns:1fr 1fr}
+    .home-routes-grid{grid-template-columns:repeat(2,1fr)}
+  }
+  @media (max-width:560px){
+    .home-climb-side{grid-template-columns:1fr}
+    .home-routes-grid{grid-template-columns:1fr}
+  }
+</style>
+<section class="home-climb-section">
+  <div class="container">
+    <div class="home-climb-head">
+      <span class="section-eyebrow"><i class="fas fa-mountain"></i> <span data-i18n="homeClimb.eyebrow">Mountain Climbing</span></span>
+      <h2 class="section-title" data-i18n-html="homeClimb.titleHtml">Climb the Roof of <span>Africa</span></h2>
+      <p class="section-desc" data-i18n="homeClimb.desc">Trek to Uhuru Peak on Mount Kilimanjaro (5,895 m) or acclimatize on Mount Meru — guided from Arusha with expert crews and proven summit success.</p>
+    </div>
+    <div class="home-climb-grid">
+      <a href="/kilimanjaro" class="home-climb-feature">
+        <img src="/images/kilimanjaro/kilimanjaro%20(2).jpeg" alt="Mount Kilimanjaro climb" loading="lazy">
+        <div class="hcf-overlay">
+          <h3 data-i18n="homeClimb.kiliTitle">Mount Kilimanjaro</h3>
+          <p data-i18n="homeClimb.kiliDesc">Africa's highest peak — Machame, Lemosho, Marangu and more, with private climbs and climb + safari combos.</p>
+          <span class="btn btn-white" style="min-height:44px" data-i18n="homeClimb.kiliCta">Explore Kilimanjaro climbs</span>
+        </div>
+      </a>
+      <div class="home-climb-side">
+        <a href="/kilimanjaro/routes" class="home-climb-mini">
+          <img src="/images/kilimanjaro/kilimanjaro%20(5).jpeg" alt="Kilimanjaro routes" loading="lazy">
+          <div class="hcm-overlay">
+            <h4 data-i18n="homeClimb.routesTitle">Compare routes</h4>
+            <span data-i18n="homeClimb.routesDesc">Difficulty, days &amp; success rate</span>
+          </div>
+        </a>
+        <a href="/safaris/6-day-mount-meru-tarangire-ngorongoro" class="home-climb-mini">
+          <img src="/images/kilimanjaro/kilimanjaro%20(6).jpeg" alt="Mount Meru trek" loading="lazy">
+          <div class="hcm-overlay">
+            <h4 data-i18n="homeClimb.meruTitle">Mount Meru trek</h4>
+            <span data-i18n="homeClimb.meruDesc">Perfect Kilimanjaro warm-up</span>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="home-climb-actions">
+      <a href="/kilimanjaro" class="btn btn-primary" style="min-height:48px" data-i18n="homeClimb.actionKili">Kilimanjaro climbs</a>
+      <a href="/kilimanjaro/routes" class="btn btn-outline btn-outline-light" style="min-height:48px" data-i18n="homeClimb.actionRoutes">All routes</a>
+      <a href="/safaris/9-day-mount-meru-northern-tanzania-safari" class="btn btn-outline btn-outline-light" style="min-height:48px" data-i18n="homeClimb.actionMeruSafari">Meru + safari</a>
+      <a href="/booking" class="btn btn-outline btn-outline-light" style="min-height:48px" data-i18n="homeClimb.actionBook">Get a quote</a>
+    </div>
+  </div>
+</section>
+
+<section class="home-routes-section">
+  <div class="container">
+    <div class="home-routes-head">
+      <span class="section-eyebrow"><i class="fas fa-route"></i> <span data-i18n="homeRoutes.eyebrow">Kilimanjaro Routes</span></span>
+      <h2 class="section-title" data-i18n-html="homeRoutes.titleHtml">Choose Your Path to <span>Uhuru Peak</span></h2>
+      <p class="section-desc" data-i18n="homeRoutes.desc">Every route to the summit has its own character — pick by scenery, days and success rate, or ask us which one fits you best.</p>
+    </div>
+    <div class="home-routes-grid">
+      <a href="/kilimanjaro/routes/machame-route" class="home-route-teaser">
+        <img src="/images/kilimanjaro/kilimanjaro%20(1).jpeg" alt="Machame Route" loading="lazy">
+        <div class="hrt-overlay"><h4 data-i18n="homeRoutes.machame">Machame</h4><span data-i18n="homeRoutes.machameMeta">6–7 days · Whiskey Route</span></div>
+      </a>
+      <a href="/kilimanjaro/routes/marangu-route" class="home-route-teaser">
+        <img src="/images/kilimanjaro/kilimanjaro%20(2).jpeg" alt="Marangu Route" loading="lazy">
+        <div class="hrt-overlay"><h4 data-i18n="homeRoutes.marangu">Marangu</h4><span data-i18n="homeRoutes.maranguMeta">5–6 days · Coca-Cola Route</span></div>
+      </a>
+      <a href="/kilimanjaro/routes/lemosho-route" class="home-route-teaser">
+        <img src="/images/kilimanjaro/kilimanjaro%20(3).jpeg" alt="Lemosho Route" loading="lazy">
+        <div class="hrt-overlay"><h4 data-i18n="homeRoutes.lemosho">Lemosho</h4><span data-i18n="homeRoutes.lemoshoMeta">7–8 days · Most scenic</span></div>
+      </a>
+      <a href="/kilimanjaro/routes/rongai-route" class="home-route-teaser">
+        <img src="/images/kilimanjaro/kilimanjaro%20(4).jpeg" alt="Rongai Route" loading="lazy">
+        <div class="hrt-overlay"><h4 data-i18n="homeRoutes.rongai">Rongai</h4><span data-i18n="homeRoutes.rongaiMeta">6–7 days · Quiet north</span></div>
+      </a>
+      <a href="/kilimanjaro/routes/northern-circuit-route" class="home-route-teaser">
+        <img src="/images/kilimanjaro/kilimanjaro%20(5).jpeg" alt="Northern Circuit Route" loading="lazy">
+        <div class="hrt-overlay"><h4 data-i18n="homeRoutes.northern">Northern Circuit</h4><span data-i18n="homeRoutes.northernMeta">8–9 days · Best success</span></div>
+      </a>
+      <a href="/kilimanjaro/routes/umbwe-route" class="home-route-teaser">
+        <img src="/images/kilimanjaro/kilimanjaro%20(6).jpeg" alt="Umbwe Route" loading="lazy">
+        <div class="hrt-overlay"><h4 data-i18n="homeRoutes.umbwe">Umbwe</h4><span data-i18n="homeRoutes.umbweMeta">5–6 days · Steep &amp; direct</span></div>
+      </a>
+    </div>
+    <div class="home-routes-actions">
+      <a href="/kilimanjaro/routes" class="btn btn-primary" style="min-height:48px" data-i18n="homeRoutes.exploreAll">Explore all routes</a>
+    </div>
+  </div>
+</section>
+
 <!-- Why Choose Us -->
 <section class="section why-section" style="background-image: url('/images/optimized/balloon.webp'); background-size: cover; background-position: center; position: relative; padding: 5rem 0;">
   <div style="position: absolute; inset: 0; background: rgba(0,0,0,0);"></div>

@@ -176,6 +176,7 @@ router.get('/sitemap.xml', async (req, res) => {
       { path: '/safaris', priority: '0.95', changefreq: 'daily' },
       { path: '/group-safaris', priority: '0.95', changefreq: 'daily' },
       { path: '/kilimanjaro', priority: '0.98', changefreq: 'weekly' },
+      { path: '/kilimanjaro/routes', priority: '0.95', changefreq: 'weekly' },
       { path: '/migrations', priority: '0.98', changefreq: 'weekly' },
       { path: '/zanzibar', priority: '0.95', changefreq: 'weekly' },
       { path: '/destinations', priority: '0.95', changefreq: 'weekly' },
@@ -195,6 +196,11 @@ router.get('/sitemap.xml', async (req, res) => {
     ];
     staticPages.forEach(p => {
       xml += urlEntry(p.path, { priority: p.priority, changefreq: p.changefreq });
+    });
+
+    // Kilimanjaro route detail pages
+    KILI_ROUTE_SLUGS.forEach(slug => {
+      xml += urlEntry(`/kilimanjaro/routes/${slug}`, { priority: '0.9', changefreq: 'weekly' });
     });
 
     packages.rows.forEach(pkg => {
@@ -365,6 +371,112 @@ router.get('/group-safaris/:slug', async (req, res) => {
   } catch (e) {
     console.error('group-safari SEO:', e.message);
     sendFile(res, 'group-safari-detail.html');
+  }
+});
+
+// ── Kilimanjaro routes hub + detail (more specific — declared before /kilimanjaro) ──
+const KILI_ROUTE_SEO = {
+  'machame-route': {
+    name: 'Machame Route',
+    title: 'Machame Route Kilimanjaro | 6–7 Day Camping Climb',
+    description:
+      'Climb the Machame Route on Kilimanjaro with Tanzania Safari Magic in Arusha. 6–7 day camping itinerary, day-by-day overview, difficulty, pros and cons, and free quotes.',
+    image: '/images/kilimanjaro/kilimanjaro%20(1).jpeg'
+  },
+  'marangu-route': {
+    name: 'Marangu Route',
+    title: 'Marangu Route Kilimanjaro | Hut Climb, 5–6 Days',
+    description:
+      'The Marangu "Coca-Cola" Route on Kilimanjaro — the only hut trail. 5–6 day itinerary, day-by-day overview, pros and cons, and free quotes from Tanzania Safari Magic in Arusha.',
+    image: '/images/kilimanjaro/kilimanjaro%20(2).jpeg'
+  },
+  'lemosho-route': {
+    name: 'Lemosho Route',
+    title: 'Lemosho Route Kilimanjaro | 7–8 Day Scenic Climb',
+    description:
+      'Climb the Lemosho Route on Kilimanjaro — a scenic 7–8 day western approach with high success rates. Day-by-day overview, pros and cons, and free quotes from Tanzania Safari Magic.',
+    image: '/images/kilimanjaro/kilimanjaro%20(3).jpeg'
+  },
+  'rongai-route': {
+    name: 'Rongai Route',
+    title: 'Rongai Route Kilimanjaro | Northern Approach, 6–7 Days',
+    description:
+      'The Rongai Route climbs Kilimanjaro from the quiet northern side near Kenya. 6–7 day itinerary, day-by-day overview, pros and cons, and free quotes from Tanzania Safari Magic.',
+    image: '/images/kilimanjaro/kilimanjaro%20(4).jpeg'
+  },
+  'northern-circuit-route': {
+    name: 'Northern Circuit Route',
+    title: 'Northern Circuit Kilimanjaro | 8–9 Day Route',
+    description:
+      'The Northern Circuit is Kilimanjaro’s longest, quietest route with the highest success rate. 8–9 day day-by-day overview, pros and cons, and free quotes from Tanzania Safari Magic.',
+    image: '/images/kilimanjaro/kilimanjaro%20(5).jpeg'
+  },
+  'umbwe-route': {
+    name: 'Umbwe Route',
+    title: 'Umbwe Route Kilimanjaro | Steep Direct Climb, 6–7 Days',
+    description:
+      'The Umbwe Route is Kilimanjaro’s steepest, most direct and challenging trail. 6–7 day day-by-day overview, who it suits, pros and cons, and free quotes from Tanzania Safari Magic.',
+    image: '/images/kilimanjaro/kilimanjaro%20(6).jpeg'
+  }
+};
+const KILI_ROUTE_SLUGS = Object.keys(KILI_ROUTE_SEO);
+
+router.get('/kilimanjaro/routes', (req, res) => {
+  try {
+    seo.sendSeoHtml(res, 'kilimanjaro-routes.html', {
+      pageKey: 'kilimanjaroRoutes',
+      canonical: seo.SITE.url + '/kilimanjaro/routes',
+      image: '/images/kilimanjaro/kilimanjaro%20(1).jpeg',
+      keywords: 'kilimanjaro routes, machame route, lemosho route, marangu route, rongai route, northern circuit, umbwe route, best kilimanjaro route',
+      h1: 'Kilimanjaro Climbing Routes',
+      hreflangPath: '/kilimanjaro/routes',
+      type: 'website',
+      jsonLd: [
+        seo.breadcrumbSchema([
+          { name: 'Home', url: '/' },
+          { name: 'Kilimanjaro', url: '/kilimanjaro' },
+          { name: 'Routes', url: '/kilimanjaro/routes' }
+        ]),
+        seo.organizationSchema()
+      ]
+    });
+  } catch {
+    sendFile(res, 'kilimanjaro-routes.html');
+  }
+});
+
+router.get('/kilimanjaro/routes/:slug', (req, res) => {
+  const slug = String(req.params.slug || '').toLowerCase();
+  const meta = KILI_ROUTE_SEO[slug];
+  try {
+    const name = meta ? meta.name : 'Kilimanjaro Route';
+    const title = (meta ? meta.title : `${name} | Kilimanjaro Climbing Route`).slice(0, 70);
+    const description = meta
+      ? meta.description
+      : 'Kilimanjaro climbing route details — difficulty, days, distance and summit success rate. Plan your private climb from Arusha.';
+
+    seo.sendSeoHtml(res, 'kilimanjaro-route-detail.html', {
+      title,
+      description,
+      canonical: `${seo.SITE.url}/kilimanjaro/routes/${encodeURIComponent(slug)}`,
+      image: meta ? meta.image : '/images/optimized/mount-kilimanjaro-national-park.webp',
+      keywords: `${name.toLowerCase()}, kilimanjaro route, climb kilimanjaro, ${slug.replace(/-/g, ' ')}, kilimanjaro from arusha`,
+      type: 'article',
+      h1: name,
+      hreflangPath: `/kilimanjaro/routes/${slug}`,
+      robots: meta ? 'index, follow' : 'noindex, follow',
+      jsonLd: [
+        seo.breadcrumbSchema([
+          { name: 'Home', url: '/' },
+          { name: 'Kilimanjaro', url: '/kilimanjaro' },
+          { name: 'Routes', url: '/kilimanjaro/routes' },
+          { name: name, url: `/kilimanjaro/routes/${slug}` }
+        ])
+      ]
+    });
+  } catch (e) {
+    console.error('kilimanjaro route SEO:', e.message);
+    sendFile(res, 'kilimanjaro-route-detail.html');
   }
 });
 

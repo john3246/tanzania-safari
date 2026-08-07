@@ -214,6 +214,45 @@ const PAGE_SEO = {
       keywords: 'kilimanjaro beklimmen, mount kilimanjaro, kilimanjaro trektocht, machame route, uhuru peak'
     }
   },
+  kilimanjaroRoutes: {
+    en: {
+      title: 'Kilimanjaro Routes | Machame, Lemosho, Marangu & More',
+      description:
+        'Compare all Mount Kilimanjaro climbing routes — Machame, Lemosho, Marangu, Rongai, Northern Circuit and Umbwe — by difficulty, days and summit success rate.',
+      keywords:
+        'kilimanjaro routes, machame route, lemosho route, marangu route, rongai route, northern circuit, umbwe route, best kilimanjaro route, kilimanjaro route comparison'
+    },
+    it: {
+      title: 'Rotte del Kilimanjaro | Machame, Lemosho, Marangu e altre',
+      description:
+        'Confronta tutte le rotte per la salita al Kilimanjaro — Machame, Lemosho, Marangu, Rongai, Northern Circuit e Umbwe — per difficoltà, giorni e tasso di successo.',
+      keywords: 'rotte kilimanjaro, rotta machame, rotta lemosho, rotta marangu, migliore rotta kilimanjaro'
+    },
+    fr: {
+      title: 'Voies du Kilimandjaro | Machame, Lemosho, Marangu et plus',
+      description:
+        'Comparez toutes les voies d’ascension du Kilimandjaro — Machame, Lemosho, Marangu, Rongai, Northern Circuit et Umbwe — par difficulté, jours et taux de réussite.',
+      keywords: 'voies kilimandjaro, route machame, route lemosho, route marangu, meilleure voie kilimandjaro'
+    },
+    es: {
+      title: 'Rutas del Kilimanjaro | Machame, Lemosho, Marangu y más',
+      description:
+        'Compara todas las rutas de ascenso al Kilimanjaro — Machame, Lemosho, Marangu, Rongai, Northern Circuit y Umbwe — por dificultad, días y tasa de éxito.',
+      keywords: 'rutas kilimanjaro, ruta machame, ruta lemosho, ruta marangu, mejor ruta kilimanjaro'
+    },
+    de: {
+      title: 'Kilimanjaro-Routen | Machame, Lemosho, Marangu & mehr',
+      description:
+        'Vergleichen Sie alle Kilimanjaro-Besteigungsrouten — Machame, Lemosho, Marangu, Rongai, Northern Circuit und Umbwe — nach Schwierigkeit, Tagen und Erfolgsquote.',
+      keywords: 'kilimanjaro routen, machame route, lemosho route, marangu route, beste kilimanjaro route'
+    },
+    nl: {
+      title: 'Kilimanjaro-routes | Machame, Lemosho, Marangu & meer',
+      description:
+        'Vergelijk alle Kilimanjaro-beklimmingsroutes — Machame, Lemosho, Marangu, Rongai, Northern Circuit en Umbwe — op moeilijkheid, dagen en slagingskans.',
+      keywords: 'kilimanjaro routes, machame route, lemosho route, marangu route, beste kilimanjaro route'
+    }
+  },
   migrations: {
     en: {
       title: 'Great Migration Safaris | Serengeti & Ndutu Wildebeest Tours',
