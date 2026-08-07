@@ -226,7 +226,7 @@
   }
 
   function renderRelated(all, current) {
-    var related = all.filter(function (r) { return r.slug !== current.slug; }).slice(0, 4);
+    var related = all.filter(function (r) { return r.slug !== current.slug; });
     var section = document.getElementById('relatedSection');
     var grid = document.getElementById('relatedGrid');
     if (!section || !grid || !related.length) return;
@@ -236,7 +236,7 @@
         return (
           '<a href="/kilimanjaro/routes/' +
           encodeURIComponent(r.slug) +
-          '" class="route-related-card">' +
+          '" class="route-related-row">' +
           '<img src="' +
           escapeHtml(r.image) +
           '" alt="' +
@@ -244,11 +244,10 @@
           '" loading="lazy" onerror="this.src=\'/images/optimized/mount-kilimanjaro-national-park.webp\'">' +
           '<div class="b"><h4>' +
           escapeHtml(r.name) +
-          '</h4><span style="font-size:0.8rem;color:var(--primary);font-weight:700">' +
+          '</h4><div class="meta">' +
           escapeHtml(r.days || '') +
-          ' · ' +
-          tf('kiliRoutes.viewRoute', 'View route') +
-          ' <i class="fas fa-arrow-right"></i></span></div></a>'
+          (r.difficulty ? ' · ' + escapeHtml(r.difficulty) : '') +
+          '</div></div></a>'
         );
       })
       .join('');
@@ -306,6 +305,7 @@
 
     document.getElementById('sidebarTitle').textContent = route.name;
     document.getElementById('sidebarDays').textContent = (route.days || '') + (route.accommodation ? ' · ' + route.accommodation : '');
+    // Keep sidebar facts short so related routes fit beside the content
     document.getElementById('sidebarMeta').innerHTML =
       metaRow('fa-calendar-alt', tf('kiliRoutes.statDays', 'Duration'), route.days) +
       metaRow('fa-mountain', tf('kiliRoutes.statDifficulty', 'Difficulty'), route.difficulty) +
@@ -313,11 +313,8 @@
       metaRow('fa-eye', tf('kiliRoutes.statScenery', 'Scenery'), route.scenery) +
       metaRow('fa-campground', tf('kiliRoutes.statAccommodation', 'Sleeping'), route.accommodation) +
       metaRow('fa-route', tf('kiliRoutes.statDistance', 'Distance'), route.distance) +
-      metaRow('fa-arrow-up', tf('kiliRoutes.statAltitude', 'Max altitude'), route.altitudeMax) +
       metaRow('fa-users', tf('kiliRoutes.statCrowd', 'Crowds'), route.crowdLevel) +
-      metaRow('fa-lungs', tf('kiliRoutes.statAcclimatization', 'Acclimatization'), route.acclimatization) +
-      metaRow('fa-moon', tf('kiliRoutes.statSummitNight', 'Summit night'), route.summitNight) +
-      metaRow('fa-user-friends', tf('kiliRoutes.statBestFor', 'Best for'), route.bestFor);
+      metaRow('fa-lungs', tf('kiliRoutes.statAcclimatization', 'Acclimatization'), route.acclimatization);
 
     var book = bookingUrl(route);
     var wa = waUrl(route);

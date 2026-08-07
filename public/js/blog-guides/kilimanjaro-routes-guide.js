@@ -17,7 +17,7 @@
     meta_title: 'Kilimanjaro Routes Compared 2026 | Machame, Lemosho, Marangu, Rongai',
     meta_description: 'Compare Kilimanjaro routes: Machame, Lemosho, Marangu, Rongai, Northern Circuit — days, scenery, crowds, acclimatisation. Choose with Tanzania Safari Magic in Arusha.',
     excerpt: 'An original Arusha-based comparison of Kilimanjaro’s main routes — who each profile suits, how many days to plan, and how Tanzania Safari Magic helps you decide.',
-    featured_image_url: '/images/optimized/mount-kilimanjaro-national-park.webp',
+    featured_image_url: '/images/kilimanjaro/kilimanjaro%20(1).jpeg',
     published_at: '2026-08-04T09:00:00.000Z',
     updated_at: '2026-08-05T17:00:00.000Z',
     category_name: 'Kilimanjaro Guides',
@@ -32,7 +32,7 @@
 <p><strong>Tanzania Safari Magic</strong> designs the itinerary around your fitness and calendar. Start on <a href="/kilimanjaro">Kilimanjaro</a>, read park context on <a href="/destinations/mount-kilimanjaro-national-park">Mount Kilimanjaro National Park</a>, then request a route match via <a href="/booking">booking</a>.</p>
 
 <figure class="guide-figure">
-  <img src="/images/optimized/mount-kilimanjaro-national-park.webp" alt="Kilimanjaro routes comparison Mount Kilimanjaro National Park" width="1200" height="750" loading="eager">
+  <img src="/images/kilimanjaro/kilimanjaro%20(1).jpeg" alt="Kilimanjaro routes comparison Mount Kilimanjaro National Park" width="1200" height="750" loading="eager">
   <figcaption>Every standard route aims for Uhuru Peak — the path you take changes days, crowds, and views.</figcaption>
 </figure>
 
@@ -79,7 +79,7 @@
 </ul>
 
 <figure class="guide-figure">
-  <img src="/images/optimized/balloon.webp" alt="Kilimanjaro mountain scenery route planning Tanzania" width="1200" height="750" loading="lazy">
+  <img src="/images/kilimanjaro/kilimanjaro%20(2).jpeg" alt="Kilimanjaro mountain scenery route planning Tanzania" width="1200" height="750" loading="lazy">
   <figcaption>Scenic camping routes trade hut comfort for bigger landscape drama.</figcaption>
 </figure>
 
@@ -114,7 +114,7 @@
 </ul>
 
 <figure class="guide-figure">
-  <img src="/images/optimized/mbugani.webp" alt="Northern Tanzania adventure planning Kilimanjaro routes and safari" width="1200" height="750" loading="lazy">
+  <img src="/images/optimized/6-day-machame-route-kilimanjaro.webp" alt="Northern Tanzania adventure planning Kilimanjaro routes and safari" width="1200" height="750" loading="lazy">
   <figcaption>After any route, Arusha is your hub for safari add-ons across the northern circuit.</figcaption>
 </figure>
 
