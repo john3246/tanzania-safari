@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<!-- SSR meta placeholders — overwritten by seoRender -->
+<title>Visit Tanzania 2026 | Safaris, Kilimanjaro &amp; Beach Holidays</title>
+<link rel="icon" type="image/png" href="/images/logo.png">
+<meta name="description" content="Plan your trip to Tanzania: safaris, Kilimanjaro climbs, and Zanzibar beaches from Arusha. Best time to visit, costs, visas, and top experiences.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://tanzaniasafarimagic.com/visit-tanzania">
+<link rel="stylesheet" href="/css/seo.css">
+<link rel="stylesheet" href="/css/corporate-ui.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="/css/variables.css">
+<link rel="stylesheet" href="/css/main.css?v=6">
+</head>
+<body>
+<!-- Header -->
+<div id="header"></div>
+
+<style>
+/* ── Visit Tanzania Page ── */
+.vtz-hero{position:relative;min-height:66vh;display:flex;align-items:flex-end;overflow:hidden}
+.vtz-hero-media{position:absolute;inset:0}
+.vtz-hero-media img{width:100%;height:100%;object-fit:cover}
+.vtz-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.25) 0%,rgba(0,0,0,.35) 40%,rgba(0,0,0,.78) 100%);z-index:1}
+.vtz-hero-inner{position:relative;z-index:2;width:100%;padding:3rem 0 3.5rem}
+.vtz-breadcrumb{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;font-size:.85rem;color:rgba(255,255,255,.85);margin-bottom:1rem}
+.vtz-breadcrumb a{color:rgba(255,255,255,.85);text-decoration:none}
+.vtz-breadcrumb a:hover{color:#fff;text-decoration:underline}
+.vtz-eyebrow{display:inline-block;background:rgba(255,255,255,.16);backdrop-filter:blur(4px);color:#fff;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.4rem .85rem;border-radius:30px;margin-bottom:1rem}
+.vtz-h1{font-family:var(--font-heading,'Poppins',sans-serif);font-size:clamp(2rem,4.6vw,3.4rem);font-weight:800;color:#fff;line-height:1.08;margin:0 0 1rem;max-width:22ch}
+.vtz-lead{font-size:clamp(1rem,1.6vw,1.2rem);color:rgba(255,255,255,.92);max-width:60ch;margin:0 0 1.75rem}
+.vtz-hero-cta{display:flex;flex-wrap:wrap;gap:.75rem}
+.vtz-hero-stats{display:flex;flex-wrap:wrap;gap:1.75rem;margin-top:2rem;color:#fff}
+.vtz-hero-stat b{display:block;font-size:1.5rem;font-weight:800;font-family:var(--font-heading,'Poppins',sans-serif)}
+.vtz-hero-stat span{font-size:.8rem;color:rgba(255,255,255,.8)}
+
+.vtz-section{padding:4.5rem 0}
+.vtz-section.alt{background:var(--bg-light,#f7f8f4)}
+.vtz-head{max-width:760px;margin:0 auto 3rem;text-align:center}
+.vtz-kicker{display:inline-block;color:var(--primary,#2d5a27);font-weight:700;font-size:.8rem;letter-spacing:.09em;text-transform:uppercase;margin-bottom:.6rem}
+.vtz-h2{font-family:var(--font-heading,'Poppins',sans-serif);font-size:clamp(1.7rem,3vw,2.4rem);font-weight:800;color:#1a1a1a;margin:0 0 .85rem;line-height:1.15}
+.vtz-sub{font-size:1.05rem;color:#5a5f55;line-height:1.7;margin:0}
+.vtz-intro-prose{max-width:820px;margin:0 auto;font-size:1.05rem;line-height:1.85;color:#4a4f46}
+.vtz-intro-prose a{color:var(--primary,#2d5a27);font-weight:600;text-decoration:none}
+.vtz-intro-prose a:hover{text-decoration:underline}
+
+.vtz-grid{display:grid;gap:1.5rem}
+.vtz-grid.cols-2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.vtz-grid.cols-3{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.vtz-grid.cols-4{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+
+.vtz-why{background:#fff;border:1px solid var(--border-light,#e8e8e2);border-radius:14px;padding:1.9rem 1.6rem;box-shadow:0 4px 18px rgba(0,0,0,.04)}
+.vtz-why i{font-size:1.6rem;color:var(--primary,#2d5a27);margin-bottom:1rem;display:block}
+.vtz-why h3{margin:0 0 .6rem;font-size:1.2rem;font-family:var(--font-heading,'Poppins',sans-serif);color:#1a1a1a}
+.vtz-why p{margin:0;color:#63685e;line-height:1.65;font-size:.95rem}
+
+.vtz-card{display:flex;flex-direction:column;background:#fff;border-radius:14px;overflow:hidden;text-decoration:none;color:inherit;border:1px solid var(--border-light,#e8e8e2);box-shadow:0 4px 18px rgba(0,0,0,.05);transition:transform .3s ease,box-shadow .3s ease}
+.vtz-card:hover{transform:translateY(-6px);box-shadow:0 16px 36px rgba(0,0,0,.12)}
+.vtz-card-img{position:relative;height:200px;overflow:hidden}
+.vtz-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.vtz-card:hover .vtz-card-img img{transform:scale(1.07)}
+.vtz-card-body{padding:1.5rem;display:flex;flex-direction:column;flex-grow:1}
+.vtz-card-body h3{margin:0 0 .5rem;font-size:1.2rem;font-family:var(--font-heading,'Poppins',sans-serif);color:#1a1a1a}
+.vtz-card-body p{margin:0 0 1.1rem;color:#63685e;line-height:1.6;font-size:.93rem;flex-grow:1}
+.vtz-card-link{display:inline-flex;align-items:center;gap:.45rem;color:var(--primary,#2d5a27);font-weight:700;font-size:.9rem}
+.vtz-card:hover .vtz-card-link i{transform:translateX(4px)}
+.vtz-card-link i{transition:transform .3s ease}
+
+.vtz-season{background:#fff;border:1px solid var(--border-light,#e8e8e2);border-left:4px solid var(--primary,#2d5a27);border-radius:12px;padding:1.6rem}
+.vtz-season h3{margin:0 0 .5rem;font-size:1.1rem;color:#1a1a1a;font-family:var(--font-heading,'Poppins',sans-serif)}
+.vtz-season .vtz-months{display:block;color:var(--primary,#2d5a27);font-weight:700;font-size:.85rem;margin-bottom:.5rem}
+.vtz-season p{margin:0;color:#63685e;line-height:1.6;font-size:.93rem}
+
+.vtz-plan{background:#fff;border:1px solid var(--border-light,#e8e8e2);border-radius:14px;padding:1.8rem 1.6rem;text-decoration:none;color:inherit;display:flex;flex-direction:column;transition:transform .3s ease,box-shadow .3s ease}
+.vtz-plan:hover{transform:translateY(-5px);box-shadow:0 14px 30px rgba(0,0,0,.1)}
+.vtz-plan i{font-size:1.5rem;color:var(--primary,#2d5a27);margin-bottom:.9rem}
+.vtz-plan h3{margin:0 0 .5rem;font-size:1.15rem;color:#1a1a1a;font-family:var(--font-heading,'Poppins',sans-serif)}
+.vtz-plan p{margin:0 0 1rem;color:#63685e;line-height:1.6;font-size:.93rem;flex-grow:1}
+.vtz-plan span.vtz-card-link{color:var(--primary,#2d5a27);font-weight:700;font-size:.9rem}
+
+.vtz-meru{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;align-items:stretch}
+.vtz-meru-lead{max-width:760px;margin:0 auto 2.5rem;text-align:center;color:#4a4f46;line-height:1.8;font-size:1.02rem}
+.vtz-meru-lead a{color:var(--primary,#2d5a27);font-weight:600;text-decoration:none}
+.vtz-meru-lead a:hover{text-decoration:underline}
+
+.vtz-faq{max-width:860px;margin:0 auto}
+.vtz-faq-item{background:#fff;border:1px solid var(--border-light,#e8e8e2);border-radius:12px;padding:1.4rem 1.6rem;margin-bottom:1rem}
+.vtz-faq-item h3{margin:0 0 .6rem;font-size:1.08rem;color:#1a1a1a;font-family:var(--font-heading,'Poppins',sans-serif);display:flex;gap:.6rem;align-items:flex-start}
+.vtz-faq-item h3 i{color:var(--primary,#2d5a27);font-size:.95rem;margin-top:.2rem}
+.vtz-faq-item p{margin:0;color:#5a5f55;line-height:1.7;font-size:.96rem}
+.vtz-faq-item p a{color:var(--primary,#2d5a27);font-weight:600;text-decoration:none}
+.vtz-faq-item p a:hover{text-decoration:underline}
+
+.vtz-cta{position:relative;padding:5rem 0;text-align:center;color:#fff;overflow:hidden}
+.vtz-cta-media{position:absolute;inset:0}
+.vtz-cta-media img{width:100%;height:100%;object-fit:cover}
+.vtz-cta::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,32,16,.72),rgba(20,32,16,.82));z-index:1}
+.vtz-cta-inner{position:relative;z-index:2}
+.vtz-cta h2{color:#fff;font-size:clamp(1.8rem,3.2vw,2.6rem);font-weight:800;font-family:var(--font-heading,'Poppins',sans-serif);margin:0 0 1rem}
+.vtz-cta p{color:rgba(255,255,255,.9);font-size:1.1rem;max-width:60ch;margin:0 auto 2rem;line-height:1.65}
+.vtz-cta-btns{display:flex;flex-wrap:wrap;gap:.9rem;justify-content:center}
+.btn-whatsapp{background:#25D366;color:#fff;border:none}
+.btn-whatsapp:hover{background:#1eb257;color:#fff}
+</style>
+
+<!-- Hero -->
+<section class="vtz-hero">
+  <div class="vtz-hero-media">
+    <img src="/images/optimized/serengeti-national-park.webp" alt="Visit Tanzania — Serengeti plains at sunrise" fetchpriority="high" width="1600" height="900">
+  </div>
+  <div class="vtz-hero-inner">
+    <div class="container">
+      <nav class="vtz-breadcrumb" aria-label="Breadcrumb">
+        <a href="/" data-i18n="nav.home">Home</a><span>/</span>
+        <span data-i18n="visitTz.crumb">Visit Tanzania</span>
+      </nav>
+      <span class="vtz-eyebrow" data-i18n="visitTz.eyebrow">Tanzania Travel Guide 2026</span>
+      <h1 class="vtz-h1" data-i18n="visitTz.title">Visit Tanzania — Safaris, Kilimanjaro &amp; Zanzibar from Arusha</h1>
+      <p class="vtz-lead" data-i18n="visitTz.subtitle">Plan the trip of a lifetime with local Arusha experts: Big Five safaris in the Serengeti and Ngorongoro, the Great Migration, Mount Kilimanjaro climbs, and white-sand Zanzibar beaches — all in one unforgettable Tanzania holiday.</p>
+      <div class="vtz-hero-cta">
+        <a href="/booking" class="btn btn-primary btn-lg"><i class="fas fa-paper-plane"></i> <span data-i18n="visitTz.heroCtaQuote">Get a free quote</span></a>
+        <a href="/safaris" class="btn btn-outline btn-outline-light btn-lg"><i class="fas fa-binoculars"></i> <span data-i18n="visitTz.heroCtaSafaris">Browse safari packages</span></a>
+      </div>
+      <div class="vtz-hero-stats">
+        <div class="vtz-hero-stat"><b>22+</b><span data-i18n="visitTz.statParks">National parks &amp; reserves</span></div>
+        <div class="vtz-hero-stat"><b>5,895 m</b><span data-i18n="visitTz.statKili">Mount Kilimanjaro</span></div>
+        <div class="vtz-hero-stat"><b>1.5M</b><span data-i18n="visitTz.statWildebeest">Migrating wildebeest</span></div>
+        <div class="vtz-hero-stat"><b>#1</b><span data-i18n="visitTz.statBeaches">Zanzibar beaches</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Intro prose with dense internal links -->
+<section class="vtz-section">
+  <div class="container">
+    <p class="vtz-intro-prose" data-i18n-html="visitTz.introHtml">Ready to <strong>visit Tanzania</strong>? Whether you dream of a classic <a href="/safaris">Tanzania safari</a>, witnessing the <a href="/migrations">Great Wildebeest Migration</a>, climbing <a href="/kilimanjaro">Mount Kilimanjaro</a>, or relaxing on <a href="/zanzibar">Zanzibar's beaches</a>, this guide covers everything you need to plan your Tanzania holiday. Explore the <a href="/destinations">top destinations</a>, learn the <a href="/blog/best-time-to-visit-tanzania">best time to visit Tanzania</a>, budget with our <a href="/blog/tanzania-safari-cost">safari cost guide</a>, sort your <a href="/blog/tanzania-visa-guide">Tanzania visa</a>, and read the essential <a href="/blog/tanzania-safari">Tanzania safari guide</a>. Prefer to travel with others? Join an affordable <a href="/group-safaris">open group safari</a> from Arusha.</p>
+  </div>
+</section>
+
+<!-- Why visit Tanzania -->
+<section class="vtz-section alt" id="why-visit">
+  <div class="container">
+    <div class="vtz-head">
+      <span class="vtz-kicker" data-i18n="visitTz.whyKicker">Why Tanzania</span>
+      <h2 class="vtz-h2" data-i18n="visitTz.whyTitle">Why visit Tanzania?</h2>
+      <p class="vtz-sub" data-i18n="visitTz.whyDesc">Tanzania packs Africa's greatest wildlife, its highest mountain, and its most beautiful beaches into a single country — with warm, welcoming people and a rich Swahili culture.</p>
+    </div>
+    <div class="vtz-grid cols-4">
+      <div class="vtz-why">
+        <i class="fas fa-paw"></i>
+        <h3 data-i18n="visitTz.whyWildlifeTitle">World-class wildlife</h3>
+        <p data-i18n="visitTz.whyWildlifeDesc">See the Big Five, big cats, and 1.5 million wildebeest across the Serengeti, Ngorongoro Crater, and Tarangire on unforgettable game drives.</p>
+      </div>
+      <div class="vtz-why">
+        <i class="fas fa-mountain"></i>
+        <h3 data-i18n="visitTz.whyKiliTitle">Mount Kilimanjaro</h3>
+        <p data-i18n="visitTz.whyKiliDesc">Stand on the Roof of Africa — Kilimanjaro (5,895 m) is the world's tallest free-standing mountain and a bucket-list trek anyone reasonably fit can attempt.</p>
+      </div>
+      <div class="vtz-why">
+        <i class="fas fa-umbrella-beach"></i>
+        <h3 data-i18n="visitTz.whyBeachTitle">Zanzibar beaches</h3>
+        <p data-i18n="visitTz.whyBeachDesc">Unwind on the Spice Island's powder-white sand and turquoise Indian Ocean — the perfect bush-to-beach finale after your safari.</p>
+      </div>
+      <div class="vtz-why">
+        <i class="fas fa-hands-holding-circle"></i>
+        <h3 data-i18n="visitTz.whyCultureTitle">People &amp; culture</h3>
+        <p data-i18n="visitTz.whyCultureDesc">Meet the Maasai, taste Swahili cuisine, and explore historic Stone Town. Tanzania is safe, friendly, and easy to travel with local guides.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Top experiences -->
+<section class="vtz-section" id="experiences">
+  <div class="container">
+    <div class="vtz-head">
+      <span class="vtz-kicker" data-i18n="visitTz.expKicker">Top Experiences</span>
+      <h2 class="vtz-h2" data-i18n="visitTz.expTitle">The best things to do in Tanzania</h2>
+      <p class="vtz-sub" data-i18n="visitTz.expDesc">From once-in-a-lifetime safaris to summit treks and island escapes — here's how to spend your time in Tanzania.</p>
+    </div>
+    <div class="vtz-grid cols-3">
+      <a class="vtz-card" href="/safaris">
+        <div class="vtz-card-img"><img src="/images/optimized/7-day-tanzania-wildlife-safari.webp" alt="Tanzania wildlife safari" loading="lazy"></div>
+        <div class="vtz-card-body">
+          <h3 data-i18n="visitTz.expSafarisTitle">Wildlife safaris</h3>
+          <p data-i18n="visitTz.expSafarisDesc">Private Big Five safaris across the Serengeti, Ngorongoro, Tarangire and Lake Manyara with expert guides.</p>
+          <span class="vtz-card-link"><span data-i18n="visitTz.explore">Explore</span> <i class="fas fa-arrow-right"></i></span>
+        </div>
+      </a>
+      <a class="vtz-card" href="/migrations">
+        <div class="vtz-card-img"><img src="/images/optimized/8-day-northern-serengeti-mara-river-crossing.webp" alt="Great Wildebeest Migration river crossing" loading="lazy"></div>
+        <div class="vtz-card-body">
+          <h3 data-i18n="visitTz.expMigrationTitle">Great Migration</h3>
+          <p data-i18n="visitTz.expMigrationDesc">Time your trip for dramatic Mara River crossings or the Ndutu calving season in the Serengeti ecosystem.</p>
+          <span class="vtz-card-link"><span data-i18n="visitTz.explore">Explore</span> <i class="fas fa-arrow-right"></i></span>
+        </div>
+      </a>
+      <a class="vtz-card" href="/kilimanjaro">
+        <div class="vtz-card-img"><img src="/images/kilimanjaro/kilimanjaro%20(1).jpeg" alt="Climb Mount Kilimanjaro" loading="lazy"></div>
+        <div class="vtz-card-body">
+          <h3 data-i18n="visitTz.expKiliTitle">Climb Kilimanjaro</h3>
+          <p data-i18n="visitTz.expKiliDesc">Trek to Uhuru Peak on guided Machame, Lemosho or Marangu routes — with climb + safari combos from Arusha.</p>
+          <span class="vtz-card-link"><span data-i18n="visitTz.explore">Explore</span> <i class="fas fa-arrow-right"></i></span>
+        </div>
+      </a>
+      <a class="vtz-card" href="/kilimanjaro/routes">
+        <div class="vtz-card-img"><img src="/images/kilimanjaro/kilimanjaro%20(3).jpeg" alt="Compare Kilimanjaro climbing routes" loading="lazy"></div>
+        <div class="vtz-card-body">
+          <h3 data-i18n="visitTz.expRoutesTitle">Compare Kilimanjaro routes</h3>
+          <p data-i18n="visitTz.expRoutesDesc">Machame, Lemosho, Marangu, Rongai, Northern Circuit and Umbwe compared by difficulty, days and success rate.</p>
+          <span class="vtz-card-link"><span data-i18n="visitTz.explore">Explore</span> <i class="fas fa-arrow-right"></i></span>
+        </div>
+      </a>
+      <a class="vtz-card" href="/zanzibar">
+        <div class="vtz-card-img"><img src="/images/optimized/zanzibar.webp" alt="Zanzibar beach holiday" loading="lazy"></div>
+        <div class="vtz-card-body">
+          <h3 data-i18n="visitTz.expZanzibarTitle">Zanzibar &amp; beaches</h3>
+          <p data-i18n="visitTz.expZanzibarDesc">Add a bush-to-beach extension: Stone Town, spice tours, snorkeling and pristine Indian Ocean sand.</p>
+          <span class="vtz-card-link"><span data-i18n="visitTz.explore">Explore</span> <i class="fas fa-arrow-right"></i></span>
+        </div>
+      </a>
+      <a class="vtz-card" href="/group-safaris">
+        <div class="vtz-card-img"><img src="/images/optimized/mbugani.webp" alt="Group safari in Tanzania" loading="lazy"></div>
+        <div class="vtz-card-body">
+          <h3 data-i18n="visitTz.expGroupTitle">Group safaris</h3>
+          <p data-i18n="visitTz.expGroupDesc">Join a fixed-date shared safari — perfect for solo travelers and couples who want to keep costs down.</p>
+          <span class="vtz-card-link"><span data-i18n="visitTz.explore">Explore</span> <i class="fas fa-arrow-right"></i></span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Best time to visit -->
+<section class="vtz-section alt" id="best-time">
+  <div class="container">
+    <div class="vtz-head">
+      <span class="vtz-kicker" data-i18n="visitTz.bestKicker">When to Go</span>
+      <h2 class="vtz-h2" data-i18n="visitTz.bestTitle">Best time to visit Tanzania</h2>
+      <p class="vtz-sub" data-i18n-html="visitTz.bestDescHtml">Tanzania is a year-round destination, but the ideal months depend on what you want to see. Read our full <a href="/blog/best-time-to-visit-tanzania">best time to visit Tanzania</a> guide, or use this quick overview.</p>
+    </div>
+    <div class="vtz-grid cols-3">
+      <div class="vtz-season">
+        <h3 data-i18n="visitTz.bestDryTitle">Dry season — peak wildlife</h3>
+        <span class="vtz-months" data-i18n="visitTz.bestDryMonths">June – October</span>
+        <p data-i18n="visitTz.bestDryDesc">The best time for general game viewing and Mara River crossings. Thinner vegetation and animals gathering at water make wildlife easy to spot.</p>
+      </div>
+      <div class="vtz-season">
+        <h3 data-i18n="visitTz.bestGreenTitle">Green season — calving &amp; value</h3>
+        <span class="vtz-months" data-i18n="visitTz.bestGreenMonths">November – March</span>
+        <p data-i18n="visitTz.bestGreenDesc">Lush landscapes, newborn wildlife, great birding and lower prices. January–February is the Ndutu calving season in the southern Serengeti.</p>
+      </div>
+      <div class="vtz-season">
+        <h3 data-i18n="visitTz.bestKiliTitle">Best for Kilimanjaro</h3>
+        <span class="vtz-months" data-i18n="visitTz.bestKiliMonths">Jan – Mar &amp; Jun – Oct</span>
+        <p data-i18n="visitTz.bestKiliDesc">The clearest, driest windows for climbing Kilimanjaro. Avoid the long rains of April–May for the best summit conditions.</p>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:2.5rem">
+      <a href="/blog/best-time-to-visit-tanzania" class="btn btn-primary"><i class="fas fa-calendar-alt"></i> <span data-i18n="visitTz.bestCta">Read the best-time guide</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- Where to go -->
+<section class="vtz-section" id="where-to-go">
+  <div class="container">
+    <div class="vtz-head">
+      <span class="vtz-kicker" data-i18n="visitTz.whereKicker">Where to Go</span>
+      <h2 class="vtz-h2" data-i18n="visitTz.whereTitle">Where to go in Tanzania</h2>
+      <p class="vtz-sub" data-i18n="visitTz.whereDesc">Tanzania's northern safari circuit and Zanzibar coast combine perfectly. Explore each destination in depth.</p>
+    </div>
+    <div class="vtz-grid cols-3">
+      <a class="vtz-card" href="/destinations/serengeti-national-park">
+        <div class="vtz-card-img"><img src="/images/optimized/serengeti-national-park.webp" alt="Serengeti National Park" loading="lazy"></div>
+        <div class="vtz-card-body">
+          <h3 data-i18n="visitTz.whereSerengetiTitle">Serengeti National Park</h3>
+          <p data-i18n="visitTz.whereSerengetiDesc">Endless plains, big cats, and the Great Migration — Tanzania's most iconic safari destination.</p>
+          <span class="vtz-card-link"><span data-i18n="visitTz.discover">Discover</span> <i class="fas fa-arrow-right"></i></span>
+        </div>
+      </a>
+      <a class="vtz-card" href="/destinations/ngorongoro-conservation-area">
+        <div class="vtz-card-img"><img src="/images/optimized/ngororo%20%20righno.webp" alt="Ngorongoro Crater" loading="lazy"></div>
+        <div class="vtz-card-body">
+          <h3 data-i18n="visitTz.whereNgorongoroTitle">Ngorongoro Crater</h3>
+          <p data-i18n="visitTz.whereNgorongoroDesc">A UNESCO World Heritage caldera with the Big Five and one of Africa's densest wildlife populations.</p>
+          <span class="vtz-card-link"><span data-i18n="visitTz.discover">Discover</span> <i class="fas fa-arrow-right"></i></span>
+        </div>
+      </a>
+      <a class="vtz-card" href="/destinations/tarangire-national-park">
+        <div class="vtz-card-img"><img src="/images/optimized/tarangire-national-park.webp" alt="Tarangire National Park" loading="lazy"></div>
+        <div class="vtz-card-body">
+          <h3 data-i18n="visitTz.whereTarangireTitle">Tarangire National Park</h3>
+          <p data-i18n="visitTz.whereTarangireDesc">Giant baobabs and huge elephant herds — a superb, quieter addition to the northern circuit.</p>
+          <span class="vtz-card-link"><span data-i18n="visitTz.discover">Discover</span> <i class="fas fa-arrow-right"></i></span>
+        </div>
+      </a>
+      <a class="vtz-card" href="/destinations/lake-manyara-national-park">
+        <div class="vtz-card-img"><img src="/images/optimized/lake-manyara-national-park.webp" alt="Lake Manyara National Park" loading="lazy"></div>
+        <div class="vtz-card-body">
+          <h3 data-i18n="visitTz.whereManyaraTitle">Lake Manyara</h3>
+          <p data-i18n="visitTz.whereManyaraDesc">Tree-climbing lions, flamingos and lush groundwater forest beneath the Rift Valley escarpment.</p>
+          <span class="vtz-card-link"><span data-i18n="visitTz.discover">Discover</span> <i class="fas fa-arrow-right"></i></span>
+        </div>
+      </a>
+      <a class="vtz-card" href="/destinations/arusha-national-park">
+        <div class="vtz-card-img"><img src="/images/optimized/arusha-national-park.webp" alt="Arusha National Park and Mount Meru" loading="lazy"></div>
+        <div class="vtz-card-body">
+          <h3 data-i18n="visitTz.whereArushaTitle">Arusha &amp; Mount Meru</h3>
+          <p data-i18n="visitTz.whereArushaDesc">The safari gateway city and Mount Meru (4,566 m) — a scenic day safari and the ideal Kilimanjaro warm-up.</p>
+          <span class="vtz-card-link"><span data-i18n="visitTz.discover">Discover</span> <i class="fas fa-arrow-right"></i></span>
+        </div>
+      </a>
+      <a class="vtz-card" href="/destinations/zanzibar">
+        <div class="vtz-card-img"><img src="/images/optimized/zanzibar%20sunset.webp" alt="Zanzibar island" loading="lazy"></div>
+        <div class="vtz-card-body">
+          <h3 data-i18n="visitTz.whereZanzibarTitle">Zanzibar</h3>
+          <p data-i18n="visitTz.whereZanzibarDesc">Historic Stone Town, spice farms and idyllic beaches for the perfect end to your Tanzania trip.</p>
+          <span class="vtz-card-link"><span data-i18n="visitTz.discover">Discover</span> <i class="fas fa-arrow-right"></i></span>
+        </div>
+      </a>
+    </div>
+    <div style="text-align:center;margin-top:2.5rem">
+      <a href="/destinations" class="btn btn-outline"><i class="fas fa-map-marked-alt"></i> <span data-i18n="visitTz.whereAll">See all destinations</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- How to plan -->
+<section class="vtz-section alt" id="how-to-plan">
+  <div class="container">
+    <div class="vtz-head">
+      <span class="vtz-kicker" data-i18n="visitTz.planKicker">Plan Your Trip</span>
+      <h2 class="vtz-h2" data-i18n="visitTz.planTitle">How to plan your trip to Tanzania</h2>
+      <p class="vtz-sub" data-i18n="visitTz.planDesc">Everything you need to travel to Tanzania with confidence — visas, budgets, and first-timer tips.</p>
+    </div>
+    <div class="vtz-grid cols-3">
+      <a class="vtz-plan" href="/blog/tanzania-visa-guide">
+        <i class="fas fa-passport"></i>
+        <h3 data-i18n="visitTz.planVisaTitle">Tanzania visa guide</h3>
+        <p data-i18n="visitTz.planVisaDesc">Who needs a visa, how to apply for the e-visa or visa on arrival, costs and passport requirements.</p>
+        <span class="vtz-card-link"><span data-i18n="visitTz.readGuide">Read guide</span> <i class="fas fa-arrow-right"></i></span>
+      </a>
+      <a class="vtz-plan" href="/blog/tanzania-safari-cost">
+        <i class="fas fa-wallet"></i>
+        <h3 data-i18n="visitTz.planCostTitle">How much a safari costs</h3>
+        <p data-i18n="visitTz.planCostDesc">Realistic 2026 budgets for budget, mid-range and luxury Tanzania safaris, and what's included.</p>
+        <span class="vtz-card-link"><span data-i18n="visitTz.readGuide">Read guide</span> <i class="fas fa-arrow-right"></i></span>
+      </a>
+      <a class="vtz-plan" href="/blog/first-tanzania-safari">
+        <i class="fas fa-compass"></i>
+        <h3 data-i18n="visitTz.planFirstTitle">Your first Tanzania safari</h3>
+        <p data-i18n="visitTz.planFirstDesc">What to pack, how long to stay, health tips and how to build the perfect first-timer itinerary.</p>
+        <span class="vtz-card-link"><span data-i18n="visitTz.readGuide">Read guide</span> <i class="fas fa-arrow-right"></i></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Mount Meru packages -->
+<section class="vtz-section" id="mount-meru">
+  <div class="container">
+    <div class="vtz-head">
+      <span class="vtz-kicker" data-i18n="visitTz.meruKicker">Mount Meru</span>
+      <h2 class="vtz-h2" data-i18n="visitTz.meruTitle">Mount Meru trek packages</h2>
+    </div>
+    <p class="vtz-meru-lead" data-i18n-html="visitTz.meruLeadHtml">Mount Meru (4,566 m) is Tanzania's second-highest peak and the perfect acclimatization climb before <a href="/kilimanjaro">Kilimanjaro</a>. Trek through Arusha National Park's wildlife-rich forest and combine it with a northern-circuit safari.</p>
+    <div class="vtz-meru">
+      <a class="vtz-card" href="/safaris/6-day-mount-meru-tarangire-ngorongoro">
+        <div class="vtz-card-img"><img src="/images/optimized/4-day-mount-meru-trek.webp" alt="6-Day Mount Meru, Tarangire and Ngorongoro safari" loading="lazy"></div>
+        <div class="vtz-card-body">
+          <h3 data-i18n="visitTz.meru6Title">6-Day Mount Meru, Tarangire &amp; Ngorongoro</h3>
+          <p data-i18n="visitTz.meru6Desc">Summit Mount Meru over three trek days, then enjoy Tarangire elephants and a Ngorongoro Crater game drive.</p>
+          <span class="vtz-card-link"><span data-i18n="visitTz.viewPackage">View package</span> <i class="fas fa-arrow-right"></i></span>
+        </div>
+      </a>
+      <a class="vtz-card" href="/safaris/9-day-mount-meru-northern-tanzania-safari">
+        <div class="vtz-card-img"><img src="/images/kilimanjaro/kilimanjaro%20(6).jpeg" alt="9-Day Mount Meru trek and northern Tanzania safari" loading="lazy"></div>
+        <div class="vtz-card-body">
+          <h3 data-i18n="visitTz.meru9Title">9-Day Mount Meru Trek &amp; Northern Safari</h3>
+          <p data-i18n="visitTz.meru9Desc">A three-day Meru summit plus a five-day safari through Tarangire, the Serengeti and Ngorongoro.</p>
+          <span class="vtz-card-link"><span data-i18n="visitTz.viewPackage">View package</span> <i class="fas fa-arrow-right"></i></span>
+        </div>
+      </a>
+      <a class="vtz-card" href="/kilimanjaro/routes">
+        <div class="vtz-card-img"><img src="/images/kilimanjaro/kilimanjaro%20(5).jpeg" alt="Kilimanjaro climbing routes" loading="lazy"></div>
+        <div class="vtz-card-body">
+          <h3 data-i18n="visitTz.meruRoutesTitle">Prefer Kilimanjaro?</h3>
+          <p data-i18n="visitTz.meruRoutesDesc">Compare all Kilimanjaro routes or ask us to combine Meru, Kilimanjaro and a safari into one trip.</p>
+          <span class="vtz-card-link"><span data-i18n="visitTz.compareRoutes">Compare routes</span> <i class="fas fa-arrow-right"></i></span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="vtz-section alt" id="faq">
+  <div class="container">
+    <div class="vtz-head">
+      <span class="vtz-kicker" data-i18n="visitTz.faqKicker">FAQ</span>
+      <h2 class="vtz-h2" data-i18n="visitTz.faqTitle">Tanzania travel FAQ</h2>
+      <p class="vtz-sub" data-i18n="visitTz.faqDesc">Common questions about visiting Tanzania, answered by our Arusha team.</p>
+    </div>
+    <div class="vtz-faq">
+      <div class="vtz-faq-item">
+        <h3><i class="fas fa-circle-question"></i><span data-i18n="visitTz.faqQ1">Is Tanzania safe to visit?</span></h3>
+        <p data-i18n="visitTz.faqA1">Yes. Tanzania is one of Africa's most stable, welcoming destinations and safari areas are very safe with professional guides. Use normal travel precautions in towns, and your guide handles logistics throughout.</p>
+      </div>
+      <div class="vtz-faq-item">
+        <h3><i class="fas fa-circle-question"></i><span data-i18n="visitTz.faqQ2">Do I need a visa to visit Tanzania?</span></h3>
+        <p data-i18n-html="visitTz.faqA2Html">Most visitors need a tourist visa, available online as an e-visa or on arrival at major airports. See our <a href="/blog/tanzania-visa-guide">Tanzania visa guide</a> for costs and step-by-step instructions.</p>
+      </div>
+      <div class="vtz-faq-item">
+        <h3><i class="fas fa-circle-question"></i><span data-i18n="visitTz.faqQ3">What is the best time to visit Tanzania?</span></h3>
+        <p data-i18n-html="visitTz.faqA3Html">June–October is best for general wildlife and Mara River crossings, while January–February is ideal for the calving season. Read the full <a href="/blog/best-time-to-visit-tanzania">best time to visit Tanzania</a> guide.</p>
+      </div>
+      <div class="vtz-faq-item">
+        <h3><i class="fas fa-circle-question"></i><span data-i18n="visitTz.faqQ4">How much does a Tanzania safari cost?</span></h3>
+        <p data-i18n-html="visitTz.faqA4Html">Costs vary by season, accommodation and park fees. Mid-range safaris typically start around $250–$450 per person per day. See our <a href="/blog/tanzania-safari-cost">Tanzania safari cost guide</a> for detailed 2026 budgets.</p>
+      </div>
+      <div class="vtz-faq-item">
+        <h3><i class="fas fa-circle-question"></i><span data-i18n="visitTz.faqQ5">How many days do I need in Tanzania?</span></h3>
+        <p data-i18n="visitTz.faqA5">A great northern-circuit safari takes 5–7 days. Add 2–4 days for Zanzibar or 6–8 days for a Kilimanjaro climb. Most first-timers spend 8–12 days combining safari and beach.</p>
+      </div>
+      <div class="vtz-faq-item">
+        <h3><i class="fas fa-circle-question"></i><span data-i18n="visitTz.faqQ6">Do I need vaccinations for Tanzania?</span></h3>
+        <p data-i18n="visitTz.faqA6">Yellow fever proof may be required if arriving from an at-risk country, and malaria prophylaxis is recommended. Always confirm current requirements with a travel clinic before you go.</p>
+      </div>
+      <div class="vtz-faq-item">
+        <h3><i class="fas fa-circle-question"></i><span data-i18n="visitTz.faqQ7">Can I combine a safari with Zanzibar or Kilimanjaro?</span></h3>
+        <p data-i18n-html="visitTz.faqA7Html">Absolutely — that's our specialty. We build bush-to-beach trips with <a href="/zanzibar">Zanzibar</a> and combined <a href="/kilimanjaro">Kilimanjaro</a> climb-and-safari itineraries, all from Arusha.</p>
+      </div>
+      <div class="vtz-faq-item">
+        <h3><i class="fas fa-circle-question"></i><span data-i18n="visitTz.faqQ8">What is the best time to climb Kilimanjaro?</span></h3>
+        <p data-i18n-html="visitTz.faqA8Html">The clearest months are January–March and June–October. Explore <a href="/kilimanjaro/routes">Kilimanjaro routes</a> to pick the trail that fits your fitness and schedule.</p>
+      </div>
+      <div class="vtz-faq-item">
+        <h3><i class="fas fa-circle-question"></i><span data-i18n="visitTz.faqQ9">What currency and language are used in Tanzania?</span></h3>
+        <p data-i18n="visitTz.faqA9">The currency is the Tanzanian Shilling (TZS); US dollars are widely accepted for tourism. Swahili and English are both official languages, so communication is easy.</p>
+      </div>
+      <div class="vtz-faq-item">
+        <h3><i class="fas fa-circle-question"></i><span data-i18n="visitTz.faqQ10">How do I get to Tanzania and the safari parks?</span></h3>
+        <p data-i18n-html="visitTz.faqA10Html">Most safari travelers fly into Kilimanjaro International Airport (JRO) near Arusha, the gateway to the northern circuit. From there we handle all transfers and game drives — just <a href="/booking">request a quote</a> and we'll plan the rest.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="vtz-cta">
+  <div class="vtz-cta-media">
+    <img src="/images/optimized/balloon.webp" alt="Hot-air balloon safari over the Serengeti" loading="lazy">
+  </div>
+  <div class="vtz-cta-inner">
+    <div class="container">
+      <h2 data-i18n="visitTz.ctaTitle">Ready to visit Tanzania?</h2>
+      <p data-i18n="visitTz.ctaDesc">Tell us your dates and dream experiences — our Arusha team will craft a private, tailor-made Tanzania itinerary and send you a free quote within 24 hours.</p>
+      <div class="vtz-cta-btns">
+        <a href="/booking" class="btn btn-primary btn-lg"><i class="fas fa-paper-plane"></i> <span data-i18n="visitTz.ctaBook">Get your free quote</span></a>
+        <a href="https://wa.me/255695108009?text=Hi%20Tanzania%20Safari%20Magic%2C%20I%27d%20like%20to%20plan%20a%20trip%20to%20Tanzania.%20Please%20send%20me%20a%20free%20quote." class="btn btn-whatsapp btn-lg" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> <span data-i18n="visitTz.ctaWhatsapp">WhatsApp us</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<div id="footer"></div>
+
+<script src="/js/layout-loader.js?v=13"></script>
+</body>
+</html>
