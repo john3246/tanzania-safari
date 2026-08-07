@@ -10,7 +10,7 @@ function t(key, vars) {
 
 function localeTag() {
   const lang = (window.TSM_i18n && window.TSM_i18n.getLanguage && window.TSM_i18n.getLanguage()) || 'en';
-  const map = { en: 'en-GB', it: 'it-IT', fr: 'fr-FR', es: 'es-ES' };
+  const map = { en: 'en-GB', it: 'it-IT', fr: 'fr-FR', es: 'es-ES', de: 'de-DE', nl: 'nl-NL' };
   return map[lang] || 'en-GB';
 }
 

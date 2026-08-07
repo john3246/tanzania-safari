@@ -286,7 +286,7 @@
         ensureMeta('property', 'og:url', (canonical || window.location.href).split('?')[0]);
         ensureMeta('property', 'og:type', type || 'website');
         ensureMeta('property', 'og:site_name', SITE.name);
-        const ogLocales = { en: 'en_US', it: 'it_IT', fr: 'fr_FR', es: 'es_ES' };
+        const ogLocales = { en: 'en_US', it: 'it_IT', fr: 'fr_FR', es: 'es_ES', de: 'de_DE', nl: 'nl_NL' };
         let lang = 'en';
         try {
             if (global.TSM_i18n && typeof global.TSM_i18n.getLanguage === 'function') {
