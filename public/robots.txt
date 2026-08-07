@@ -4,13 +4,17 @@ Allow: /images/
 Allow: /css/
 Allow: /js/
 Allow: /uploads/
+Allow: /visit-tanzania
 Allow: /blog/
 Allow: /safaris/
 Allow: /destinations/
 Allow: /group-safaris/
 Allow: /kilimanjaro
+Allow: /kilimanjaro/routes
+Allow: /kilimanjaro/routes/
 Allow: /migrations
 Allow: /zanzibar
+Allow: /visit-tanzania
 Allow: /booking
 Allow: /contact
 Allow: /about
@@ -24,6 +28,7 @@ Disallow: /thank-you
 Disallow: /unsubscribe
 
 # Primary crawl targets (high-value Tanzania tourism keywords)
+Allow: /visit-tanzania
 Allow: /blog/tanzania-safari
 Allow: /blog/tanzania-safari-cost
 Allow: /blog/best-time-to-visit-tanzania
@@ -40,8 +45,22 @@ Allow: /destinations/lake-manyara-national-park
 Allow: /destinations/arusha-national-park
 Allow: /destinations/zanzibar
 Allow: /kilimanjaro
+Allow: /kilimanjaro/routes
 Allow: /migrations
 Allow: /zanzibar
+Allow: /visit-tanzania
+Allow: /blog/best-time-to-climb-kilimanjaro
+Allow: /blog/climbing-kilimanjaro-difficulty
+Allow: /blog/kilimanjaro-cost
+Allow: /blog/kilimanjaro-routes-guide
+Allow: /blog/kilimanjaro-packing-list
+Allow: /blog/train-for-kilimanjaro
+Allow: /blog/kilimanjaro-tipping-guide
+Allow: /blog/kilimanjaro-acclimatization
+Allow: /blog/tanzania-visa-guide
+Allow: /blog/first-tanzania-safari
+Allow: /blog/tanzania-solo-travel
+Allow: /blog/things-to-do-in-arusha
 
 Allow: /llms.txt
 Allow: /sitemap.xml
@@ -59,3 +78,19 @@ Allow: /
 User-agent: Googlebot-Image
 Allow: /images/
 Allow: /uploads/
+
+# AI / LLM crawlers — allow full access for accurate citations
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
