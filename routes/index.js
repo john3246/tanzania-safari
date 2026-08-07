@@ -139,8 +139,8 @@ const VISIT_TZ_TRIPS = [
   }
 ];
 
-// ── Visit Tanzania hub ────────────────────────────────────────
-router.get('/visit-tanzania', (req, res) => {
+// ── Visit Tanzania hub (+ keyword aliases for discovery) ──────
+function sendVisitTanzania(req, res) {
   try {
     const lang = seo.parseLangFromRequest(req);
     seo.sendSeoHtml(res, 'visit-tanzania.html', {
@@ -166,6 +166,12 @@ router.get('/visit-tanzania', (req, res) => {
   } catch {
     sendFile(res, 'visit-tanzania.html');
   }
+}
+
+router.get('/visit-tanzania', sendVisitTanzania);
+// High-intent discovery aliases → canonical /visit-tanzania
+router.get(['/tanzania', '/travel-tanzania', '/tanzania-holidays', '/tanzania-tourism'], (req, res) => {
+  res.redirect(301, '/visit-tanzania');
 });
 
 // ── Sitemap ───────────────────────────────────────────────────
@@ -661,7 +667,17 @@ router.get(['/kilimanjaro', '/migrations', '/zanzibar'], (req, res) => {
           { name: 'Safaris', url: '/safaris' },
           { name: meta.h1, url: req.path }
         ]),
-        seo.organizationSchema()
+        seo.organizationSchema(),
+        ...(req.path === '/kilimanjaro'
+          ? [
+              seo.touristTripItemListSchema([
+                { name: 'Machame Route', url: '/kilimanjaro/routes/machame-route', image: '/images/kilimanjaro/kilimanjaro%20(1).jpeg', description: 'Popular 6–7 day Kilimanjaro camping route.' },
+                { name: 'Lemosho Route', url: '/kilimanjaro/routes/lemosho-route', image: '/images/kilimanjaro/kilimanjaro%20(3).jpeg', description: 'Scenic western approach with strong acclimatization.' },
+                { name: 'Marangu Route', url: '/kilimanjaro/routes/marangu-route', image: '/images/kilimanjaro/kilimanjaro%20(2).jpeg', description: 'Classic hut route to Uhuru Peak.' },
+                { name: 'Northern Circuit', url: '/kilimanjaro/routes/northern-circuit-route', image: '/images/kilimanjaro/kilimanjaro%20(5).jpeg', description: 'Longest route with the highest summit success profile.' }
+              ])
+            ]
+          : [])
       ]
     });
   } catch {
@@ -766,7 +782,7 @@ router.get('/destinations/:slug', async (req, res) => {
       description,
       canonical: `${seo.SITE.url}/destinations/${encodeURIComponent(slug)}`,
       image: row?.featured_image_url || (isKili ? kiliMeta.image : '/images/optimized/serengeti-national-park.webp'),
-      keywords: isKili ? kiliMeta.keywords : `${name}, tanzania safari, ${slug.replace(/-/g, ' ')}, wildlife safari arusha`,
+      keywords: isKili ? kiliMeta.keywords : `${name}, tanzania safari, visit tanzania, ${slug.replace(/-/g, ' ')}, wildlife safari arusha, tanzania tourism`,
       type: 'article',
       h1: isKili ? kiliMeta.h1 : name,
       jsonLd: [
@@ -774,7 +790,14 @@ router.get('/destinations/:slug', async (req, res) => {
           { name: 'Home', url: '/' },
           { name: 'Destinations', url: '/destinations' },
           { name: isKili ? 'Kilimanjaro National Park' : name, url: `/destinations/${slug}` }
-        ])
+        ]),
+        seo.touristDestinationSchema({
+          name: isKili ? 'Mount Kilimanjaro National Park' : name,
+          description,
+          url: `/destinations/${slug}`,
+          image: row?.featured_image_url || (isKili ? kiliMeta.image : '/images/optimized/serengeti-national-park.webp')
+        }),
+        seo.organizationSchema()
       ]
     });
   } catch (e) {

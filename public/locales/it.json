@@ -29,7 +29,8 @@
     "chatAria": "Chatta con il nostro team",
     "trustAria": "Certificazioni di fiducia",
     "safariCollections": "Collezioni safari",
-    "logoSub": "SAFARI & TOUR"
+    "logoSub": "SAFARI & TOUR",
+    "visitTanzania": "Visita la Tanzania"
   },
   "common": {
     "home": "Home",
@@ -93,7 +94,9 @@
     "copyright": "Tanzania Safari Magic · Safari privati e di gruppo da Arusha. Tutti i diritti riservati.",
     "paymentNote": "Preventivi e depositi offline · Checkout online in arrivo",
     "whatsappTitle": "WhatsApp al team — Preventivo safari gratis",
-    "whatsappAria": "WhatsApp al team di Tanzania Safari Magic per un preventivo gratis"
+    "whatsappAria": "WhatsApp al team di Tanzania Safari Magic per un preventivo gratis",
+    "kiliRoutes": "Vie del Kilimanjaro",
+    "visaGuide": "Guida visto Tanzania"
   },
   "quickBook": {
     "title": "Pianifica il tuo safari",

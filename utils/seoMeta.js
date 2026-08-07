@@ -17,9 +17,9 @@ const OG_LOCALE = {
 const PAGE_SEO = {
   home: {
     en: {
-      title: 'Tanzania Safari 2026 | Private Tours | Tanzania Safari Magic',
+      title: 'Visit Tanzania 2026 | Safaris & Kilimanjaro | Tanzania Safari Magic',
       description:
-        'Plan your 2026 Tanzania safari from Arusha — Serengeti, Ngorongoro, Great Migration, Kilimanjaro & Zanzibar. Free quote from local safari experts.',
+        'Visit Tanzania with local Arusha experts — private Serengeti safaris, Ngorongoro Crater, Great Migration, Kilimanjaro climbs & Zanzibar beaches. Free quote.',
       keywords:
         'tanzania safari, visit tanzania, travel to tanzania, tanzania holidays, private tanzania safari, serengeti safari, ngorongoro crater, great wildebeest migration, climb kilimanjaro, tanzania safari from arusha, safari packages tanzania, tanzania tourism, africa safari tours'
     },

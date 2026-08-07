@@ -227,6 +227,34 @@ function faqPageSchema(faqs) {
 }
 
 /**
+ * TouristDestination JSON-LD for national park / destination pages.
+ */
+function touristDestinationSchema({ name, description, url, image, geo }) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'TouristDestination',
+    name: name || 'Tanzania Destination',
+    description: truncate(stripHtml(description), 300),
+    url: absoluteUrl(url),
+    image: absoluteUrl(image || SITE.defaultImage),
+    touristType: ['Wildlife enthusiasts', 'Adventure travelers', 'Safari tourists'],
+    isPartOf: {
+      '@type': 'Country',
+      name: 'Tanzania'
+    },
+    provider: { '@id': SITE.url + '/#organization' }
+  };
+  if (geo && (geo.lat != null || geo.latitude != null)) {
+    schema.geo = {
+      '@type': 'GeoCoordinates',
+      latitude: geo.lat != null ? geo.lat : geo.latitude,
+      longitude: geo.lng != null ? geo.lng : geo.longitude
+    };
+  }
+  return schema;
+}
+
+/**
  * ItemList of TouristTrip entries from [{ name, url, image, description }, ...]
  */
 function touristTripItemListSchema(items) {
@@ -494,6 +522,7 @@ module.exports = {
   organizationSchema,
   faqPageSchema,
   touristTripItemListSchema,
+  touristDestinationSchema,
   injectSeoIntoHtml,
   sendSeoHtml,
   resolveSeo,
