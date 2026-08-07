@@ -11,7 +11,7 @@ const HUBS = {
     leadKey: 'hub.kiliLead',
     title: 'Kilimanjaro Climbs & Treks',
     eyebrow: 'Mount Kilimanjaro · 5,895 m',
-    lead: 'Guided Kilimanjaro routes from Arusha — Machame, Lemosho &amp; Marangu. Read the full <a href="/destinations/mount-kilimanjaro-national-park">Kilimanjaro National Park guide</a>, then book a private climb or climb + safari combo.',
+    lead: 'Guided Kilimanjaro routes from Arusha — Machame, Lemosho &amp; Marangu. <a href="/kilimanjaro/routes">Compare all climbing routes</a>, read the <a href="/destinations/mount-kilimanjaro-national-park">Kilimanjaro National Park guide</a>, or ask about a <a href="/safaris/6-day-mount-meru-tarangire-ngorongoro">Mount Meru</a> warm-up trek.',
     image: '/images/optimized/mount-kilimanjaro-national-park.webp',
     path: '/kilimanjaro'
   },
