@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const outRoot = 'public/locales';
-['en', 'it', 'fr', 'es'].forEach((l) => {
+['en', 'it', 'fr', 'es', 'de', 'nl'].forEach((l) => {
   fs.mkdirSync(path.join(outRoot, l, 'guides'), { recursive: true });
 });
 
