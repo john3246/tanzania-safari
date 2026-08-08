@@ -127,9 +127,18 @@
             sameAs: [
                 'https://facebook.com/tanzaniasafarimagic',
                 'https://instagram.com/tanzaniasafarimagic',
-                'https://wa.me/255695108009'
+                'https://wa.me/255695108009',
+                'https://www.tripadvisor.com/Attraction_Review-g297913-d28075837-Reviews-Tanzania_Safari_Magic-Arusha_Arusha_Region.html',
+                'https://maps.app.goo.gl/36osoUgbeghcvwE89'
             ],
             priceRange: '$$-$$$',
+            aggregateRating: {
+                '@type': 'AggregateRating',
+                ratingValue: '5.0',
+                reviewCount: '48',
+                bestRating: '5',
+                worstRating: '1'
+            },
             knowsAbout: [
                 'Tanzania safari',
                 'visit Tanzania',
@@ -350,7 +359,10 @@
             url: SITE.url,
             potentialAction: {
                 '@type': 'SearchAction',
-                target: SITE.url + '/safaris?q={search_term_string}',
+                target: {
+                    '@type': 'EntryPoint',
+                    urlTemplate: SITE.url + '/safaris?search={search_term_string}'
+                },
                 'query-input': 'required name=search_term_string'
             }
         };

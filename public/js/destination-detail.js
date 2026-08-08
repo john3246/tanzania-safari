@@ -1007,7 +1007,7 @@ async function loadSafariPackagesForDestination(destinationName, slug) {
                       <a href="https://wa.me/255695108009?text=Hi%20Tanzania%20Safari%20Magic%20team%2C%20I%27m%20interested%20in%20a%20safari%20to%20this%20destination." class="btn btn-primary" target="_blank" rel="noopener" style="min-height:48px"><i class="fab fa-whatsapp"></i> ${escapeHtml(t('destDetail.whatsappTeam'))}</a>
                     </div>
                   </div>`;
-                if (window.SafariSEO) SafariSEO.setNoIndexFollow();
+                // Keep destination pages indexable even without related packages
             }
         } else {
             packagesGrid.innerHTML = `
@@ -1019,7 +1019,7 @@ async function loadSafariPackagesForDestination(destinationName, slug) {
                   <a href="/booking?interest=${encodeURIComponent(destinationName || '')}" class="btn btn-primary" style="min-height:48px">${escapeHtml(t('destDetail.requestQuoteBtn'))}</a>
                 </div>
               </div>`;
-            if (window.SafariSEO) SafariSEO.setNoIndexFollow();
+            // Do not noindex destination pages — parks remain valuable landing pages
         }
     } catch (error) {
         console.error('Error loading packages:', error);

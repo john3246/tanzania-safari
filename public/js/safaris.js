@@ -133,11 +133,23 @@ async function loadFilters() {
                 dests.map(d => `<option value="${d.park_slug || d.slug}">${d.park_name || d.name}</option>`).join('');
         }
     } catch {}
-    // Read URL params
+    // Read URL params (search aligns with SearchAction ?search=)
     const params = new URLSearchParams(window.location.search);
+    const searchVal = params.get('search') || params.get('q') || '';
+    if (searchVal && document.getElementById('searchInput')) {
+        document.getElementById('searchInput').value = searchVal;
+    }
     if (params.get('category')) {
         const r = document.getElementById('categorySelect');
         if (r) r.value = params.get('category');
+    }
+    if (params.get('destination')) {
+        const r = document.getElementById('destinationSelect');
+        if (r) r.value = params.get('destination');
+    }
+    if (params.get('duration')) {
+        const r = document.getElementById('durationSelect');
+        if (r) r.value = params.get('duration');
     }
     applyFilters();
 }

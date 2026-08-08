@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 const seo = require('../utils/seoRender');
+const ssr = require('../utils/ssrContent');
 
 const VIEWS = path.join(__dirname, '../views');
 
@@ -43,9 +44,24 @@ const HOME_FAQS = [
 ];
 
 // ── Home ──────────────────────────────────────────────────────
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const lang = seo.parseLangFromRequest(req);
+    const [featured, destinations] = await Promise.all([
+      ssr.fetchFeaturedPackages(6),
+      ssr.fetchDestinations(4)
+    ]);
+    const jsonLd = [
+      seo.websiteSchema(lang),
+      seo.organizationSchema(),
+      seo.faqPageSchema(HOME_FAQS),
+      seo.breadcrumbSchema([{ name: 'Home', url: '/' }])
+    ];
+    if (featured.length) jsonLd.push(seo.touristTripItemListSchema(ssr.toTripListItems(featured)));
+    if (destinations.length) {
+      jsonLd.push(seo.touristDestinationItemListSchema(ssr.toDestinationListItems(destinations)));
+    }
+
     seo.sendSeoHtml(res, 'index.html', {
       pageKey: 'home',
       canonical: seo.SITE.url + '/',
@@ -54,14 +70,14 @@ router.get('/', (req, res) => {
       type: 'website',
       lang,
       hreflangPath: '/',
-      jsonLd: [
-        seo.websiteSchema(lang),
-        seo.organizationSchema(),
-        seo.faqPageSchema(HOME_FAQS),
-        seo.breadcrumbSchema([{ name: 'Home', url: '/' }])
-      ]
+      jsonLd,
+      replaceHtml: {
+        destinationsGrid: ssr.destinationListHtml(destinations),
+        safarisGrid: ssr.packageListHtml(featured)
+      }
     });
-  } catch {
+  } catch (e) {
+    console.error('home SEO:', e.message);
     sendFile(res, 'index.html');
   }
 });
@@ -444,17 +460,34 @@ router.get('/unsubscribe', (req, res) => {
   }
 });
 
-router.get('/safaris', (req, res) => {
+router.get('/safaris', async (req, res) => {
   try {
+    // Filter/query pages share one canonical to avoid duplicate indexation
+    const packages = await ssr.fetchPackages(24);
+    const jsonLd = [
+      seo.organizationSchema(),
+      seo.breadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Safaris', url: '/safaris' }
+      ])
+    ];
+    if (packages.length) jsonLd.push(seo.touristTripItemListSchema(ssr.toTripListItems(packages)));
+
     seo.sendSeoHtml(res, 'safaris.html', {
       pageKey: 'safaris',
       canonical: seo.SITE.url + '/safaris',
       image: '/images/optimized/serengeti-national-park.webp',
       keywords: seo.KEYWORD_HUB.safaris,
       h1: 'Tanzania Safari Packages',
-      hreflangPath: '/safaris'
+      hreflangPath: '/safaris',
+      robots: 'index, follow',
+      jsonLd,
+      replaceHtml: {
+        safarisGrid: ssr.packageListHtml(packages)
+      }
     });
-  } catch {
+  } catch (e) {
+    console.error('safaris SEO:', e.message);
     sendFile(res, 'safaris.html');
   }
 });
@@ -695,18 +728,7 @@ router.get(['/kilimanjaro', '/migrations', '/zanzibar'], (req, res) => {
 router.get('/safaris/:slug', async (req, res) => {
   const slug = req.params.slug;
   try {
-    const db = require('../config/db');
-    let row = null;
-    try {
-      const r = await db.query(`
-        SELECT package_name, package_slug, short_description, detailed_description,
-               featured_image_url, duration_days, base_price_usd, meta_title, meta_description
-        FROM safari_packages
-        WHERE package_slug = $1 AND is_active = true
-        LIMIT 1
-      `, [slug]);
-      row = r.rows[0];
-    } catch (_) { /* fall through */ }
+    const row = await ssr.fetchPackageBySlug(slug);
 
     const title = (row?.meta_title || (row
       ? `${row.package_name} | ${row.duration_days || ''}-Day Tanzania Safari`
@@ -714,6 +736,17 @@ router.get('/safaris/:slug', async (req, res) => {
     const description = row?.meta_description
       || seo.truncate(row?.short_description || row?.detailed_description
         || 'Private Tanzania safari itinerary with expert local guides from Arusha. Serengeti, Ngorongoro & more.', 160);
+
+    const jsonLd = [
+      seo.organizationSchema(),
+      seo.breadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Safaris', url: '/safaris' },
+        { name: row?.package_name || 'Safari', url: `/safaris/${slug}` }
+      ])
+    ];
+    const trip = seo.touristTripSchema(row);
+    if (trip) jsonLd.push(trip);
 
     seo.sendSeoHtml(res, 'safari-detail.html', {
       title,
@@ -723,13 +756,10 @@ router.get('/safaris/:slug', async (req, res) => {
       keywords: `tanzania safari, ${row?.package_name || 'safari package'}, serengeti, ngorongoro, private safari arusha`,
       type: 'product',
       h1: row?.package_name || 'Tanzania Safari Package',
-      jsonLd: [
-        seo.breadcrumbSchema([
-          { name: 'Home', url: '/' },
-          { name: 'Safaris', url: '/safaris' },
-          { name: row?.package_name || 'Safari', url: `/safaris/${slug}` }
-        ])
-      ]
+      jsonLd,
+      replaceHtml: {
+        loadingState: row ? ssr.safariDetailSsrHtml(row) : ''
+      }
     });
   } catch (e) {
     console.error('safari SEO:', e.message);
@@ -737,17 +767,39 @@ router.get('/safaris/:slug', async (req, res) => {
   }
 });
 
-router.get('/destinations', (req, res) => {
+router.get('/destinations', async (req, res) => {
   try {
+    const destinations = await ssr.fetchDestinations(24);
+    const jsonLd = [
+      seo.organizationSchema(),
+      seo.breadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Destinations', url: '/destinations' }
+      ])
+    ];
+    if (destinations.length) {
+      jsonLd.push(seo.touristDestinationItemListSchema(ssr.toDestinationListItems(destinations)));
+    }
+
+    // Crawlable destination cards in the northern grid; client JS re-partitions on hydrate
+    const listHtml = ssr.destinationListHtml(destinations);
+
     seo.sendSeoHtml(res, 'destinations.html', {
       pageKey: 'destinations',
       canonical: seo.SITE.url + '/destinations',
       image: '/images/optimized/balloon.webp',
       keywords: seo.KEYWORD_HUB.destinations,
       h1: 'Tanzania Safari Destinations',
-      hreflangPath: '/destinations'
+      hreflangPath: '/destinations',
+      jsonLd,
+      replaceHtml: {
+        northernDestGrid: listHtml,
+        southernDestGrid: '',
+        zanzibarDestGrid: ''
+      }
     });
-  } catch {
+  } catch (e) {
+    console.error('destinations SEO:', e.message);
     sendFile(res, 'destinations.html');
   }
 });
@@ -755,18 +807,7 @@ router.get('/destinations', (req, res) => {
 router.get('/destinations/:slug', async (req, res) => {
   const slug = req.params.slug;
   try {
-    const db = require('../config/db');
-    let row = null;
-    try {
-      const r = await db.query(`
-        SELECT park_name, park_slug, short_description, detailed_description,
-               featured_image_url, meta_title, meta_description
-        FROM national_parks
-        WHERE park_slug = $1
-        LIMIT 1
-      `, [slug]);
-      row = r.rows[0];
-    } catch (_) { /* fall through */ }
+    const row = await ssr.fetchDestinationBySlug(slug);
 
     const name = row?.park_name || slug.replace(/-/g, ' ');
     const isKili = /kilimanjaro/i.test(slug) || /kilimanjaro/i.test(name || '');
@@ -784,28 +825,37 @@ router.get('/destinations/:slug', async (req, res) => {
         || seo.truncate(row?.short_description || row?.detailed_description
           || `Plan your ${name} safari with Tanzania Safari Magic in Arusha — wildlife, best time, and private packages.`, 160));
 
+    const destName = isKili ? 'Mount Kilimanjaro National Park' : name;
+    const image = row?.featured_image_url || (isKili ? kiliMeta.image : '/images/optimized/serengeti-national-park.webp');
+    const h1 = isKili ? kiliMeta.h1 : name;
+
     seo.sendSeoHtml(res, 'destination-detail.html', {
       title,
       description,
       canonical: `${seo.SITE.url}/destinations/${encodeURIComponent(slug)}`,
-      image: row?.featured_image_url || (isKili ? kiliMeta.image : '/images/optimized/serengeti-national-park.webp'),
+      image,
       keywords: isKili ? kiliMeta.keywords : `${name}, tanzania safari, visit tanzania, ${slug.replace(/-/g, ' ')}, wildlife safari arusha, tanzania tourism`,
       type: 'article',
-      h1: isKili ? kiliMeta.h1 : name,
+      h1,
       jsonLd: [
+        seo.organizationSchema(),
         seo.breadcrumbSchema([
           { name: 'Home', url: '/' },
           { name: 'Destinations', url: '/destinations' },
           { name: isKili ? 'Kilimanjaro National Park' : name, url: `/destinations/${slug}` }
         ]),
         seo.touristDestinationSchema({
-          name: isKili ? 'Mount Kilimanjaro National Park' : name,
+          name: destName,
           description,
           url: `/destinations/${slug}`,
-          image: row?.featured_image_url || (isKili ? kiliMeta.image : '/images/optimized/serengeti-national-park.webp')
-        }),
-        seo.organizationSchema()
-      ]
+          image
+        })
+      ],
+      replaceBlock: {
+        destinationDetailContent: row
+          ? ssr.destinationDetailSsrHtml(Object.assign({}, row, { park_name: h1 }))
+          : `<main id="destinationDetailContent"><h1>${seo.escapeHtml(h1)}</h1><p>${seo.escapeHtml(description)}</p><p><a href="/booking?interest=${encodeURIComponent(name)}">Request a free quote</a></p></main>`
+      }
     });
   } catch (e) {
     console.error('destination SEO:', e.message);

@@ -24,7 +24,12 @@ class SafariController {
             });
         } catch (error) {
             console.error('Error in getAllPackages:', error);
-            res.status(500).json({ success: false, message: 'Error fetching packages' });
+            res.status(200).json({
+                success: true,
+                data: [],
+                pagination: { total: 0, page: 1, limit: 9, pages: 0 },
+                degraded: true
+            });
         }
     }
 
@@ -32,9 +37,11 @@ class SafariController {
         try {
             const limit = parseInt(req.query.limit) || 6;
             const packages = await safariService.getFeaturedPackages(limit);
-            res.json({ success: true, data: packages });
+            res.json({ success: true, data: packages || [] });
         } catch (error) {
-            res.status(500).json({ success: false, message: error.message });
+            console.error('Error in getFeaturedPackages:', error.message);
+            // Soft-fail so homepage cards can fall back to SSR content / empty state
+            res.status(200).json({ success: true, data: [], degraded: true });
         }
     }
 
@@ -46,16 +53,18 @@ class SafariController {
             }
             res.json({ success: true, data: pkg });
         } catch (error) {
-            res.status(500).json({ success: false, message: error.message });
+            console.error('Error in getPackageBySlug:', error.message);
+            res.status(500).json({ success: false, message: 'Error fetching package' });
         }
     }
 
     async getDestinations(req, res) {
         try {
             const destinations = await safariService.getDestinations();
-            res.json({ success: true, data: destinations });
+            res.json({ success: true, data: destinations || [] });
         } catch (error) {
-            res.status(500).json({ success: false, message: 'Error fetching destinations' });
+            console.error('Error in getDestinations:', error.message);
+            res.status(200).json({ success: true, data: [], degraded: true });
         }
     }
 
@@ -67,7 +76,8 @@ class SafariController {
             }
             res.json({ success: true, data: destination });
         } catch (error) {
-            res.status(500).json({ success: false, message: error.message });
+            console.error('Error in getDestinationBySlug:', error.message);
+            res.status(500).json({ success: false, message: 'Error fetching destination' });
         }
     }
 }

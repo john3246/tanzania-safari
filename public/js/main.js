@@ -130,12 +130,15 @@ async function loadHomepage() {
         const grid = document.getElementById('destinationsGrid');
         if (grid && data?.length) {
             grid.innerHTML = data.slice(0, 4).map(buildDestCard).join('');
-        } else if (grid) {
+        } else if (grid && !grid.querySelector('.ssr-card, a[href*="/destinations/"]')) {
             grid.innerHTML = `<p style="text-align:center;color:var(--text-muted);grid-column:1/-1">${t('home.noDestinations')}</p>`;
         }
     } catch (e) {
         const grid = document.getElementById('destinationsGrid');
-        if (grid) grid.innerHTML = `<p style="color:var(--text-muted);grid-column:1/-1;text-align:center">${t('home.unableDestinations')}</p>`;
+        // Keep SSR cards if present so the page never looks empty after a transient API failure
+        if (grid && !grid.querySelector('.ssr-card, a[href*="/destinations/"]')) {
+            grid.innerHTML = `<p style="color:var(--text-muted);grid-column:1/-1;text-align:center">${t('home.unableDestinations')}</p>`;
+        }
     }
 
     // Categories (filters only) + Group Safaris homepage entry
@@ -227,7 +230,9 @@ async function loadHomepage() {
         }
     } catch (e) {
         const grid = document.getElementById('safarisGrid');
-        if (grid) grid.innerHTML = `<p style="color:var(--text-muted);grid-column:1/-1;text-align:center">${t('home.unablePackages')}</p>`;
+        if (grid && !grid.querySelector('.ssr-card, a[href*="/safaris/"]')) {
+            grid.innerHTML = `<p style="color:var(--text-muted);grid-column:1/-1;text-align:center">${t('home.unablePackages')}</p>`;
+        }
     }
 
     // Testimonials

@@ -1,21 +1,52 @@
 // ── Shared API helper ──────────────────────────────────────
 const API = {
     base: '/api',
+
+    async _fetchJson(path, options = {}, retries = 2) {
+        let lastErr;
+        for (let attempt = 0; attempt <= retries; attempt++) {
+            try {
+                const r = await fetch(this.base + path, options);
+                let data = {};
+                try {
+                    data = await r.json();
+                } catch (_) {
+                    data = {};
+                }
+                if (!r.ok) {
+                    const err = new Error(data.message || `Request failed (${r.status})`);
+                    err.status = r.status;
+                    // Retry transient 5xx / rate limits
+                    if ((r.status >= 500 || r.status === 429) && attempt < retries) {
+                        await new Promise((res) => setTimeout(res, 300 * (attempt + 1)));
+                        lastErr = err;
+                        continue;
+                    }
+                    throw err;
+                }
+                return data;
+            } catch (e) {
+                lastErr = e;
+                // Network failures
+                if (attempt < retries && !e.status) {
+                    await new Promise((res) => setTimeout(res, 300 * (attempt + 1)));
+                    continue;
+                }
+                throw e;
+            }
+        }
+        throw lastErr || new Error('Request failed');
+    },
+
     async get(path) {
-        const r = await fetch(this.base + path);
-        const data = await r.json();
-        if (!r.ok) throw new Error(data.message || 'Request failed');
-        return data;
+        return this._fetchJson(path);
     },
     async post(path, body) {
-        const r = await fetch(this.base + path, {
+        return this._fetchJson(path, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body)
         });
-        const data = await r.json();
-        if (!r.ok) throw new Error(data.message || 'Request failed');
-        return data;
     },
     async getPackages(params = {}) {
         const query = new URLSearchParams(params).toString();
@@ -57,6 +88,11 @@ function imgSrc(url, fallback = '/images/optimized/balloon.webp') {
     return '/' + url;
 }
 
+function imgAlt(name, suffix = 'Tanzania Safari Magic') {
+    const base = String(name || 'Tanzania safari').trim();
+    return `${base} - ${suffix}`;
+}
+
 // ── Star rating HTML ───────────────────────────────────────
 function stars(rating) {
     const full = Math.floor(rating);
@@ -88,3 +124,4 @@ function toast(msg, type = 'success', duration = 4000) {
     setTimeout(() => t.remove(), duration);
 }
 window.toast = toast;
+window.imgAlt = imgAlt;

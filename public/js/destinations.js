@@ -97,6 +97,14 @@ async function loadDestinations() {
         if (zGrid) zGrid.innerHTML = zanzibar.length ? zanzibar.map(createCorporateCard).join('') : `<p class="text-muted">${t('home.noDestinations')}</p>`;
     } catch (e) {
         console.error('Failed to load destinations:', e);
+        const msg = `<p class="text-muted" style="grid-column:1/-1;text-align:center;padding:1.5rem">${t('home.unableDestinations')}</p>`;
+        ['northernDestGrid', 'southernDestGrid', 'zanzibarDestGrid'].forEach((id) => {
+            const el = document.getElementById(id);
+            // Keep any SSR cards if present; only replace empty/skeleton grids
+            if (el && !el.querySelector('[data-ssr], .ssr-card, .corp-dest-card, a[href*="/destinations/"]')) {
+                el.innerHTML = msg;
+            }
+        });
     }
 }
 loadDestinations();

@@ -69,14 +69,47 @@ app.use(helmet({
     contentSecurityPolicy: {
         directives: {
             defaultSrc: ["'self'"],
-            scriptSrc: ["'self'", "'unsafe-eval'", "'unsafe-inline'", "https://cdnjs.cloudflare.com", "https://cdn.tailwindcss.com", "https://unpkg.com", "https://cdn.jsdelivr.net"],
-            scriptSrcAttr: ["'unsafe-inline'"],
-            styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com", "https://unpkg.com", "https://cdn.tailwindcss.com", "https://cdn.jsdelivr.net"],
-            imgSrc: ["'self'", "data:", "blob:", "https:", "http:"], 
-            connectSrc: [
-                "'self'", 
+            scriptSrc: [
+                "'self'",
+                "'unsafe-eval'",
+                "'unsafe-inline'",
+                "https://cdnjs.cloudflare.com",
+                "https://cdn.tailwindcss.com",
+                "https://unpkg.com",
                 "https://cdn.jsdelivr.net",
-                "https://tanzaniasafarimagic.com", 
+                "https://www.googletagmanager.com",
+                "https://www.google-analytics.com",
+                "https://www.googleadservices.com",
+                "https://googleads.g.doubleclick.net",
+                "https://tagmanager.google.com"
+            ],
+            scriptSrcAttr: ["'unsafe-inline'"],
+            styleSrc: [
+                "'self'",
+                "'unsafe-inline'",
+                "https://fonts.googleapis.com",
+                "https://cdnjs.cloudflare.com",
+                "https://unpkg.com",
+                "https://cdn.tailwindcss.com",
+                "https://cdn.jsdelivr.net",
+                "https://tagmanager.google.com",
+                "https://www.googletagmanager.com"
+            ],
+            imgSrc: [
+                "'self'",
+                "data:",
+                "blob:",
+                "https:",
+                "http:",
+                "https://www.googletagmanager.com",
+                "https://www.google-analytics.com",
+                "https://www.google.com",
+                "https://googleads.g.doubleclick.net"
+            ],
+            connectSrc: [
+                "'self'",
+                "https://cdn.jsdelivr.net",
+                "https://tanzaniasafarimagic.com",
                 "https://www.tanzaniasafarimagic.com",
                 "https://tanzania-safari.onrender.com",
                 "http://localhost:3000",
@@ -86,6 +119,11 @@ app.use(helmet({
                 "wss://tanzania-safari.onrender.com",
                 "wss://tanzaniasafarimagic.com",
                 "wss://www.tanzaniasafarimagic.com",
+                "https://www.googletagmanager.com",
+                "https://www.google-analytics.com",
+                "https://analytics.google.com",
+                "https://region1.google-analytics.com",
+                "https://stats.g.doubleclick.net",
                 ...renderConnectSrc
             ],
             fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com", "https://unpkg.com", "https://fonts.googleapis.com", "https://cdn.jsdelivr.net", "data:", "https://ka-f.fontawesome.com"],
@@ -97,6 +135,7 @@ app.use(helmet({
                 "https://maps.google.com",
                 "https://www.google.com/maps/",
                 "https://maps.googleapis.com",
+                "https://www.googletagmanager.com"
             ],
         },
     },

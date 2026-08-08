@@ -125,8 +125,11 @@ function buildHeadTags({
     .map((obj, i) => `<script type="application/ld+json" id="ssr-jsonld-${i}">${JSON.stringify(obj)}</script>`)
     .join('\n');
 
+  const googleTags = buildGoogleTags();
+
   return `
 <!-- SSR SEO -->
+${googleTags.head}
 <title id="pageTitle">${t}</title>
 <meta id="metaDesc" name="description" content="${d}">
 <meta name="robots" content="${escapeHtml(robotsDirective)}">
@@ -201,10 +204,143 @@ function websiteSchema(lang = 'en') {
     publisher: { '@id': SITE.url + '/#organization' },
     potentialAction: {
       '@type': 'SearchAction',
-      target: SITE.url + '/safaris?q={search_term_string}',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: SITE.url + '/safaris?search={search_term_string}'
+      },
       'query-input': 'required name=search_term_string'
     }
   };
+}
+
+/**
+ * TouristTrip + Product + Offer JSON-LD for a safari package (SSR + client reuse).
+ */
+function touristTripSchema(safari) {
+  if (!safari || !safari.package_name) return null;
+  const images = [];
+  if (safari.featured_image_url) images.push(absoluteUrl(safari.featured_image_url));
+  if (Array.isArray(safari.image_urls)) {
+    safari.image_urls.forEach((u) => {
+      if (u) images.push(absoluteUrl(u));
+    });
+  }
+  if (!images.length) images.push(SITE.defaultImage);
+
+  const days = parseInt(safari.duration_days, 10);
+  const itinerary = Array.isArray(safari.itinerary) ? safari.itinerary : [];
+  const price = Number(safari.base_price_usd || safari.price || 0);
+  const slug = safari.package_slug || '';
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': ['TouristTrip', 'Product'],
+    '@id': SITE.url + '/safaris/' + slug + '#trip',
+    name: safari.package_name,
+    description: truncate(stripHtml(safari.short_description || safari.detailed_description || ''), 300),
+    image: images,
+    url: SITE.url + '/safaris/' + slug,
+    brand: { '@id': SITE.url + '/#organization' },
+    provider: { '@id': SITE.url + '/#organization' },
+    touristType: ['Safari travelers', 'Wildlife enthusiasts', 'Adventure travelers'],
+    offers: {
+      '@type': 'Offer',
+      '@id': SITE.url + '/safaris/' + slug + '#offer',
+      url: SITE.url + '/booking?package=' + encodeURIComponent(slug),
+      priceCurrency: 'USD',
+      price: price > 0 ? price : undefined,
+      availability: 'https://schema.org/InStock',
+      eligibleRegion: 'Worldwide',
+      seller: { '@id': SITE.url + '/#organization' }
+    }
+  };
+
+  if (days > 0) schema.duration = `P${days}D`;
+
+  if (itinerary.length) {
+    schema.itinerary = {
+      '@type': 'ItemList',
+      numberOfItems: itinerary.length,
+      itemListElement: itinerary.map((day, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: day.title || `Day ${day.day || day.day_number || i + 1}`,
+        description: truncate(stripHtml(day.description || ''), 200)
+      }))
+    };
+  }
+
+  if (Number(safari.avg_rating) > 0) {
+    schema.aggregateRating = {
+      '@type': 'AggregateRating',
+      ratingValue: Number(safari.avg_rating).toFixed(1),
+      reviewCount: Number(safari.review_count || safari.reviews?.length || 1),
+      bestRating: 5,
+      worstRating: 1
+    };
+  }
+
+  return schema;
+}
+
+/**
+ * ItemList of TouristDestination entries.
+ */
+function touristDestinationItemListSchema(items) {
+  const list = (Array.isArray(items) ? items : []).filter((it) => it && it.name);
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: list.map((it, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: Object.assign(
+        {
+          '@type': 'TouristDestination',
+          name: it.name,
+          url: absoluteUrl(it.url)
+        },
+        it.description ? { description: truncate(stripHtml(it.description), 200) } : {},
+        it.image ? { image: absoluteUrl(it.image) } : {}
+      )
+    }))
+  };
+}
+
+/**
+ * Google Analytics 4 / Google Tag Manager snippets (env-driven).
+ */
+function buildGoogleTags() {
+  const gtm = (process.env.GTM_ID || process.env.GOOGLE_TAG_MANAGER_ID || '').trim();
+  const ga4 = (process.env.GA4_MEASUREMENT_ID || process.env.GOOGLE_ANALYTICS_ID || '').trim();
+  const ads = (process.env.GOOGLE_ADS_ID || '').trim();
+  const parts = { head: '', body: '' };
+
+  if (gtm) {
+    parts.head = `<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','${escapeHtml(gtm)}');</script>
+<!-- End Google Tag Manager -->`;
+    parts.body = `<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${escapeHtml(gtm)}"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->`;
+  } else if (ga4) {
+    const configIds = [ga4, ads].filter(Boolean);
+    parts.head = `<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=${escapeHtml(ga4)}"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+${configIds.map((id) => `gtag('config', '${escapeHtml(id)}');`).join('\n')}
+</script>`;
+  }
+
+  return parts;
 }
 
 /**
@@ -339,8 +475,18 @@ function organizationSchema() {
       'https://facebook.com/tanzaniasafarimagic',
       'https://instagram.com/tanzaniasafarimagic',
       'https://twitter.com/tanzaniasafarimagic',
-      'https://youtube.com/tanzaniasafarimagic'
+      'https://youtube.com/tanzaniasafarimagic',
+      'https://wa.me/255695108009',
+      'https://www.tripadvisor.com/Attraction_Review-g297913-d28075837-Reviews-Tanzania_Safari_Magic-Arusha_Arusha_Region.html',
+      'https://maps.app.goo.gl/36osoUgbeghcvwE89'
     ],
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '5.0',
+      reviewCount: '48',
+      bestRating: '5',
+      worstRating: '1'
+    },
     knowsAbout: [
       'Tanzania safari',
       'visit Tanzania',
@@ -418,6 +564,73 @@ function organizationSchema() {
 }
 
 /**
+ * Replace inner HTML of the first element with id=markerId (depth-aware).
+ */
+function replaceElementInnerById(html, markerId, innerHtml) {
+  const openRe = new RegExp(`(<([a-zA-Z0-9]+)([^>]*\\bid=["']${markerId}["'][^>]*)>)`, 'i');
+  const m = openRe.exec(html);
+  if (!m) return html;
+  const openTag = m[1];
+  const tagName = m[2];
+  const startInner = m.index + openTag.length;
+  let depth = 1;
+  let i = startInner;
+  const openTagRe = new RegExp(`<${tagName}\\b[^>]*>`, 'gi');
+  const closeTagRe = new RegExp(`</${tagName}\\s*>`, 'gi');
+  while (i < html.length && depth > 0) {
+    openTagRe.lastIndex = i;
+    closeTagRe.lastIndex = i;
+    const nextOpen = openTagRe.exec(html);
+    const nextClose = closeTagRe.exec(html);
+    if (!nextClose) break;
+    if (nextOpen && nextOpen.index < nextClose.index) {
+      depth += 1;
+      i = nextOpen.index + nextOpen[0].length;
+    } else {
+      depth -= 1;
+      if (depth === 0) {
+        return html.slice(0, startInner) + innerHtml + html.slice(nextClose.index);
+      }
+      i = nextClose.index + nextClose[0].length;
+    }
+  }
+  return html;
+}
+
+/**
+ * Replace entire element with id=markerId.
+ */
+function replaceElementById(html, markerId, replacement) {
+  const openRe = new RegExp(`<([a-zA-Z0-9]+)([^>]*\\bid=["']${markerId}["'][^>]*)>`, 'i');
+  const m = openRe.exec(html);
+  if (!m) return html;
+  const tagName = m[1];
+  const start = m.index;
+  let depth = 1;
+  let i = start + m[0].length;
+  const openTagRe = new RegExp(`<${tagName}\\b[^>]*>`, 'gi');
+  const closeTagRe = new RegExp(`</${tagName}\\s*>`, 'gi');
+  while (i < html.length && depth > 0) {
+    openTagRe.lastIndex = i;
+    closeTagRe.lastIndex = i;
+    const nextOpen = openTagRe.exec(html);
+    const nextClose = closeTagRe.exec(html);
+    if (!nextClose) break;
+    if (nextOpen && nextOpen.index < nextClose.index) {
+      depth += 1;
+      i = nextOpen.index + nextOpen[0].length;
+    } else {
+      depth -= 1;
+      if (depth === 0) {
+        return html.slice(0, start) + replacement + html.slice(nextClose.index + nextClose[0].length);
+      }
+      i = nextClose.index + nextClose[0].length;
+    }
+  }
+  return html;
+}
+
+/**
  * Inject SEO tags into an HTML file string.
  */
 function injectSeoIntoHtml(html, seo) {
@@ -452,6 +665,10 @@ function injectSeoIntoHtml(html, seo) {
       /(<h1[^>]*id=["']hubTitle["'][^>]*>)([\s\S]*?)(<\/h1>)/i,
       `$1${escapeHtml(seo.h1)}$3`
     );
+    out = out.replace(
+      /(<h1[^>]*id=["']heroTitle["'][^>]*>)([\s\S]*?)(<\/h1>)/i,
+      `$1${escapeHtml(seo.h1)}$3`
+    );
   }
   if (seo.eyebrow) {
     out = out.replace(
@@ -465,6 +682,34 @@ function injectSeoIntoHtml(html, seo) {
       `$1${escapeHtml(seo.crumb)}$3`
     );
   }
+
+  // Replace marker containers with crawlable SSR HTML (packages, destinations, detail)
+  if (seo.replaceHtml && typeof seo.replaceHtml === 'object') {
+    Object.entries(seo.replaceHtml).forEach(([markerId, html]) => {
+      if (html == null) return;
+      out = replaceElementInnerById(out, markerId, html);
+    });
+  }
+
+  // Full-block replacement (e.g. destination detail main)
+  if (seo.replaceBlock && typeof seo.replaceBlock === 'object') {
+    Object.entries(seo.replaceBlock).forEach(([markerId, html]) => {
+      if (!html) return;
+      out = replaceElementById(out, markerId, html);
+    });
+  }
+
+  // Google Tag Manager noscript immediately after <body>
+  const gtags = buildGoogleTags();
+  if (gtags.body) {
+    out = out.replace(/<body([^>]*)>/i, `<body$1>\n${gtags.body}`);
+  }
+
+  // Strip query strings from any remaining canonical tags for safety
+  out = out.replace(
+    /(<link[^>]+rel=["']canonical["'][^>]+href=["'])([^"']+)(["'])/gi,
+    (_, a, href, c) => `${a}${String(href).split('?')[0]}${c}`
+  );
 
   return out;
 }
@@ -516,13 +761,16 @@ module.exports = {
   truncate,
   stripHtml,
   buildHeadTags,
+  buildGoogleTags,
   breadcrumbSchema,
   faqSchema,
   websiteSchema,
   organizationSchema,
   faqPageSchema,
+  touristTripSchema,
   touristTripItemListSchema,
   touristDestinationSchema,
+  touristDestinationItemListSchema,
   injectSeoIntoHtml,
   sendSeoHtml,
   resolveSeo,
