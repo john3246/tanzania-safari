@@ -1,36 +1,54 @@
 {{#with booking}}
-<p>Dear <strong>{{full_name}}</strong>,</p>
+<p class="greeting">Dear <strong>{{#if full_name}}{{full_name}}{{else}}Traveller{{/if}}</strong>,</p>
 
-<p>Your safari booking has been received. We'll confirm availability within <strong>24 hours</strong>.</p>
+<p class="lead">
+  Asante sana — thank you for trusting <strong>Tanzania Safari Magic</strong> with your safari plans.
+  We have safely received your booking request and our Arusha specialists are already reviewing lodge availability, park logistics, and the best pacing for your dates.
+</p>
 
-<div class="divider"></div>
+<p class="section-label">Your request summary</p>
+<div class="data-card">
+  <div class="row">
+    <span class="label">Booking reference</span>
+    <span class="value">#{{booking_reference}}</span>
+  </div>
+  <div class="row">
+    <span class="label">Safari / package</span>
+    <span class="value">{{#if package_name}}{{package_name}}{{else}}Custom safari enquiry{{/if}}</span>
+  </div>
+  <div class="row">
+    <span class="label">Preferred travel date</span>
+    <span class="value">{{#if start_date}}{{formatDate start_date}}{{else}}To be confirmed with you{{/if}}</span>
+  </div>
+  <div class="row">
+    <span class="label">Travellers</span>
+    <span class="value">{{#if number_of_adults}}{{number_of_adults}} adult(s){{else}}As discussed{{/if}}{{#if number_of_children}}, {{number_of_children}} child(ren){{/if}}</span>
+  </div>
+  {{#if total_price_usd}}
+  <div class="row">
+    <span class="label">Quoted total (indicative)</span>
+    <span class="value">${{formatPrice total_price_usd}} USD</span>
+  </div>
+  {{/if}}
+  <div class="row">
+    <span class="label">Status</span>
+    <span class="value"><span class="badge">Received — under review</span></span>
+  </div>
+</div>
 
-<div class="row">
-  <span class="label">Booking Reference</span>
-  <span class="value">#{{booking_reference}}</span>
-</div>
-<div class="row">
-  <span class="label">Package</span>
-  <span class="value">{{package_name}}</span>
-</div>
-<div class="row">
-  <span class="label">Travel Date</span>
-  <span class="value">{{formatDate start_date}}</span>
-</div>
-<div class="row">
-  <span class="label">Travelers</span>
-  <span class="value">{{number_of_adults}} Adults{{#if number_of_children}}, {{number_of_children}} Children{{/if}}</span>
-</div>
-<div class="row">
-  <span class="label">Total Price</span>
-  <span class="value">${{formatPrice total_price_usd}} USD</span>
-</div>
-<div class="row">
-  <span class="label">Status</span>
-  <span class="value"><span class="badge">Pending Review</span></span>
+<div class="info-box">
+  <strong>What happens next</strong><br>
+  1. A safari consultant reviews your dates, group size, and preferred style of travel.<br>
+  2. Within <strong>24 hours</strong> we reply with availability, a clear itinerary outline, and next steps.<br>
+  3. No card is charged online for this request. After you accept a quote, we share secure offline deposit instructions.
 </div>
 
-<div class="divider"></div>
+<p>If you would like to add preferences — lodges, migration timing, Kilimanjaro, or a Zanzibar beach extension — simply reply to this email or WhatsApp us. We are happy to tailor every detail.</p>
 
-<p>Questions? Reply to this email or WhatsApp Our Team on <strong>+255 695 108 009</strong>.</p>
+<div class="cta-row">
+  <a class="btn" href="https://wa.me/255695108009?text=Hi%20Tanzania%20Safari%20Magic%2C%20I%20just%20sent%20a%20booking%20request%20({{booking_reference}})">WhatsApp our team</a>
+  <a class="btn-secondary" href="{{#if site_url}}{{site_url}}{{else}}https://tanzaniasafarimagic.com{{/if}}/safaris">Browse more safaris</a>
+</div>
+
+<p class="closing">We look forward to hosting you in the wild heart of Tanzania.</p>
 {{/with}}

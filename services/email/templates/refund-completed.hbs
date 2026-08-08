@@ -1,28 +1,44 @@
 {{#with refund}}
-<p>Dear <strong>{{customer_name}}</strong>,</p>
+<p class="greeting">Dear <strong>{{#if customer_name}}{{customer_name}}{{else}}Traveller{{/if}}</strong>,</p>
 
-<p>Your refund has been processed successfully!</p>
+<p class="lead">
+  Good news — your refund with <strong>Tanzania Safari Magic</strong> has been completed on our side.
+  Please allow your bank a little more time if the funds have not yet landed in your account.
+</p>
 
-<div class="divider"></div>
-
-<div class="row">
-  <span class="label">Refund ID</span>
-  <span class="value">{{refund_id}}</span>
+<p class="section-label">Completed refund</p>
+<div class="data-card">
+  {{#if refund_id}}
+  <div class="row">
+    <span class="label">Refund ID</span>
+    <span class="value">{{refund_id}}</span>
+  </div>
+  {{/if}}
+  {{#if booking_reference}}
+  <div class="row">
+    <span class="label">Booking reference</span>
+    <span class="value">#{{booking_reference}}</span>
+  </div>
+  {{/if}}
+  <div class="row">
+    <span class="label">Refund amount</span>
+    <span class="value">${{formatPrice amount}} USD</span>
+  </div>
+  <div class="row">
+    <span class="label">Status</span>
+    <span class="value"><span class="badge badge-success">Refund completed</span></span>
+  </div>
 </div>
-<div class="row">
-  <span class="label">Booking Reference</span>
-  <span class="value">#{{booking_reference}}</span>
-</div>
-<div class="row">
-  <span class="label">Refund Amount</span>
-  <span class="value">${{formatPrice amount}} USD</span>
-</div>
-<div class="row">
-  <span class="label">Status</span>
-  <span class="value"><span class="badge badge-success">Completed</span></span>
+
+<div class="info-box success">
+  <strong>Still planning Tanzania?</strong><br>
+  Whenever you are ready, we would be honoured to rebuild an itinerary around new dates. Your history with us helps us tailor the next journey even more carefully.
 </div>
 
-<div class="divider"></div>
+<div class="cta-row">
+  <a class="btn" href="{{#if site_url}}{{site_url}}{{else}}https://tanzaniasafarimagic.com{{/if}}/booking">Plan a new safari</a>
+  <a class="btn-secondary" href="https://wa.me/255695108009">Talk to a consultant</a>
+</div>
 
-<p>The refund should appear in your account within 5-10 business days. Please contact us if you have any questions.</p>
+<p class="closing">Thank you for your understanding — we hope to welcome you to Tanzania another time.</p>
 {{/with}}

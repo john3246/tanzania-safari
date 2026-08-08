@@ -16,11 +16,12 @@ const logger = require('../../utils/logger');
 Handlebars.registerHelper('formatDate', function(date) {
   if (!date) return '';
   const d = new Date(date);
+  if (Number.isNaN(d.getTime())) return String(date);
   return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 });
 
 Handlebars.registerHelper('formatPrice', function(price) {
-  if (!price) return '0';
+  if (price == null || price === '') return '0';
   return parseFloat(price).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
 });
 
@@ -32,13 +33,67 @@ Handlebars.registerHelper('if', function(conditional, options) {
   }
 });
 
+Handlebars.registerHelper('unless', function(conditional, options) {
+  if (!conditional) {
+    return options.fn(this);
+  }
+  return options.inverse(this);
+});
+
 // Template cache
 const templateCache = new Map();
+let partialsReady = null;
+
+async function ensurePartialsRegistered() {
+  if (partialsReady) return partialsReady;
+  partialsReady = (async () => {
+    const partialsDir = path.join(__dirname, 'templates', 'partials');
+    try {
+      const files = await fs.readdir(partialsDir);
+      await Promise.all(
+        files
+          .filter((f) => f.endsWith('.hbs'))
+          .map(async (file) => {
+            const name = file.replace(/\.hbs$/, '');
+            const content = await fs.readFile(path.join(partialsDir, file), 'utf-8');
+            Handlebars.registerPartial(name, content);
+          })
+      );
+    } catch (err) {
+      logger.warn({ event: 'email_partials_missing', error: err.message }, 'Email partials not loaded');
+    }
+  })();
+  return partialsReady;
+}
+
+function normalizeTemplateData(data = {}) {
+  const siteUrl = process.env.SITE_URL || 'https://tanzaniasafarimagic.com';
+  // Templates historically used {{#with booking|enquiry|payment}} while callers spread
+  // fields at the root. Nest aliases so both styles resolve to the same values.
+  const nestedKeys = ['booking', 'enquiry', 'payment', 'refund', 'user', 'content', 'alert'];
+  const normalized = {
+    site_url: data.site_url || siteUrl,
+    year: data.year || new Date().getFullYear(),
+    company_name: 'Tanzania Safari Magic',
+    company_email: 'info@tanzaniasafarimagic.com',
+    company_phone: '+255 695 108 009',
+    company_whatsapp: 'https://wa.me/255695108009',
+    ...data
+  };
+  for (const key of nestedKeys) {
+    if (!normalized[key] || typeof normalized[key] !== 'object') {
+      normalized[key] = { ...normalized };
+    }
+  }
+  return normalized;
+}
 
 /**
  * Load and compile a template
  */
 async function loadTemplate(templateName) {
+  await ensurePartialsRegistered();
+
   if (templateCache.has(templateName)) {
     return templateCache.get(templateName);
   }
@@ -63,16 +118,17 @@ async function loadTemplate(templateName) {
  */
 async function renderTemplate(templateName, data, layout = 'main') {
   try {
+    const normalized = normalizeTemplateData(data || {});
     const contentTemplate = await loadTemplate(templateName);
-    const content = contentTemplate(data);
+    const content = contentTemplate(normalized);
     
     const layoutTemplate = await loadTemplate(`layouts/${layout}`);
     const html = layoutTemplate({
-      subject: data.subject || '',
-      header: data.header || null,
+      ...normalized,
+      subject: normalized.subject || '',
+      header: normalized.header || null,
       body: content,
-      footer: data.footer || null,
-      ...data
+      footer: normalized.footer || null
     });
     
     return html;
@@ -113,20 +169,26 @@ async function sendEmailDirect(options) {
       logger.warn({ event: 'template_render_warning', templateName, error: err.message }, 'Using inline HTML fallback for direct email');
       const bodyContent = templateData?.response_notes || templateData?.enquiry_message || templateData?.message || subject || '';
       html = `
-        <div style="font-family:'Segoe UI',Helvetica,Arial,sans-serif;max-width:640px;margin:0 auto;background:#fff;border:1px solid #e5ebe3;border-radius:16px;overflow:hidden">
+        <div style="font-family:'Segoe UI',Helvetica,Arial,sans-serif;max-width:640px;margin:0 auto;background:#fff;border:1px solid #d9e3d6;border-radius:18px;overflow:hidden">
           <div style="background:linear-gradient(135deg,#1E311B,#263E22);padding:28px;text-align:center">
             <h2 style="color:#fff;margin:0;font-size:22px;font-weight:800">Tanzania Safari Magic</h2>
-            <p style="color:rgba(255,255,255,0.85);margin:8px 0 0;font-size:14px">Private safaris from Arusha</p>
+            <p style="color:rgba(255,255,255,0.9);margin:8px 0 0;font-size:14px">Private safaris from Arusha · Serengeti · Ngorongoro · Zanzibar</p>
           </div>
           <div style="height:4px;background:#FF6F00"></div>
-          <div style="padding:28px;color:#475569;font-size:15px;line-height:1.6">
+          <div style="padding:28px;color:#3d4a3a;font-size:16px;line-height:1.65">
+            <p style="margin:0 0 10px">Dear guest,</p>
             <h3 style="color:#1E311B;margin:0 0 12px">${String(subject || '').replace(/</g,'&lt;')}</h3>
-            <div style="white-space:pre-wrap">${String(bodyContent).replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
-            <p style="margin-top:24px"><a href="https://tanzaniasafarimagic.com/booking" style="display:inline-block;background:#FF6F00;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:700">Get a Free Quote</a></p>
+            <div style="white-space:pre-wrap;margin-bottom:18px">${String(bodyContent).replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+            <p style="margin:0 0 8px">With warm regards from Arusha,</p>
+            <p style="margin:0 0 4px"><strong>The Tanzania Safari Magic Team</strong></p>
+            <p style="margin:0 0 16px;color:#64748b;font-size:13px">Private Safari Specialists · Licensed Local Operator</p>
+            <p style="margin:0 0 8px;font-size:13px"><a href="mailto:info@tanzaniasafarimagic.com" style="color:#C45500;font-weight:650">info@tanzaniasafarimagic.com</a> · <a href="https://wa.me/255695108009" style="color:#C45500;font-weight:650">+255 695 108 009</a></p>
+            <p style="margin-top:20px"><a href="https://tanzaniasafarimagic.com/booking" style="display:inline-block;background:#FF6F00;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:700">Get a free quote</a></p>
           </div>
           <div style="background:#f0f3ef;padding:20px;text-align:center;font-size:13px;color:#64748b">
-            <strong>Tanzania Safari Magic</strong> · Arusha · <a href="https://wa.me/255695108009" style="color:#263E22;font-weight:700">+255 695 108 009</a>
-            <div style="margin-top:8px;font-size:12px;opacity:0.8">&copy; ${new Date().getFullYear()} Tanzania Safari Magic</div>
+            <strong style="color:#1E311B">Tanzania Safari Magic</strong> — your hosts in Arusha<br>
+            Office hours Mon–Sat 08:00–18:00 EAT · We reply within 24 hours<br>
+            <span style="display:inline-block;margin-top:8px;font-size:12px">&copy; ${new Date().getFullYear()} Tanzania Safari Magic. All rights reserved.</span>
           </div>
         </div>
       `;
@@ -210,15 +272,21 @@ async function sendEmailQueued(jobName, data) {
       logger.warn({ event: 'template_render_warning', templateName, error: renderErr.message }, 'Falling back to inline HTML rendering');
       const bodyContent = templateData?.response_notes || templateData?.enquiry_message || templateData?.message || subject || '';
       data.html = `
-        <div style="font-family: 'Segoe UI', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff;">
-          <div style="background: #0f172a; padding: 20px; border-radius: 8px 8px 0 0; text-align: center;">
-            <h2 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 700;">Tanzania Safari Magic</h2>
+        <div style="font-family:'Segoe UI',Helvetica,Arial,sans-serif;max-width:640px;margin:0 auto;background:#fff;border:1px solid #d9e3d6;border-radius:18px;overflow:hidden">
+          <div style="background:linear-gradient(135deg,#1E311B,#263E22);padding:28px;text-align:center">
+            <h2 style="color:#fff;margin:0;font-size:22px;font-weight:800">Tanzania Safari Magic</h2>
+            <p style="color:rgba(255,255,255,0.9);margin:8px 0 0;font-size:14px">Private safaris from Arusha</p>
           </div>
-          <div style="padding: 24px; color: #334155; font-size: 15px; line-height: 1.6;">
-            <h3 style="color: #0f172a; margin-top: 0;">${subject}</h3>
-            <div style="margin-top: 16px; white-space: pre-wrap;">${bodyContent}</div>
+          <div style="height:4px;background:#FF6F00"></div>
+          <div style="padding:28px;color:#3d4a3a;font-size:16px;line-height:1.65">
+            <p style="margin:0 0 10px">Dear guest,</p>
+            <h3 style="color:#1E311B;margin:0 0 12px">${String(subject || '').replace(/</g,'&lt;')}</h3>
+            <div style="white-space:pre-wrap;margin-bottom:18px">${String(bodyContent).replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+            <p style="margin:0 0 8px">With warm regards from Arusha,</p>
+            <p style="margin:0"><strong>The Tanzania Safari Magic Team</strong></p>
+            <p style="margin:8px 0 0;font-size:13px"><a href="mailto:info@tanzaniasafarimagic.com" style="color:#C45500">info@tanzaniasafarimagic.com</a> · <a href="https://wa.me/255695108009" style="color:#C45500">+255 695 108 009</a></p>
           </div>
-          <div style="border-top: 1px solid #e2e8f0; padding: 16px; font-size: 12px; color: #94a3b8; text-align: center; background: #f8fafc; border-radius: 0 0 8px 8px;">
+          <div style="background:#f0f3ef;padding:20px;text-align:center;font-size:13px;color:#64748b">
             &copy; ${new Date().getFullYear()} Tanzania Safari Magic. All rights reserved.
           </div>
         </div>
@@ -259,98 +327,109 @@ async function sendEmailQueued(jobName, data) {
 
 // Booking emails
 async function sendBookingConfirmation(booking) {
+  const subject = `We received your safari request — ${booking.package_name || 'Tanzania Safari Magic'}`;
   const data = {
     to: booking.email,
-    subject: `Booking Confirmed — ${booking.package_name || 'Safari Package'}`,
+    subject,
     templateName: 'booking-confirmation',
     templateData: {
       ...booking,
       header: {
-        title: 'Booking Confirmed!',
-        subtitle: 'Tanzania Safari Magic'
+        title: 'Your safari request is with us',
+        subtitle: 'Thank you — our Arusha team is reviewing your dates'
       },
-      subject: `Booking Confirmed — ${booking.package_name || 'Safari Package'}`
+      subject
     }
   };
   return sendEmailQueued('booking-confirmation', data);
 }
 
 async function sendBookingApproved(booking) {
+  const subject = `Your safari is confirmed — ${booking.package_name || 'Tanzania Safari Magic'}`;
   const data = {
     to: booking.email,
-    subject: `Booking Approved — ${booking.package_name}`,
+    subject,
     templateName: 'booking-approved',
     templateData: {
       ...booking,
       header: {
-        title: 'Booking Approved!',
-        subtitle: 'Tanzania Safari Magic'
-      }
+        title: 'Safari confirmed — karibu!',
+        subtitle: 'Your journey with Tanzania Safari Magic is approved'
+      },
+      subject
     }
   };
   return sendEmailQueued('booking-approved', data);
 }
 
 async function sendBookingRejected(booking) {
+  const subject = `Update on your safari request — ${booking.package_name || 'Tanzania Safari Magic'}`;
   const data = {
     to: booking.email,
-    subject: `Booking Update — ${booking.package_name}`,
+    subject,
     templateName: 'booking-rejected',
     templateData: {
       ...booking,
       header: {
-        title: 'Booking Update',
-        subtitle: 'Tanzania Safari Magic'
-      }
+        title: 'An update on your request',
+        subtitle: 'Let’s find the right dates together'
+      },
+      subject
     }
   };
   return sendEmailQueued('booking-rejected', data);
 }
 
 async function sendBookingCancelled(booking) {
+  const subject = `Cancellation confirmation — ${booking.package_name || 'Tanzania Safari Magic'}`;
   const data = {
     to: booking.email,
-    subject: `Booking Cancelled — ${booking.package_name}`,
+    subject,
     templateName: 'booking-cancelled',
     templateData: {
       ...booking,
       header: {
-        title: 'Booking Cancelled',
-        subtitle: 'Tanzania Safari Magic'
-      }
+        title: 'Booking cancellation confirmed',
+        subtitle: 'We’re here whenever you wish to replan'
+      },
+      subject
     }
   };
   return sendEmailQueued('booking-cancelled', data);
 }
 
 async function sendBookingReminder(booking, daysUntil) {
+  const subject = `Following up on your safari enquiry — ${booking.package_name || 'Tanzania Safari Magic'}`;
   const data = {
     to: booking.email,
-    subject: `Safari Reminder — ${booking.package_name}`,
+    subject,
     templateName: 'booking-reminder',
     templateData: {
       ...booking,
       days_until: daysUntil,
       header: {
-        title: 'Upcoming Safari!',
-        subtitle: 'Tanzania Safari Magic'
-      }
+        title: 'Just checking in from Arusha',
+        subtitle: 'We’re ready to help you finalise your plans'
+      },
+      subject
     }
   };
   return sendEmailQueued('booking-reminder', data);
 }
 
 async function sendBookingCompleted(booking) {
+  const subject = `Asante sana — thank you for travelling with us`;
   const data = {
     to: booking.email,
-    subject: `Thank You — ${booking.package_name}`,
+    subject,
     templateName: 'booking-completed',
     templateData: {
       ...booking,
       header: {
-        title: 'Safari Completed',
-        subtitle: 'Tanzania Safari Magic'
-      }
+        title: 'Thank you for travelling with us',
+        subtitle: 'We hope Tanzania left you with lifelong memories'
+      },
+      subject
     }
   };
   return sendEmailQueued('booking-completed', data);
@@ -394,13 +473,13 @@ async function sendPaymentReceipt(booking, amount) {
 async function sendPaymentSuccess(payment) {
   const data = {
     to: payment.customer_email,
-    subject: 'Payment Successful',
+    subject: 'Payment received — thank you | Tanzania Safari Magic',
     templateName: 'payment-success',
     templateData: {
       ...payment,
       header: {
-        title: 'Payment Successful',
-        subtitle: 'Tanzania Safari Magic'
+        title: 'Payment received — asante',
+        subtitle: 'Your receipt from Tanzania Safari Magic'
       }
     }
   };
@@ -410,13 +489,13 @@ async function sendPaymentSuccess(payment) {
 async function sendPaymentFailed(payment) {
   const data = {
     to: payment.customer_email,
-    subject: 'Payment Failed',
+    subject: 'We could not complete your payment — Tanzania Safari Magic',
     templateName: 'payment-failed',
     templateData: {
       ...payment,
       header: {
-        title: 'Payment Failed',
-        subtitle: 'Tanzania Safari Magic'
+        title: 'Payment needs another try',
+        subtitle: 'We’re here to help you complete it smoothly'
       }
     }
   };
@@ -426,13 +505,13 @@ async function sendPaymentFailed(payment) {
 async function sendRefundInitiated(refund) {
   const data = {
     to: refund.customer_email,
-    subject: 'Refund Initiated',
+    subject: 'Your refund is being processed — Tanzania Safari Magic',
     templateName: 'refund-initiated',
     templateData: {
       ...refund,
       header: {
-        title: 'Refund Initiated',
-        subtitle: 'Tanzania Safari Magic'
+        title: 'Refund in progress',
+        subtitle: 'We’ll email you again when it is complete'
       }
     }
   };
@@ -442,13 +521,13 @@ async function sendRefundInitiated(refund) {
 async function sendRefundCompleted(refund) {
   const data = {
     to: refund.customer_email,
-    subject: 'Refund Completed',
+    subject: 'Your refund is complete — Tanzania Safari Magic',
     templateName: 'refund-completed',
     templateData: {
       ...refund,
       header: {
-        title: 'Refund Completed',
-        subtitle: 'Tanzania Safari Magic'
+        title: 'Refund completed',
+        subtitle: 'Thank you for your patience'
       }
     }
   };
@@ -457,16 +536,18 @@ async function sendRefundCompleted(refund) {
 
 // Contact emails
 async function sendContactAcknowledgment(enquiry) {
+  const subject = 'We received your message — Tanzania Safari Magic';
   const data = {
     to: enquiry.email,
-    subject: 'Message Received — Tanzania Safari Magic',
+    subject,
     templateName: 'contact-confirmation',
     templateData: {
       ...enquiry,
       header: {
-        title: 'Message Received',
-        subtitle: 'Tanzania Safari Magic'
-      }
+        title: 'Thank you for contacting us',
+        subtitle: 'A safari consultant in Arusha will reply within 24 hours'
+      },
+      subject
     }
   };
   return sendEmailQueued('contact-confirmation', data);
@@ -480,14 +561,15 @@ async function sendAdminContactNotification(enquiry) {
 
   const data = {
     to: process.env.ADMIN_EMAIL,
-    subject: `New Enquiry from ${enquiry.full_name}`,
+    subject: `New enquiry from ${enquiry.full_name}`,
     templateName: 'admin-contact-notification',
     templateData: {
       ...enquiry,
       admin_url: process.env.ADMIN_URL || 'http://localhost:3000/admin',
+      hide_signature: true,
       header: {
-        title: 'Admin Notification',
-        subtitle: 'New Contact Enquiry'
+        title: 'New contact enquiry',
+        subtitle: 'Action needed within 24 hours'
       }
     },
     priority: 'high'
@@ -496,17 +578,19 @@ async function sendAdminContactNotification(enquiry) {
 }
 
 async function sendEnquiryResponse(enquiry, responseNotes) {
+  const subject = 'A personal reply from Tanzania Safari Magic';
   const data = {
     to: enquiry.email,
-    subject: `Response to your Safari Inquiry — Tanzania Safari Magic`,
+    subject,
     templateName: 'enquiry-response',
     templateData: {
       ...enquiry,
       response_notes: responseNotes,
       header: {
-        title: 'Safari Inquiry Response',
-        subtitle: 'Tanzania Safari Magic'
-      }
+        title: 'A note from your safari consultant',
+        subtitle: 'Tanzania Safari Magic · Arusha'
+      },
+      subject
     }
   };
   return sendEmailQueued('enquiry-response', data);
@@ -520,14 +604,15 @@ async function sendAdminBookingNotification(booking) {
 
   const data = {
     to: process.env.ADMIN_EMAIL,
-    subject: `New Booking — ${booking.package_name}`,
+    subject: `New booking — ${booking.package_name || booking.booking_reference || 'Safari'}`,
     templateName: 'admin-booking-notification',
     templateData: {
       ...booking,
       admin_url: process.env.ADMIN_URL || 'http://localhost:3000/admin',
+      hide_signature: true,
       header: {
-        title: 'Admin Notification',
-        subtitle: 'New Booking Received'
+        title: 'New booking request',
+        subtitle: 'Review and respond within 24 hours'
       }
     },
     priority: 'high'
@@ -543,14 +628,15 @@ async function sendAdminBookingCancelled(booking) {
 
   const data = {
     to: process.env.ADMIN_EMAIL,
-    subject: `Booking Cancelled — ${booking.package_name}`,
+    subject: `Booking cancelled — ${booking.package_name || booking.booking_reference || 'Safari'}`,
     templateName: 'admin-booking-cancelled',
     templateData: {
       ...booking,
       admin_url: process.env.ADMIN_URL || 'http://localhost:3000/admin',
+      hide_signature: true,
       header: {
-        title: 'Admin Notification',
-        subtitle: 'Booking Cancelled'
+        title: 'Booking cancelled',
+        subtitle: 'Check refund / guest communication'
       }
     },
     priority: 'high'
@@ -566,14 +652,15 @@ async function sendAdminPaymentFailed(payment) {
 
   const data = {
     to: process.env.ADMIN_EMAIL,
-    subject: `Payment Failed — ${payment.customer_name}`,
+    subject: `Payment failed — ${payment.customer_name || 'Guest'}`,
     templateName: 'admin-payment-failed',
     templateData: {
       ...payment,
       admin_url: process.env.ADMIN_URL || 'http://localhost:3000/admin',
+      hide_signature: true,
       header: {
-        title: 'Admin Notification',
-        subtitle: 'Payment Failed'
+        title: 'Payment failed',
+        subtitle: 'Guest may need alternative payment help'
       }
     },
     priority: 'high'
@@ -585,14 +672,14 @@ async function sendAdminPaymentFailed(payment) {
 async function sendWelcomeEmail(user) {
   const data = {
     to: user.email,
-    subject: 'Welcome to Tanzania Safari Magic!',
+    subject: 'Karibu — welcome to Tanzania Safari Magic',
     templateName: 'welcome',
     templateData: {
       ...user,
-      site_url: process.env.SITE_URL || 'http://localhost:3000',
+      site_url: process.env.SITE_URL || 'https://tanzaniasafarimagic.com',
       header: {
-        title: 'Welcome!',
-        subtitle: 'Tanzania Safari Magic'
+        title: 'Karibu — welcome',
+        subtitle: 'Your journey with Tanzania Safari Magic begins here'
       }
     }
   };
@@ -602,13 +689,13 @@ async function sendWelcomeEmail(user) {
 async function sendEmailVerification(user, verificationUrl) {
   const data = {
     to: user.email,
-    subject: 'Verify Your Email Address',
+    subject: 'Please verify your email — Tanzania Safari Magic',
     templateName: 'email-verification',
     templateData: {
       verification_url: verificationUrl,
       header: {
-        title: 'Verify Your Email',
-        subtitle: 'Tanzania Safari Magic'
+        title: 'Verify your email',
+        subtitle: 'One quick step to secure your account'
       }
     }
   };
@@ -616,34 +703,28 @@ async function sendEmailVerification(user, verificationUrl) {
 }
 
 async function sendPasswordResetEmail(email, resetUrl) {
-  const data = {
-    to: email,
-    subject: 'Password Reset — Tanzania Safari Magic',
-    templateName: 'password-reset',
-    templateData: {
-      reset_url: resetUrl,
-      header: {
-        title: 'Password Reset',
-        subtitle: 'Tanzania Safari Magic'
-      }
-    }
-  };
   return sendEmailDirect({
     to: email,
-    subject: 'Password Reset — Tanzania Safari Magic',
-    html: await renderTemplate('password-reset', { reset_url: resetUrl, header: { title: 'Password Reset', subtitle: 'Tanzania Safari Magic' } })
+    subject: 'Reset your password — Tanzania Safari Magic',
+    html: await renderTemplate('password-reset', {
+      reset_url: resetUrl,
+      header: {
+        title: 'Password reset request',
+        subtitle: 'Secure link inside — expires in 1 hour'
+      }
+    })
   });
 }
 
 async function sendPasswordChanged(email) {
   const data = {
     to: email,
-    subject: 'Password Changed — Tanzania Safari Magic',
+    subject: 'Your password was changed — Tanzania Safari Magic',
     templateName: 'password-changed',
     templateData: {
       header: {
-        title: 'Password Changed',
-        subtitle: 'Tanzania Safari Magic'
+        title: 'Password changed successfully',
+        subtitle: 'Contact us immediately if this was not you'
       }
     }
   };

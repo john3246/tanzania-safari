@@ -1,36 +1,23 @@
 {{#with payment}}
-<p><strong>Payment Failed</strong></p>
+<p class="greeting"><strong>Payment failed</strong></p>
+<p class="lead">A guest payment attempt failed. Follow up promptly so the booking is not left in limbo.</p>
 
-<div class="divider"></div>
-
-<div class="row">
-  <span class="label">Payment ID</span>
-  <span class="value">{{payment_id}}</span>
-</div>
-<div class="row">
-  <span class="label">Customer</span>
-  <span class="value">{{customer_name}}</span>
-</div>
-<div class="row">
-  <span class="label">Email</span>
-  <span class="value">{{customer_email}}</span>
-</div>
-<div class="row">
-  <span class="label">Booking Reference</span>
-  <span class="value">{{booking_reference}}</span>
-</div>
-<div class="row">
-  <span class="label">Amount</span>
-  <span class="value">${{formatPrice amount}} USD</span>
-</div>
-<div class="row">
-  <span class="label">Status</span>
-  <span class="value"><span class="badge badge-error">Failed</span></span>
+<p class="section-label">Payment attempt</p>
+<div class="data-card">
+  {{#if payment_id}}
+  <div class="row"><span class="label">Payment ID</span><span class="value">{{payment_id}}</span></div>
+  {{/if}}
+  <div class="row"><span class="label">Guest</span><span class="value">{{customer_name}}</span></div>
+  <div class="row"><span class="label">Email</span><span class="value"><a href="mailto:{{customer_email}}">{{customer_email}}</a></span></div>
+  {{#if booking_reference}}
+  <div class="row"><span class="label">Booking reference</span><span class="value">{{booking_reference}}</span></div>
+  {{/if}}
+  <div class="row"><span class="label">Amount</span><span class="value">${{formatPrice amount}} USD</span></div>
+  <div class="row"><span class="label">Status</span><span class="value"><span class="badge badge-error">Failed</span></span></div>
 </div>
 
-<div class="divider"></div>
-
-<div style="text-align: center; margin-top: 24px;">
-  <a href="{{admin_url}}/bookings" class="btn">View in Dashboard</a>
+<div class="cta-row">
+  <a href="{{admin_url}}/bookings" class="btn">Open in dashboard</a>
+  <a href="mailto:{{customer_email}}" class="btn-secondary">Contact guest</a>
 </div>
 {{/with}}

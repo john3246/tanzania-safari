@@ -1,28 +1,47 @@
 {{#with payment}}
-<p>Dear <strong>{{customer_name}}</strong>,</p>
+<p class="greeting">Dear <strong>{{#if customer_name}}{{customer_name}}{{else}}Traveller{{/if}}</strong>,</p>
 
-<p>We were unable to process your payment. This may be due to insufficient funds, an expired card, or a technical issue.</p>
+<p class="lead">
+  We were unable to complete a payment attempt linked to your booking with <strong>Tanzania Safari Magic</strong>.
+  Please do not worry — your safari plans are not automatically cancelled. Our team can help you retry or arrange another secure method.
+</p>
 
-<div class="divider"></div>
-
-<div class="row">
-  <span class="label">Payment ID</span>
-  <span class="value">{{payment_id}}</span>
+<p class="section-label">Payment attempt</p>
+<div class="data-card">
+  {{#if payment_id}}
+  <div class="row">
+    <span class="label">Payment ID</span>
+    <span class="value">{{payment_id}}</span>
+  </div>
+  {{/if}}
+  {{#if booking_reference}}
+  <div class="row">
+    <span class="label">Booking reference</span>
+    <span class="value">#{{booking_reference}}</span>
+  </div>
+  {{/if}}
+  {{#if amount}}
+  <div class="row">
+    <span class="label">Amount</span>
+    <span class="value">${{formatPrice amount}} USD</span>
+  </div>
+  {{/if}}
+  <div class="row">
+    <span class="label">Status</span>
+    <span class="value"><span class="badge badge-error">Payment failed</span></span>
+  </div>
 </div>
-<div class="row">
-  <span class="label">Booking Reference</span>
-  <span class="value">#{{booking_reference}}</span>
-</div>
-<div class="row">
-  <span class="label">Amount</span>
-  <span class="value">${{formatPrice amount}} USD</span>
-</div>
-<div class="row">
-  <span class="label">Status</span>
-  <span class="value"><span class="badge badge-error">Failed</span></span>
+
+<div class="info-box warning">
+  <strong>Common reasons</strong><br>
+  Insufficient funds, an expired card, bank fraud checks, or a temporary connection issue.
+  If you prefer, we can share alternative bank-transfer or deposit instructions that many international guests find easier.
 </div>
 
-<div class="divider"></div>
+<div class="cta-row">
+  <a class="btn" href="https://wa.me/255695108009">Get help on WhatsApp</a>
+  <a class="btn-secondary" href="mailto:info@tanzaniasafarimagic.com">Email our billing team</a>
+</div>
 
-<p>Please try again with a different payment method or contact us for assistance.</p>
+<p class="closing">We are here to make payment as calm and clear as the rest of your journey planning.</p>
 {{/with}}

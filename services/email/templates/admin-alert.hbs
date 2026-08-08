@@ -1,22 +1,23 @@
 {{#with alert}}
-<p><strong>System Alert: {{alert_type}}</strong></p>
+<p class="greeting"><strong>System alert: {{alert_type}}</strong></p>
+<p class="lead">Please investigate as soon as possible. Details below.</p>
 
-<div class="divider"></div>
-
-<p><strong>Timestamp:</strong> {{timestamp}}</p>
-<p><strong>Severity:</strong> {{severity}}</p>
+<div class="data-card">
+  {{#if timestamp}}
+  <div class="row"><span class="label">Timestamp</span><span class="value">{{timestamp}}</span></div>
+  {{/if}}
+  {{#if severity}}
+  <div class="row"><span class="label">Severity</span><span class="value">{{severity}}</span></div>
+  {{/if}}
+</div>
 
 {{#if error_message}}
-<p><strong>Error Message:</strong></p>
-<p style="background: #FFEBEE; padding: 16px; border-radius: 8px; font-size: 14px; color: #C62828;">{{error_message}}</p>
+<p class="section-label">Error message</p>
+<div class="info-box danger">{{error_message}}</div>
 {{/if}}
 
 {{#if details}}
-<p><strong>Details:</strong></p>
-<pre style="background: #FBF6EE; padding: 16px; border-radius: 8px; font-size: 13px; overflow: auto;">{{details}}</pre>
+<p class="section-label">Details</p>
+<pre style="background:#f6f9f5;border:1px solid #e0e8dd;border-radius:12px;padding:16px;font-size:13px;overflow:auto;white-space:pre-wrap;">{{details}}</pre>
 {{/if}}
-
-<div class="divider"></div>
-
-<p>Please investigate this issue as soon as possible.</p>
 {{/with}}

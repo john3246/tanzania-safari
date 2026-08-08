@@ -1,36 +1,52 @@
 {{#with booking}}
-<p>Dear <strong>{{full_name}}</strong>,</p>
+<p class="greeting">Dear <strong>{{#if full_name}}{{full_name}}{{else}}Traveller{{/if}}</strong>,</p>
 
-<p>Great news! Your safari booking has been <strong>approved</strong> and confirmed.</p>
+<p class="lead">
+  Wonderful news from Arusha — your safari with <strong>Tanzania Safari Magic</strong> has been
+  <strong>approved and confirmed</strong>. Our operations team is preparing your guides, vehicle, and lodge arrangements so everything feels seamless when you arrive.
+</p>
 
-<div class="divider"></div>
+<p class="section-label">Confirmed booking details</p>
+<div class="data-card">
+  <div class="row">
+    <span class="label">Booking reference</span>
+    <span class="value">#{{booking_reference}}</span>
+  </div>
+  <div class="row">
+    <span class="label">Safari / package</span>
+    <span class="value">{{package_name}}</span>
+  </div>
+  <div class="row">
+    <span class="label">Travel date</span>
+    <span class="value">{{formatDate start_date}}</span>
+  </div>
+  <div class="row">
+    <span class="label">Travellers</span>
+    <span class="value">{{number_of_adults}} adult(s){{#if number_of_children}}, {{number_of_children}} child(ren){{/if}}</span>
+  </div>
+  {{#if total_price_usd}}
+  <div class="row">
+    <span class="label">Total</span>
+    <span class="value">${{formatPrice total_price_usd}} USD</span>
+  </div>
+  {{/if}}
+  <div class="row">
+    <span class="label">Status</span>
+    <span class="value"><span class="badge badge-success">Confirmed</span></span>
+  </div>
+</div>
 
-<div class="row">
-  <span class="label">Booking Reference</span>
-  <span class="value">#{{booking_reference}}</span>
-</div>
-<div class="row">
-  <span class="label">Package</span>
-  <span class="value">{{package_name}}</span>
-</div>
-<div class="row">
-  <span class="label">Travel Date</span>
-  <span class="value">{{formatDate start_date}}</span>
-</div>
-<div class="row">
-  <span class="label">Travelers</span>
-  <span class="value">{{number_of_adults}} Adults{{#if number_of_children}}, {{number_of_children}} Children{{/if}}</span>
-</div>
-<div class="row">
-  <span class="label">Total Price</span>
-  <span class="value">${{formatPrice total_price_usd}} USD</span>
-</div>
-<div class="row">
-  <span class="label">Status</span>
-  <span class="value"><span class="badge badge-success">Confirmed</span></span>
+<div class="info-box success">
+  <strong>Before you travel</strong><br>
+  Please keep this reference handy. Closer to departure we will share practical notes on airport pickup, packing for the parks, tipping guidelines, and how to reach your guide. If your flight times change, tell us as soon as you can so we can adjust transfers.
 </div>
 
-<div class="divider"></div>
+<p>Questions about visas, malaria precautions, or what to wear on game drives? Reply anytime — hospitality is part of the journey for us.</p>
 
-<p>Get ready for an incredible safari experience in Tanzania!</p>
+<div class="cta-row">
+  <a class="btn" href="https://wa.me/255695108009">Chat with your consultant</a>
+  <a class="btn-secondary" href="{{#if site_url}}{{site_url}}{{else}}https://tanzaniasafarimagic.com{{/if}}/blog/first-tanzania-safari">First-safari tips</a>
+</div>
+
+<p class="closing">Karibu sana — we cannot wait to welcome you to Tanzania.</p>
 {{/with}}

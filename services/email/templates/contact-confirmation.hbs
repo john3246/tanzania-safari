@@ -1,27 +1,59 @@
 {{#with enquiry}}
-<p>Dear <strong>{{full_name}}</strong>,</p>
+<p class="greeting">Dear <strong>{{#if full_name}}{{full_name}}{{else}}Traveller{{/if}}</strong>,</p>
 
-<p>Thank you for contacting us! Our team will respond within <strong>24 hours</strong>.</p>
+<p class="lead">
+  Thank you for writing to <strong>Tanzania Safari Magic</strong>. Your message has reached our hospitality desk in Arusha,
+  and a safari consultant will personally review it. We aim to reply within <strong>24 hours</strong> with thoughtful, practical guidance — not a generic auto-reply.
+</p>
 
-<div class="divider"></div>
+<p class="section-label">What we received</p>
+<div class="data-card">
+  {{#if enquiry_id}}
+  <div class="row">
+    <span class="label">Enquiry reference</span>
+    <span class="value">#{{enquiry_id}}</span>
+  </div>
+  {{/if}}
+  {{#if enquiry_type}}
+  <div class="row">
+    <span class="label">Enquiry type</span>
+    <span class="value">{{enquiry_type}}</span>
+  </div>
+  {{/if}}
+  {{#if package_name}}
+  <div class="row">
+    <span class="label">Package of interest</span>
+    <span class="value">{{package_name}}</span>
+  </div>
+  {{/if}}
+  {{#if preferred_travel_date}}
+  <div class="row">
+    <span class="label">Preferred travel date</span>
+    <span class="value">{{formatDate preferred_travel_date}}</span>
+  </div>
+  {{/if}}
+  {{#if number_of_travelers}}
+  <div class="row">
+    <span class="label">Travellers</span>
+    <span class="value">{{number_of_travelers}}</span>
+  </div>
+  {{/if}}
+</div>
 
-<div class="row">
-  <span class="label">Enquiry ID</span>
-  <span class="value">#{{enquiry_id}}</span>
-</div>
-<div class="row">
-  <span class="label">Type</span>
-  <span class="value">{{enquiry_type}}</span>
-</div>
-{{#if package_name}}
-<div class="row">
-  <span class="label">Package</span>
-  <span class="value">{{package_name}}</span>
-</div>
+{{#if enquiry_message}}
+<p class="section-label">Your message</p>
+<div class="quote-box">{{enquiry_message}}</div>
 {{/if}}
 
-<div class="divider"></div>
+<div class="info-box">
+  <strong>While you wait</strong><br>
+  Feel free to share more detail by reply: travel month, group size, budget range, and must-see experiences (Great Migration, Big Five, Kilimanjaro summit, Zanzibar beach, and so on). The clearer your wishlist, the richer our proposal.
+</div>
 
-<p><strong>Your Message:</strong></p>
-<p style="background: #FBF6EE; padding: 16px; border-radius: 8px; font-size: 14px;">{{enquiry_message}}</p>
+<div class="cta-row">
+  <a class="btn" href="https://wa.me/255695108009">WhatsApp for a faster reply</a>
+  <a class="btn-secondary" href="{{#if site_url}}{{site_url}}{{else}}https://tanzaniasafarimagic.com{{/if}}/safaris">Explore safari ideas</a>
+</div>
+
+<p class="closing">Karibu — we are honoured you reached out, and we look forward to planning something memorable with you.</p>
 {{/with}}

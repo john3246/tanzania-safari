@@ -1,13 +1,25 @@
 {{#with enquiry}}
-<p>Dear <strong>{{full_name}}</strong>,</p>
+<p class="greeting">Dear <strong>{{#if full_name}}{{full_name}}{{else}}Traveller{{/if}}</strong>,</p>
 
-<p>Thank you for your inquiry about <strong>{{package_name || 'your safari'}}</strong>.</p>
+<p class="lead">
+  Thank you again for your enquiry
+  {{#if package_name}} about <strong>{{package_name}}</strong>{{else}} about travelling in Tanzania{{/if}}.
+  Below is a personal response from our Arusha team — please read it carefully, and reply with any questions so we can refine the plan together.
+</p>
 
-<div style="background: #FBF6EE; padding: 24px; border-radius: 12px; margin: 24px 0; line-height: 1.6;">
-  {{{response_notes}}}
+<p class="section-label">Message from your safari consultant</p>
+<div class="quote-box">{{{response_notes}}}</div>
+
+<div class="info-box">
+  <strong>Ready for the next step?</strong><br>
+  Reply to this email with your preferred dates and group size, or WhatsApp us to talk through lodge options and pacing.
+  When you are happy with the itinerary, we will send a clear written quote and deposit guidance — still with no surprise online charges for the enquiry itself.
 </div>
 
-<p>If you have any further questions or would like to proceed with your booking, simply reply to this email or contact us at <strong>+255 695 108 009</strong>.</p>
+<div class="cta-row">
+  <a class="btn" href="https://wa.me/255695108009">Continue on WhatsApp</a>
+  <a class="btn-secondary" href="{{#if site_url}}{{site_url}}{{else}}https://tanzaniasafarimagic.com{{/if}}/booking">Request a formal quote</a>
+</div>
 
-<p>We look forward to welcoming you to Tanzania!</p>
+<p class="closing">We are excited to help shape your Tanzania journey — one thoughtful detail at a time.</p>
 {{/with}}

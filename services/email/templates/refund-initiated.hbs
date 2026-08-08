@@ -1,28 +1,40 @@
 {{#with refund}}
-<p>Dear <strong>{{customer_name}}</strong>,</p>
+<p class="greeting">Dear <strong>{{#if customer_name}}{{customer_name}}{{else}}Traveller{{/if}}</strong>,</p>
 
-<p>Your refund request has been initiated and is being processed.</p>
+<p class="lead">
+  We have started processing your refund with <strong>Tanzania Safari Magic</strong>.
+  Thank you for your patience — we know waiting on money matters, and we will keep this transparent.
+</p>
 
-<div class="divider"></div>
-
-<div class="row">
-  <span class="label">Refund ID</span>
-  <span class="value">{{refund_id}}</span>
+<p class="section-label">Refund details</p>
+<div class="data-card">
+  {{#if refund_id}}
+  <div class="row">
+    <span class="label">Refund ID</span>
+    <span class="value">{{refund_id}}</span>
+  </div>
+  {{/if}}
+  {{#if booking_reference}}
+  <div class="row">
+    <span class="label">Booking reference</span>
+    <span class="value">#{{booking_reference}}</span>
+  </div>
+  {{/if}}
+  <div class="row">
+    <span class="label">Refund amount</span>
+    <span class="value">${{formatPrice amount}} USD</span>
+  </div>
+  <div class="row">
+    <span class="label">Status</span>
+    <span class="value"><span class="badge badge-warning">Processing</span></span>
+  </div>
 </div>
-<div class="row">
-  <span class="label">Booking Reference</span>
-  <span class="value">#{{booking_reference}}</span>
-</div>
-<div class="row">
-  <span class="label">Refund Amount</span>
-  <span class="value">${{formatPrice amount}} USD</span>
-</div>
-<div class="row">
-  <span class="label">Status</span>
-  <span class="value"><span class="badge badge-warning">Processing</span></span>
+
+<div class="info-box">
+  <strong>Timing</strong><br>
+  Most refunds appear in the original payment account within <strong>5–10 business days</strong>, depending on your bank.
+  You will receive another email when the refund is marked complete on our side.
 </div>
 
-<div class="divider"></div>
-
-<p>Refunds typically take 5-10 business days to appear in your account. You will receive another email when the refund is complete.</p>
+<p class="closing">If you need a status update sooner, reply to this email — we are happy to check for you.</p>
 {{/with}}

@@ -1,28 +1,38 @@
 {{#with booking}}
-<p>Dear <strong>{{full_name}}</strong>,</p>
+<p class="greeting">Dear <strong>{{#if full_name}}{{full_name}}{{else}}Traveller{{/if}}</strong>,</p>
 
-<p>Thank you for choosing Tanzania Safari Magic! Your safari adventure has been completed.</p>
-
-<div class="divider"></div>
-
-<div class="row">
-  <span class="label">Booking Reference</span>
-  <span class="value">#{{booking_reference}}</span>
-</div>
-<div class="row">
-  <span class="label">Package</span>
-  <span class="value">{{package_name}}</span>
-</div>
-<div class="row">
-  <span class="label">Travel Date</span>
-  <span class="value">{{formatDate start_date}}</span>
-</div>
-
-<div class="divider"></div>
-
-<p>We hope you had an amazing experience! Please consider leaving a Google review to share your adventure with others:</p>
-<p style="text-align:center;margin:24px 0">
-  <a class="btn" href="https://maps.app.goo.gl/36osoUgbeghcvwE89" target="_blank" rel="noopener">Leave a Google Review</a>
+<p class="lead">
+  Asante sana for travelling with <strong>Tanzania Safari Magic</strong>.
+  We hope the dust of the tracks, the quiet of the crater rim, and the warmth of our guides stay with you long after you have flown home.
 </p>
-<p>Safe travels, and we hope to see you again soon!</p>
+
+<p class="section-label">Journey completed</p>
+<div class="data-card">
+  <div class="row">
+    <span class="label">Booking reference</span>
+    <span class="value">#{{booking_reference}}</span>
+  </div>
+  <div class="row">
+    <span class="label">Safari / package</span>
+    <span class="value">{{package_name}}</span>
+  </div>
+  <div class="row">
+    <span class="label">Travel date</span>
+    <span class="value">{{formatDate start_date}}</span>
+  </div>
+</div>
+
+<div class="info-box success">
+  <strong>Share the magic — if you enjoyed your trip</strong><br>
+  A short Google review helps fellow travellers find a trusted Arusha operator, and it means a great deal to our guides and camp teams who work so hard in the field.
+</div>
+
+<div class="cta-row">
+  <a class="btn" href="https://maps.app.goo.gl/36osoUgbeghcvwE89" target="_blank" rel="noopener">Leave a Google review</a>
+  <a class="btn-secondary" href="{{#if site_url}}{{site_url}}{{else}}https://tanzaniasafarimagic.com{{/if}}/booking">Plan a return safari</a>
+</div>
+
+<p>If anything during your trip could have been better, please tell us privately — we treat every note as a chance to improve our hospitality.</p>
+
+<p class="closing">Until the savannah calls you back — travel safely, and thank you for being our guest.</p>
 {{/with}}

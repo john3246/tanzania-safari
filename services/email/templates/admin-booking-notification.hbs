@@ -1,56 +1,31 @@
 {{#with booking}}
-<p><strong>New Booking Received</strong></p>
+<p class="greeting"><strong>New booking request received</strong></p>
+<p class="lead">A guest submitted a safari booking request. Please review availability and reply within 24 hours.</p>
 
-<div class="divider"></div>
-
-<div class="row">
-  <span class="label">Booking ID</span>
-  <span class="value">#{{booking_id}}</span>
-</div>
-<div class="row">
-  <span class="label">Reference</span>
-  <span class="value">{{booking_reference}}</span>
-</div>
-<div class="row">
-  <span class="label">Customer</span>
-  <span class="value">{{full_name}}</span>
-</div>
-<div class="row">
-  <span class="label">Email</span>
-  <span class="value">{{email}}</span>
-</div>
-{{#if phone}}
-<div class="row">
-  <span class="label">Phone</span>
-  <span class="value">{{phone}}</span>
-</div>
-{{/if}}
-<div class="row">
-  <span class="label">Package</span>
-  <span class="value">{{package_name}}</span>
-</div>
-<div class="row">
-  <span class="label">Start Date</span>
-  <span class="value">{{formatDate start_date}}</span>
-</div>
-<div class="row">
-  <span class="label">Adults</span>
-  <span class="value">{{number_of_adults}}</span>
-</div>
-{{#if number_of_children}}
-<div class="row">
-  <span class="label">Children</span>
-  <span class="value">{{number_of_children}}</span>
-</div>
-{{/if}}
-<div class="row">
-  <span class="label">Total Price</span>
-  <span class="value">${{formatPrice total_price_usd}} USD</span>
+<p class="section-label">Booking details</p>
+<div class="data-card">
+  {{#if booking_id}}
+  <div class="row"><span class="label">Booking ID</span><span class="value">#{{booking_id}}</span></div>
+  {{/if}}
+  <div class="row"><span class="label">Reference</span><span class="value">{{booking_reference}}</span></div>
+  <div class="row"><span class="label">Guest</span><span class="value">{{full_name}}</span></div>
+  <div class="row"><span class="label">Email</span><span class="value"><a href="mailto:{{email}}">{{email}}</a></span></div>
+  {{#if phone}}
+  <div class="row"><span class="label">Phone / WhatsApp</span><span class="value">{{phone}}</span></div>
+  {{/if}}
+  <div class="row"><span class="label">Package</span><span class="value">{{package_name}}</span></div>
+  <div class="row"><span class="label">Start date</span><span class="value">{{formatDate start_date}}</span></div>
+  <div class="row"><span class="label">Adults</span><span class="value">{{number_of_adults}}</span></div>
+  {{#if number_of_children}}
+  <div class="row"><span class="label">Children</span><span class="value">{{number_of_children}}</span></div>
+  {{/if}}
+  {{#if total_price_usd}}
+  <div class="row"><span class="label">Total</span><span class="value">${{formatPrice total_price_usd}} USD</span></div>
+  {{/if}}
 </div>
 
-<div class="divider"></div>
-
-<div style="text-align: center; margin-top: 24px;">
-  <a href="{{admin_url}}/bookings" class="btn">View in Dashboard</a>
+<div class="cta-row">
+  <a href="{{admin_url}}/bookings" class="btn">Open in dashboard</a>
+  <a href="mailto:{{email}}" class="btn-secondary">Email guest</a>
 </div>
 {{/with}}

@@ -1,32 +1,50 @@
 {{#with payment}}
-<p>Dear <strong>{{customer_name}}</strong>,</p>
+<p class="greeting">Dear <strong>{{#if customer_name}}{{customer_name}}{{else}}Traveller{{/if}}</strong>,</p>
 
-<p>Your payment has been processed successfully!</p>
+<p class="lead">
+  Asante — we have successfully received your payment for your journey with <strong>Tanzania Safari Magic</strong>.
+  This email is your receipt. Please keep it for your records and for any future correspondence with our team.
+</p>
 
-<div class="divider"></div>
+<p class="section-label">Payment receipt</p>
+<div class="data-card">
+  {{#if payment_id}}
+  <div class="row">
+    <span class="label">Payment ID</span>
+    <span class="value">{{payment_id}}</span>
+  </div>
+  {{/if}}
+  {{#if booking_reference}}
+  <div class="row">
+    <span class="label">Booking reference</span>
+    <span class="value">#{{booking_reference}}</span>
+  </div>
+  {{/if}}
+  <div class="row">
+    <span class="label">Amount paid</span>
+    <span class="value">${{formatPrice amount}} USD</span>
+  </div>
+  {{#if payment_date}}
+  <div class="row">
+    <span class="label">Payment date</span>
+    <span class="value">{{formatDate payment_date}}</span>
+  </div>
+  {{/if}}
+  <div class="row">
+    <span class="label">Status</span>
+    <span class="value"><span class="badge badge-success">Paid successfully</span></span>
+  </div>
+</div>
 
-<div class="row">
-  <span class="label">Payment ID</span>
-  <span class="value">{{payment_id}}</span>
-</div>
-<div class="row">
-  <span class="label">Booking Reference</span>
-  <span class="value">#{{booking_reference}}</span>
-</div>
-<div class="row">
-  <span class="label">Amount</span>
-  <span class="value">${{formatPrice amount}} USD</span>
-</div>
-<div class="row">
-  <span class="label">Payment Date</span>
-  <span class="value">{{formatDate payment_date}}</span>
-</div>
-<div class="row">
-  <span class="label">Status</span>
-  <span class="value"><span class="badge badge-success">Paid</span></span>
+<div class="info-box success">
+  <strong>What this means for your trip</strong><br>
+  Your reservation moves forward with our operations team. If any balance remains before travel, we will remind you politely with clear due dates — never with surprise fees hidden in fine print.
 </div>
 
-<div class="divider"></div>
+<div class="cta-row">
+  <a class="btn" href="https://wa.me/255695108009">Questions? WhatsApp us</a>
+  <a class="btn-secondary" href="mailto:info@tanzaniasafarimagic.com">Email receipts desk</a>
+</div>
 
-<p>Your booking is now confirmed. Thank you for your payment!</p>
+<p class="closing">Thank you for your trust — we are preparing to host you with care.</p>
 {{/with}}

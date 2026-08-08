@@ -1,36 +1,20 @@
 {{#with booking}}
-<p><strong>Booking Cancelled</strong></p>
+<p class="greeting"><strong>Booking cancelled</strong></p>
+<p class="lead">A booking was marked cancelled. Review any refund obligations and confirm the guest was notified.</p>
 
-<div class="divider"></div>
-
-<div class="row">
-  <span class="label">Booking ID</span>
-  <span class="value">#{{booking_id}}</span>
-</div>
-<div class="row">
-  <span class="label">Reference</span>
-  <span class="value">{{booking_reference}}</span>
-</div>
-<div class="row">
-  <span class="label">Customer</span>
-  <span class="value">{{full_name}}</span>
-</div>
-<div class="row">
-  <span class="label">Email</span>
-  <span class="value">{{email}}</span>
-</div>
-<div class="row">
-  <span class="label">Package</span>
-  <span class="value">{{package_name}}</span>
-</div>
-<div class="row">
-  <span class="label">Status</span>
-  <span class="value"><span class="badge badge-warning">Cancelled</span></span>
+<p class="section-label">Booking</p>
+<div class="data-card">
+  {{#if booking_id}}
+  <div class="row"><span class="label">Booking ID</span><span class="value">#{{booking_id}}</span></div>
+  {{/if}}
+  <div class="row"><span class="label">Reference</span><span class="value">{{booking_reference}}</span></div>
+  <div class="row"><span class="label">Guest</span><span class="value">{{full_name}}</span></div>
+  <div class="row"><span class="label">Email</span><span class="value"><a href="mailto:{{email}}">{{email}}</a></span></div>
+  <div class="row"><span class="label">Package</span><span class="value">{{package_name}}</span></div>
+  <div class="row"><span class="label">Status</span><span class="value"><span class="badge badge-warning">Cancelled</span></span></div>
 </div>
 
-<div class="divider"></div>
-
-<div style="text-align: center; margin-top: 24px;">
-  <a href="{{admin_url}}/bookings" class="btn">View in Dashboard</a>
+<div class="cta-row">
+  <a href="{{admin_url}}/bookings" class="btn">Open in dashboard</a>
 </div>
 {{/with}}

@@ -1,36 +1,51 @@
 {{#with booking}}
-<p>Dear <strong>{{full_name}}</strong>,</p>
+<p class="greeting">Dear <strong>{{#if full_name}}{{full_name}}{{else}}Traveller{{/if}}</strong>,</p>
 
-<p>Your booking has been <strong>cancelled</strong> as requested.</p>
+<p class="lead">
+  We have processed the cancellation for your safari booking with <strong>Tanzania Safari Magic</strong>.
+  We are sorry to see this journey pause — and we want you to know our door (and our savannah) remains open whenever you are ready to replan.
+</p>
 
-<div class="divider"></div>
+<p class="section-label">Cancelled booking</p>
+<div class="data-card">
+  <div class="row">
+    <span class="label">Booking reference</span>
+    <span class="value">#{{booking_reference}}</span>
+  </div>
+  <div class="row">
+    <span class="label">Safari / package</span>
+    <span class="value">{{package_name}}</span>
+  </div>
+  <div class="row">
+    <span class="label">Travel date</span>
+    <span class="value">{{formatDate start_date}}</span>
+  </div>
+  <div class="row">
+    <span class="label">Travellers</span>
+    <span class="value">{{number_of_adults}} adult(s){{#if number_of_children}}, {{number_of_children}} child(ren){{/if}}</span>
+  </div>
+  {{#if total_price_usd}}
+  <div class="row">
+    <span class="label">Original total</span>
+    <span class="value">${{formatPrice total_price_usd}} USD</span>
+  </div>
+  {{/if}}
+  <div class="row">
+    <span class="label">Status</span>
+    <span class="value"><span class="badge badge-warning">Cancelled</span></span>
+  </div>
+</div>
 
-<div class="row">
-  <span class="label">Booking Reference</span>
-  <span class="value">#{{booking_reference}}</span>
-</div>
-<div class="row">
-  <span class="label">Package</span>
-  <span class="value">{{package_name}}</span>
-</div>
-<div class="row">
-  <span class="label">Travel Date</span>
-  <span class="value">{{formatDate start_date}}</span>
-</div>
-<div class="row">
-  <span class="label">Travelers</span>
-  <span class="value">{{number_of_adults}} Adults{{#if number_of_children}}, {{number_of_children}} Children{{/if}}</span>
-</div>
-<div class="row">
-  <span class="label">Total Price</span>
-  <span class="value">${{formatPrice total_price_usd}} USD</span>
-</div>
-<div class="row">
-  <span class="label">Status</span>
-  <span class="value"><span class="badge badge-warning">Cancelled</span></span>
+<div class="info-box">
+  <strong>Need help with a refund or a new date?</strong><br>
+  If a payment was already made, our team will follow up with the refund status according to the terms shared on your quote.
+  If you did <em>not</em> request this cancellation, contact us immediately so we can investigate and protect your booking.
 </div>
 
-<div class="divider"></div>
+<div class="cta-row">
+  <a class="btn" href="https://wa.me/255695108009">WhatsApp support</a>
+  <a class="btn-secondary" href="mailto:info@tanzaniasafarimagic.com">Email info@tanzaniasafarimagic.com</a>
+</div>
 
-<p>If you did not request this cancellation, please contact us immediately.</p>
+<p class="closing">Whenever you wish to return to Tanzania, we will be ready with warm hospitality and a carefully planned itinerary.</p>
 {{/with}}

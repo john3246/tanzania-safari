@@ -1,61 +1,41 @@
 {{#with enquiry}}
-<p><strong>New Contact Enquiry Received</strong></p>
+<p class="greeting"><strong>New contact enquiry</strong></p>
+<p class="lead">A website visitor sent a message. Please respond with hospitality and clear next steps within 24 hours.</p>
 
-<div class="divider"></div>
+<p class="section-label">Guest details</p>
+<div class="data-card">
+  {{#if enquiry_id}}
+  <div class="row"><span class="label">Enquiry ID</span><span class="value">#{{enquiry_id}}</span></div>
+  {{/if}}
+  <div class="row"><span class="label">Name</span><span class="value">{{full_name}}</span></div>
+  <div class="row"><span class="label">Email</span><span class="value"><a href="mailto:{{email}}">{{email}}</a></span></div>
+  {{#if phone}}
+  <div class="row"><span class="label">Phone</span><span class="value">{{phone}}</span></div>
+  {{/if}}
+  {{#if country}}
+  <div class="row"><span class="label">Country</span><span class="value">{{country}}</span></div>
+  {{/if}}
+  {{#if enquiry_type}}
+  <div class="row"><span class="label">Type</span><span class="value">{{enquiry_type}}</span></div>
+  {{/if}}
+  {{#if package_name}}
+  <div class="row"><span class="label">Package</span><span class="value">{{package_name}}</span></div>
+  {{/if}}
+  {{#if preferred_travel_date}}
+  <div class="row"><span class="label">Preferred date</span><span class="value">{{formatDate preferred_travel_date}}</span></div>
+  {{/if}}
+  {{#if number_of_travelers}}
+  <div class="row"><span class="label">Travellers</span><span class="value">{{number_of_travelers}}</span></div>
+  {{/if}}
+</div>
 
-<div class="row">
-  <span class="label">Enquiry ID</span>
-  <span class="value">#{{enquiry_id}}</span>
-</div>
-<div class="row">
-  <span class="label">Name</span>
-  <span class="value">{{full_name}}</span>
-</div>
-<div class="row">
-  <span class="label">Email</span>
-  <span class="value">{{email}}</span>
-</div>
-{{#if phone}}
-<div class="row">
-  <span class="label">Phone</span>
-  <span class="value">{{phone}}</span>
-</div>
-{{/if}}
-{{#if country}}
-<div class="row">
-  <span class="label">Country</span>
-  <span class="value">{{country}}</span>
-</div>
-{{/if}}
-<div class="row">
-  <span class="label">Type</span>
-  <span class="value">{{enquiry_type}}</span>
-</div>
-{{#if package_name}}
-<div class="row">
-  <span class="label">Package</span>
-  <span class="value">{{package_name}}</span>
-</div>
-{{/if}}
-{{#if preferred_travel_date}}
-<div class="row">
-  <span class="label">Preferred Date</span>
-  <span class="value">{{formatDate preferred_travel_date}}</span>
-</div>
-{{/if}}
-{{#if number_of_travelers}}
-<div class="row">
-  <span class="label">Travelers</span>
-  <span class="value">{{number_of_travelers}}</span>
-</div>
+{{#if enquiry_message}}
+<p class="section-label">Message</p>
+<div class="quote-box">{{enquiry_message}}</div>
 {{/if}}
 
-<div class="divider"></div>
-
-<p><strong>Message:</strong></p>
-<p style="background: #FBF6EE; padding: 16px; border-radius: 8px; font-size: 14px;">{{enquiry_message}}</p>
-
-<div style="text-align: center; margin-top: 24px;">
-  <a href="{{admin_url}}/enquiries" class="btn">View in Dashboard</a>
+<div class="cta-row">
+  <a href="{{admin_url}}/enquiries" class="btn">Open in dashboard</a>
+  <a href="mailto:{{email}}" class="btn-secondary">Reply to guest</a>
 </div>
 {{/with}}

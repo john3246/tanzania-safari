@@ -1,22 +1,26 @@
 {{#with user}}
-<p>Welcome to Tanzania Safari Magic, <strong>{{first_name}}</strong>!</p>
+<p class="greeting">Karibu, <strong>{{#if first_name}}{{first_name}}{{else}}friend{{/if}}</strong>!</p>
 
-<p>We're thrilled to have you join our community of safari enthusiasts. Get ready to explore the breathtaking landscapes and incredible wildlife of Tanzania.</p>
+<p class="lead">
+  Welcome to <strong>Tanzania Safari Magic</strong> — we are delighted you joined our community of travellers who dream of wildebeest rivers, crater floors, Kilimanjaro sunrises, and Zanzibar tides.
+  From our home in Arusha, we craft private journeys that feel personal, safe, and deeply Tanzanian.
+</p>
 
-<div class="divider"></div>
+<p class="section-label">How to begin</p>
+<div class="info-box success">
+  <strong>Popular first steps</strong><br>
+  1. Browse private <a href="{{site_url}}/safaris">safari packages</a> on the northern circuit.<br>
+  2. Compare <a href="{{site_url}}/kilimanjaro/routes">Kilimanjaro routes</a> or bush-to-beach <a href="{{site_url}}/zanzibar">Zanzibar</a> ideas.<br>
+  3. Read practical guides on our <a href="{{site_url}}/blog">travel blog</a>.<br>
+  4. When ready, <a href="{{site_url}}/booking">request a free custom quote</a> — we reply within 24 hours.
+</div>
 
-<p><strong>What's Next?</strong></p>
+<p>Whether you are planning a honeymoon, a family migration safari, or a first visit to Africa, tell us what matters most to you. Hospitality starts with listening.</p>
 
-<ul style="line-height: 1.8;">
-  <li>Browse our <a href="{{site_url}}/safaris">safari packages</a></li>
-  <li>Discover amazing <a href="{{site_url}}/destinations">destinations</a></li>
-  <li>Read our <a href="{{site_url}}/blog">travel blog</a></li>
-  <li>Book your dream safari adventure</li>
-</ul>
+<div class="cta-row">
+  <a class="btn" href="{{site_url}}/booking">Get a free quote</a>
+  <a class="btn-secondary" href="https://wa.me/255695108009">WhatsApp a specialist</a>
+</div>
 
-<div class="divider"></div>
-
-<p>If you have any questions or need help planning your trip, our team is here to assist you. Simply reply to this email or contact us at <strong>+255 695 108 009</strong>.</p>
-
-<p>We look forward to helping you create unforgettable memories in Tanzania!</p>
+<p class="closing">We look forward to welcoming you — on the page today, and someday under the African sky.</p>
 {{/with}}

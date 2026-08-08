@@ -1,32 +1,43 @@
 {{#with booking}}
-<p>Dear <strong>{{#if full_name}}{{full_name}}{{else}}{{customer_name}}{{/if}}</strong>,</p>
+<p class="greeting">Dear <strong>{{#if full_name}}{{full_name}}{{else}}{{#if customer_name}}{{customer_name}}{{else}}Traveller{{/if}}{{/if}}</strong>,</p>
 
-<p>This is a friendly reminder about your Tanzania safari quote request with <strong>Tanzania Safari Magic</strong>.</p>
+<p class="lead">
+  A warm note from your safari team in Arusha — we are following up on your recent quote request with
+  <strong>Tanzania Safari Magic</strong>. We want to make sure you have everything you need to decide with confidence.
+</p>
 
-<div class="divider"></div>
-
+<p class="section-label">Your enquiry</p>
 <div class="data-card">
   <div class="row">
-    <span class="label">Package</span>
-    <span class="value">{{package_name}}</span>
+    <span class="label">Safari / package</span>
+    <span class="value">{{#if package_name}}{{package_name}}{{else}}Custom safari plan{{/if}}</span>
   </div>
   <div class="row">
-    <span class="label">Travel Date</span>
-    <span class="value">{{#if start_date}}{{formatDate start_date}}{{else}}{{travel_date}}{{/if}}</span>
+    <span class="label">Travel date</span>
+    <span class="value">{{#if start_date}}{{formatDate start_date}}{{else}}{{#if travel_date}}{{travel_date}}{{else}}Flexible / to confirm{{/if}}{{/if}}</span>
   </div>
   {{#if days_until}}
   <div class="row">
-    <span class="label">Reminder stage</span>
-    <span class="value">{{days_until}}h follow-up (within 24 hours of your request)</span>
+    <span class="label">Follow-up stage</span>
+    <span class="value">{{days_until}}h courtesy check-in</span>
   </div>
   {{/if}}
 </div>
 
-<div class="divider"></div>
+<div class="info-box">
+  <strong>How we can help right now</strong><br>
+  • Refine lodge level, private vs group options, or add Kilimanjaro / Zanzibar<br>
+  • Suggest better wildlife timing for your month of travel<br>
+  • Answer questions on park fees, what is included, and how deposits work<br><br>
+  There is still <strong>no online card charge</strong> — we only share deposit instructions after you accept a written quote.
+</div>
 
-<p>Our Team in Arusha is preparing your itinerary. No payment is taken online — after you accept the quote we send offline deposit instructions.</p>
+<p>If you are still planning, reply with your preferred dates and group size. If your plans changed, a short reply is perfect — we appreciate the update either way.</p>
 
-<p>Questions? Reply to this email or WhatsApp <a href="https://wa.me/255695108009">+255 695 108 009</a>.</p>
+<div class="cta-row">
+  <a class="btn" href="https://wa.me/255695108009">WhatsApp our Arusha team</a>
+  <a class="btn-secondary" href="{{#if site_url}}{{site_url}}{{else}}https://tanzaniasafarimagic.com{{/if}}/booking">Update your request</a>
+</div>
 
-<p><a class="btn" href="https://wa.me/255695108009">WhatsApp Our Team</a></p>
+<p class="closing">We are here whenever you are ready — pole pole, at your pace.</p>
 {{/with}}
