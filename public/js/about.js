@@ -1,8 +1,25 @@
-// about.js - Zara-inspired About page for Tanzania Safari Magic
+// about.js — content-rich About page for Tanzania Safari Magic
 
 function t(key, vars) {
     if (window.TSM_i18n && typeof window.TSM_i18n.t === 'function') return window.TSM_i18n.t(key, vars);
     return key;
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+}
+
+/** Locale-owned HTML only (our JSON). Strip scripts; keep simple anchors/strong. */
+function localeHtml(str) {
+    return String(str || '')
+        .replace(/<(?!\/?(?:a|strong)\b)[^>]*>/gi, '')
+        .replace(/\son\w+\s*=\s*(['"]).*?\1/gi, '')
+        .replace(/javascript:/gi, '');
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -14,15 +31,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadBlogPosts();
 });
 
-function escapeHtml(str) {
-    if (!str) return '';
-    return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-}
-
 async function loadAboutContent() {
     const mainContent = document.getElementById('aboutContent');
     if (!mainContent) return;
@@ -32,19 +40,29 @@ async function loadAboutContent() {
     let vision = '';
 
     try {
-        const result = await API.fetchJSON('/about-content');
-        if (result && result.success && result.data) {
-            company = result.data.about_company || '';
-            mission = result.data.about_mission || '';
-            vision = result.data.about_vision || '';
+        if (typeof API !== 'undefined' && typeof API.get === 'function') {
+            const result = await API.get('/about-content');
+            if (result && result.success && result.data) {
+                company = result.data.about_company || '';
+                mission = result.data.about_mission || '';
+                vision = result.data.about_vision || '';
+            }
         }
-    } catch (e) {
-        console.warn('About CMS content unavailable, using defaults');
+    } catch (_) {
+        /* CMS optional — locale defaults below */
     }
 
-    const story = company || t('about.defaultStory');
+    const storyLead = company || t('about.storyLead');
     const missionText = mission || t('about.defaultMission');
     const visionText = vision || t('about.defaultVision');
+
+    const whyItems = [
+        { icon: 'fa-map-marker-alt', title: t('about.why1Title'), desc: t('about.why1Desc') },
+        { icon: 'fa-car', title: t('about.why2Title'), desc: t('about.why2Desc') },
+        { icon: 'fa-binoculars', title: t('about.why3Title'), desc: t('about.why3Desc') },
+        { icon: 'fa-comments', title: t('about.why4Title'), desc: t('about.why4Desc') },
+        { icon: 'fa-hand-holding-heart', title: t('about.why5Title'), desc: t('about.why5Desc') }
+    ];
 
     mainContent.innerHTML = `
     <section class="zara-about">
@@ -53,11 +71,29 @@ async function loadAboutContent() {
           <a href="/">${escapeHtml(t('common.home'))}</a> <span>›</span> <span>${escapeHtml(t('about.crumbAbout'))}</span>
         </nav>
 
-        <p class="zara-intro">
-          ${escapeHtml(story)}
-          ${t('about.introOffer')}
-          ${escapeHtml(t('about.experiencesIntro'))}
-        </p>
+        <header class="about-who">
+          <p class="about-kicker">${escapeHtml(t('about.whoEyebrow'))}</p>
+          <h2 class="about-section-heading">${escapeHtml(t('about.whoTitle'))}</h2>
+          <p class="zara-intro about-lead">${escapeHtml(storyLead)}</p>
+          <div class="about-prose">
+            <p>${localeHtml(t('about.storyP1'))}</p>
+            <p>${localeHtml(t('about.storyP2'))}</p>
+            <p>${localeHtml(t('about.storyP3'))}</p>
+          </div>
+        </header>
+
+        <div class="zara-mv-grid" role="region" aria-label="Mission and vision">
+          <article class="zara-mv-card" id="mission">
+            <span class="zara-mv-label"><i class="fas fa-compass" aria-hidden="true"></i> ${escapeHtml(t('about.mission'))}</span>
+            <h3 class="zara-mv-title">${escapeHtml(t('about.missionHeading'))}</h3>
+            <p>${escapeHtml(missionText)}</p>
+          </article>
+          <article class="zara-mv-card vision" id="vision">
+            <span class="zara-mv-label"><i class="fas fa-eye" aria-hidden="true"></i> ${escapeHtml(t('about.vision'))}</span>
+            <h3 class="zara-mv-title">${escapeHtml(t('about.visionHeading'))}</h3>
+            <p>${escapeHtml(visionText)}</p>
+          </article>
+        </div>
 
         <div class="zara-split">
           <div class="zara-gallery" aria-label="Safari photo gallery">
@@ -74,62 +110,92 @@ async function loadAboutContent() {
           </div>
 
           <div class="zara-services">
+            <p class="about-kicker">${escapeHtml(t('about.offerEyebrow'))}</p>
+            <h2 class="about-section-heading" style="text-align:left;margin-bottom:1.25rem">${escapeHtml(t('about.offerTitle'))}</h2>
             <article class="zara-service">
               <div class="zara-service-icon"><i class="fas fa-paw"></i></div>
               <div>
-                <h2>${escapeHtml(t('about.wildlifeTitle'))}</h2>
-                <p>${t('about.wildlifeDesc')}</p>
+                <h3>${escapeHtml(t('about.wildlifeTitle'))}</h3>
+                <p>${localeHtml(t('about.wildlifeDesc'))}</p>
               </div>
             </article>
             <article class="zara-service">
               <div class="zara-service-icon"><i class="fas fa-mountain"></i></div>
               <div>
-                <h2>${escapeHtml(t('about.mountainTitle'))}</h2>
-                <p>${t('about.mountainDesc')}</p>
+                <h3>${escapeHtml(t('about.mountainTitle'))}</h3>
+                <p>${localeHtml(t('about.mountainDesc'))}</p>
               </div>
             </article>
             <article class="zara-service">
               <div class="zara-service-icon"><i class="fas fa-users"></i></div>
               <div>
-                <h2>${escapeHtml(t('about.culturalTitle'))}</h2>
+                <h3>${escapeHtml(t('about.culturalTitle'))}</h3>
                 <p>${escapeHtml(t('about.culturalDesc'))}</p>
               </div>
             </article>
             <article class="zara-service">
               <div class="zara-service-icon"><i class="fas fa-umbrella-beach"></i></div>
               <div>
-                <h2>${escapeHtml(t('about.beachTitle'))}</h2>
-                <p>${t('about.beachDesc')}</p>
+                <h3>${escapeHtml(t('about.beachTitle'))}</h3>
+                <p>${localeHtml(t('about.beachDesc'))}</p>
               </div>
             </article>
-            <p class="zara-sustain">
-              <strong>${escapeHtml(t('about.sustainableTitle'))}</strong> ${escapeHtml(t('about.sustainableDesc'))}
-            </p>
           </div>
         </div>
 
-        <div class="zara-mv-grid">
-          <a href="/about#mission" class="zara-mv-card" id="mission">
-            <span class="zara-mv-label">${escapeHtml(t('about.mission'))}</span>
-            <p>“${escapeHtml(missionText)}”</p>
-          </a>
-          <a href="/about#vision" class="zara-mv-card vision" id="vision">
-            <span class="zara-mv-label">${escapeHtml(t('about.vision'))}</span>
-            <p>“${escapeHtml(visionText)}”</p>
-          </a>
+        <section class="about-why" aria-labelledby="whyHeading">
+          <p class="about-kicker">${escapeHtml(t('about.whyEyebrow'))}</p>
+          <h2 class="about-section-heading" id="whyHeading">${escapeHtml(t('about.whyTitle'))}</h2>
+          <p class="about-section-lead">${escapeHtml(t('about.whyLead'))}</p>
+          <ol class="about-why-list">
+            ${whyItems.map((item, i) => `
+              <li>
+                <span class="about-why-num" aria-hidden="true">${i + 1}</span>
+                <div>
+                  <h3><i class="fas ${item.icon}" aria-hidden="true"></i> ${escapeHtml(item.title)}</h3>
+                  <p>${escapeHtml(item.desc)}</p>
+                </div>
+              </li>`).join('')}
+          </ol>
+        </section>
+
+        <section class="about-promise" aria-labelledby="promiseHeading">
+          <div class="about-promise-inner">
+            <div>
+              <p class="about-kicker">${escapeHtml(t('about.promiseEyebrow'))}</p>
+              <h2 class="about-section-heading" id="promiseHeading" style="text-align:left">${escapeHtml(t('about.promiseTitle'))}</h2>
+              <p>${escapeHtml(t('about.promiseP1'))}</p>
+              <p>${escapeHtml(t('about.promiseP2'))}</p>
+            </div>
+            <ul class="about-promise-points">
+              <li><i class="fas fa-check" aria-hidden="true"></i> ${escapeHtml(t('about.promisePoint1'))}</li>
+              <li><i class="fas fa-check" aria-hidden="true"></i> ${escapeHtml(t('about.promisePoint2'))}</li>
+              <li><i class="fas fa-check" aria-hidden="true"></i> ${escapeHtml(t('about.promisePoint3'))}</li>
+              <li><i class="fas fa-check" aria-hidden="true"></i> ${escapeHtml(t('about.promisePoint4'))}</li>
+            </ul>
+          </div>
+        </section>
+
+        <div class="zara-sustain about-sustain-block">
+          <h2 class="about-section-heading" style="text-align:left;margin-bottom:0.75rem">${escapeHtml(t('about.sustainableTitle'))}</h2>
+          <p style="margin:0">${escapeHtml(t('about.sustainableDesc'))}</p>
+          <p style="margin:0.85rem 0 0">${escapeHtml(t('about.sustainableExtra'))}</p>
         </div>
 
         <div class="zara-hotels">
           <h2>${escapeHtml(t('about.hotelsTitle'))}</h2>
           <p>${escapeHtml(t('about.hotelsDesc'))}</p>
+          <p>${escapeHtml(t('about.hotelsExtra'))}</p>
           <div class="zara-cta-row">
             <a href="/booking" class="btn btn-primary" style="min-height:48px"><i class="fas fa-calendar-check"></i> ${escapeHtml(t('about.bookCta'))}</a>
             <a href="https://wa.me/255695108009?text=Hi%20Tanzania%20Safari%20Magic%2C%20I%27m%20interested%20in%20booking%20a%20custom%20safari%20package..." class="btn btn-outline" target="_blank" rel="noopener" style="min-height:48px"><i class="fab fa-whatsapp"></i> ${escapeHtml(t('about.contactCta'))}</a>
+            <a href="/safaris" class="btn btn-outline" style="min-height:48px"><i class="fas fa-paw"></i> ${escapeHtml(t('about.browseSafaris'))}</a>
           </div>
         </div>
 
         <div class="zara-team-roles" id="teamRoles">
           <h2 class="zara-section-title">${escapeHtml(t('about.teamTitle'))}</h2>
+          <p class="about-section-lead">${escapeHtml(t('about.teamLead'))}</p>
           <div class="zara-roles-grid">
             <div class="zara-role">
               <h3><i class="fas fa-plane-arrival"></i> ${escapeHtml(t('about.roleAirport'))}</h3>
@@ -156,6 +222,15 @@ async function loadAboutContent() {
           <div class="corp-stat"><strong>50+</strong><span>${escapeHtml(t('about.expertGuides'))}</span></div>
           <div class="corp-stat"><strong>Arusha</strong><span>${escapeHtml(t('about.basedOperator'))}</span></div>
         </div>
+
+        <section class="about-final-cta" aria-labelledby="finalCtaHeading">
+          <h2 id="finalCtaHeading">${escapeHtml(t('about.finalCtaTitle'))}</h2>
+          <p>${escapeHtml(t('about.finalCtaDesc'))}</p>
+          <div class="zara-cta-row" style="justify-content:center">
+            <a href="/booking" class="btn btn-primary" style="min-height:48px">${escapeHtml(t('about.bookCta'))}</a>
+            <a href="/contact" class="btn btn-outline" style="min-height:48px">${escapeHtml(t('about.talkExpert'))}</a>
+          </div>
+        </section>
       </div>
     </section>
     `;
@@ -180,7 +255,8 @@ function initZaraGallery() {
 
 async function loadTeamMembers() {
     try {
-        const result = await API.fetchJSON('/team-members');
+        if (typeof API === 'undefined' || typeof API.get !== 'function') return;
+        const result = await API.get('/team-members');
         if (!(result && result.success && result.data && result.data.length)) return;
 
         const wrap = document.createElement('div');
@@ -207,7 +283,13 @@ async function loadTeamMembers() {
 
 async function loadBlogPosts() {
     try {
-        const result = await API.fetchJSON('/blog?limit=3') || await API.fetchJSON('/blog-posts?limit=3');
+        if (typeof API === 'undefined' || typeof API.get !== 'function') return;
+        let result;
+        try {
+            result = await API.get('/blog?limit=3');
+        } catch (_) {
+            result = await API.get('/blog-posts?limit=3');
+        }
         const posts = result?.data || [];
         if (!posts.length) return;
         const wrap = document.createElement('section');
@@ -230,7 +312,7 @@ async function loadBlogPosts() {
             </div>
           </div>`;
         document.getElementById('aboutContent')?.appendChild(wrap);
-    } catch (e) {
+    } catch (_) {
         /* optional */
     }
 }

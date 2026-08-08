@@ -196,6 +196,15 @@ async function migrate() {
         CREATE INDEX IF NOT EXISTS idx_page_views_session ON public.page_views (session_id)
     `);
 
+    await runStep('page_views country + search keyword columns', `
+        ALTER TABLE public.page_views ADD COLUMN IF NOT EXISTS search_keyword varchar(180);
+        ALTER TABLE public.page_views ADD COLUMN IF NOT EXISTS utm_term varchar(180);
+        CREATE INDEX IF NOT EXISTS idx_page_views_country ON public.page_views (country)
+          WHERE country IS NOT NULL;
+        CREATE INDEX IF NOT EXISTS idx_page_views_keyword ON public.page_views (search_keyword)
+          WHERE search_keyword IS NOT NULL;
+    `);
+
     await runStep('hub category seeds', `
         INSERT INTO public.package_categories (category_name, category_slug, category_description, icon_class, display_order, is_active)
         VALUES

@@ -3,7 +3,7 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
       <div>
         <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Website Analytics</h1>
-        <p class="text-sm text-gray-500 mt-1">Live visitor traffic — page views, unique visitors, and what brought them.</p>
+        <p class="text-sm text-gray-500 mt-1">Live visitor traffic — page views, countries, search keywords, and what brought them.</p>
       </div>
       <div class="flex flex-wrap items-center gap-2">
         <label class="text-xs font-bold text-gray-500 uppercase">Period</label>
@@ -88,6 +88,46 @@
               <tr><th class="px-6 py-3">Page</th><th class="px-6 py-3 text-right">Views</th><th class="px-6 py-3 text-right">Visitors</th></tr>
             </thead>
             <tbody id="an-pages-body" class="divide-y divide-gray-50"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Country + Keywords -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-100">
+          <h3 class="font-semibold text-gray-900">Traffic by Country</h3>
+          <p class="text-xs text-gray-500 mt-0.5">Where visitors are browsing from</p>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm text-left">
+            <thead class="bg-gray-50 text-xs uppercase text-gray-400 font-semibold">
+              <tr>
+                <th class="px-6 py-3">Country</th>
+                <th class="px-6 py-3 text-right">Views</th>
+                <th class="px-6 py-3 text-right">Visitors</th>
+              </tr>
+            </thead>
+            <tbody id="an-countries-body" class="divide-y divide-gray-50"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-100">
+          <h3 class="font-semibold text-gray-900">Search Keywords</h3>
+          <p class="text-xs text-gray-500 mt-0.5">From UTM terms and search-engine referrers when available</p>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm text-left">
+            <thead class="bg-gray-50 text-xs uppercase text-gray-400 font-semibold">
+              <tr>
+                <th class="px-6 py-3">Keyword</th>
+                <th class="px-6 py-3 text-right">Views</th>
+                <th class="px-6 py-3 text-right">Visitors</th>
+              </tr>
+            </thead>
+            <tbody id="an-keywords-body" class="divide-y divide-gray-50"></tbody>
           </table>
         </div>
       </div>

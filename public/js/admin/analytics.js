@@ -43,7 +43,13 @@ async function loadAnalytics() {
 
     const top = (data.sources || [])[0];
     set('an-top-source', top ? top.source : 'No data yet');
-    set('an-top-source-views', top ? `${Number(top.views).toLocaleString()} views` : 'Visit the public site to start collecting');
+    const topCountry = data.totals?.top_country || (data.countries || []).find((c) => c.country && c.country !== 'Unknown')?.country;
+    set(
+      'an-top-source-views',
+      top
+        ? `${Number(top.views).toLocaleString()} views${topCountry ? ` · top country: ${topCountry}` : ''}`
+        : 'Visit the public site to start collecting'
+    );
 
     renderAnalyticsCharts(data);
     renderAnalyticsTables(data);
@@ -157,6 +163,32 @@ function renderAnalyticsTables(data) {
           <td class="px-6 py-3 text-right text-gray-500">${Number(r.visitors).toLocaleString()}</td>
         </tr>`).join('')
       : '<tr><td colspan="3" class="px-6 py-8 text-center text-gray-400">No page views recorded yet.</td></tr>';
+  }
+
+  const countriesBody = document.getElementById('an-countries-body');
+  if (countriesBody) {
+    const rows = data.countries || [];
+    countriesBody.innerHTML = rows.length
+      ? rows.map(r => `
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-3 font-medium text-gray-800">${escapeAn(r.country)}</td>
+          <td class="px-6 py-3 text-right">${Number(r.views).toLocaleString()}</td>
+          <td class="px-6 py-3 text-right text-gray-500">${Number(r.visitors).toLocaleString()}</td>
+        </tr>`).join('')
+      : '<tr><td colspan="3" class="px-6 py-8 text-center text-gray-400">No country data yet — new visits will appear here.</td></tr>';
+  }
+
+  const keywordsBody = document.getElementById('an-keywords-body');
+  if (keywordsBody) {
+    const rows = data.keywords || [];
+    keywordsBody.innerHTML = rows.length
+      ? rows.map(r => `
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-3 font-medium text-gray-800">${escapeAn(r.keyword)}</td>
+          <td class="px-6 py-3 text-right">${Number(r.views).toLocaleString()}</td>
+          <td class="px-6 py-3 text-right text-gray-500">${Number(r.visitors).toLocaleString()}</td>
+        </tr>`).join('')
+      : '<tr><td colspan="3" class="px-6 py-8 text-center text-gray-400">No keywords yet — use utm_term on campaign links, or wait for search referrers.</td></tr>';
   }
 }
 

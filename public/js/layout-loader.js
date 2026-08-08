@@ -198,7 +198,8 @@ function trackPageView() {
             session_id: sessionId,
             utm_source: params.get('utm_source') || '',
             utm_medium: params.get('utm_medium') || '',
-            utm_campaign: params.get('utm_campaign') || ''
+            utm_campaign: params.get('utm_campaign') || '',
+            utm_term: params.get('utm_term') || params.get('q') || params.get('query') || ''
         };
 
         const body = JSON.stringify(payload);

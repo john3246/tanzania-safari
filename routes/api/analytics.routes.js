@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const rateLimit = require('express-rate-limit');
 const analyticsRepo = require('../../repositories/analytics.repository');
+const { resolveCountry, extractSearchKeyword } = require('../../utils/geoCountry');
 
 const pageviewLimiter = rateLimit({
   windowMs: 60 * 1000,
@@ -45,6 +46,21 @@ router.post('/pageview', pageviewLimiter, async (req, res) => {
     if (ip === '::1') ip = '127.0.0.1';
 
     const referrer = req.body?.referrer || req.headers.referer || '';
+    const utm_term = req.body?.utm_term || '';
+    const search_keyword =
+      extractSearchKeyword({ utm_term, referrer }) ||
+      (req.body?.search_keyword ? String(req.body.search_keyword).slice(0, 180) : null);
+
+    // Resolve country from CDN headers or lightweight IP lookup (cached)
+    let country = req.body?.country ? String(req.body.country).slice(0, 80) : null;
+    if (!country) {
+      try {
+        country = await resolveCountry(req, ip);
+      } catch (_) {
+        country = null;
+      }
+    }
+
     await analyticsRepo.recordPageView({
       session_id: String(req.body?.session_id || '').slice(0, 64) || null,
       path,
@@ -54,6 +70,9 @@ router.post('/pageview', pageviewLimiter, async (req, res) => {
       utm_source: req.body?.utm_source,
       utm_medium: req.body?.utm_medium,
       utm_campaign: req.body?.utm_campaign,
+      utm_term,
+      search_keyword,
+      country,
       ip,
       user_agent: ua
     });
