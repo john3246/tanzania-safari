@@ -1,0 +1,361 @@
+{
+  "generated_at": "2026-08-09T10:34:10.547Z",
+  "pools": {
+    "meru": [
+      "/images/mount-meru/mount-meru-01-arusha_national_park_mount_meru_aerial-view-1.jpg",
+      "/images/mount-meru/mount-meru-01-pexels-mn-str-1235237659-30847954-2.jpg",
+      "/images/mount-meru/mount-meru-02-oip-2026-01-19t224854-840.webp",
+      "/images/mount-meru/mount-meru-03-r-91.jpg",
+      "/images/mount-meru/mount-meru-07-oip-37.webp"
+    ],
+    "lengai": [
+      "/images/ol-doinyo-lengai/ol-doinyo-lengai-01-mount_oldonyo_lengai_12.jpg",
+      "/images/ol-doinyo-lengai/ol-doinyo-lengai-01-r-30.jpg",
+      "/images/ol-doinyo-lengai/ol-doinyo-lengai-03-r-29.jpg",
+      "/images/ol-doinyo-lengai/ol-doinyo-lengai-04-oip-37.webp",
+      "/images/ol-doinyo-lengai/ol-doinyo-lengai-06-pexels-1047845400-20504576-1.jpg",
+      "/images/ol-doinyo-lengai/ol-doinyo-lengai-07-pexels-lan-yao-324969-20847884.jpg",
+      "/images/ol-doinyo-lengai/ol-doinyo-lengai-09-water-buffalo-1458907_1280.jpg",
+      "/images/ol-doinyo-lengai/ol-doinyo-lengai-10-elephants-6906019_1280.jpg",
+      "/images/ol-doinyo-lengai/ol-doinyo-lengai-11-pexels-mn-str-1235237659-30847954-2.jpg"
+    ],
+    "kilimanjaro": [
+      "/images/kilimanjaro/kilimanjaro%20(1).jpeg",
+      "/images/kilimanjaro/kilimanjaro%20(2).jpeg",
+      "/images/kilimanjaro/kilimanjaro%20(3).jpeg",
+      "/images/kilimanjaro/kilimanjaro%20(4).jpeg",
+      "/images/kilimanjaro/kilimanjaro%20(5).jpeg",
+      "/images/kilimanjaro/kilimanjaro%20(6).jpeg",
+      "/images/kilimanjaro/kilimanjaro%20(7).jpeg",
+      "/images/kilimanjaro/kilimanjaro%20(8).jpeg",
+      "/images/kilimanjaro/kilimanjaro%20(9).jpeg",
+      "/images/kilimanjaro/kilimanjaro%20(10).jpeg",
+      "/images/kilimanjaro/kilimanjaro-01-lava-tower-camp-kilimanjaro-8r.jpg",
+      "/images/kilimanjaro/kilimanjaro-02-mountain-3081356_640.jpg",
+      "/images/kilimanjaro/kilimanjaro-03-shira-camp.webp",
+      "/images/kilimanjaro/kilimanjaro-04-lava-tower-camp-kilimanjaro-lm.jpg",
+      "/images/kilimanjaro/kilimanjaro-05-kilimanjaro-342699_640.jpg",
+      "/images/kilimanjaro/kilimanjaro-06-barranco-lava-tower.webp",
+      "/images/kilimanjaro/kilimanjaro-06-nature-7081138_1280.jpg",
+      "/images/kilimanjaro/kilimanjaro-07-africa-4055169_1280.jpg",
+      "/images/kilimanjaro/kilimanjaro-07-lava-tower.jpg",
+      "/images/kilimanjaro/kilimanjaro-08-oip-2026-01-19t155351-604.webp",
+      "/images/kilimanjaro/kilimanjaro-08-pexels-balazsimon-15994023.jpg",
+      "/images/kilimanjaro/kilimanjaro-08-randonnee-pedestre-republique-unie-tanzanie-kilimanjaro-jour.jpg",
+      "/images/kilimanjaro/kilimanjaro-09-kilimanjaros-lava-tower-1000x750-1.webp",
+      "/images/kilimanjaro/kilimanjaro-09-r-90.jpg",
+      "/images/kilimanjaro/kilimanjaro-09-volcano-3779159_1280.jpg",
+      "/images/kilimanjaro/kilimanjaro-10-kilimanjaro-3405564_1280.jpg",
+      "/images/kilimanjaro/kilimanjaro-11-kilimanjaro-7312252_1280.jpg",
+      "/images/kilimanjaro/kilimanjaro-12-kilimanjaro-574299_1280.jpg",
+      "/images/kilimanjaro/kilimanjaro-13-alpine-desert-in-kilimanjaro-national-park-easy-travel-tanza.jpg",
+      "/images/kilimanjaro/kilimanjaro-16-mount-kilimanjaro-7312237_1280.jpg",
+      "/images/kilimanjaro/kilimanjaro-17-oip-2026-04-26t183951-325.webp",
+      "/images/kilimanjaro/kilimanjaro-18-pexels-balazsimon-15993988.jpg",
+      "/images/kilimanjaro/kilimanjaro-18-site_0403_0001-1200-630-20151105162509.jpg",
+      "/images/kilimanjaro/kilimanjaro-19-morh4fytsm88bn4xxoxe_shutterstock_2518775841.jpg",
+      "/images/kilimanjaro/kilimanjaro-19-oip-2026-01-19t154902-461.webp",
+      "/images/kilimanjaro/kilimanjaro-20-r-2026-04-26t184106-015.jpg",
+      "/images/kilimanjaro/kilimanjaro-24-pianchette-top-7989881_640.jpg",
+      "/images/kilimanjaro/kilimanjaro-27-pexels-kilinge-adventures-1983321-12573131.jpg",
+      "/images/kilimanjaro/kilimanjaro-28-image1-1.webp",
+      "/images/kilimanjaro/kilimanjaro-29-pexels-ross-green-2159326053-36048575.jpg",
+      "/images/kilimanjaro/kilimanjaro-35-oip-2026-04-26t182002-471.webp",
+      "/images/kilimanjaro/kilimanjaro-36-oip-2026-04-26t173259-353.webp"
+    ]
+  },
+  "packages": {
+    "10-days-wildlife-tracking-kilimanjaro-day-hiking": {
+      "family": "kilimanjaro",
+      "featured_image_url": "/images/safaris/10-days-wildlife-tracking-kilimanjaro-day-hiking/10-days-wildlife-trackin-01-alpine-desert-in-kilimanjaro-national-park-easy-travel-tanza.jpg",
+      "image_urls": [
+        "/images/safaris/10-days-wildlife-tracking-kilimanjaro-day-hiking/10-days-wildlife-trackin-01-alpine-desert-in-kilimanjaro-national-park-easy-travel-tanza.jpg",
+        "/images/safaris/10-days-wildlife-tracking-kilimanjaro-day-hiking/10-days-wildlife-trackin-02-lava-tower-camp-kilimanjaro-8r.jpg",
+        "/images/safaris/10-days-wildlife-tracking-kilimanjaro-day-hiking/10-days-wildlife-trackin-02-pexels-kilinge-adventures-1983321-12573131.jpg",
+        "/images/safaris/10-days-wildlife-tracking-kilimanjaro-day-hiking/10-days-wildlife-trackin-03-image1-1.webp",
+        "/images/safaris/10-days-wildlife-tracking-kilimanjaro-day-hiking/10-days-wildlife-trackin-04-pexels-ross-green-2159326053-36048575.jpg",
+        "/images/safaris/10-days-wildlife-tracking-kilimanjaro-day-hiking/kilimanjaro%20(1).jpeg",
+        "/images/safaris/10-days-wildlife-tracking-kilimanjaro-day-hiking/kilimanjaro%20(2).jpeg",
+        "/images/safaris/10-days-wildlife-tracking-kilimanjaro-day-hiking/kilimanjaro%20(3).jpeg",
+        "/images/safaris/10-days-wildlife-tracking-kilimanjaro-day-hiking/kilimanjaro%20(4).jpeg",
+        "/images/safaris/10-days-wildlife-tracking-kilimanjaro-day-hiking/kilimanjaro%20(5).jpeg",
+        "/images/safaris/10-days-wildlife-tracking-kilimanjaro-day-hiking/kilimanjaro%20(6).jpeg",
+        "/images/safaris/10-days-wildlife-tracking-kilimanjaro-day-hiking/kilimanjaro%20(7).jpeg",
+        "/images/safaris/10-days-wildlife-tracking-kilimanjaro-day-hiking/kilimanjaro%20(8).jpeg",
+        "/images/safaris/10-days-wildlife-tracking-kilimanjaro-day-hiking/kilimanjaro%20(9).jpeg",
+        "/images/safaris/10-days-wildlife-tracking-kilimanjaro-day-hiking/kilimanjaro%20(10).jpeg"
+      ]
+    },
+    "13-days-kilimanjaro-adventure-serengeti-wildebeest-migration-safari": {
+      "family": "kilimanjaro",
+      "featured_image_url": "/images/safaris/13-days-kilimanjaro-adventure-serengeti-wildebeest-migration-safari/13-days-kilimanjaro-adve-01-alpine-desert-in-kilimanjaro-national-park-easy-travel-tanza.jpg",
+      "image_urls": [
+        "/images/safaris/13-days-kilimanjaro-adventure-serengeti-wildebeest-migration-safari/13-days-kilimanjaro-adve-01-alpine-desert-in-kilimanjaro-national-park-easy-travel-tanza.jpg",
+        "/images/safaris/13-days-kilimanjaro-adventure-serengeti-wildebeest-migration-safari/13-days-kilimanjaro-adve-02-volcano-3779159_1280.jpg",
+        "/images/safaris/13-days-kilimanjaro-adventure-serengeti-wildebeest-migration-safari/13-days-kilimanjaro-adve-03-lava-tower-camp-kilimanjaro-8r.jpg",
+        "/images/safaris/13-days-kilimanjaro-adventure-serengeti-wildebeest-migration-safari/kilimanjaro%20(1).jpeg",
+        "/images/safaris/13-days-kilimanjaro-adventure-serengeti-wildebeest-migration-safari/kilimanjaro%20(2).jpeg",
+        "/images/safaris/13-days-kilimanjaro-adventure-serengeti-wildebeest-migration-safari/kilimanjaro%20(3).jpeg",
+        "/images/safaris/13-days-kilimanjaro-adventure-serengeti-wildebeest-migration-safari/kilimanjaro%20(4).jpeg",
+        "/images/safaris/13-days-kilimanjaro-adventure-serengeti-wildebeest-migration-safari/kilimanjaro%20(5).jpeg",
+        "/images/safaris/13-days-kilimanjaro-adventure-serengeti-wildebeest-migration-safari/kilimanjaro%20(6).jpeg",
+        "/images/safaris/13-days-kilimanjaro-adventure-serengeti-wildebeest-migration-safari/kilimanjaro%20(7).jpeg",
+        "/images/safaris/13-days-kilimanjaro-adventure-serengeti-wildebeest-migration-safari/kilimanjaro%20(8).jpeg",
+        "/images/safaris/13-days-kilimanjaro-adventure-serengeti-wildebeest-migration-safari/kilimanjaro%20(9).jpeg",
+        "/images/safaris/13-days-kilimanjaro-adventure-serengeti-wildebeest-migration-safari/kilimanjaro%20(10).jpeg"
+      ]
+    },
+    "3-day-mount-meru-trek": {
+      "family": "meru",
+      "featured_image_url": "/images/safaris/3-day-mount-meru-trek/3-day-mount-meru-trek-01-arusha_national_park_mount_meru_aerial-view-1.jpg",
+      "image_urls": [
+        "/images/safaris/3-day-mount-meru-trek/3-day-mount-meru-trek-01-arusha_national_park_mount_meru_aerial-view-1.jpg",
+        "/images/safaris/3-day-mount-meru-trek/3-day-mount-meru-trek-01-pexels-mn-str-1235237659-30847954-2.jpg",
+        "/images/safaris/3-day-mount-meru-trek/3-day-mount-meru-trek-02-oip-2026-01-19t224854-840.webp",
+        "/images/safaris/3-day-mount-meru-trek/3-day-mount-meru-trek-03-r-91.jpg",
+        "/images/safaris/3-day-mount-meru-trek/3-day-mount-meru-trek.jpg",
+        "/images/safaris/3-day-mount-meru-trek/mount-meru-07-oip-37.webp"
+      ]
+    },
+    "3-days-ol-donyo-lengai-trek-natron-lake-eyasi-culture": {
+      "family": "lengai",
+      "featured_image_url": "/images/safaris/3-days-ol-donyo-lengai-trek-natron-lake-eyasi-culture/3-days-ol-donyo-lengai-t-01-mount_oldonyo_lengai_12.jpg",
+      "image_urls": [
+        "/images/safaris/3-days-ol-donyo-lengai-trek-natron-lake-eyasi-culture/3-days-ol-donyo-lengai-t-01-mount_oldonyo_lengai_12.jpg",
+        "/images/safaris/3-days-ol-donyo-lengai-trek-natron-lake-eyasi-culture/3-days-ol-donyo-lengai-t-01-r-30.jpg",
+        "/images/safaris/3-days-ol-donyo-lengai-trek-natron-lake-eyasi-culture/3-days-ol-donyo-lengai-t-03-r-29.jpg",
+        "/images/safaris/3-days-ol-donyo-lengai-trek-natron-lake-eyasi-culture/3-days-ol-donyo-lengai-t-04-oip-37.webp",
+        "/images/safaris/3-days-ol-donyo-lengai-trek-natron-lake-eyasi-culture/ol-doinyo-lengai-06-pexels-1047845400-20504576-1.jpg",
+        "/images/safaris/3-days-ol-donyo-lengai-trek-natron-lake-eyasi-culture/ol-doinyo-lengai-07-pexels-lan-yao-324969-20847884.jpg"
+      ]
+    },
+    "4-day-mount-meru-trek": {
+      "family": "meru",
+      "featured_image_url": "/images/safaris/4-day-mount-meru-trek/4-day-mount-meru-trek-01-arusha_national_park_mount_meru_aerial-view-1.jpg",
+      "image_urls": [
+        "/images/safaris/4-day-mount-meru-trek/4-day-mount-meru-trek-01-arusha_national_park_mount_meru_aerial-view-1.jpg",
+        "/images/safaris/4-day-mount-meru-trek/4-day-mount-meru-trek-02-r-91.jpg",
+        "/images/safaris/4-day-mount-meru-trek/4-day-mount-meru-trek-03-pexels-mn-str-1235237659-30847954-2.jpg",
+        "/images/safaris/4-day-mount-meru-trek/4-day-mount-meru-trek-04-oip-2026-01-19t224854-840.webp",
+        "/images/safaris/4-day-mount-meru-trek/4-day-mount-meru-trek.jpg",
+        "/images/safaris/4-day-mount-meru-trek/mount-meru-07-oip-37.webp"
+      ]
+    },
+    "4-days-ol-doinyo-lengai-volcano-trek-great-wild-safari": {
+      "family": "lengai",
+      "featured_image_url": "/images/safaris/4-days-ol-doinyo-lengai-volcano-trek-great-wild-safari/4-days-ol-doinyo-lengai--01-mount_oldonyo_lengai_12.jpg",
+      "image_urls": [
+        "/images/safaris/4-days-ol-doinyo-lengai-volcano-trek-great-wild-safari/4-days-ol-doinyo-lengai--01-mount_oldonyo_lengai_12.jpg",
+        "/images/safaris/4-days-ol-doinyo-lengai-volcano-trek-great-wild-safari/4-days-ol-doinyo-lengai--02-pexels-1047845400-20504576-1.jpg",
+        "/images/safaris/4-days-ol-doinyo-lengai-volcano-trek-great-wild-safari/4-days-ol-doinyo-lengai--03-pexels-lan-yao-324969-20847884.jpg",
+        "/images/safaris/4-days-ol-doinyo-lengai-volcano-trek-great-wild-safari/4-days-ol-doinyo-lengai--04-water-buffalo-1458907_1280.jpg",
+        "/images/safaris/4-days-ol-doinyo-lengai-volcano-trek-great-wild-safari/4-days-ol-doinyo-lengai--05-elephants-6906019_1280.jpg",
+        "/images/safaris/4-days-ol-doinyo-lengai-volcano-trek-great-wild-safari/4-days-ol-doinyo-lengai--06-pexels-mn-str-1235237659-30847954-2.jpg",
+        "/images/safaris/4-days-ol-doinyo-lengai-volcano-trek-great-wild-safari/ol-doinyo-lengai-01-r-30.jpg",
+        "/images/safaris/4-days-ol-doinyo-lengai-volcano-trek-great-wild-safari/ol-doinyo-lengai-03-r-29.jpg",
+        "/images/safaris/4-days-ol-doinyo-lengai-volcano-trek-great-wild-safari/ol-doinyo-lengai-04-oip-37.webp"
+      ]
+    },
+    "6-day-machame-route-kilimanjaro": {
+      "family": "kilimanjaro",
+      "featured_image_url": "/images/safaris/6-day-machame-route-kilimanjaro/6-day-machame-route-kili-01-lava-tower-camp-kilimanjaro-8r.jpg",
+      "image_urls": [
+        "/images/safaris/6-day-machame-route-kilimanjaro/6-day-machame-route-kili-01-lava-tower-camp-kilimanjaro-8r.jpg",
+        "/images/safaris/6-day-machame-route-kilimanjaro/6-day-machame-route-kili-02-mountain-3081356_640.jpg",
+        "/images/safaris/6-day-machame-route-kilimanjaro/6-day-machame-route-kili-03-shira-camp.webp",
+        "/images/safaris/6-day-machame-route-kilimanjaro/6-day-machame-route-kili-04-lava-tower-camp-kilimanjaro-lm.jpg",
+        "/images/safaris/6-day-machame-route-kilimanjaro/6-day-machame-route-kili-05-kilimanjaro-342699_640.jpg",
+        "/images/safaris/6-day-machame-route-kilimanjaro/6-day-machame-route-kili-06-barranco-lava-tower.webp",
+        "/images/safaris/6-day-machame-route-kilimanjaro/6-day-machame-route-kili-07-lava-tower.jpg",
+        "/images/safaris/6-day-machame-route-kilimanjaro/6-day-machame-route-kili-08-oip-2026-01-19t155351-604.webp",
+        "/images/safaris/6-day-machame-route-kilimanjaro/6-day-machame-route-kili-08-randonnee-pedestre-republique-unie-tanzanie-kilimanjaro-jour.jpg",
+        "/images/safaris/6-day-machame-route-kilimanjaro/6-day-machame-route-kilimanjaro.jpg",
+        "/images/safaris/6-day-machame-route-kilimanjaro/kilimanjaro%20(1).jpeg",
+        "/images/safaris/6-day-machame-route-kilimanjaro/kilimanjaro%20(2).jpeg",
+        "/images/safaris/6-day-machame-route-kilimanjaro/kilimanjaro%20(3).jpeg",
+        "/images/safaris/6-day-machame-route-kilimanjaro/kilimanjaro%20(4).jpeg",
+        "/images/safaris/6-day-machame-route-kilimanjaro/kilimanjaro%20(5).jpeg",
+        "/images/safaris/6-day-machame-route-kilimanjaro/kilimanjaro%20(6).jpeg",
+        "/images/safaris/6-day-machame-route-kilimanjaro/kilimanjaro%20(7).jpeg",
+        "/images/safaris/6-day-machame-route-kilimanjaro/kilimanjaro%20(8).jpeg",
+        "/images/safaris/6-day-machame-route-kilimanjaro/kilimanjaro%20(9).jpeg",
+        "/images/safaris/6-day-machame-route-kilimanjaro/kilimanjaro%20(10).jpeg",
+        "/images/safaris/6-day-machame-route-kilimanjaro/main.jpg"
+      ]
+    },
+    "6-day-marangu-route-kilimanjaro": {
+      "family": "kilimanjaro",
+      "featured_image_url": "/images/safaris/6-day-marangu-route-kilimanjaro/6-day-marangu-route-kili-01-nature-7081138_1280.jpg",
+      "image_urls": [
+        "/images/safaris/6-day-marangu-route-kilimanjaro/6-day-marangu-route-kili-01-nature-7081138_1280.jpg",
+        "/images/safaris/6-day-marangu-route-kilimanjaro/6-day-marangu-route-kili-02-mountain-3081356_640.jpg",
+        "/images/safaris/6-day-marangu-route-kilimanjaro/6-day-marangu-route-kili-03-africa-4055169_1280.jpg",
+        "/images/safaris/6-day-marangu-route-kilimanjaro/6-day-marangu-route-kili-04-pexels-balazsimon-15994023.jpg",
+        "/images/safaris/6-day-marangu-route-kilimanjaro/6-day-marangu-route-kili-04-volcano-3779159_1280.jpg",
+        "/images/safaris/6-day-marangu-route-kilimanjaro/6-day-marangu-route-kili-05-pexels-balazsimon-15993988.jpg",
+        "/images/safaris/6-day-marangu-route-kilimanjaro/6-day-marangu-route-kili-06-oip-2026-01-19t154902-461.webp",
+        "/images/safaris/6-day-marangu-route-kilimanjaro/6-day-marangu-route-kilimanjaro.jpg",
+        "/images/safaris/6-day-marangu-route-kilimanjaro/kilimanjaro%20(1).jpeg",
+        "/images/safaris/6-day-marangu-route-kilimanjaro/kilimanjaro%20(2).jpeg",
+        "/images/safaris/6-day-marangu-route-kilimanjaro/kilimanjaro%20(3).jpeg",
+        "/images/safaris/6-day-marangu-route-kilimanjaro/kilimanjaro%20(4).jpeg",
+        "/images/safaris/6-day-marangu-route-kilimanjaro/kilimanjaro%20(5).jpeg",
+        "/images/safaris/6-day-marangu-route-kilimanjaro/kilimanjaro%20(6).jpeg",
+        "/images/safaris/6-day-marangu-route-kilimanjaro/kilimanjaro%20(7).jpeg",
+        "/images/safaris/6-day-marangu-route-kilimanjaro/kilimanjaro%20(8).jpeg",
+        "/images/safaris/6-day-marangu-route-kilimanjaro/kilimanjaro%20(9).jpeg",
+        "/images/safaris/6-day-marangu-route-kilimanjaro/kilimanjaro%20(10).jpeg",
+        "/images/safaris/6-day-marangu-route-kilimanjaro/main.jpg"
+      ]
+    },
+    "6-day-mount-kilimanjaro-machame-route": {
+      "family": "kilimanjaro",
+      "featured_image_url": "/images/safaris/6-day-mount-kilimanjaro-machame-route/6-day-mount-kilimanjaro--01-lava-tower-camp-kilimanjaro-8r.jpg",
+      "image_urls": [
+        "/images/safaris/6-day-mount-kilimanjaro-machame-route/6-day-mount-kilimanjaro--01-lava-tower-camp-kilimanjaro-8r.jpg",
+        "/images/safaris/6-day-mount-kilimanjaro-machame-route/6-day-mount-kilimanjaro--02-mountain-3081356_640.jpg",
+        "/images/safaris/6-day-mount-kilimanjaro-machame-route/6-day-mount-kilimanjaro--03-shira-camp.webp",
+        "/images/safaris/6-day-mount-kilimanjaro-machame-route/6-day-mount-kilimanjaro--04-lava-tower-camp-kilimanjaro-lm.jpg",
+        "/images/safaris/6-day-mount-kilimanjaro-machame-route/6-day-mount-kilimanjaro--05-kilimanjaro-342699_640.jpg",
+        "/images/safaris/6-day-mount-kilimanjaro-machame-route/6-day-mount-kilimanjaro--06-barranco-lava-tower.webp",
+        "/images/safaris/6-day-mount-kilimanjaro-machame-route/6-day-mount-kilimanjaro--07-lava-tower.jpg",
+        "/images/safaris/6-day-mount-kilimanjaro-machame-route/6-day-mount-kilimanjaro--08-oip-2026-01-19t155351-604.webp",
+        "/images/safaris/6-day-mount-kilimanjaro-machame-route/6-day-mount-kilimanjaro--08-randonnee-pedestre-republique-unie-tanzanie-kilimanjaro-jour.jpg",
+        "/images/safaris/6-day-mount-kilimanjaro-machame-route/kilimanjaro%20(1).jpeg",
+        "/images/safaris/6-day-mount-kilimanjaro-machame-route/kilimanjaro%20(2).jpeg",
+        "/images/safaris/6-day-mount-kilimanjaro-machame-route/kilimanjaro%20(3).jpeg",
+        "/images/safaris/6-day-mount-kilimanjaro-machame-route/kilimanjaro%20(4).jpeg",
+        "/images/safaris/6-day-mount-kilimanjaro-machame-route/kilimanjaro%20(5).jpeg",
+        "/images/safaris/6-day-mount-kilimanjaro-machame-route/kilimanjaro%20(6).jpeg",
+        "/images/safaris/6-day-mount-kilimanjaro-machame-route/kilimanjaro%20(7).jpeg",
+        "/images/safaris/6-day-mount-kilimanjaro-machame-route/kilimanjaro%20(8).jpeg",
+        "/images/safaris/6-day-mount-kilimanjaro-machame-route/kilimanjaro%20(9).jpeg",
+        "/images/safaris/6-day-mount-kilimanjaro-machame-route/kilimanjaro%20(10).jpeg"
+      ]
+    },
+    "6-day-mount-kilimanjaro-marangu-route": {
+      "family": "kilimanjaro",
+      "featured_image_url": "/images/safaris/6-day-mount-kilimanjaro-marangu-route/6-day-mount-kilimanjaro--01-nature-7081138_1280.jpg",
+      "image_urls": [
+        "/images/safaris/6-day-mount-kilimanjaro-marangu-route/6-day-mount-kilimanjaro--01-nature-7081138_1280.jpg",
+        "/images/safaris/6-day-mount-kilimanjaro-marangu-route/6-day-mount-kilimanjaro--02-mountain-3081356_640.jpg",
+        "/images/safaris/6-day-mount-kilimanjaro-marangu-route/6-day-mount-kilimanjaro--03-africa-4055169_1280.jpg",
+        "/images/safaris/6-day-mount-kilimanjaro-marangu-route/6-day-mount-kilimanjaro--04-pexels-balazsimon-15994023.jpg",
+        "/images/safaris/6-day-mount-kilimanjaro-marangu-route/6-day-mount-kilimanjaro--04-volcano-3779159_1280.jpg",
+        "/images/safaris/6-day-mount-kilimanjaro-marangu-route/6-day-mount-kilimanjaro--05-pexels-balazsimon-15993988.jpg",
+        "/images/safaris/6-day-mount-kilimanjaro-marangu-route/6-day-mount-kilimanjaro--06-oip-2026-01-19t154902-461.webp",
+        "/images/safaris/6-day-mount-kilimanjaro-marangu-route/kilimanjaro%20(1).jpeg",
+        "/images/safaris/6-day-mount-kilimanjaro-marangu-route/kilimanjaro%20(2).jpeg",
+        "/images/safaris/6-day-mount-kilimanjaro-marangu-route/kilimanjaro%20(3).jpeg",
+        "/images/safaris/6-day-mount-kilimanjaro-marangu-route/kilimanjaro%20(4).jpeg",
+        "/images/safaris/6-day-mount-kilimanjaro-marangu-route/kilimanjaro%20(5).jpeg",
+        "/images/safaris/6-day-mount-kilimanjaro-marangu-route/kilimanjaro%20(6).jpeg",
+        "/images/safaris/6-day-mount-kilimanjaro-marangu-route/kilimanjaro%20(7).jpeg",
+        "/images/safaris/6-day-mount-kilimanjaro-marangu-route/kilimanjaro%20(8).jpeg",
+        "/images/safaris/6-day-mount-kilimanjaro-marangu-route/kilimanjaro%20(9).jpeg",
+        "/images/safaris/6-day-mount-kilimanjaro-marangu-route/kilimanjaro%20(10).jpeg"
+      ]
+    },
+    "6-day-mount-meru-tarangire-ngorongoro": {
+      "family": "meru",
+      "featured_image_url": "/images/safaris/6-day-mount-meru-tarangire-ngorongoro/6-day-mount-meru-tarangi-01-arusha_national_park_mount_meru_aerial-view-1.jpg",
+      "image_urls": [
+        "/images/safaris/6-day-mount-meru-tarangire-ngorongoro/6-day-mount-meru-tarangi-01-arusha_national_park_mount_meru_aerial-view-1.jpg",
+        "/images/safaris/6-day-mount-meru-tarangire-ngorongoro/6-day-mount-meru-tarangi-01-pexels-mn-str-1235237659-30847954-2.jpg",
+        "/images/safaris/6-day-mount-meru-tarangire-ngorongoro/6-day-mount-meru-tarangi-02-oip-2026-01-19t224854-840.webp",
+        "/images/safaris/6-day-mount-meru-tarangire-ngorongoro/6-day-mount-meru-tarangi-03-r-91.jpg",
+        "/images/safaris/6-day-mount-meru-tarangire-ngorongoro/mount-meru-07-oip-37.webp"
+      ]
+    },
+    "7-day-mount-meru-summit-sacred-ol-donyo-lengai-trek": {
+      "family": "meru_lengai",
+      "featured_image_url": "/images/safaris/7-day-mount-meru-summit-sacred-ol-donyo-lengai-trek/7-day-mount-meru-summit--01-arusha_national_park_mount_meru_aerial-view.jpg",
+      "image_urls": [
+        "/images/safaris/7-day-mount-meru-summit-sacred-ol-donyo-lengai-trek/7-day-mount-meru-summit--01-arusha_national_park_mount_meru_aerial-view.jpg",
+        "/images/safaris/7-day-mount-meru-summit-sacred-ol-donyo-lengai-trek/7-day-mount-meru-summit--02-mount_oldonyo_lengai_12.jpg",
+        "/images/safaris/7-day-mount-meru-summit-sacred-ol-donyo-lengai-trek/7-day-mount-meru-summit--02-oip-37.webp",
+        "/images/safaris/7-day-mount-meru-summit-sacred-ol-donyo-lengai-trek/7-day-mount-meru-summit--07-pexels-mn-str-1235237659-30847954-2.jpg",
+        "/images/safaris/7-day-mount-meru-summit-sacred-ol-donyo-lengai-trek/mount-meru-02-oip-2026-01-19t224854-840.webp",
+        "/images/safaris/7-day-mount-meru-summit-sacred-ol-donyo-lengai-trek/mount-meru-03-r-91.jpg"
+      ]
+    },
+    "8-day-lemosho-route-kilimanjaro": {
+      "family": "kilimanjaro",
+      "featured_image_url": "/images/safaris/8-day-lemosho-route-kilimanjaro/8-day-lemosho-route-kili-01-volcano-3779159_1280.jpg",
+      "image_urls": [
+        "/images/safaris/8-day-lemosho-route-kilimanjaro/8-day-lemosho-route-kili-01-volcano-3779159_1280.jpg",
+        "/images/safaris/8-day-lemosho-route-kilimanjaro/8-day-lemosho-route-kili-02-kilimanjaro-3405564_1280.jpg",
+        "/images/safaris/8-day-lemosho-route-kilimanjaro/8-day-lemosho-route-kili-03-kilimanjaro-7312252_1280.jpg",
+        "/images/safaris/8-day-lemosho-route-kilimanjaro/8-day-lemosho-route-kili-04-kilimanjaro-574299_1280.jpg",
+        "/images/safaris/8-day-lemosho-route-kilimanjaro/8-day-lemosho-route-kili-05-mount-kilimanjaro-7312237_1280.jpg",
+        "/images/safaris/8-day-lemosho-route-kilimanjaro/8-day-lemosho-route-kili-05-pianchette-top-7989881_640.jpg",
+        "/images/safaris/8-day-lemosho-route-kilimanjaro/kilimanjaro%20(1).jpeg",
+        "/images/safaris/8-day-lemosho-route-kilimanjaro/kilimanjaro%20(2).jpeg",
+        "/images/safaris/8-day-lemosho-route-kilimanjaro/kilimanjaro%20(3).jpeg",
+        "/images/safaris/8-day-lemosho-route-kilimanjaro/kilimanjaro%20(4).jpeg",
+        "/images/safaris/8-day-lemosho-route-kilimanjaro/kilimanjaro%20(5).jpeg",
+        "/images/safaris/8-day-lemosho-route-kilimanjaro/kilimanjaro%20(6).jpeg",
+        "/images/safaris/8-day-lemosho-route-kilimanjaro/kilimanjaro%20(7).jpeg",
+        "/images/safaris/8-day-lemosho-route-kilimanjaro/kilimanjaro%20(8).jpeg",
+        "/images/safaris/8-day-lemosho-route-kilimanjaro/kilimanjaro%20(9).jpeg",
+        "/images/safaris/8-day-lemosho-route-kilimanjaro/kilimanjaro%20(10).jpeg",
+        "/images/safaris/8-day-lemosho-route-kilimanjaro/kilimanjaro.jpg"
+      ]
+    },
+    "8-day-mount-kilimanjaro-lemosho-route-trek": {
+      "family": "kilimanjaro",
+      "featured_image_url": "/images/safaris/8-day-mount-kilimanjaro-lemosho-route-trek/8-day-mount-kilimanjaro--01-volcano-3779159_1280.jpg",
+      "image_urls": [
+        "/images/safaris/8-day-mount-kilimanjaro-lemosho-route-trek/8-day-mount-kilimanjaro--01-volcano-3779159_1280.jpg",
+        "/images/safaris/8-day-mount-kilimanjaro-lemosho-route-trek/8-day-mount-kilimanjaro--02-kilimanjaro-3405564_1280.jpg",
+        "/images/safaris/8-day-mount-kilimanjaro-lemosho-route-trek/8-day-mount-kilimanjaro--03-kilimanjaro-7312252_1280.jpg",
+        "/images/safaris/8-day-mount-kilimanjaro-lemosho-route-trek/8-day-mount-kilimanjaro--04-kilimanjaro-574299_1280.jpg",
+        "/images/safaris/8-day-mount-kilimanjaro-lemosho-route-trek/8-day-mount-kilimanjaro--05-mount-kilimanjaro-7312237_1280.jpg",
+        "/images/safaris/8-day-mount-kilimanjaro-lemosho-route-trek/8-day-mount-kilimanjaro--05-pianchette-top-7989881_640.jpg",
+        "/images/safaris/8-day-mount-kilimanjaro-lemosho-route-trek/kilimanjaro%20(1).jpeg",
+        "/images/safaris/8-day-mount-kilimanjaro-lemosho-route-trek/kilimanjaro%20(2).jpeg",
+        "/images/safaris/8-day-mount-kilimanjaro-lemosho-route-trek/kilimanjaro%20(3).jpeg",
+        "/images/safaris/8-day-mount-kilimanjaro-lemosho-route-trek/kilimanjaro%20(4).jpeg",
+        "/images/safaris/8-day-mount-kilimanjaro-lemosho-route-trek/kilimanjaro%20(5).jpeg",
+        "/images/safaris/8-day-mount-kilimanjaro-lemosho-route-trek/kilimanjaro%20(6).jpeg",
+        "/images/safaris/8-day-mount-kilimanjaro-lemosho-route-trek/kilimanjaro%20(7).jpeg",
+        "/images/safaris/8-day-mount-kilimanjaro-lemosho-route-trek/kilimanjaro%20(8).jpeg",
+        "/images/safaris/8-day-mount-kilimanjaro-lemosho-route-trek/kilimanjaro%20(9).jpeg",
+        "/images/safaris/8-day-mount-kilimanjaro-lemosho-route-trek/kilimanjaro%20(10).jpeg"
+      ]
+    },
+    "9-day-mount-meru-northern-tanzania-safari": {
+      "family": "meru",
+      "featured_image_url": "/images/safaris/9-day-mount-meru-northern-tanzania-safari/9-day-mount-meru-norther-01-arusha_national_park_mount_meru_aerial-view-1.jpg",
+      "image_urls": [
+        "/images/safaris/9-day-mount-meru-northern-tanzania-safari/9-day-mount-meru-norther-01-arusha_national_park_mount_meru_aerial-view-1.jpg",
+        "/images/safaris/9-day-mount-meru-northern-tanzania-safari/9-day-mount-meru-norther-01-pexels-mn-str-1235237659-30847954-2.jpg",
+        "/images/safaris/9-day-mount-meru-northern-tanzania-safari/9-day-mount-meru-norther-02-oip-2026-01-19t224854-840.webp",
+        "/images/safaris/9-day-mount-meru-northern-tanzania-safari/9-day-mount-meru-norther-03-r-91.jpg",
+        "/images/safaris/9-day-mount-meru-northern-tanzania-safari/mount-meru-07-oip-37.webp"
+      ]
+    },
+    "kilimanjaro-national-park-day-trip": {
+      "family": "kilimanjaro",
+      "featured_image_url": "/images/safaris/kilimanjaro-national-park-day-trip/kilimanjaro%20(1).jpeg",
+      "image_urls": [
+        "/images/safaris/kilimanjaro-national-park-day-trip/kilimanjaro%20(1).jpeg",
+        "/images/safaris/kilimanjaro-national-park-day-trip/kilimanjaro%20(2).jpeg",
+        "/images/safaris/kilimanjaro-national-park-day-trip/kilimanjaro%20(3).jpeg",
+        "/images/safaris/kilimanjaro-national-park-day-trip/kilimanjaro%20(4).jpeg",
+        "/images/safaris/kilimanjaro-national-park-day-trip/kilimanjaro%20(5).jpeg",
+        "/images/safaris/kilimanjaro-national-park-day-trip/kilimanjaro%20(6).jpeg",
+        "/images/safaris/kilimanjaro-national-park-day-trip/kilimanjaro%20(7).jpeg",
+        "/images/safaris/kilimanjaro-national-park-day-trip/kilimanjaro%20(8).jpeg",
+        "/images/safaris/kilimanjaro-national-park-day-trip/kilimanjaro%20(9).jpeg",
+        "/images/safaris/kilimanjaro-national-park-day-trip/kilimanjaro%20(10).jpeg",
+        "/images/safaris/kilimanjaro-national-park-day-trip/kilimanjaro-national-par-01-oip-2026-04-26t183951-325.webp",
+        "/images/safaris/kilimanjaro-national-park-day-trip/kilimanjaro-national-par-02-site_0403_0001-1200-630-20151105162509.jpg",
+        "/images/safaris/kilimanjaro-national-park-day-trip/kilimanjaro-national-par-03-morh4fytsm88bn4xxoxe_shutterstock_2518775841.jpg",
+        "/images/safaris/kilimanjaro-national-park-day-trip/kilimanjaro-national-par-04-r-2026-04-26t184106-015.jpg",
+        "/images/safaris/kilimanjaro-national-park-day-trip/kilimanjaro-national-par-05-oip-2026-04-26t182002-471.webp",
+        "/images/safaris/kilimanjaro-national-park-day-trip/kilimanjaro-national-par-06-oip-2026-04-26t173259-353.webp"
+      ]
+    }
+  }
+}

@@ -5,20 +5,34 @@
  */
 const crypto = require('crypto');
 const db = require('./config/db');
-const { buildPackageImages } = require('./utils/localImages');
+const { buildPackageImages, imagesForPackageSlug } = require('./utils/localImages');
+const path = require('path');
+const fs = require('fs');
 
-const KILI_IMGS = [
-  '/images/kilimanjaro/kilimanjaro%20(1).jpeg',
-  '/images/kilimanjaro/kilimanjaro%20(2).jpeg',
-  '/images/kilimanjaro/kilimanjaro%20(3).jpeg',
-  '/images/kilimanjaro/kilimanjaro%20(4).jpeg',
-  '/images/kilimanjaro/kilimanjaro%20(5).jpeg',
-  '/images/kilimanjaro/kilimanjaro%20(6).jpeg',
-  '/images/kilimanjaro/kilimanjaro%20(7).jpeg',
-  '/images/kilimanjaro/kilimanjaro%20(8).jpeg',
-  '/images/kilimanjaro/kilimanjaro%20(9).jpeg',
-  '/images/kilimanjaro/kilimanjaro%20(10).jpeg'
-];
+/** Mount Meru / Arusha NP images only — never Kilimanjaro assets */
+function meruImagePool() {
+  const roots = [
+    path.join(__dirname, 'public', 'images', 'mount-meru'),
+    path.join(__dirname, 'public', 'images', 'safaris', '3-day-mount-meru-trek'),
+    path.join(__dirname, 'public', 'images', 'safaris', '4-day-mount-meru-trek'),
+  ];
+  const urls = [];
+  for (const dir of roots) {
+    if (!fs.existsSync(dir)) continue;
+    for (const name of fs.readdirSync(dir)) {
+      if (!/\.(jpe?g|png|webp)$/i.test(name)) continue;
+      const rel = path.relative(path.join(__dirname, 'public'), path.join(dir, name)).split(path.sep).join('/');
+      urls.push(
+        '/' +
+          rel
+            .split('/')
+            .map((seg) => encodeURIComponent(seg).replace(/'/g, '%27'))
+            .join('/')
+      );
+    }
+  }
+  return [...new Set(urls)];
+}
 
 const TOURS = [
   {
@@ -275,15 +289,17 @@ function escapeHtml(s) {
 
 async function upsertTour(tour, categoryId, parkIdMap) {
   const slug = tour.package_slug;
+  const meruPool = meruImagePool();
+  const pkgLocal = imagesForPackageSlug(slug);
   const gallery = buildPackageImages({
     categorySlug: 'kilimanjaro',
     parkSlugs: tour.park_slugs,
     packageSlug: slug,
-    featuredImageUrl: KILI_IMGS[0],
-    imageUrls: KILI_IMGS
+    featuredImageUrl: pkgLocal[0] || meruPool[0] || null,
+    imageUrls: [...pkgLocal, ...meruPool]
   });
-  const featured = gallery.featured_image_url || KILI_IMGS[0];
-  const images = gallery.image_urls?.length ? gallery.image_urls : KILI_IMGS;
+  const featured = gallery.featured_image_url || meruPool[0] || null;
+  const images = gallery.image_urls?.length ? gallery.image_urls : meruPool;
   const inclusionsHtml = `<ul>${tour.included_features.map((i) => `<li>${escapeHtml(i)}</li>`).join('')}</ul>`;
   const exclusionsHtml = `<ul>${tour.excluded_features.map((i) => `<li>${escapeHtml(i)}</li>`).join('')}</ul>`;
   const metaTitle = `${tour.package_name} | Mount Meru Trek from Arusha`.slice(0, 70);
