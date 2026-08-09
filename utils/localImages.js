@@ -44,18 +44,31 @@ function isWrongMountainUrl(url, family) {
   } catch (_) {
     /* keep raw */
   }
+  // Animal stock photos only — do not match package slugs like "wildlife-tracking".
+  const wildlife = /(?:^|[-_/])(?:elephants?|water-buffalo|buffalo|zebras?|lions?|giraffes?|cheetahs?|wildebeests?)(?:[-_./]|$)/i.test(
+    hint
+  );
   if (family === 'meru') {
-    return /\/kilimanjaro\/|kilimanjaro%20|kilimanjaro\s*\(|\/images\/kilimanjaro|lengai|oldoinyo|oldonyo/.test(hint);
+    return (
+      wildlife ||
+      /\/kilimanjaro\/|kilimanjaro%20|kilimanjaro\s*\(|\/images\/kilimanjaro|lengai|oldoinyo|oldonyo/.test(hint)
+    );
   }
   if (family === 'lengai') {
-    return /\/kilimanjaro\/|kilimanjaro%20|\/mount-meru\/|meru-trek|machame|marangu|lemosho/.test(hint) &&
-      !/lengai|oldoinyo|oldonyo|natron/.test(hint);
+    if (wildlife || /\/mount-meru\/|meru-trek|pexels-mn-str/.test(hint)) return true;
+    return (
+      /\/kilimanjaro\/|kilimanjaro%20|machame|marangu|lemosho/.test(hint) &&
+      !/lengai|oldoinyo|oldonyo|natron/.test(hint)
+    );
   }
   if (family === 'kilimanjaro') {
-    return /\/mount-meru\/|lengai|oldoinyo|oldonyo|meru-trek|3-day-mount-meru|4-day-mount-meru/.test(hint);
+    return (
+      wildlife ||
+      /\/mount-meru\/|lengai|oldoinyo|oldonyo|meru-trek|3-day-mount-meru|4-day-mount-meru/.test(hint)
+    );
   }
   if (family === 'meru_lengai') {
-    return /\/kilimanjaro\/|kilimanjaro%20|kilimanjaro\s*\(|\/images\/kilimanjaro/.test(hint);
+    return wildlife || /\/kilimanjaro\/|kilimanjaro%20|kilimanjaro\s*\(|\/images\/kilimanjaro/.test(hint);
   }
   return false;
 }

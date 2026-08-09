@@ -26,12 +26,15 @@ const MOUNTAIN = {
   meru: {
     folder: 'mount-meru',
     keep: /meru|arusha.?national|momella|miriakamba|saddle.?hut|socialist.?peak|arusha_national/i,
-    reject: /kilimanjaro|kibo|uhuru|machame|lemosho|marangu|lengai|oldoinyo|oldonyo|natron|eyasi|serengeti|mara.?river|lion-|zebra-|cheetah|wildebeest/i,
+    reject:
+      /kilimanjaro|kibo|uhuru|machame|lemosho|marangu|lengai|oldoinyo|oldonyo|natron|eyasi|serengeti|mara.?river|lion-|zebra-|cheetah|wildebeest|elephant|buffalo|wildlife/i,
   },
   lengai: {
     folder: 'ol-doinyo-lengai',
-    keep: /lengai|oldoinyo|oldonyo|ol.?don|natron|eyasi|volcano|ash/i,
-    reject: /kilimanjaro|kibo|uhuru|machame|lemosho|marangu|meru|momella|miriakamba|serengeti|mara.?river|lion-|giraffe/i,
+    // Prefer volcano / Natron trek cues; do not rely on the pool folder name alone.
+    keep: /lengai|oldoinyo|oldonyo|ol.?don|natron|eyasi|mount_oldonyo|sacred.?ol/i,
+    reject:
+      /kilimanjaro|kibo|uhuru|machame|lemosho|marangu|meru|momella|miriakamba|serengeti|mara.?river|lion-|giraffe|elephant|buffalo|zebra|cheetah|wildebeest|tarangire|pexels-mn-str/i,
   },
   kilimanjaro: {
     folder: 'kilimanjaro',
@@ -191,15 +194,20 @@ function classifyUrl(url, family) {
   if (GENERIC_NOISE.test(hint)) return false;
   if (/elementor\/thumbs|visa-|mastercard-|payment/i.test(hint)) return false;
 
+  // For local /images/... URLs, classify on the basename so pool folder names
+  // (e.g. ol-doinyo-lengai/) cannot make wildlife files look "on topic".
+  const base = path.basename(hint.split('?')[0]);
+  const scoreHint = hint.startsWith('/images/') || hint.includes('/images/') ? base : hint;
+
   if (family === 'meru_lengai') {
-    return MOUNTAIN.meru.keep.test(hint) || MOUNTAIN.lengai.keep.test(hint);
+    return MOUNTAIN.meru.keep.test(scoreHint) || MOUNTAIN.lengai.keep.test(scoreHint);
   }
 
   const conf = MOUNTAIN[family];
   if (!conf) return false;
-  if (conf.reject.test(hint)) return false;
+  if (conf.reject.test(scoreHint) || conf.reject.test(hint)) return false;
   // Strict: filename/path must positively match the mountain family
-  return conf.keep.test(hint);
+  return conf.keep.test(scoreHint) || conf.keep.test(hint);
 }
 
 function extFromUrl(url, contentType) {
@@ -326,14 +334,21 @@ async function syncPackageFolder(ourSlug, family, preferredRemoteUrls) {
   const destDir = path.join(IMAGES, 'safaris', ourSlug);
   ensureDir(destDir);
 
-  // Clear clearly-wrong mountain images from package folder
+  // Clear clearly-wrong mountain / wildlife images from package folder
   for (const name of fs.readdirSync(destDir)) {
     if (!/\.(jpe?g|png|webp)$/i.test(name)) continue;
     const hint = name.toLowerCase();
+    // Animal stock photos only — avoid matching package slugs like "wildlife-tracking".
+    const wildlife =
+      /(?:^|[-_])(?:elephants?|water-buffalo|buffalo|zebras?|lions?|giraffes?|cheetahs?|wildebeests?)(?:[-_.]|$)/i.test(
+        hint
+      );
     const wrong =
-      (family === 'meru' && /kilimanjaro|lengai|oldo/.test(hint)) ||
-      (family === 'lengai' && /kilimanjaro|meru|machame|marangu|lemosho/.test(hint)) ||
-      (family === 'kilimanjaro' && /meru|lengai|oldo/.test(hint));
+      (family === 'meru' && (/kilimanjaro|lengai|oldo/.test(hint) || wildlife)) ||
+      (family === 'lengai' &&
+        (/kilimanjaro|meru|machame|marangu|lemosho|pexels-mn-str/.test(hint) || wildlife)) ||
+      (family === 'kilimanjaro' && (/\/mount-meru|meru-trek|lengai|oldo/.test(hint) || wildlife)) ||
+      (family === 'meru_lengai' && (/kilimanjaro/.test(hint) || wildlife));
     if (wrong) {
       fs.unlinkSync(path.join(destDir, name));
       console.log(`    removed mismatched ${ourSlug}/${name}`);
@@ -443,11 +458,6 @@ async function main() {
       for (const u of urls) {
         if (classifyUrl(u, 'meru')) familyUrls.meru.add(u);
         if (classifyUrl(u, 'lengai')) familyUrls.lengai.add(u);
-        // also keep ambiguous combo images in both pools if not rejected
-        if (!classifyUrl(u, 'meru') && !classifyUrl(u, 'lengai')) {
-          familyUrls.meru.add(u);
-          familyUrls.lengai.add(u);
-        }
       }
     } else {
       for (const u of urls) familyUrls[entry.family].add(u);
