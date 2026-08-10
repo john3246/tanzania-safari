@@ -235,7 +235,7 @@ function renderDestinationDetails(destination) {
         { icon: 'fa-star', label: t('destDetail.factFamousFor'), value: t('destDetail.famousRoof') }
     ] : [
         { icon: 'fa-ruler', label: t('destDetail.factSize'), value: destination.size_sq_km ? `${Number(destination.size_sq_km).toLocaleString()} sq km` : t('destDetail.factVaries') },
-        { icon: 'fa-calendar', label: t('destDetail.factEstablished'), value: destination.established_year || t('destDetail.factVarious') },
+        { icon: 'fa-calendar', label: t('destDetail.factEstablished'), value: destination.established_year != null && destination.established_year !== '' ? String(destination.established_year) : t('destDetail.factVarious') },
         { icon: 'fa-users', label: t('destDetail.factAnnualVisitors'), value: '350,000+' },
         { icon: 'fa-star', label: t('destDetail.factStatus'), value: isUnesco ? t('destDetail.unescoSite') : t('destDetail.nationalPark') }
     ];
@@ -1325,8 +1325,8 @@ function bookDestination(destinationName) {
 }
 
 function escapeHtml(str) {
-    if (!str) return '';
-    return str
+    if (str == null || str === false) return '';
+    return String(str)
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
