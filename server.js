@@ -13,6 +13,7 @@ const indexRoutes = require('./routes/index');
 const apiRoutes   = require('./routes/api');
 const adminRoutes = require('./routes/admin');
 const imageRoutes = require('./routes/images');
+const { ensureGtagInHtml } = require('./utils/gtag');
 
 // Email system initialization
 const emailService = require('./services/email');
@@ -177,6 +178,23 @@ app.use(morgan('dev'));
 // ── Body parsing ──────────────────────────────────────────────
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Ensure Google tag is present in every public HTML response (installation checkers read raw source)
+app.use((req, res, next) => {
+    const pathName = (req.path || '').toLowerCase();
+    if (pathName.startsWith('/admin') || pathName.startsWith('/api')) return next();
+
+    const originalSend = res.send.bind(res);
+    res.send = (body) => {
+        try {
+            if (typeof body === 'string' && /<html[\s>]/i.test(body)) {
+                body = ensureGtagInHtml(body);
+            }
+        } catch (_) { /* never break responses */ }
+        return originalSend(body);
+    };
+    next();
+});
 
 // ── Static files with Aggressive Caching ──────────────────────────────────────────────
 const cacheOptions = {

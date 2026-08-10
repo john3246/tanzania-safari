@@ -91,6 +91,31 @@ async function loadSafariMegaMenuTours() {
     );
 }
 
+/* Inject Google Analytics (gtag) on all public pages — skip if already SSR-injected */
+(function injectGoogleTag() {
+    if (typeof document === 'undefined') return;
+    try {
+        const path = (window.location && window.location.pathname) || '';
+        if (path.startsWith('/admin')) return;
+        if (window.__TSM_GTAG_LOADED || typeof window.gtag === 'function') return;
+        if (document.querySelector('script[src*="googletagmanager.com/gtag/js?id=G-ZNT5VEXJ8F"]')) {
+            window.__TSM_GTAG_LOADED = true;
+            return;
+        }
+        window.__TSM_GTAG_LOADED = true;
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){ dataLayer.push(arguments); }
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', 'G-ZNT5VEXJ8F');
+        const s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-ZNT5VEXJ8F';
+        const head = document.head || document.getElementsByTagName('head')[0];
+        if (head) head.appendChild(s);
+    } catch (_) { /* never block UX */ }
+})();
+
 /* Inject fluid responsive CSS immediately (all public pages) */
 (function injectFluidCss() {
     if (typeof document === 'undefined') return;

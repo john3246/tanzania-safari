@@ -12,6 +12,7 @@ const {
   buildHreflangLinks,
   normalizeLang
 } = require('./seoMeta');
+const { ensureGtagInHtml } = require('./gtag');
 
 /** Normalize SITE_URL — strip trailing slash and accidental markdown link wrappers */
 function normalizeSiteUrl(raw) {
@@ -66,7 +67,7 @@ function buildHeadTags({
   image,
   keywords,
   type = 'website',
-  robots = 'index, follow',
+  robots = 'index, follow, max-image-preview:large, max-snippet:-1',
   jsonLd = [],
   lang = 'en',
   hreflangPath,
@@ -312,7 +313,8 @@ function touristDestinationItemListSchema(items) {
  */
 function buildGoogleTags() {
   const gtm = (process.env.GTM_ID || process.env.GOOGLE_TAG_MANAGER_ID || '').trim();
-  const ga4 = (process.env.GA4_MEASUREMENT_ID || process.env.GOOGLE_ANALYTICS_ID || '').trim();
+  // Default to the site GA4 property so Google's install check always finds a tag
+  const ga4 = (process.env.GA4_MEASUREMENT_ID || process.env.GOOGLE_ANALYTICS_ID || 'G-ZNT5VEXJ8F').trim();
   const ads = (process.env.GOOGLE_ADS_ID || '').trim();
   const parts = { head: '', body: '' };
 
@@ -333,10 +335,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     parts.head = `<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=${escapeHtml(ga4)}"></script>
 <script>
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-${configIds.map((id) => `gtag('config', '${escapeHtml(id)}');`).join('\n')}
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+${configIds.map((id) => `  gtag('config', '${escapeHtml(id)}');`).join('\n')}
 </script>`;
   }
 
@@ -657,6 +660,9 @@ function injectSeoIntoHtml(html, seo) {
   } else {
     out = block + out;
   }
+
+  // Google installation check requires the tag in raw HTML <head>
+  out = ensureGtagInHtml(out);
 
   if (seo.h1) {
     out = out.replace(/>Loading[.…]*</gi, `>${escapeHtml(seo.h1)}<`);
