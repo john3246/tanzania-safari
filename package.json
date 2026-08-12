@@ -9,7 +9,9 @@
     "build": "tailwindcss -i ./public/css/tailwind-input.css -o ./public/css/tailwind-output.css",
     "seed:guide": "node seed_tanzania_safari_guide.js",
     "seed:glado": "node seed_glado_tours.js",
-    "scrape:glado": "node scripts/scrape_glado_tours.js"
+    "scrape:glado": "node scripts/scrape_glado_tours.js",
+    "sync:mountain-images": "node scripts/sync_mountain_trek_images.js",
+    "seed:mountain-images": "node seed_mountain_images.js"
   },
   "engines": {
     "node": ">=18.0.0",

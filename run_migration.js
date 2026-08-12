@@ -306,6 +306,13 @@ async function migrate() {
         console.error('Mount Meru seed failed:', meruErr.message);
     }
 
+    try {
+        const seedMountainImages = require('./seed_mountain_images');
+        await seedMountainImages();
+    } catch (imgErr) {
+        console.error('Mountain trek image seed failed:', imgErr.message);
+    }
+
     console.log('Database migrations completed.');
 }
 

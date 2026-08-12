@@ -15,7 +15,63 @@ const PARK_FOLDERS = {
   ngorongoro: ['ngorongoro-conservation-area'],
   manyara: ['lake-manyara-national-park'],
   kilimanjaro: ['mount-kilimanjaro-national-park'],
+  'mount-meru': ['arusha-national-park'],
+  'ol-doinyo-lengai': ['ol-doinyo-lengai'],
 };
+
+/** Detect trek mountain family from package slug / parks (not hub category alone). */
+function detectMountainFamily({ packageSlug = '', parkSlugs = [], categorySlug = '' } = {}) {
+  // Important: hub category "kilimanjaro" also hosts Meru & Lengai treks — never let
+  // the category alone override a Meru/Lengai package slug.
+  const slugBlob = `${packageSlug} ${parkSlugs.join(' ')}`.toLowerCase();
+  const hasMeru = /meru|arusha-national/.test(slugBlob);
+  const hasLengai = /lengai|oldoinyo|oldonyo|ol-don|natron/.test(slugBlob);
+  const hasKili = /kilimanjaro|machame|marangu|lemosho|uhuru|kibo/.test(slugBlob);
+
+  if (hasMeru && hasLengai) return 'meru_lengai';
+  if (hasMeru) return 'meru';
+  if (hasLengai) return 'lengai';
+  if (hasKili) return 'kilimanjaro';
+  if (categorySlug === 'kilimanjaro') return 'kilimanjaro';
+  return null;
+}
+
+function isWrongMountainUrl(url, family) {
+  if (!family || !url) return false;
+  let hint = String(url || '').toLowerCase();
+  try {
+    hint = decodeURIComponent(hint.split('?')[0]);
+  } catch (_) {
+    /* keep raw */
+  }
+  // Animal stock photos only — do not match package slugs like "wildlife-tracking".
+  const wildlife = /(?:^|[-_/])(?:elephants?|water-buffalo|buffalo|zebras?|lions?|giraffes?|cheetahs?|wildebeests?)(?:[-_./]|$)/i.test(
+    hint
+  );
+  if (family === 'meru') {
+    return (
+      wildlife ||
+      /\/kilimanjaro\/|kilimanjaro%20|kilimanjaro\s*\(|\/images\/kilimanjaro|lengai|oldoinyo|oldonyo/.test(hint)
+    );
+  }
+  if (family === 'lengai') {
+    if (wildlife || /\/mount-meru\/|meru-trek|pexels-mn-str/.test(hint)) return true;
+    return (
+      /\/kilimanjaro\/|kilimanjaro%20|machame|marangu|lemosho/.test(hint) &&
+      !/lengai|oldoinyo|oldonyo|natron/.test(hint)
+    );
+  }
+  if (family === 'kilimanjaro') {
+    return (
+      wildlife ||
+      /\/mount-meru\/|lengai|oldoinyo|oldonyo|meru-trek|3-day-mount-meru|4-day-mount-meru/.test(hint)
+    );
+  }
+  if (family === 'meru_lengai') {
+    return wildlife || /\/kilimanjaro\/|kilimanjaro%20|kilimanjaro\s*\(|\/images\/kilimanjaro/.test(hint);
+  }
+  return false;
+}
 
 /** Keywords that must appear in a Glado URL/filename for that park/category */
 const RELEVANCE = {
@@ -24,11 +80,12 @@ const RELEVANCE = {
   'ngorongoro-conservation-area': /ngorongoro|crater|rhino/i,
   'tarangire-national-park': /tarangire|baobab|elephant/i,
   'lake-manyara-national-park': /manyara|flamingo|tree.?lion/i,
-  'arusha-national-park': /arusha|meru|momella/i,
-  'mount-kilimanjaro-national-park': /kilimanjaro|kibo|uhuru|machame|lemosho|marangu|alpine|summit|trek|mountain/i,
+  'arusha-national-park': /arusha|meru|momella|miriakamba|saddle.?hut/i,
+  'ol-doinyo-lengai': /lengai|oldoinyo|oldonyo|ol.?don|natron|eyasi/i,
+  'mount-kilimanjaro-national-park': /kilimanjaro|kibo|uhuru|machame|lemosho|marangu|alpine|summit|lava.?tower|barranco/i,
   safaris: /safari|serengeti|ngorongoro|tarangire|manyara|wildlife|lion|elephant|giraffe|zebra|cheetah|leopard|big.?five|game.?drive/i,
   migrations: /migration|wildebeest|serengeti|mara|ndutu|crossing|calving/i,
-  kilimanjaro: /kilimanjaro|kibo|uhuru|machame|lemosho|marangu|alpine|summit|trek|mountain/i,
+  kilimanjaro: /kilimanjaro|kibo|uhuru|machame|lemosho|marangu|alpine|summit|lava.?tower|barranco/i,
   'group-safaris': /safari|serengeti|ngorongoro|wildlife|group|lion|elephant/i,
 };
 
@@ -210,24 +267,62 @@ function buildPackageImages({
   minCount = 6,
   maxCount = 14,
 } = {}) {
+  const mountainFamily = detectMountainFamily({ packageSlug, parkSlugs, categorySlug });
   const remoteAll = [featuredImageUrl, ...(Array.isArray(imageUrls) ? imageUrls : [])].filter(Boolean);
-  const remoteOk = filterRelevantRemoteImages(remoteAll, { categorySlug, parkSlugs });
+  let remoteOk = filterRelevantRemoteImages(remoteAll, { categorySlug, parkSlugs });
+  if (mountainFamily) {
+    remoteOk = remoteOk.filter((u) => !isWrongMountainUrl(u, mountainFamily));
+  }
 
   const local = [];
-  const pkgLocal = imagesForPackageSlug(packageSlug);
+  let pkgLocal = imagesForPackageSlug(packageSlug);
+  if (mountainFamily) {
+    pkgLocal = pkgLocal.filter((u) => !isWrongMountainUrl(u, mountainFamily));
+  }
   local.push(...pkgLocal);
+
+  // Mountain-specific local pools (strict separation)
+  if (mountainFamily === 'meru' || mountainFamily === 'meru_lengai') {
+    local.push(...listImageFiles(path.join(IMAGES_ROOT, 'mount-meru')));
+  }
+  if (mountainFamily === 'lengai' || mountainFamily === 'meru_lengai') {
+    local.push(...listImageFiles(path.join(IMAGES_ROOT, 'ol-doinyo-lengai')));
+  }
+  if (mountainFamily === 'kilimanjaro') {
+    local.push(...listImageFiles(path.join(IMAGES_ROOT, 'kilimanjaro')));
+  }
 
   // Prefer primary park images first
   const orderedParks = [...parkSlugs];
   if (categorySlug === 'zanzibar' && !orderedParks.includes('zanzibar')) orderedParks.unshift('zanzibar');
-  if (categorySlug === 'kilimanjaro' && !orderedParks.includes('mount-kilimanjaro-national-park')) {
+  if (
+    (categorySlug === 'kilimanjaro' || mountainFamily === 'kilimanjaro') &&
+    !orderedParks.includes('mount-kilimanjaro-national-park') &&
+    mountainFamily !== 'meru' &&
+    mountainFamily !== 'lengai' &&
+    mountainFamily !== 'meru_lengai'
+  ) {
     orderedParks.unshift('mount-kilimanjaro-national-park');
+  }
+  if ((mountainFamily === 'meru' || mountainFamily === 'meru_lengai') && !orderedParks.includes('arusha-national-park')) {
+    orderedParks.unshift('arusha-national-park');
   }
   if (categorySlug === 'migrations' && !orderedParks.includes('serengeti-national-park')) {
     orderedParks.unshift('serengeti-national-park');
   }
 
   for (const slug of orderedParks) {
+    // Never pull Kilimanjaro park folder into Meru/Lengai packages
+    if (
+      (mountainFamily === 'meru' || mountainFamily === 'lengai' || mountainFamily === 'meru_lengai') &&
+      slug === 'mount-kilimanjaro-national-park'
+    ) {
+      continue;
+    }
+    // Never pull Meru folder into pure Kilimanjaro packages
+    if (mountainFamily === 'kilimanjaro' && slug === 'arusha-national-park' && /meru|lengai/.test(packageSlug || '')) {
+      continue;
+    }
     local.push(...imagesForParkSlug(slug));
   }
 
@@ -245,29 +340,59 @@ function buildPackageImages({
       ...otherRemote.slice(0, 4),
       ...zanLocal.slice(8),
     ];
+  } else if (mountainFamily === 'meru') {
+    const meruPool = listImageFiles(path.join(IMAGES_ROOT, 'mount-meru'));
+    ordered = [...pkgLocal, ...meruPool, ...remoteOk, ...local];
+  } else if (mountainFamily === 'lengai') {
+    const lengaiPool = listImageFiles(path.join(IMAGES_ROOT, 'ol-doinyo-lengai'));
+    ordered = [...pkgLocal, ...lengaiPool, ...remoteOk, ...local];
+  } else if (mountainFamily === 'meru_lengai') {
+    const meruPool = listImageFiles(path.join(IMAGES_ROOT, 'mount-meru'));
+    const lengaiPool = listImageFiles(path.join(IMAGES_ROOT, 'ol-doinyo-lengai'));
+    ordered = [...pkgLocal, ...meruPool, ...lengaiPool, ...remoteOk, ...local];
+  } else if (mountainFamily === 'kilimanjaro') {
+    const kiliPool = listImageFiles(path.join(IMAGES_ROOT, 'kilimanjaro'));
+    ordered = [...pkgLocal, ...kiliPool, ...remoteOk, ...local];
   } else {
     // Prefer relevant Glado, then package folder, then park folders
     ordered = [...remoteOk, ...pkgLocal, ...local.filter((u) => !pkgLocal.includes(u))];
   }
 
+  if (mountainFamily) {
+    ordered = ordered.filter((u) => !isWrongMountainUrl(u, mountainFamily));
+  }
+
   let gallery = uniqueUrls(ordered, maxCount);
 
-  // Pad from local parks until minCount
+  // Pad from mountain-safe local parks until minCount
   if (gallery.length < minCount) {
-    const fillers = orderedParks.length
-      ? orderedParks.flatMap((s) => imagesForParkSlug(s))
-      : imagesForParkSlug('serengeti-national-park');
+    let fillers = [];
+    if (mountainFamily === 'meru' || mountainFamily === 'meru_lengai') {
+      fillers = listImageFiles(path.join(IMAGES_ROOT, 'mount-meru'));
+    } else if (mountainFamily === 'lengai') {
+      fillers = listImageFiles(path.join(IMAGES_ROOT, 'ol-doinyo-lengai'));
+    } else if (mountainFamily === 'kilimanjaro') {
+      fillers = listImageFiles(path.join(IMAGES_ROOT, 'kilimanjaro'));
+    } else if (orderedParks.length) {
+      fillers = orderedParks.flatMap((s) => imagesForParkSlug(s));
+    } else {
+      fillers = imagesForParkSlug('serengeti-national-park');
+    }
     gallery = uniqueUrls([...gallery, ...fillers], Math.max(minCount, gallery.length));
   }
 
-  // Last resort: classic safari optimized heroes
-  if (gallery.length < Math.min(3, minCount)) {
+  // Last resort: classic safari optimized heroes (never for pure mountain packages)
+  if (gallery.length < Math.min(3, minCount) && !mountainFamily) {
     const fallbacks = [
       '/images/optimized/serengeti-national-park.webp',
       '/images/optimized/ngorongoro-conservation-area.webp',
       '/images/optimized/balloon.webp',
     ].filter((u) => fs.existsSync(path.join(__dirname, '..', 'public', u.replace(/^\//, '').replace(/\//g, path.sep))));
     gallery = uniqueUrls([...gallery, ...fallbacks], minCount);
+  }
+
+  if (mountainFamily) {
+    gallery = gallery.filter((u) => !isWrongMountainUrl(u, mountainFamily));
   }
 
   const featured = gallery[0] || null;
@@ -307,5 +432,7 @@ module.exports = {
   buildPackageImages,
   buildDestinationImages,
   allParkSlugsWithLocalImages,
+  detectMountainFamily,
+  isWrongMountainUrl,
   toPublicUrl,
 };
