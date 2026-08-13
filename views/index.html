@@ -240,38 +240,48 @@
 
 <!-- Mountain Climbing + Kilimanjaro Routes -->
 <style>
-  .home-climb-section{padding:5rem 0;background:#0f1a0d;color:#f5f5f0}
+  .home-climb-section{padding:5rem 0;background:var(--primary-dark,#1E311B);color:#fff}
   .home-climb-head{max-width:46rem;margin:0 auto 2.75rem;text-align:center}
-  .home-climb-head .section-eyebrow{color:#e7b980}
+  .home-climb-head .section-eyebrow{color:var(--accent,#FF6F00);background:var(--accent-pale,rgba(255,111,0,0.10))}
   .home-climb-head .section-title{color:#fff}
-  .home-climb-head .section-desc{color:rgba(255,255,255,0.82)}
+  .home-climb-head .section-title span{color:var(--accent,#FF6F00)}
+  .home-climb-head .section-desc{color:rgba(255,255,255,0.92)}
   .home-climb-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:1.25rem}
-  .home-climb-feature{position:relative;border-radius:18px;overflow:hidden;min-height:340px;display:flex;align-items:flex-end;text-decoration:none;color:#fff}
-  .home-climb-feature img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
-  .home-climb-feature:hover img{transform:scale(1.06)}
-  .home-climb-feature .hcf-overlay{position:relative;z-index:2;width:100%;padding:1.75rem;background:linear-gradient(to top,rgba(0,0,0,0.78) 0%,rgba(0,0,0,0.15) 70%,transparent 100%)}
-  .home-climb-feature h3{font-family:var(--font-heading);font-size:1.5rem;margin:0 0 0.4rem}
-  .home-climb-feature p{margin:0 0 0.85rem;color:rgba(255,255,255,0.88);font-size:0.95rem;line-height:1.6}
+  .home-climb-feature,.home-climb-mini,.home-route-teaser{position:relative;overflow:hidden;display:flex;align-items:flex-end;text-decoration:none;color:#fff}
+  .home-climb-feature{border-radius:18px;min-height:340px}
+  .home-climb-mini{border-radius:18px;min-height:160px}
+  .home-climb-feature img,.home-climb-mini img,.home-route-teaser img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+  .home-climb-feature:hover img,.home-climb-mini:hover img,.home-route-teaser:hover img{transform:scale(1.06)}
+  .home-climb-feature::after,.home-climb-mini::after,.home-route-teaser::after{
+    content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:linear-gradient(to top,rgba(15,26,14,0.92) 0%,rgba(15,26,14,0.55) 42%,rgba(15,26,14,0.18) 100%);
+  }
+  .home-climb-feature .hcf-overlay,.home-climb-mini .hcm-overlay,.home-route-teaser .hrt-overlay{
+    position:relative;z-index:2;width:100%;text-shadow:0 1px 8px rgba(0,0,0,0.55);
+  }
+  .home-climb-feature .hcf-overlay{padding:1.75rem;background:transparent}
+  .home-climb-feature h3,.home-climb-mini h4,.home-route-teaser h4{font-family:var(--font-heading);color:#fff!important;margin:0 0 0.35rem}
+  .home-climb-feature h3{font-size:1.5rem}
+  .home-climb-feature p{margin:0 0 0.85rem;color:rgba(255,255,255,0.95)!important;font-size:0.95rem;line-height:1.6}
   .home-climb-side{display:grid;grid-template-rows:1fr 1fr;gap:1.25rem}
-  .home-climb-mini{position:relative;border-radius:18px;overflow:hidden;min-height:160px;display:flex;align-items:flex-end;text-decoration:none;color:#fff}
-  .home-climb-mini img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
-  .home-climb-mini:hover img{transform:scale(1.06)}
-  .home-climb-mini .hcm-overlay{position:relative;z-index:2;width:100%;padding:1.1rem 1.25rem;background:linear-gradient(to top,rgba(0,0,0,0.8),transparent)}
-  .home-climb-mini h4{font-family:var(--font-heading);margin:0 0 0.15rem;font-size:1.1rem}
-  .home-climb-mini span{font-size:0.82rem;color:rgba(255,255,255,0.85)}
+  .home-climb-mini .hcm-overlay{padding:1.1rem 1.25rem;background:transparent}
+  .home-climb-mini h4,.home-route-teaser h4{font-size:1.1rem}
+  .home-climb-mini span,.home-route-teaser span{font-size:0.82rem;color:rgba(255,255,255,0.95)!important}
+  .home-climb-feature .btn-white{background:#fff;color:var(--primary-dark,#1E311B);font-weight:700}
   .home-climb-actions{display:flex;flex-wrap:wrap;gap:0.6rem;justify-content:center;margin-top:2.25rem}
-  .home-climb-section .btn-outline-light{background:transparent;color:#fff;border:2px solid rgba(255,255,255,0.65)}
-  .home-climb-section .btn-outline-light:hover{background:rgba(255,255,255,0.12);border-color:#fff}
+  .home-climb-section .btn-outline.btn-outline-light{
+    background:transparent!important;color:#fff!important;
+    border:2px solid rgba(255,255,255,0.88)!important;
+  }
+  .home-climb-section .btn-outline.btn-outline-light:hover{
+    background:#fff!important;color:var(--primary-dark,#1E311B)!important;border-color:#fff!important;
+  }
 
   .home-routes-section{padding:5rem 0;background:#f7f8f6}
   .home-routes-head{max-width:44rem;margin:0 auto 2.5rem;text-align:center}
   .home-routes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem}
-  .home-route-teaser{position:relative;border-radius:14px;overflow:hidden;min-height:170px;display:flex;align-items:flex-end;text-decoration:none;color:#fff}
-  .home-route-teaser img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
-  .home-route-teaser:hover img{transform:scale(1.07)}
-  .home-route-teaser .hrt-overlay{position:relative;z-index:2;width:100%;padding:1rem 1.1rem;background:linear-gradient(to top,rgba(0,0,0,0.82),transparent)}
-  .home-route-teaser h4{font-family:var(--font-heading);margin:0 0 0.15rem;font-size:1.1rem}
-  .home-route-teaser span{font-size:0.8rem;color:rgba(255,255,255,0.85)}
+  .home-route-teaser{border-radius:14px;min-height:170px}
+  .home-route-teaser .hrt-overlay{padding:1rem 1.1rem;background:transparent}
   .home-routes-actions{text-align:center;margin-top:2.25rem}
   @media (max-width:860px){
     .home-climb-grid{grid-template-columns:1fr}
