@@ -15,6 +15,8 @@ const PARK_FOLDERS = {
   ngorongoro: ['ngorongoro-conservation-area'],
   manyara: ['lake-manyara-national-park'],
   kilimanjaro: ['mount-kilimanjaro-national-park'],
+  tarangire: ['tarangire-national-park'],
+  arusha: ['arusha-national-park'],
 };
 
 /** Keywords that must appear in a Glado URL/filename for that park/category */

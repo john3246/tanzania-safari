@@ -42,11 +42,26 @@ function buildSafariCard(p) {
     </a>`;
 }
 
+const DEST_ALIASES = {
+    serengeti: 'serengeti-national-park',
+    ngorongoro: 'ngorongoro-conservation-area',
+    tarangire: 'tarangire-national-park',
+    zanzibar: 'zanzibar',
+    manyara: 'lake-manyara-national-park'
+};
+const DUR_ALIASES = { '4-7': '4-6', '8+': '7-9' };
+
+function resolveDestParam(value) {
+    if (!value) return value;
+    const key = String(value).trim().toLowerCase();
+    return DEST_ALIASES[key] || value;
+}
+
 function getFilters() {
     return {
         search: document.getElementById('searchInput')?.value.trim() || '',
         category: document.getElementById('categorySelect')?.value || '',
-        destination: document.getElementById('destinationSelect')?.value || '',
+        destination: resolveDestParam(document.getElementById('destinationSelect')?.value || ''),
         duration: document.getElementById('durationSelect')?.value || 'all',
         difficulty: document.getElementById('difficultySelect')?.value || 'all',
         min_price: document.getElementById('minPrice')?.value || '',
@@ -121,8 +136,9 @@ async function loadFilters() {
         const { data: cats } = await API.get('/categories');
         const catEl = document.getElementById('categorySelect');
         if (catEl && cats?.length) {
+            const withTours = cats.filter((c) => Number(c.safari_count) > 0);
             catEl.innerHTML = `<option value="all">${t('safarisPage.allCategories')}</option>` +
-                cats.map(c => `<option value="${c.category_slug}">${c.category_name} (${c.safari_count||0})</option>`).join('');
+                withTours.map(c => `<option value="${c.category_slug}">${c.category_name} (${c.safari_count||0})</option>`).join('');
         }
     } catch {}
     try {
@@ -145,11 +161,12 @@ async function loadFilters() {
     }
     if (params.get('destination')) {
         const r = document.getElementById('destinationSelect');
-        if (r) r.value = params.get('destination');
+        if (r) r.value = resolveDestParam(params.get('destination'));
     }
     if (params.get('duration')) {
         const r = document.getElementById('durationSelect');
-        if (r) r.value = params.get('duration');
+        const dur = DUR_ALIASES[params.get('duration')] || params.get('duration');
+        if (r) r.value = dur;
     }
     applyFilters();
 }
@@ -157,4 +174,9 @@ async function loadFilters() {
 // Search on Enter
 document.getElementById('searchInput')?.addEventListener('keypress', e => { if (e.key === 'Enter') applyFilters(); });
 
-loadFilters();
+(async () => {
+  try {
+    if (window.TSM_i18n && window.TSM_i18n.ready) await window.TSM_i18n.ready;
+  } catch (_) {}
+  loadFilters();
+})();

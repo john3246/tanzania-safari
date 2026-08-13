@@ -141,26 +141,55 @@ async function loadHomepage() {
         }
     }
 
-    // Categories (filters only) + Group Safaris homepage entry
-    let allPackages = [];
+    // Categories — only those with packages; filter fetches that category from the API
+    let featuredPackages = [];
+    const viewAllLink = document.getElementById('viewAllSafaris');
+
+    async function loadSafarisByCategory(slug) {
+        const grid = document.getElementById('safarisGrid');
+        if (grid) {
+            grid.innerHTML = '<div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line medium"></div><div class="skeleton skeleton-line short"></div></div></div>'.repeat(4);
+        }
+        if (viewAllLink) {
+            viewAllLink.href = (!slug || slug === 'all')
+                ? '/safaris'
+                : (slug === 'group-safaris' ? '/group-safaris' : `/safaris?category=${encodeURIComponent(slug)}`);
+        }
+        try {
+            if (!slug || slug === 'all') {
+                if (!featuredPackages.length) {
+                    const { data } = await API.get('/packages/featured?limit=8');
+                    featuredPackages = data || [];
+                }
+                renderSafaris(featuredPackages, 4);
+                return;
+            }
+            const { data } = await API.get(`/packages?category=${encodeURIComponent(slug)}&limit=8&sort=featured`);
+            renderSafaris(data || [], 8);
+        } catch {
+            if (grid && !grid.querySelector('.ssr-card, a[href*="/safaris/"]')) {
+                grid.innerHTML = `<p style="color:var(--text-muted);grid-column:1/-1;text-align:center">${t('home.unablePackages')}</p>`;
+            }
+        }
+    }
+
     try {
         const { data: cats } = await API.get('/categories');
         const filterBar = document.getElementById('categoryFilters');
         if (cats?.length && filterBar) {
-            cats.forEach(c => {
+            cats.forEach((c) => {
                 const btn = document.createElement('button');
+                btn.type = 'button';
                 btn.className = 'filter-btn';
                 btn.dataset.filter = c.category_slug;
                 btn.textContent = c.category_name;
                 filterBar.appendChild(btn);
             });
-            filterBar.querySelectorAll('.filter-btn').forEach(btn => {
+            filterBar.querySelectorAll('.filter-btn').forEach((btn) => {
                 btn.addEventListener('click', () => {
-                    filterBar.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    filterBar.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('active'));
                     btn.classList.add('active');
-                    const f = btn.dataset.filter;
-                    const filtered = f === 'all' ? allPackages : allPackages.filter(p => p.category_slug === f);
-                    renderSafaris(filtered);
+                    loadSafarisByCategory(btn.dataset.filter);
                 });
             });
         }
@@ -208,13 +237,13 @@ async function loadHomepage() {
 
     // Safaris
     try {
-        const { data } = await API.get('/packages/featured?limit=6');
-        allPackages = data || [];
-        renderSafaris(allPackages);
+        const { data } = await API.get('/packages/featured?limit=8');
+        featuredPackages = data || [];
+        renderSafaris(featuredPackages, 4);
         // Populate quick-book dropdown
         const sel = document.getElementById('quickBookPackage');
-        if (sel && allPackages.length) {
-            allPackages.forEach(p => {
+        if (sel && featuredPackages.length) {
+            featuredPackages.forEach(p => {
                 const opt = document.createElement('option');
                 opt.value = p.package_id;
                 opt.textContent = p.package_name;
@@ -247,14 +276,14 @@ async function loadHomepage() {
     } catch {}
 }
 
-function renderSafaris(packages) {
+function renderSafaris(packages, limit = 4) {
     const grid = document.getElementById('safarisGrid');
     if (!grid) return;
     if (!packages?.length) {
         grid.innerHTML = `<p style="color:var(--text-muted);grid-column:1/-1;text-align:center;padding:2rem">${t('home.noPackages')}</p>`;
         return;
     }
-    grid.innerHTML = packages.slice(0, 4).map(buildSafariCard).join('');
+    grid.innerHTML = packages.slice(0, limit).map(buildSafariCard).join('');
 }
 
 // ── Quick Book Modal ───────────────────────────────────────

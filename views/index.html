@@ -173,18 +173,19 @@
       <div class="form-group" style="flex: 1; min-width: 200px; margin: 0;">
         <select class="form-control" name="destination" style="background: var(--bg-secondary); border: none; padding: 0.875rem 1.25rem; border-radius: var(--radius-md);">
           <option value="" data-i18n="home.anyDestination">Any Destination</option>
-          <option value="Serengeti">Serengeti</option>
-          <option value="Ngorongoro">Ngorongoro</option>
-          <option value="Tarangire">Tarangire</option>
-          <option value="Zanzibar">Zanzibar</option>
+          <option value="serengeti-national-park">Serengeti</option>
+          <option value="ngorongoro-conservation-area">Ngorongoro</option>
+          <option value="tarangire-national-park">Tarangire</option>
+          <option value="zanzibar">Zanzibar</option>
         </select>
       </div>
       <div class="form-group" style="flex: 1; min-width: 200px; margin: 0;">
         <select class="form-control" name="duration" style="background: var(--bg-secondary); border: none; padding: 0.875rem 1.25rem; border-radius: var(--radius-md);">
           <option value="" data-i18n="home.anyDuration">Any Duration</option>
-          <option value="1-3" data-i18n="home.days1to3">1 - 3 Days</option>
-          <option value="4-7" data-i18n="home.days4to7">4 - 7 Days</option>
-          <option value="8+" data-i18n="home.days8plus">8+ Days</option>
+          <option value="1-3" data-i18n="safarisPage.days1to3">1–3 Days</option>
+          <option value="4-6" data-i18n="safarisPage.days4to6">4–6 Days</option>
+          <option value="7-9" data-i18n="safarisPage.days7to9">7–9 Days</option>
+          <option value="10+" data-i18n="safarisPage.days10plus">10+ Days</option>
         </select>
       </div>
       <button type="submit" class="btn btn-primary" style="padding: 0.875rem 2rem; min-width: 150px;"><i class="fas fa-search"></i> <span data-i18n="common.search">Search</span></button>
@@ -224,7 +225,7 @@
       <p class="section-desc" data-i18n="home.popularDesc">Handpicked experiences designed for every type of traveler — from thrilling game drives to serene cultural encounters.</p>
     </div>
     <div class="filter-bar" id="categoryFilters">
-      <button class="filter-btn active" data-filter="all" data-i18n="home.allSafaris">All Safaris</button>
+      <button type="button" class="filter-btn active" data-filter="all" data-i18n="home.allSafaris">All Safaris</button>
     </div>
     <div class="safari-grid" id="safarisGrid">
       <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line medium"></div><div class="skeleton skeleton-line short"></div></div></div>
@@ -232,7 +233,7 @@
       <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line medium"></div><div class="skeleton skeleton-line short"></div></div></div>
     </div>
     <div class="text-center" style="margin-top:2.5rem">
-      <a href="/safaris" class="btn btn-outline"><i class="fas fa-binoculars"></i> <span data-i18n="home.viewAllSafaris">View All Safaris</span></a>
+      <a href="/safaris" class="btn btn-outline" id="viewAllSafaris"><i class="fas fa-binoculars"></i> <span data-i18n="home.viewAllSafaris">View All Safaris</span></a>
     </div>
   </div>
 </section>
@@ -513,6 +514,6 @@
 <div id="footer"></div>
 <script src="/js/layout-loader.js?v=14"></script>
 <script src="/js/api.js?v=2"></script>
-<script src="/js/main.js?v=6"></script>
+<script src="/js/main.js?v=8"></script>
 </body>
 </html>

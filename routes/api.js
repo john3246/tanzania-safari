@@ -66,6 +66,7 @@ router.get('/categories', safariController.getCategories || (async (req, res) =>
             LEFT JOIN safari_packages sp ON pc.category_id = sp.category_id AND sp.is_active = true
             WHERE pc.is_active = true
             GROUP BY pc.category_id
+            HAVING COUNT(sp.package_id) > 0
             ORDER BY pc.display_order
         `;
         const result = await db.query(query);

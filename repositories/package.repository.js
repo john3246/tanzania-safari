@@ -1,5 +1,90 @@
 const db = require('../config/db');
 
+const DEST_ALIASES = {
+    serengeti: 'serengeti-national-park',
+    ngorongoro: 'ngorongoro-conservation-area',
+    tarangire: 'tarangire-national-park',
+    zanzibar: 'zanzibar',
+    manyara: 'lake-manyara-national-park',
+    kilimanjaro: 'mount-kilimanjaro-national-park',
+    meru: 'arusha-national-park',
+    arusha: 'arusha-national-park'
+};
+
+function resolveDestinationSlug(destination) {
+    const raw = String(destination || '').trim();
+    if (!raw) return '';
+    const key = raw.toLowerCase();
+    return DEST_ALIASES[key] || raw;
+}
+
+function durationSql(duration) {
+    switch (duration) {
+        case '1-3': return 'sp.duration_days BETWEEN 1 AND 3';
+        case '4-6': return 'sp.duration_days BETWEEN 4 AND 6';
+        case '4-7': return 'sp.duration_days BETWEEN 4 AND 7';
+        case '7-9': return 'sp.duration_days BETWEEN 7 AND 9';
+        case '8+': return 'sp.duration_days >= 8';
+        case '10+': return 'sp.duration_days >= 10';
+        default: return null;
+    }
+}
+
+/** Extra slugs treated as the same hub (e.g. Great Migration ↔ Migration Safaris). */
+const CATEGORY_SLUG_ALIASES = {
+    'great-migration': ['great-migration', 'migrations'],
+    migrations: ['migrations', 'great-migration'],
+    'mountain-climbing': ['mountain-climbing', 'kilimanjaro'],
+    kilimanjaro: ['kilimanjaro', 'mountain-climbing']
+};
+
+/** Name/slug keywords so Fly-In, Budget, etc. still match tours stored under another hub. */
+const CATEGORY_KEYWORDS = {
+    'fly-in': ['%fly-in%', '%fly in%', '%fly-out%', '%fly out%'],
+    budget: ['%budget%'],
+    'family-safaris': ['%family%'],
+    'day-trips': ['%day trip%', '%day-trip%', '%one day%', '%1-day%', '%1 day%'],
+    'photography-tours': ['%photo%'],
+    'cultural-tours': ['%cultural%', '%maasai%', '%hadzabe%', '%datoga%'],
+    'luxury-safaris': ['%luxury%'],
+    'wildlife-safaris': ['%wildlife%', '%game drive%', '%big five%', '%big cat%'],
+    zanzibar: ['%zanzibar%'],
+    'group-safaris': ['%group%'],
+    kilimanjaro: ['%kilimanjaro%', '%machame%', '%marangu%', '%lemosho%', '%mount meru%', '%meru trek%'],
+    'mountain-climbing': ['%kilimanjaro%', '%mount meru%', '%meru trek%', '%machame%', '%lemosho%', '%marangu%'],
+    migrations: ['%migration%', '%wildebeest%', '%ndutu%', '%mara river%', '%calving%'],
+    'great-migration': ['%migration%', '%wildebeest%', '%ndutu%', '%mara river%', '%calving%']
+};
+
+/**
+ * Match packages by category slug, alias, or itinerary keywords.
+ * Returns the next unused param index.
+ */
+function applyCategoryFilter(conditions, params, paramIndex, category) {
+    if (!category || category === 'all') return paramIndex;
+
+    const slugs = CATEGORY_SLUG_ALIASES[category] || [category];
+    const keywords = CATEGORY_KEYWORDS[category] || [];
+    const parts = [`pc.category_slug = ANY($${paramIndex}::text[])`];
+    params.push(slugs);
+    paramIndex += 1;
+
+    for (const kw of keywords) {
+        parts.push(
+            `(sp.package_name ILIKE $${paramIndex} OR sp.package_slug ILIKE $${paramIndex} OR COALESCE(sp.short_description, '') ILIKE $${paramIndex})`
+        );
+        params.push(kw);
+        paramIndex += 1;
+    }
+
+    if (category === 'day-trips') {
+        parts.push('sp.duration_days = 1');
+    }
+
+    conditions.push(`(${parts.join(' OR ')})`);
+    return paramIndex;
+}
+
 class PackageRepository {
     /**
      * Get all packages with filters and pagination
@@ -29,25 +114,21 @@ class PackageRepository {
         const params = [];
         let paramIndex = 1;
 
-        if (category && category !== 'all') {
-            conditions.push(`pc.category_slug = $${paramIndex++}`);
-            params.push(category);
-        }
+        paramIndex = applyCategoryFilter(conditions, params, paramIndex, category);
 
         if (destination && destination !== 'all') {
+            const destSlug = resolveDestinationSlug(destination);
             conditions.push(`EXISTS (
                 SELECT 1 FROM package_destinations pd 
                 JOIN national_parks np ON pd.park_id = np.park_id 
                 WHERE pd.package_id = sp.package_id AND np.park_slug = $${paramIndex++}
             )`);
-            params.push(destination);
+            params.push(destSlug);
         }
 
         if (duration && duration !== 'all') {
-            if (duration === '1-3') conditions.push(`sp.duration_days BETWEEN 1 AND 3`);
-            else if (duration === '4-6') conditions.push(`sp.duration_days BETWEEN 4 AND 6`);
-            else if (duration === '7-9') conditions.push(`sp.duration_days BETWEEN 7 AND 9`);
-            else if (duration === '10+') conditions.push(`sp.duration_days >= 10`);
+            const durSql = durationSql(duration);
+            if (durSql) conditions.push(durSql);
         }
 
         if (difficulty && difficulty !== 'all') {
@@ -115,25 +196,21 @@ class PackageRepository {
         const params = [];
         let paramIndex = 1;
 
-        if (category && category !== 'all') {
-            conditions.push(`pc.category_slug = $${paramIndex++}`);
-            params.push(category);
-        }
+        paramIndex = applyCategoryFilter(conditions, params, paramIndex, category);
 
         if (destination && destination !== 'all') {
+            const destSlug = resolveDestinationSlug(destination);
             conditions.push(`EXISTS (
                 SELECT 1 FROM package_destinations pd 
                 JOIN national_parks np ON pd.park_id = np.park_id 
                 WHERE pd.package_id = sp.package_id AND np.park_slug = $${paramIndex++}
             )`);
-            params.push(destination);
+            params.push(destSlug);
         }
 
         if (duration && duration !== 'all') {
-            if (duration === '1-3') conditions.push(`sp.duration_days BETWEEN 1 AND 3`);
-            else if (duration === '4-6') conditions.push(`sp.duration_days BETWEEN 4 AND 6`);
-            else if (duration === '7-9') conditions.push(`sp.duration_days BETWEEN 7 AND 9`);
-            else if (duration === '10+') conditions.push(`sp.duration_days >= 10`);
+            const durSql = durationSql(duration);
+            if (durSql) conditions.push(durSql);
         }
 
         if (difficulty && difficulty !== 'all') {

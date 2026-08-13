@@ -23,6 +23,13 @@ const KILI_IMGS = [
 const TOURS = [
   {
     package_slug: '6-day-mount-meru-tarangire-ngorongoro',
+    featured_image_url: '/images/optimized/4-day-mount-meru-trek.webp',
+    gallery_lead: [
+      '/images/optimized/4-day-mount-meru-trek.webp',
+      '/images/optimized/arusha-national-park.webp',
+      '/images/optimized/tarangire-national-park.webp',
+      '/images/optimized/ngorongoro-conservation-area.webp'
+    ],
     package_name: '6-Day Mount Meru Adventure, Tarangire & Ngorongoro Crater Safari',
     duration_days: 6,
     duration_nights: 5,
@@ -102,6 +109,14 @@ const TOURS = [
   },
   {
     package_slug: '9-day-mount-meru-northern-tanzania-safari',
+    featured_image_url: '/images/kilimanjaro/kilimanjaro%20(6).jpeg',
+    gallery_lead: [
+      '/images/kilimanjaro/kilimanjaro%20(6).jpeg',
+      '/images/optimized/serengeti-national-park.webp',
+      '/images/kilimanjaro/kilimanjaro%20(3).jpeg',
+      '/images/optimized/ngorongoro-conservation-area.webp',
+      '/images/optimized/tarangire-national-park.webp'
+    ],
     package_name: '9-Day Mount Meru Trek & Northern Tanzania Wildlife Safari',
     duration_days: 9,
     duration_nights: 8,
@@ -273,17 +288,24 @@ function escapeHtml(s) {
     .replace(/"/g, '&quot;');
 }
 
+/** Keep each Meru tour on its own hero image even if park-folder padding repeats. */
+function uniqueLeadGallery(featured, galleryUrls, fallback) {
+  const rest = (galleryUrls?.length ? galleryUrls : fallback).filter((u) => u && u !== featured);
+  return [featured, ...rest];
+}
+
 async function upsertTour(tour, categoryId, parkIdMap) {
   const slug = tour.package_slug;
+  const featuredSeed = tour.featured_image_url || KILI_IMGS[0];
   const gallery = buildPackageImages({
     categorySlug: 'kilimanjaro',
     parkSlugs: tour.park_slugs,
     packageSlug: slug,
-    featuredImageUrl: KILI_IMGS[0],
-    imageUrls: KILI_IMGS
+    featuredImageUrl: featuredSeed,
+    imageUrls: [...(tour.gallery_lead || []), ...KILI_IMGS]
   });
-  const featured = gallery.featured_image_url || KILI_IMGS[0];
-  const images = gallery.image_urls?.length ? gallery.image_urls : KILI_IMGS;
+  const featured = featuredSeed || gallery.featured_image_url || KILI_IMGS[0];
+  const images = uniqueLeadGallery(featured, gallery.image_urls, KILI_IMGS);
   const inclusionsHtml = `<ul>${tour.included_features.map((i) => `<li>${escapeHtml(i)}</li>`).join('')}</ul>`;
   const exclusionsHtml = `<ul>${tour.excluded_features.map((i) => `<li>${escapeHtml(i)}</li>`).join('')}</ul>`;
   const metaTitle = `${tour.package_name} | Mount Meru Trek from Arusha`.slice(0, 70);

@@ -81,8 +81,15 @@ const PARK_RULES = [
 
 function resolveCategorySlug(tour) {
   const title = `${tour.package_name || ''} ${tour.package_slug || ''}`.toLowerCase();
+  const days = Number(tour.duration_days) || 0;
 
   if (/\bgroup\b/.test(title)) return 'group-safaris';
+  if (/fly-?in|fly.?out|charter/.test(title)) return 'fly-in';
+  if (/\bbudget\b/.test(title)) return 'budget';
+  if (days === 1 || /\bday.?trips?\b|\bone.?day\b|(^|[^0-9])1-day/.test(title)) return 'day-trips';
+  if (/\bfamily\b/.test(title)) return 'family-safaris';
+  if (/photo/.test(title)) return 'photography-tours';
+  if (/cultural|maasai|hadzabe|datoga/.test(title)) return 'cultural-tours';
 
   if (
     /kilimanjaro|machame|marangu|lemosho|mount.?meru|ol.?don|lengai|uhuru/.test(title) &&
@@ -106,7 +113,8 @@ function resolveCategorySlug(tour) {
     return 'migrations';
   }
 
-  // Fly-in, budget, day trips, classic northern circuit → Safaris hub (nav "Safaris")
+  if (/\bluxury\b/.test(title)) return 'luxury-safaris';
+
   return 'safaris';
 }
 
