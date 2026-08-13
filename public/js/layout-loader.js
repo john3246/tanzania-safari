@@ -134,7 +134,7 @@ async function loadSafariMegaMenuTours() {
     if (document.querySelector('link[href*="/css/header.css"]')) return;
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '/css/header.css?v=2';
+    link.href = '/css/header.css?v=3';
     const head = document.head || document.getElementsByTagName('head')[0];
     if (head) head.appendChild(link);
     else document.addEventListener('DOMContentLoaded', () => document.head.appendChild(link));
