@@ -38,7 +38,7 @@ async function fetchFeaturedPackages(limit = 6) {
        LEFT JOIN reviews r ON r.package_id = sp.package_id AND r.is_approved = true
        WHERE sp.is_active = true
        GROUP BY sp.package_id
-       ORDER BY sp.is_featured DESC NULLS LAST, avg_rating DESC NULLS LAST, sp.package_name ASC
+       ORDER BY RANDOM()
        LIMIT $1`,
       [limit]
     );

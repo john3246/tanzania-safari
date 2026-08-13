@@ -63,11 +63,12 @@ async function loadSafariMegaMenuTours() {
         categories.map(async (category) => {
             const targets = document.querySelectorAll(`.nav-mega-tours[data-category="${category}"]`);
             try {
-                const res = await fetch(`/api/packages?category=${encodeURIComponent(category)}&limit=4&sort=featured`);
+                const res = await fetch(`/api/packages?category=${encodeURIComponent(category)}&limit=12&sort=random`);
                 const json = await res.json();
                 const packages = Array.isArray(json?.data) ? json.data : json?.data?.packages || [];
-                const html = packages.length
-                    ? packages
+                const shuffled = [...packages].sort(() => Math.random() - 0.5);
+                const html = shuffled.length
+                    ? shuffled
                           .slice(0, 4)
                           .map((p) => {
                               const days = p.duration_days ? `${p.duration_days} ${daysLabel}` : '';
@@ -134,7 +135,7 @@ async function loadSafariMegaMenuTours() {
     if (document.querySelector('link[href*="/css/header.css"]')) return;
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '/css/header.css?v=3';
+    link.href = '/css/header.css?v=4';
     const head = document.head || document.getElementsByTagName('head')[0];
     if (head) head.appendChild(link);
     else document.addEventListener('DOMContentLoaded', () => document.head.appendChild(link));

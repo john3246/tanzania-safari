@@ -157,15 +157,13 @@ async function loadHomepage() {
         }
         try {
             if (!slug || slug === 'all') {
-                if (!featuredPackages.length) {
-                    const { data } = await API.get('/packages/featured?limit=8');
-                    featuredPackages = data || [];
-                }
+                const { data } = await API.get('/packages?limit=24&sort=random');
+                featuredPackages = shuffleList(data || []);
                 renderSafaris(featuredPackages, 4);
                 return;
             }
-            const { data } = await API.get(`/packages?category=${encodeURIComponent(slug)}&limit=8&sort=featured`);
-            renderSafaris(data || [], 8);
+            const { data } = await API.get(`/packages?category=${encodeURIComponent(slug)}&limit=12&sort=random`);
+            renderSafaris(shuffleList(data || []), 8);
         } catch {
             if (grid && !grid.querySelector('.ssr-card, a[href*="/safaris/"]')) {
                 grid.innerHTML = `<p style="color:var(--text-muted);grid-column:1/-1;text-align:center">${t('home.unablePackages')}</p>`;
@@ -237,8 +235,8 @@ async function loadHomepage() {
 
     // Safaris
     try {
-        const { data } = await API.get('/packages/featured?limit=8');
-        featuredPackages = data || [];
+        const { data } = await API.get('/packages?limit=24&sort=random');
+        featuredPackages = shuffleList(data || []);
         renderSafaris(featuredPackages, 4);
         // Populate quick-book dropdown
         const sel = document.getElementById('quickBookPackage');
@@ -274,6 +272,15 @@ async function loadHomepage() {
             grid.innerHTML = `<p style="color:var(--text-muted);grid-column:1/-1;text-align:center">${t('home.noTestimonials')}</p>`;
         }
     } catch {}
+}
+
+function shuffleList(list) {
+    const a = Array.isArray(list) ? [...list] : [];
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
 }
 
 function renderSafaris(packages, limit = 4) {

@@ -132,6 +132,9 @@ class SafariModel {
       case 'newest':
         query += ' ORDER BY sp.created_at DESC';
         break;
+      case 'random':
+        query += ' ORDER BY RANDOM()';
+        break;
       default:
         query += ' ORDER BY sp.is_featured DESC, sp.created_at DESC';
     }

@@ -62,7 +62,10 @@ function listRecursiveImages(dirAbs, limit = 40) {
   if (!fs.existsSync(dirAbs)) return [];
   const out = [];
   const walk = (d) => {
-    for (const ent of fs.readdirSync(d, { withFileTypes: true })) {
+    const entries = fs
+      .readdirSync(d, { withFileTypes: true })
+      .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }));
+    for (const ent of entries) {
       if (out.length >= limit) return;
       const full = path.join(d, ent.name);
       if (ent.isDirectory()) walk(full);
@@ -71,6 +74,32 @@ function listRecursiveImages(dirAbs, limit = 40) {
   };
   walk(dirAbs);
   return out;
+}
+
+function stableIndex(key, modulo) {
+  if (!modulo) return 0;
+  let h = 0;
+  const s = String(key || '');
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+  return h % modulo;
+}
+
+function rotateList(list, offset) {
+  if (!Array.isArray(list) || list.length < 2) return list || [];
+  const i = ((offset % list.length) + list.length) % list.length;
+  return [...list.slice(i), ...list.slice(0, i)];
+}
+
+/** Put a unique cover first so tours that share a park folder do not all look the same. */
+function uniqueLeadGallery(featured, galleryUrls, fallback = []) {
+  const pool = galleryUrls?.length ? galleryUrls : fallback;
+  const rest = (pool || []).filter((u) => u && u !== featured);
+  return featured ? [featured, ...rest] : [...rest];
+}
+
+function pickUniqueLead(key, urls) {
+  if (!urls?.length) return null;
+  return urls[stableIndex(key, urls.length)];
 }
 
 /** Cache folder listings once per process */
@@ -233,19 +262,23 @@ function buildPackageImages({
     local.push(...imagesForParkSlug(slug));
   }
 
-  // Zanzibar: lead with local zanzibar folder, keep relevant Glado URLs, then other parks
+  // Zanzibar: rotate local folder covers so each tour gets a different beach photo
   let ordered;
-  if (categorySlug === 'zanzibar' || parkSlugs.includes('zanzibar')) {
+  const isZanzibarTour = categorySlug === 'zanzibar' || /zanzibar/i.test(packageSlug || '');
+  if (isZanzibarTour) {
     const zanLocal = imagesForParkSlug('zanzibar');
+    const zanRotated = rotateList(zanLocal, stableIndex(packageSlug, zanLocal.length || 1));
     const zanRemote = remoteOk.filter((u) => RELEVANCE.zanzibar.test(remoteFileHint(u)));
     const otherRemote = remoteOk.filter((u) => !RELEVANCE.zanzibar.test(remoteFileHint(u)));
-    const otherLocal = local.filter((u) => !/\/images\/zanzibar\//i.test(u));
+    const otherLocal = local.filter(
+      (u) => !/\/images\/zanzibar\//i.test(u) && !/\/destinations\/zanzibar/i.test(u)
+    );
     ordered = [
-      ...zanLocal.slice(0, 8),
+      ...zanRotated,
+      ...pkgLocal,
       ...zanRemote,
       ...otherLocal.slice(0, 4),
       ...otherRemote.slice(0, 4),
-      ...zanLocal.slice(8),
     ];
   } else {
     // Prefer relevant Glado, then package folder, then park folders
@@ -309,5 +342,8 @@ module.exports = {
   buildPackageImages,
   buildDestinationImages,
   allParkSlugsWithLocalImages,
+  uniqueLeadGallery,
+  pickUniqueLead,
+  rotateList,
   toPublicUrl,
 };

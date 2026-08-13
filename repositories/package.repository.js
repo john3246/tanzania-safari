@@ -160,6 +160,7 @@ class PackageRepository {
             case 'price-desc': orderBy = 'ORDER BY sp.base_price_usd DESC'; break;
             case 'duration-asc': orderBy = 'ORDER BY sp.duration_days ASC'; break;
             case 'rating': orderBy = 'ORDER BY avg_rating DESC NULLS LAST'; break;
+            case 'random': orderBy = 'ORDER BY RANDOM()'; break;
             case 'featured':
             default: orderBy = 'ORDER BY sp.is_featured DESC, sp.created_at DESC'; break;
         }
@@ -272,7 +273,7 @@ class PackageRepository {
             LEFT JOIN reviews r ON sp.package_id = r.package_id AND r.is_approved = true
             WHERE sp.is_active = true AND sp.is_featured = true AND (sp.is_group_tour IS NOT TRUE)
             GROUP BY sp.package_id, pc.category_name, pc.category_slug
-            ORDER BY sp.created_at DESC
+            ORDER BY RANDOM()
             LIMIT $1
         `;
         const result = await db.query(query, [limit]);

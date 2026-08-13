@@ -1,14 +1,14 @@
-/* ── Zara-style site header (logo column + top + nav) ──────── */
-:root{--site-header-offset:168px;--header-logo-col:168px}
-@media(max-width:1200px){:root{--header-logo-col:148px}}
-@media(max-width:1024px){:root{--site-header-offset:116px;--header-logo-col:auto}}
+/* ── Zara-style site header: full-width bars, brand colors ── */
+:root{--site-header-offset:132px}
+@media(max-width:1024px){:root{--site-header-offset:64px}}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
+#header{width:100%;max-width:none}
 .header.header--zara{
-  position:fixed;top:0;left:0;width:100%;z-index:var(--z-sticky,900);
-  display:flex;flex-direction:column;padding:0;overflow:visible;
+  position:fixed;top:0;left:0;right:0;width:100%;max-width:none;
+  z-index:var(--z-sticky,900);
+  display:flex;flex-direction:column;padding:0;margin:0;overflow:visible;
   background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.08);
-  transition:box-shadow .25s ease;
 }
 .header.header--zara.scrolled{
   background:#fff!important;
@@ -24,133 +24,123 @@
   -webkit-backdrop-filter:none !important;
 }
 
-/* Shell: logo spans both rows on the left */
-.header-shell{
-  display:grid;
-  grid-template-columns:var(--header-logo-col) minmax(0,1fr);
-  align-items:stretch;
-  gap:0 1.25rem;
-  max-width:1280px;
+/* Full-width white top: logo left → tagline → utility right */
+.header-top{width:100%;background:#fff;border-bottom:1px solid #ececec}
+.header-top-inner{
+  display:flex;align-items:center;justify-content:space-between;gap:1.25rem;
+  min-height:76px;padding:.45rem 0;
 }
-.header-main{display:flex;flex-direction:column;min-width:0}
-
-/* Logo column — stacked badge like Zara */
 .header.header--zara .logo{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:.35rem;text-align:center;color:var(--primary-dark,#1E311B);
-  text-decoration:none;padding:.55rem .35rem .45rem 0;align-self:stretch;
-  max-width:none;
+  display:flex;flex-direction:row;align-items:center;gap:.65rem;
+  color:var(--primary-dark,#1E311B);text-decoration:none;flex-shrink:0;max-width:none;
 }
 .header.header--zara .logo-img{
-  width:112px;height:112px;object-fit:contain;flex-shrink:0;
-  border-radius:50%;background:#fff;padding:4px;
-  box-shadow:0 2px 10px rgba(0,0,0,.12);border:2px solid #f0f0f0;
+  width:56px;height:56px;object-fit:contain;flex-shrink:0;
+  border-radius:50%;background:#fff;padding:3px;
+  box-shadow:0 1px 6px rgba(0,0,0,.1);border:1px solid #eee;
 }
-.header.header--zara .logo-text{display:flex;flex-direction:column;align-items:center;line-height:1.15;min-width:0}
+.header.header--zara .logo-text{display:flex;flex-direction:column;line-height:1.15;min-width:0}
 .header.header--zara .logo-text .brand{
-  font-size:.82rem;font-weight:800;letter-spacing:1.2px;
+  font-size:1.05rem;font-weight:800;letter-spacing:1.2px;
   font-family:var(--font-heading,'Poppins',sans-serif);
   text-transform:uppercase;color:var(--primary-dark,#1E311B)!important;
   white-space:nowrap;text-shadow:none;
 }
 .header.header--zara .logo-text .sub{
-  font-size:.52rem;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;
+  font-size:.55rem;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;
   color:var(--primary,#263E22)!important;text-shadow:none;white-space:nowrap;
 }
 
-/* Top white band (right of logo) */
-.header-top{background:#fff;border-bottom:1px solid #ececec}
-.header-top-inner{
-  display:flex;align-items:center;justify-content:space-between;gap:1rem;
-  padding:.5rem 0 .4rem;min-height:88px;
-}
-.header-top-mid{min-width:0;text-align:left;flex:1}
+.header-top-mid{min-width:0;flex:1;text-align:center}
 .header-tagline{
-  margin:0 0 .35rem;font-family:var(--font-heading,'Poppins',sans-serif);
-  font-size:clamp(.9rem,1.5vw,1.25rem);font-weight:700;line-height:1.25;
+  margin:0 0 .3rem;font-family:var(--font-heading,'Poppins',sans-serif);
+  font-size:clamp(.88rem,1.45vw,1.2rem);font-weight:700;line-height:1.25;
   color:var(--primary,#263E22);
 }
 .header.header--zara .header-trust{
-  display:flex;justify-content:flex-start;gap:.85rem;flex-wrap:wrap;
-  font-size:.72rem;font-weight:600;color:#5a5a5a;
+  display:flex;justify-content:center;gap:.85rem;flex-wrap:wrap;
+  font-size:.7rem;font-weight:600;color:#5a5a5a;
 }
 .header.header--zara .header-trust span{color:#4a4a4a}
 
-.header-top-end{display:flex;flex-direction:column;align-items:flex-end;gap:.4rem;flex-shrink:0}
+.header-top-end{display:flex;flex-direction:column;align-items:flex-end;gap:.35rem;flex-shrink:0}
 .header-utility{
   display:flex;align-items:stretch;background:var(--accent,#FF6F00);
-  border-radius:2px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08);
+  border-radius:2px;overflow:hidden;
 }
 .header-utility a,
 .header-utility-chat{
   display:inline-flex;align-items:center;gap:.4rem;
-  padding:.5rem .8rem;font-size:.75rem;font-weight:700;
+  padding:.48rem .8rem;font-size:.74rem;font-weight:700;
   color:#fff;text-decoration:none;background:transparent;border:0;
   border-right:1px solid rgba(255,255,255,.28);cursor:pointer;white-space:nowrap;
-  font-family:inherit;min-height:38px;
+  font-family:inherit;min-height:36px;
 }
 .header-utility a:last-child,
 .header-utility-chat{border-right:0;position:relative}
 .header-utility a:hover,
 .header-utility-chat:hover{background:var(--accent-dark,#C45500)}
-.header-utility i{font-size:.82rem}
+.header-utility i{font-size:.8rem}
 
-.header-phone-row{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;justify-content:flex-end}
-.header-phone{margin:0;font-size:.82rem;color:var(--primary,#263E22);font-weight:600}
+.header-phone-row{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;justify-content:flex-end}
+.header-phone{margin:0;font-size:.8rem;color:var(--primary,#263E22);font-weight:600}
 .header-phone a{color:var(--primary-dark,#1E311B);text-decoration:none;margin-left:.25rem}
 .header-phone a:hover{text-decoration:underline}
 .header-phone strong{font-weight:800}
-.header-phone-sep{margin:0 .35rem;opacity:.5}
-.header-email{font-weight:600;font-size:.78rem}
-
+.header-phone-sep{margin:0 .3rem;opacity:.5}
+.header-email{font-weight:600;font-size:.76rem}
 .header-top .lang-switcher-btn{
   background:#f3f6f1!important;color:#1E311B!important;border-color:#cfd8cb!important;
 }
 
-/* Nav bar sits to the right of the logo */
-.header-nav-bar{background:var(--primary-dark,#1E311B);color:#fff;position:relative}
+/* Full-width nav bar, left → right. Links inset so mega-menu has room. */
+.header-nav-bar{width:100%;background:var(--primary-dark,#1E311B);color:#fff;position:relative}
 .header-nav-inner{
   display:flex;align-items:center;justify-content:space-between;gap:1.25rem;
-  min-height:52px;padding:0 0 0 1.75rem;position:relative;
+  min-height:50px;position:relative;
 }
 .header.header--zara .nav{
   display:flex;align-items:center;gap:1.35rem;flex:1;min-width:0;
   justify-content:flex-start;
+  padding-left:7.5rem; /* shift nav content right of the logo column */
 }
 .header.header--zara .nav-link{
   font-size:.78rem;font-weight:700;color:#fff;letter-spacing:.8px;
   text-transform:uppercase;opacity:1;text-shadow:none;white-space:nowrap;
+  text-decoration:none;border-bottom:none!important;padding-bottom:0;
+}
+.header.header--zara .nav-link::after{display:none!important}
+.header.header--zara .nav-link-emphasis{
+  border-bottom:none!important;padding-bottom:0!important;
 }
 .header.header--zara .nav-link:hover,
 .header.header--zara .nav-link.active{color:var(--accent,#FF6F00)}
-.header.header--zara .nav-link::after{background:var(--accent,#FF6F00)}
-.header.header--zara .nav-link-emphasis{border-bottom-color:rgba(255,111,0,.55);padding-bottom:2px}
 .header.header--zara .nav-dropdown-toggle.nav-link,
 .header.header--zara button.nav-dropdown-toggle{
-  color:#fff!important;text-shadow:none;
+  color:#fff!important;text-shadow:none;text-decoration:none;
 }
 .header.header--zara .nav-dropdown-toggle.nav-link:hover{color:var(--accent,#FF6F00)!important}
 
-.header-nav-actions{display:flex;align-items:center;gap:.65rem;flex-shrink:0}
+.header-nav-actions{display:flex;align-items:center;gap:.55rem;flex-shrink:0}
 .header-plan-btn{
-  display:inline-flex;align-items:center;gap:.5rem;
-  background:var(--accent,#FF6F00);color:#fff;font-weight:800;font-size:.78rem;
-  text-transform:uppercase;letter-spacing:.4px;
-  padding:.55rem 1.1rem;border-radius:999px;text-decoration:none;
-  white-space:nowrap;min-height:42px;box-shadow:0 2px 10px rgba(255,111,0,.35);
+  display:inline-flex;align-items:center;gap:.45rem;
+  background:var(--accent,#FF6F00);color:#fff;font-weight:800;font-size:.76rem;
+  text-transform:uppercase;letter-spacing:.4px;text-decoration:none;
+  padding:.5rem 1rem;border-radius:999px;white-space:nowrap;min-height:40px;
+  box-shadow:0 2px 10px rgba(255,111,0,.35);
 }
-.header-plan-btn:hover{background:var(--accent-dark,#C45500);color:#fff;transform:translateY(-1px)}
+.header-plan-btn:hover{background:var(--accent-dark,#C45500);color:#fff}
 .header-search-btn{
-  width:42px;height:42px;border:0;background:transparent;color:#fff;
+  width:40px;height:40px;border:0;background:transparent;color:#fff;
   cursor:pointer;display:inline-flex;align-items:center;justify-content:center;
-  font-size:1.05rem;border-radius:50%;
+  font-size:1rem;border-radius:50%;
 }
 .header-search-btn:hover,
 .header-search-btn[aria-expanded="true"]{background:rgba(255,255,255,.12);color:var(--accent,#FF6F00)}
 .header.header--zara .mobile-toggle{color:#fff}
 
 .header-search-panel{
-  background:var(--primary-dark,#1E311B);border-top:1px solid rgba(255,255,255,.12);padding:.75rem 1.75rem .75rem;
+  background:var(--primary-dark,#1E311B);border-top:1px solid rgba(255,255,255,.12);padding:.7rem 0;
 }
 .header-search-form{display:flex;gap:.6rem;align-items:center}
 .header-search-form input{
@@ -158,7 +148,6 @@
 }
 .nav-link-drawer-only{display:none}
 
-/* Mega menu: span the nav column so all 5 hubs stay on-screen */
 @media(min-width:1025px){
   .header.header--zara .mobile-toggle{display:none!important}
   .header.header--zara .drawer-header{display:none!important}
@@ -179,52 +168,40 @@
 @media(min-width:1025px) and (max-width:1200px){
   .header-email,.header-phone-sep{display:none}
   .header.header--zara .header-trust{display:none}
-  .header.header--zara .logo-img{width:96px;height:96px}
-  .header.header--zara .nav{gap:1rem}
+  .header.header--zara .nav{padding-left:4.5rem;gap:1rem}
   .header.header--zara .nav-link{font-size:.72rem}
-  .header-nav-inner{padding-left:1.15rem}
 }
 
-.header.header--zara.scrolled .logo-img{width:96px;height:96px}
-.header.header--zara.scrolled .header-top-inner{min-height:76px;padding:.35rem 0}
-.header.header--zara.scrolled .header-tagline{font-size:1rem}
+.header.header--zara.scrolled .logo-img{width:48px;height:48px}
+.header.header--zara.scrolled .header-top-inner{min-height:64px;padding:.3rem 0}
 
 .header.header--zara .nav-mega-menu{z-index:220}
 
 @media(max-width:1024px){
-  .header-search-panel{
-    position:fixed;left:0;right:0;top:var(--site-header-offset,116px);
-    padding:.75rem 1rem;z-index:20;
-  }
-  .header-shell{grid-template-columns:1fr auto;align-items:center;gap:.5rem;padding-top:.35rem;padding-bottom:.35rem}
-  .header.header--zara .logo{
-    flex-direction:row;text-align:left;padding:0;gap:.55rem;justify-content:flex-start;
-  }
-  .header.header--zara .logo-img{width:48px;height:48px}
-  .header.header--zara .logo-text{align-items:flex-start}
-  .header.header--zara .logo-text .brand{font-size:.95rem}
+  .header-top-inner{min-height:56px;padding:.3rem 0}
+  .header.header--zara .logo-img{width:42px;height:42px}
+  .header.header--zara .logo-text .brand{font-size:.9rem}
   .header.header--zara .logo-text .sub{display:none}
   .header-top-mid,
   .header-top-end{display:none}
-  .header-main{display:contents}
-  .header-top{display:none}
-  .header-nav-bar{
-    grid-column:2;background:transparent;justify-self:end;
-  }
-  .header-nav-inner{min-height:48px;padding:0;gap:.4rem}
+  .header-nav-inner{min-height:0;padding:0}
+  .header-nav-bar{position:absolute;top:0;right:0;background:transparent;width:auto;height:100%}
+  .header-nav-inner{height:100%;padding-right:.15rem}
   .header.header--zara .nav{
+    padding-left:0;
     position:fixed;top:0;right:-100%;width:min(320px,88vw);max-width:88vw;
     height:100dvh;background:#fff!important;flex-direction:column;align-items:flex-start;
-    padding:0;gap:0;z-index:9999!important;overflow-y:auto;
+    gap:0;z-index:9999!important;overflow-y:auto;
   }
   .header.header--zara .nav.active{right:0}
   .nav-link-drawer-only{display:flex!important}
   .header-plan-btn span{display:none}
-  .header-plan-btn{padding:.55rem .7rem;border-radius:50%;width:42px;height:42px;justify-content:center}
+  .header-plan-btn{padding:.5rem;border-radius:50%;width:40px;height:40px;justify-content:center}
   .header-search-btn{width:40px;height:40px;color:var(--primary-dark,#1E311B)}
   .header.header--zara .mobile-toggle{display:flex!important;color:var(--primary-dark,#1E311B)!important}
-  .header-nav-bar{background:transparent}
-  .header-plan-btn{box-shadow:0 2px 8px rgba(255,111,0,.3)}
+  .header-search-panel{
+    position:fixed;left:0;right:0;top:var(--site-header-offset,64px);padding:.75rem 1rem;z-index:20;
+  }
 }
 
 @media(max-width:480px){

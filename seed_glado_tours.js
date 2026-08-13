@@ -15,6 +15,8 @@ const {
   buildPackageImages,
   buildDestinationImages,
   allParkSlugsWithLocalImages,
+  imagesForParkSlug,
+  uniqueLeadGallery,
 } = require('./utils/localImages');
 
 const DATA_PATH = path.join(__dirname, 'scripts', 'glado_tours_scraped.json');
@@ -432,6 +434,8 @@ async function seedGladoTours() {
 
   let inserted = 0;
   let updated = 0;
+  const zanCovers = imagesForParkSlug('zanzibar');
+  let zanLead = 0;
 
   for (const tour of tours) {
     const slug = String(tour.package_slug).toLowerCase().trim();
@@ -439,6 +443,13 @@ async function seedGladoTours() {
     const categoryId = categories[categorySlug] || categories.safaris || null;
     const p = packagePayload(tour, categoryId, categorySlug);
     const parkSlugs = p.seo.parks;
+    const isZanzibarTour =
+      categorySlug === 'zanzibar' || /zanzibar/i.test(`${tour.package_name || ''} ${slug}`);
+    if (isZanzibarTour && zanCovers.length) {
+      const featuredSeed = zanCovers[zanLead++ % zanCovers.length];
+      p.featuredImage = featuredSeed;
+      p.images = uniqueLeadGallery(featuredSeed, p.images, zanCovers);
+    }
 
     const existing = await db.query(
       `SELECT package_id FROM safari_packages WHERE package_slug = $1 LIMIT 1`,

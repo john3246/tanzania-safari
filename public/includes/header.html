@@ -1,53 +1,51 @@
 <!-- Header — Zara-style top + nav, original Tanzania Safari Magic content -->
 <header class="header header--zara" id="siteHeader">
-  <div class="container header-shell">
-    <a href="/" class="logo">
-      <img src="/images/logo.png" alt="Tanzania Safari Magic" class="logo-img" width="120" height="120" decoding="async">
-      <div class="logo-text">
-        <span class="brand">TANZANIA</span>
-        <span class="sub" data-i18n="nav.logoSub">SAFARI &amp; TOURS</span>
-      </div>
-    </a>
+  <div class="header-top">
+    <div class="container header-top-inner">
+      <a href="/" class="logo">
+        <img src="/images/logo.png" alt="Tanzania Safari Magic" class="logo-img" width="56" height="56" decoding="async">
+        <div class="logo-text">
+          <span class="brand">TANZANIA</span>
+          <span class="sub" data-i18n="nav.logoSub">SAFARI &amp; TOURS</span>
+        </div>
+      </a>
 
-    <div class="header-main">
-      <div class="header-top">
-        <div class="header-top-inner">
-          <div class="header-top-mid">
-            <p class="header-tagline" data-i18n="nav.tagline">The number one safari operator in Tanzania.</p>
-            <div class="header-trust" data-i18n-aria="nav.trustAria" aria-label="Trust certifications">
-              <span><i class="fab fa-tripadvisor" style="color:#00af87"></i> TripAdvisor</span>
-              <span><i class="fas fa-certificate" style="color:#f59e0b"></i> TATO</span>
-              <span><i class="fas fa-shield-alt" style="color:var(--primary)"></i> <span data-i18n="nav.licensed">Licensed</span></span>
-            </div>
-          </div>
-
-          <div class="header-top-end">
-            <nav class="header-utility" aria-label="Quick links">
-              <a href="/about"><i class="fas fa-users" aria-hidden="true"></i> <span data-i18n="nav.aboutUs">About Us</span></a>
-              <a href="/contact"><i class="fas fa-phone" aria-hidden="true"></i> <span data-i18n="nav.contactUs">Contact Us</span></a>
-              <a href="/blog"><i class="fas fa-book" aria-hidden="true"></i> <span data-i18n="nav.blog">Blog</span></a>
-              <button type="button" id="headerLiveChatBtn" class="pulse-anim header-utility-chat" data-i18n-aria="nav.chatAria" aria-label="Chat with Our Team">
-                <i class="fas fa-comments" aria-hidden="true"></i> <span data-i18n="nav.ourTeam">Our Team</span>
-              </button>
-            </nav>
-            <div class="header-phone-row">
-              <p class="header-phone">
-                <span data-i18n="nav.haveQuestions">Have questions?</span>
-                <a href="https://wa.me/255695108009" id="headerWhatsApp">
-                  <span data-i18n="nav.whatsappLabel">WhatsApp:</span>
-                  <strong id="headerPhoneDisplay">+255 695 108 009</strong>
-                </a>
-                <span class="header-phone-sep" aria-hidden="true">·</span>
-                <a href="mailto:info@tanzaniasafarimagic.com" class="header-email">info@tanzaniasafarimagic.com</a>
-              </p>
-              <div id="langSwitcherMount" aria-label="Language"></div>
-            </div>
-          </div>
+      <div class="header-top-mid">
+        <p class="header-tagline" data-i18n="nav.tagline">The number one safari operator in Tanzania.</p>
+        <div class="header-trust" data-i18n-aria="nav.trustAria" aria-label="Trust certifications">
+          <span><i class="fab fa-tripadvisor" style="color:#00af87"></i> TripAdvisor</span>
+          <span><i class="fas fa-certificate" style="color:#f59e0b"></i> TATO</span>
+          <span><i class="fas fa-shield-alt" style="color:var(--primary)"></i> <span data-i18n="nav.licensed">Licensed</span></span>
         </div>
       </div>
 
-      <div class="header-nav-bar">
-        <div class="header-nav-inner">
+      <div class="header-top-end">
+        <nav class="header-utility" aria-label="Quick links">
+          <a href="/about"><i class="fas fa-users" aria-hidden="true"></i> <span data-i18n="nav.aboutUs">About Us</span></a>
+          <a href="/contact"><i class="fas fa-phone" aria-hidden="true"></i> <span data-i18n="nav.contactUs">Contact Us</span></a>
+          <a href="/blog"><i class="fas fa-book" aria-hidden="true"></i> <span data-i18n="nav.blog">Blog</span></a>
+          <button type="button" id="headerLiveChatBtn" class="pulse-anim header-utility-chat" data-i18n-aria="nav.chatAria" aria-label="Chat with Our Team">
+            <i class="fas fa-comments" aria-hidden="true"></i> <span data-i18n="nav.ourTeam">Our Team</span>
+          </button>
+        </nav>
+        <div class="header-phone-row">
+          <p class="header-phone">
+            <span data-i18n="nav.haveQuestions">Have questions?</span>
+            <a href="https://wa.me/255695108009" id="headerWhatsApp">
+              <span data-i18n="nav.whatsappLabel">WhatsApp:</span>
+              <strong id="headerPhoneDisplay">+255 695 108 009</strong>
+            </a>
+            <span class="header-phone-sep" aria-hidden="true">·</span>
+            <a href="mailto:info@tanzaniasafarimagic.com" class="header-email">info@tanzaniasafarimagic.com</a>
+          </p>
+          <div id="langSwitcherMount" aria-label="Language"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="header-nav-bar">
+    <div class="container header-nav-inner">
       <nav class="nav" id="mainNav">
         <div class="drawer-header">
           <span class="brand">TANZANIA SAFARI</span>
@@ -56,7 +54,7 @@
           </button>
         </div>
         <a href="/" class="nav-link" data-i18n="nav.home">Home</a>
-        <a href="/visit-tanzania" class="nav-link nav-link-emphasis" data-i18n="nav.visitTanzania">Visit Tanzania</a>
+        <a href="/visit-tanzania" class="nav-link" data-i18n="nav.visitTanzania">Visit Tanzania</a>
         <div class="nav-dropdown" id="safarisNavDropdown">
           <button type="button" class="nav-link nav-dropdown-toggle" aria-expanded="false" aria-haspopup="true">
             <span data-i18n="nav.safaris">Safaris</span> <i class="fas fa-chevron-down nav-caret" aria-hidden="true"></i>
@@ -96,8 +94,8 @@
             </div>
           </div>
         </div>
-        <a href="/destinations" class="nav-link nav-link-emphasis" data-i18n="nav.destinations">Destinations</a>
-        <a href="/blog" class="nav-link nav-link-emphasis nav-link-drawer-only" data-i18n="nav.blog">Blog</a>
+        <a href="/destinations" class="nav-link" data-i18n="nav.destinations">Destinations</a>
+        <a href="/blog" class="nav-link nav-link-drawer-only" data-i18n="nav.blog">Blog</a>
         <a href="/about" class="nav-link nav-link-drawer-only" data-i18n="nav.about">About</a>
         <a href="/contact" class="nav-link nav-link-drawer-only" data-i18n="nav.contactUs">Contact Us</a>
         <a href="/booking" class="nav-link nav-link-inquire nav-link-drawer-only" data-i18n="nav.inquire">Inquire</a>
@@ -115,16 +113,14 @@
         <button class="mobile-toggle" id="mobileToggle" data-i18n-aria="nav.toggleMenu" aria-label="Toggle navigation menu">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
         </button>
-        </div>
-        <div class="header-search-panel" id="headerSearchPanel" hidden>
-          <form class="header-search-form" action="/safaris" method="GET" role="search">
-            <label class="sr-only" for="headerSearchInput" data-i18n="nav.searchAria">Search packages</label>
-            <input type="search" id="headerSearchInput" name="search" data-i18n-placeholder="nav.searchPlaceholder" placeholder="Search safaris..." autocomplete="off">
-            <button type="submit" class="btn btn-primary" data-i18n="common.search">Search</button>
-          </form>
-        </div>
-        </div>
       </div>
+    </div>
+    <div class="header-search-panel" id="headerSearchPanel" hidden>
+      <form class="container header-search-form" action="/safaris" method="GET" role="search">
+        <label class="sr-only" for="headerSearchInput" data-i18n="nav.searchAria">Search packages</label>
+        <input type="search" id="headerSearchInput" name="search" data-i18n-placeholder="nav.searchPlaceholder" placeholder="Search safaris..." autocomplete="off">
+        <button type="submit" class="btn btn-primary" data-i18n="common.search">Search</button>
+      </form>
     </div>
   </div>
 </header>
