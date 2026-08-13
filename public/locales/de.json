@@ -30,7 +30,15 @@
     "trustAria": "Vertrauenszertifikate",
     "safariCollections": "Safari-Kollektionen",
     "logoSub": "SAFARI & TOURS",
-    "visitTanzania": "Tansania besuchen"
+    "visitTanzania": "Tansania besuchen",
+    "tagline": "Der Safari-Veranstalter Nummer eins in Tansania.",
+    "aboutUs": "Über uns",
+    "contactUs": "Kontakt",
+    "haveQuestions": "Fragen?",
+    "whatsappLabel": "WhatsApp:",
+    "planTrip": "Reise planen",
+    "searchAria": "Pakete suchen",
+    "searchPlaceholder": "Safaris suchen..."
   },
   "common": {
     "home": "Startseite",

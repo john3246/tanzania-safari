@@ -30,7 +30,15 @@
     "trustAria": "Certificaciones de confianza",
     "safariCollections": "Colecciones safari",
     "logoSub": "SAFARI & TOURS",
-    "visitTanzania": "Visitar Tanzania"
+    "visitTanzania": "Visitar Tanzania",
+    "tagline": "El operador de safari número uno en Tanzania.",
+    "aboutUs": "Sobre nosotros",
+    "contactUs": "Contacto",
+    "haveQuestions": "¿Tienes preguntas?",
+    "whatsappLabel": "WhatsApp:",
+    "planTrip": "Planifica un viaje",
+    "searchAria": "Buscar paquetes",
+    "searchPlaceholder": "Buscar safaris..."
   },
   "common": {
     "home": "Inicio",

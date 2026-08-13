@@ -112,9 +112,9 @@ button.nav-dropdown-toggle{
   box-shadow:0 18px 48px rgba(15,26,14,0.22);
 }
 /* Keep header readable while Safaris mega-menu is open (click .open or desktop :hover) */
-.header:has(.nav-dropdown.open),
-.header:has(.nav-dropdown:hover),
-.header.mega-open{
+.header:not(.header--zara):has(.nav-dropdown.open),
+.header:not(.header--zara):has(.nav-dropdown:hover),
+.header:not(.header--zara).mega-open{
   background:rgba(20,12,6,0.98) !important;
   backdrop-filter:blur(12px);
   -webkit-backdrop-filter:blur(12px);

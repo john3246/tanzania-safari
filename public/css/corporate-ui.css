@@ -871,15 +871,15 @@ h3 { font-size: clamp(1.1rem, 1rem + 0.4vw, 1.35rem); }
 @media (max-width: 380px) {
   .hero-actions { flex-direction: column; width: 100%; }
   .hero-actions .btn { width: 100%; }
-  #headerLiveChatBtn span { display: none; }
-  #headerLiveChatBtn { padding: 0.7rem; border-radius: 50%; width: 48px; height: 48px; justify-content: center; }
+  #headerLiveChatBtn:not(.header-utility-chat) span { display: none; }
+  #headerLiveChatBtn:not(.header-utility-chat) { padding: 0.7rem; border-radius: 50%; width: 48px; height: 48px; justify-content: center; }
 }
 
 /* ── Compact header + high-contrast CTAs ───────────────────── */
 .top-bar { padding: 0.15rem 0 !important; font-size: 0.75rem !important; }
 .header-right { gap: 0.85rem !important; }
 .header-chat-btn,
-#headerLiveChatBtn {
+#headerLiveChatBtn:not(.header-utility-chat) {
   background: var(--primary) !important;
   color: #fff !important;
   border: none !important;
@@ -1008,9 +1008,9 @@ h3 { font-size: clamp(1.1rem, 1rem + 0.4vw, 1.35rem); }
 }
 
 /* Clearance under fixed header (top-bar + nav) */
-:root { --site-header-offset: 92px; }
+:root { --site-header-offset: 148px; }
 @media (max-width: 1024px) {
-  :root { --site-header-offset: 86px; }
+  :root { --site-header-offset: 116px; }
 }
 .blog-editorial {
   padding-top: calc(var(--site-header-offset) + 1.25rem) !important;

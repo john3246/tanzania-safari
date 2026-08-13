@@ -1,0 +1,198 @@
+/* ── Zara-style site header (white top + dark nav) ─────────── */
+:root{--site-header-offset:148px}
+@media(max-width:1024px){:root{--site-header-offset:116px}}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+.header.header--zara{
+  position:fixed;top:0;left:0;width:100%;z-index:var(--z-sticky,900);
+  display:flex;flex-direction:column;padding:0;overflow:visible;
+  background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.08);
+  transition:box-shadow .25s ease;
+}
+.header.header--zara.scrolled{
+  background:#fff!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  box-shadow:0 6px 22px rgba(0,0,0,.14);
+}
+.header.header--zara.mega-open,
+.header.header--zara:has(.nav-dropdown.open),
+.header.header--zara:has(.nav-dropdown:hover){
+  background:#fff !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+}
+
+/* Top white band */
+.header-top{background:#fff;border-bottom:1px solid #ececec}
+.header-top-inner{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:1.25rem 2rem;
+  padding:.65rem 0 .55rem;
+  min-height:92px;
+}
+.header.header--zara .logo{
+  display:flex;align-items:center;gap:.75rem;color:var(--primary-dark,#1E311B);
+  text-decoration:none;flex-shrink:0;max-width:none;
+}
+.header.header--zara .logo-img{
+  width:86px;height:86px;object-fit:contain;flex-shrink:0;
+  border-radius:50%;background:#fff;padding:4px;
+  box-shadow:0 2px 10px rgba(0,0,0,.12);border:2px solid #f0f0f0;
+}
+.header.header--zara .logo-text .brand{
+  font-size:1.15rem;font-weight:800;letter-spacing:1.4px;
+  font-family:var(--font-heading,'Poppins',sans-serif);
+  text-transform:uppercase;color:var(--primary-dark,#1E311B)!important;
+  white-space:nowrap;text-shadow:none;
+}
+.header.header--zara .logo-text .sub{
+  font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--primary,#263E22)!important;text-shadow:none;white-space:nowrap;
+}
+
+.header-top-mid{min-width:0;text-align:center}
+.header-tagline{
+  margin:0 0 .4rem;font-family:var(--font-heading,'Poppins',sans-serif);
+  font-size:clamp(.95rem,1.6vw,1.35rem);font-weight:700;line-height:1.25;
+  color:var(--primary,#263E22);
+}
+.header.header--zara .header-trust{
+  display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;
+  font-size:.72rem;font-weight:600;color:#5a5a5a;
+}
+.header.header--zara .header-trust span{color:#4a4a4a}
+
+/* Utility strip + phone — brand accent, not a new palette */
+.header-top-end{display:flex;flex-direction:column;align-items:flex-end;gap:.45rem}
+.header-utility{
+  display:flex;align-items:stretch;background:var(--accent,#FF6F00);
+  border-radius:2px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+.header-utility a,
+.header-utility-chat{
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.55rem .9rem;font-size:.78rem;font-weight:700;
+  color:#fff;text-decoration:none;background:transparent;border:0;
+  border-right:1px solid rgba(255,255,255,.28);cursor:pointer;white-space:nowrap;
+  font-family:inherit;min-height:40px;
+}
+.header-utility a:last-child,
+.header-utility-chat{border-right:0;position:relative}
+.header-utility a:hover,
+.header-utility-chat:hover{background:var(--accent-dark,#C45500)}
+.header-utility i{font-size:.85rem}
+
+.header-phone-row{display:flex;align-items:center;gap:.85rem;flex-wrap:wrap;justify-content:flex-end}
+.header-phone{margin:0;font-size:.88rem;color:var(--primary,#263E22);font-weight:600}
+.header-phone a{color:var(--primary-dark,#1E311B);text-decoration:none;margin-left:.25rem}
+.header-phone a:hover{text-decoration:underline}
+.header-phone strong{font-weight:800}
+.header-phone-sep{margin:0 .35rem;opacity:.5}
+.header-email{font-weight:600;font-size:.82rem}
+
+.header-top .lang-switcher-btn{
+  background:#f3f6f1!important;color:#1E311B!important;border-color:#cfd8cb!important;
+}
+
+/* Dark nav bar */
+.header-nav-bar{background:var(--primary-dark,#1E311B);color:#fff;position:relative}
+.header-nav-inner{
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  min-height:52px;
+}
+.header.header--zara .nav{
+  display:flex;align-items:center;gap:1.15rem;flex:1;min-width:0;
+}
+.header.header--zara .nav-link{
+  font-size:.78rem;font-weight:700;color:#fff;letter-spacing:.8px;
+  text-transform:uppercase;opacity:1;text-shadow:none;
+}
+.header.header--zara .nav-link:hover,
+.header.header--zara .nav-link.active{color:var(--accent,#FF6F00)}
+.header.header--zara .nav-link::after{background:var(--accent,#FF6F00)}
+.header.header--zara .nav-link-emphasis{border-bottom-color:rgba(255,111,0,.55);padding-bottom:2px}
+.header.header--zara .nav-dropdown-toggle.nav-link,
+.header.header--zara button.nav-dropdown-toggle{
+  color:#fff!important;text-shadow:none;
+}
+.header.header--zara .nav-dropdown-toggle.nav-link:hover{color:var(--accent,#FF6F00)!important}
+
+.header-nav-actions{display:flex;align-items:center;gap:.65rem;flex-shrink:0}
+.header-plan-btn{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:var(--accent,#FF6F00);color:#fff;font-weight:800;font-size:.78rem;
+  text-transform:uppercase;letter-spacing:.4px;
+  padding:.55rem 1.1rem;border-radius:999px;text-decoration:none;
+  white-space:nowrap;min-height:42px;box-shadow:0 2px 10px rgba(255,111,0,.35);
+}
+.header-plan-btn:hover{background:var(--accent-dark,#C45500);color:#fff;transform:translateY(-1px)}
+.header-search-btn{
+  width:42px;height:42px;border:0;background:transparent;color:#fff;
+  cursor:pointer;display:inline-flex;align-items:center;justify-content:center;
+  font-size:1.05rem;border-radius:50%;
+}
+.header-search-btn:hover,
+.header-search-btn[aria-expanded="true"]{background:rgba(255,255,255,.12);color:var(--accent,#FF6F00)}
+.header.header--zara .mobile-toggle{color:#fff}
+
+.header-search-panel{
+  background:var(--primary-dark,#1E311B);border-top:1px solid rgba(255,255,255,.12);padding:.75rem 0;
+}
+.header-search-form{display:flex;gap:.6rem;align-items:center}
+.header-search-form input{
+  flex:1;min-height:44px;border:0;border-radius:8px;padding:.6rem 1rem;font-size:.95rem;
+}
+.nav-link-drawer-only{display:none}
+
+@media(min-width:1025px){
+  .header.header--zara .mobile-toggle{display:none!important}
+  .header.header--zara .drawer-header{display:none!important}
+  .nav-link-drawer-only{display:none!important}
+}
+@media(min-width:1025px) and (max-width:1200px){
+  .header-email,.header-phone-sep{display:none}
+  .header.header--zara .header-trust{display:none}
+  .header.header--zara .logo-img{width:72px;height:72px}
+}
+
+/* Compact when scrolled */
+.header.header--zara.scrolled .header-top-inner{min-height:76px;padding:.4rem 0}
+.header.header--zara.scrolled .logo-img{width:72px;height:72px}
+.header.header--zara.scrolled .header-tagline{font-size:1.05rem}
+
+/* Mega-menu still drops from nav */
+.header.header--zara .nav-mega-menu{z-index:220}
+
+/* ── Tablet / phone ── */
+@media(max-width:1024px){
+  .header-top-inner{
+    grid-template-columns:1fr auto;min-height:64px;padding:.4rem 0;gap:.5rem;
+  }
+  .header-top-mid,
+  .header-top-end{display:none}
+  .header.header--zara .logo-img{width:48px;height:48px}
+  .header.header--zara .logo-text .brand{font-size:.95rem;color:var(--primary-dark,#1E311B)!important}
+  .header.header--zara .logo-text .sub{display:none}
+  .header-nav-bar{min-height:52px}
+  .header-nav-inner{min-height:52px}
+  .header.header--zara .nav{
+    /* drawer — keep existing off-canvas behaviour */
+    position:fixed;top:0;right:-100%;width:min(320px,88vw);max-width:88vw;
+    height:100dvh;background:#fff!important;flex-direction:column;align-items:flex-start;
+    padding:0;gap:0;z-index:9999!important;overflow-y:auto;
+  }
+  .header.header--zara .nav.active{right:0}
+  .nav-link-drawer-only{display:flex!important}
+  .header-plan-btn span{display:none}
+  .header-plan-btn{padding:.55rem .7rem;border-radius:50%;width:42px;height:42px;justify-content:center}
+  .header-search-btn{width:40px;height:40px}
+  .header.header--zara .mobile-toggle{display:flex!important;color:#fff!important}
+}
+
+@media(max-width:480px){
+  .header.header--zara .logo-text{display:none}
+  .header-plan-btn{display:none}
+}

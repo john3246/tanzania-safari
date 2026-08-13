@@ -52,8 +52,8 @@ table { max-width: 100%; }
 
 /* ── Header / mobile navigation drawer ─────────────────────── */
 @media (max-width: 1024px) {
-  #headerLiveChatBtn span { display: none; }
-  #headerLiveChatBtn,
+  #headerLiveChatBtn:not(.header-utility-chat) span { display: none; }
+  #headerLiveChatBtn:not(.header-utility-chat),
   .header-chat-btn {
     padding: 0 !important;
     width: 44px !important;
@@ -62,9 +62,9 @@ table { max-width: 100%; }
     border-radius: 50% !important;
     justify-content: center !important;
   }
-  .header-trust { display: none !important; }
+  .header:not(.header--zara) .header-trust { display: none !important; }
   .header-right { gap: 0.5rem !important; }
-  .logo { max-width: min(200px, 48vw) !important; }
+  .header:not(.header--zara) .logo { max-width: min(200px, 48vw) !important; }
 
   #mainNav.nav,
   .nav {
@@ -169,12 +169,13 @@ table { max-width: 100%; }
 
 /* Intermediate tablet: hide crowded nav labels earlier */
 @media (min-width: 1025px) and (max-width: 1180px) {
-  .header-trust { display: none !important; }
-  .nav { gap: 0.65rem !important; }
+  .header:not(.header--zara) .header-trust { display: none !important; }
+  .header.header--zara .nav { gap: 0.7rem !important; }
   .nav-link { font-size: 0.7rem !important; letter-spacing: 0.4px; }
   .nav-cta { font-size: 0.65rem !important; padding: 0.45rem 0.7rem !important; }
-  #headerLiveChatBtn span { display: none; }
-  #headerLiveChatBtn { width: 42px; height: 42px; padding: 0 !important; border-radius: 50%; justify-content: center; }
+  .header.header--zara .header-tagline { font-size: 1rem; }
+  .header.header--zara .header-utility a,
+  .header.header--zara .header-utility-chat { padding: 0.5rem 0.65rem; font-size: 0.72rem; }
 }
 
 /* ── Heroes: fluid, not viewport-eating on phones ──────────── */

@@ -291,7 +291,8 @@
       '.lang-option{display:flex;align-items:center;gap:.55rem;width:100%;border:0;background:transparent;text-align:left;padding:.55rem .65rem;border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:600;color:#1a2a17}' +
       '.lang-option:hover{background:#f3f6f1}' +
       '.lang-option.active{background:#e8f0e4;color:var(--primary,#2d5a27)}' +
-      '.header .top-bar .lang-switcher-btn{background:rgba(255,255,255,.1)}' +
+      '.header-top .lang-switcher-btn,.header .top-bar .lang-switcher-btn{background:#f3f6f1;color:#1E311B;border-color:#cfd8cb}' +
+      '.header-top .lang-switcher-btn:hover{background:#e8f0e4}' +
       '@media(max-width:640px){.top-bar-location{display:none}}';
     (document.head || document.documentElement).appendChild(style);
   }

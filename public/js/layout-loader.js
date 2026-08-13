@@ -31,7 +31,7 @@ function ensureI18nLoaded() {
             return;
         }
         const s = document.createElement('script');
-        s.src = '/js/i18n.js?v=3';
+        s.src = '/js/i18n.js?v=4';
         s.onload = () => {
             if (window.TSM_i18n && window.TSM_i18n.ready) window.TSM_i18n.ready.then(resolve);
             else resolve();
@@ -122,10 +122,22 @@ async function loadSafariMegaMenuTours() {
     if (document.querySelector('link[href*="fluid-responsive.css"]')) return;
     const fluid = document.createElement('link');
     fluid.rel = 'stylesheet';
-    fluid.href = '/css/fluid-responsive.css?v=4';
+    fluid.href = '/css/fluid-responsive.css?v=5';
     const head = document.head || document.getElementsByTagName('head')[0];
     if (head) head.appendChild(fluid);
     else document.addEventListener('DOMContentLoaded', () => document.head.appendChild(fluid));
+})();
+
+/* Zara-style header layout (all public pages) */
+(function injectHeaderCss() {
+    if (typeof document === 'undefined') return;
+    if (document.querySelector('link[href*="/css/header.css"]')) return;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = '/css/header.css?v=2';
+    const head = document.head || document.getElementsByTagName('head')[0];
+    if (head) head.appendChild(link);
+    else document.addEventListener('DOMContentLoaded', () => document.head.appendChild(link));
 })();
 
 /* Start loading i18n as early as possible */
@@ -453,6 +465,30 @@ function initHeader() {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll(); // Initial check
+
+    const searchToggle = document.getElementById('headerSearchToggle');
+    const searchPanel = document.getElementById('headerSearchPanel');
+    const searchInput = document.getElementById('headerSearchInput');
+    if (searchToggle && searchPanel) {
+        searchToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            const open = searchPanel.hasAttribute('hidden');
+            if (open) {
+                searchPanel.removeAttribute('hidden');
+                searchToggle.setAttribute('aria-expanded', 'true');
+                searchInput?.focus();
+            } else {
+                searchPanel.setAttribute('hidden', '');
+                searchToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !searchPanel.hasAttribute('hidden')) {
+                searchPanel.setAttribute('hidden', '');
+                searchToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
 }
 
 /**
@@ -625,6 +661,9 @@ async function applySiteSettings() {
                 if (a.textContent.includes('@') || a.closest('.footer-contact-item')) a.textContent = email;
             }
         });
+
+        const headerPhone = document.getElementById('headerPhoneDisplay');
+        if (headerPhone && phone) headerPhone.textContent = phone;
 
         document.querySelectorAll('a[href*="wa.me"], a.social-float-whatsapp').forEach(a => {
             if (digits) {

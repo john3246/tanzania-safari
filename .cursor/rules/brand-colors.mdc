@@ -1,0 +1,14 @@
+---
+description: Never change Tanzania Safari Magic brand colors
+alwaysApply: true
+---
+
+# Brand colors — do not change
+
+Keep the existing palette from `public/css/variables.css`. Layout, spacing, and structure may change; **colors must not**.
+
+- Primary green: `--primary` `#263E22`, `--primary-dark` `#1E311B`, `--primary-light` `#365730`
+- Accent orange: `--accent` `#FF6F00`, `--accent-dark` `#C45500`, `--accent-light` `#FF8F00`
+- Earth / sand / text / background tokens already in `variables.css`
+
+Do not introduce a new palette (no Zara yellow, navy, or other competitor colors). New UI must use `var(--primary)`, `var(--accent)`, and the other existing tokens. Do not restyle buttons, nav, CTAs, or headers with different brand colors.
