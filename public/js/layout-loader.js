@@ -21,24 +21,66 @@ function escapeNavHtml(str) {
 
 function ensureI18nLoaded() {
     if (window.TSM_i18n && window.TSM_i18n.ready) return window.TSM_i18n.ready;
-    return new Promise((resolve) => {
+    if (window.__TSM_I18N_LOADING) return window.__TSM_I18N_LOADING;
+    window.__TSM_I18N_LOADING = new Promise((resolve) => {
+        const finish = () => {
+            if (window.TSM_i18n && window.TSM_i18n.ready) window.TSM_i18n.ready.then(resolve);
+            else resolve();
+        };
         if (document.querySelector('script[src*="/js/i18n.js"]')) {
+            let n = 0;
             const wait = () => {
-                if (window.TSM_i18n && window.TSM_i18n.ready) window.TSM_i18n.ready.then(resolve);
-                else setTimeout(wait, 30);
+                if (window.TSM_i18n && window.TSM_i18n.ready) return finish();
+                if (++n > 80) return resolve();
+                setTimeout(wait, 30);
             };
             wait();
             return;
         }
         const s = document.createElement('script');
-        s.src = '/js/i18n.js?v=7';
-        s.onload = () => {
-            if (window.TSM_i18n && window.TSM_i18n.ready) window.TSM_i18n.ready.then(resolve);
-            else resolve();
-        };
+        s.src = '/js/i18n.js?v=8';
+        s.async = true;
+        s.onload = finish;
         s.onerror = () => resolve();
         (document.head || document.documentElement).appendChild(s);
     });
+    return window.__TSM_I18N_LOADING;
+}
+
+function preferredLang() {
+    try {
+        const q = new URLSearchParams(window.location.search).get('lang');
+        if (q) return q;
+        return localStorage.getItem('tsm_lang') || 'en';
+    } catch (_) {
+        return 'en';
+    }
+}
+
+function mountLangSwitcher() {
+    const host = document.getElementById('langSwitcherMount');
+    const start = () => {
+        if (window.TSM_i18n && typeof window.TSM_i18n.initSwitcher === 'function') {
+            window.TSM_i18n.initSwitcher();
+        }
+        applyPageI18n(document.getElementById('header') || document);
+    };
+    if (preferredLang() !== 'en') {
+        ensureI18nLoaded().then(start);
+        return;
+    }
+    if (!host || host.querySelector('#langSwitcher, .lang-switcher-btn')) return;
+    host.innerHTML =
+        '<div class="lang-switcher" id="langSwitcher"><button type="button" class="lang-switcher-btn" aria-haspopup="listbox" aria-expanded="false" aria-label="Choose language"><span class="lang-current"><span class="lang-flag" aria-hidden="true">🇬🇧</span><span class="lang-code">EN</span></span><i class="fas fa-chevron-down lang-caret" aria-hidden="true"></i></button></div>';
+    host.querySelector('.lang-switcher-btn')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        host.innerHTML = '';
+        ensureI18nLoaded().then(() => {
+            start();
+            document.querySelector('.lang-switcher-btn')?.click();
+        });
+    }, { once: true });
 }
 
 function applyPageI18n(root) {
@@ -117,33 +159,7 @@ async function loadSafariMegaMenuTours() {
     } catch (_) { /* never block UX */ }
 })();
 
-/* Trust + conversion scripts — after first paint */
-(function injectTrustAssets() {
-    if (typeof document === 'undefined') return;
-    const path = (window.location && window.location.pathname) || '';
-    if (path.startsWith('/admin')) return;
-    const start = () => {
-        function addCss(href) {
-            if (document.querySelector(`link[href^="${href.split('?')[0]}"]`)) return;
-            const l = document.createElement('link');
-            l.rel = 'stylesheet';
-            l.href = href;
-            (document.head || document.documentElement).appendChild(l);
-        }
-        function addJs(src) {
-            if (document.querySelector(`script[src^="${src.split('?')[0]}"]`)) return;
-            const s = document.createElement('script');
-            s.src = src;
-            s.defer = true;
-            (document.head || document.documentElement).appendChild(s);
-        }
-        addCss('/css/trust.css?v=1');
-        addJs('/js/site-trust.js?v=1');
-        addJs('/js/conversion-tracking.js?v=1');
-    };
-    if (typeof requestIdleCallback === 'function') requestIdleCallback(start, { timeout: 4000 });
-    else setTimeout(start, 1);
-})();
+/* Trust + conversion scripts load once after header inject / idle callback */
 
 /* Inject fluid responsive CSS immediately (all public pages) */
 (function injectFluidCss() {
@@ -163,20 +179,13 @@ async function loadSafariMegaMenuTours() {
     if (document.querySelector('link[href*="/css/header.css"]')) return;
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '/css/header.css?v=4';
+    link.href = '/css/header.css?v=5';
     const head = document.head || document.getElementsByTagName('head')[0];
     if (head) head.appendChild(link);
     else document.addEventListener('DOMContentLoaded', () => document.head.appendChild(link));
 })();
 
-/* Start i18n only when a non-English language is already chosen */
-(function () {
-    try {
-        const q = new URLSearchParams(window.location.search).get('lang');
-        const stored = localStorage.getItem('tsm_lang');
-        if ((q && q !== 'en') || (stored && stored !== 'en')) ensureI18nLoaded();
-    } catch (_) {}
-})();
+/* i18n.js loads only for a stored/URL non-English language, or when the switcher is opened */
 
 function ensureAssetCss(href) {
     if (document.querySelector(`link[href*="${href.split('?')[0]}"]`)) return;
@@ -202,29 +211,34 @@ function whenIdle(fn, timeout) {
 
 function hydrateHeader() {
     initHeader();
-    ensureI18nLoaded().then(() => {
-        if (window.TSM_i18n && typeof window.TSM_i18n.initSwitcher === 'function') {
-            window.TSM_i18n.initSwitcher();
+    mountLangSwitcher();
+    const runTrust = () => {
+        if (window.TSMTrust && typeof window.TSMTrust.initTrustUi === 'function') {
+            window.TSMTrust.initTrustUi();
         }
-        applyPageI18n(document.getElementById('header') || document);
-    });
-    if (window.TSMTrust && typeof window.TSMTrust.initTrustUi === 'function') {
-        window.TSMTrust.initTrustUi();
+    };
+    runTrust();
+    if (!window.TSMTrust && !((window.location.pathname || '').startsWith('/admin'))) {
+        ensureAssetCss('/css/trust.css?v=2');
+        if (!document.querySelector('script[src*="/js/site-trust.js"]')) {
+            const s = document.createElement('script');
+            s.src = '/js/site-trust.js?v=2';
+            s.async = true;
+            s.onload = runTrust;
+            (document.head || document.documentElement).appendChild(s);
+        }
     }
 }
 
 function hydrateFooter() {
     initFooter();
-    applyPageI18n(document.getElementById('footer') || document);
-    whenIdle(loadChatScripts, 8000);
+    if (window.TSM_i18n) applyPageI18n(document.getElementById('footer') || document);
+    loadChatOnIntent();
     initCookieNotice();
-    if (window.TSMTrust && typeof window.TSMTrust.initTrustUi === 'function') {
-        window.TSMTrust.initTrustUi();
-    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const cb = '?v=23';
+    const cb = '?v=24';
     const headerReady = document.getElementById('siteHeader') || document.querySelector('#header header');
     const footerReady = document.querySelector('#footer footer, footer.footer');
 
@@ -238,25 +252,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     whenIdle(() => {
-        ensureI18nLoaded().then(() => {
-            applyPageI18n(document);
-            if (window.TSM_i18n && typeof window.TSM_i18n.initSwitcher === 'function') {
-                window.TSM_i18n.initSwitcher();
-            }
-        });
-        ensureAssetCss('/css/trust.css?v=1');
-        ensureAssetScript('/js/site-trust.js' + cb);
-        ensureAssetScript('/js/conversion-tracking.js' + cb);
-        if (!document.querySelector('script[src^="/js/seo.js"]')) {
+        if (window.TSM_i18n) applyPageI18n(document);
+        const isAdmin = ((window.location && window.location.pathname) || '').startsWith('/admin');
+        if (!isAdmin) {
+            ensureAssetCss('/css/trust.css?v=2');
+            ensureAssetScript('/js/site-trust.js?v=2');
+            ensureAssetScript('/js/conversion-tracking.js?v=2');
+        }
+        if (!document.querySelector('script[src*="/js/seo.js"]')) {
             const seo = document.createElement('script');
-            seo.src = '/js/seo.js' + cb;
+            seo.src = '/js/seo.js?v=24';
             seo.defer = true;
             seo.onload = () => { if (typeof initSEO === 'function') initSEO(); };
             document.head.appendChild(seo);
         }
         initSEO();
-        trackPageView();
-        lazyPlayVideos();
+        if (!isAdmin) {
+            trackPageView();
+            lazyPlayVideos();
+        }
     }, 1500);
 });
 
@@ -361,12 +375,22 @@ function lazyPlayVideos() {
     });
 }
 
+function loadChatOnIntent() {
+    if (window.__TSM_CHAT_INTENT) return;
+    window.__TSM_CHAT_INTENT = true;
+    const start = () => loadChatScripts();
+    ['pointerdown', 'keydown', 'scroll', 'touchstart'].forEach((ev) => {
+        window.addEventListener(ev, start, { once: true, passive: true });
+    });
+    setTimeout(start, 12000);
+}
+
 function loadChatScripts() {
     if (document.querySelector('script[src*="/js/chat.js"]')) return;
     const loadChat = () => {
         if (document.querySelector('script[src*="/js/chat.js"]')) return;
         const chatScript = document.createElement('script');
-        chatScript.src = '/js/chat.js?v=22';
+        chatScript.src = '/js/chat.js?v=24';
         chatScript.defer = true;
         document.body.appendChild(chatScript);
     };
@@ -406,6 +430,8 @@ async function loadComponent(id, url, callback) {
  * Initializes header functionality after injection
  */
 function initHeader() {
+    if (window.__TSM_HEADER_INIT) return;
+    window.__TSM_HEADER_INIT = true;
     // Prefer the real <header.header> — views wrap includes in <div id="header">,
     // so getElementById('header') can hit the wrapper and break .header.menu-open stacking.
     const header =
@@ -600,6 +626,8 @@ function initHeader() {
  * Initializes footer functionality after injection
  */
 function initFooter() {
+    if (window.__TSM_FOOTER_INIT) return;
+    window.__TSM_FOOTER_INIT = true;
     // Update current year
     const yearSpan = document.getElementById('year');
     if (yearSpan) yearSpan.textContent = new Date().getFullYear();
@@ -614,9 +642,11 @@ function initFooter() {
             socialFloatBtn.classList.toggle('active');
         });
 
-        document.addEventListener('click', () => {
-            socialFloat.classList.remove('active');
-            socialFloatBtn.classList.remove('active');
+        document.addEventListener('click', (e) => {
+            if (!socialFloat.contains(e.target)) {
+                socialFloat.classList.remove('active');
+                socialFloatBtn.classList.remove('active');
+            }
         });
     }
 
@@ -629,32 +659,15 @@ function initFooter() {
             } else {
                 backToTop.classList.remove('visible');
             }
-        });
-
-        // Social float
-        const floatBtn = document.getElementById('socialFloatBtn');
-        const floatWrap = document.querySelector('.social-float');
-        if (floatBtn && floatWrap) {
-            floatBtn.addEventListener('click', () => {
-                floatWrap.classList.toggle('active');
-                floatBtn.classList.toggle('active');
-            });
-            // Close on outside click
-            document.addEventListener('click', (e) => {
-                if (!floatWrap.contains(e.target)) {
-                    floatWrap.classList.remove('active');
-                    floatBtn.classList.remove('active');
-                }
-            });
-        }
+        }, { passive: true });
 
         backToTop.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
-        // Hero Slideshow (inner pages)
         const heroBg = document.querySelector('.page-hero .hero-bg img');
-        if (heroBg) {
+        if (heroBg && !window.__TSM_HERO_SLIDES) {
+            window.__TSM_HERO_SLIDES = true;
             const slides = [
                 heroBg.src,
                 '/images/optimized/serengeti-national-park.webp',

@@ -69,13 +69,13 @@ const RELATED_PILLAR_KEYS = [
   { slug: 'train-for-kilimanjaro', key: 'blogDetail.pillar.kiliTrain' },
   { slug: 'kilimanjaro-tipping-guide', key: 'blogDetail.pillar.kiliTipping' },
   { slug: 'kilimanjaro-acclimatization', key: 'blogDetail.pillar.kiliAcclimatization' },
-  { slug: 'private-serengeti-safari-price-2026', key: '' },
-  { slug: '8-day-tanzania-safari-cost', key: '' },
-  { slug: 'mara-river-crossing-best-time', key: '' },
-  { slug: 'machame-vs-lemosho', key: '' },
-  { slug: 'tanzania-safari-from-arusha', key: '' },
-  { slug: 'serengeti-zanzibar-combo', key: '' },
-  { slug: 'tanzania-safari-cost-per-person-2026', key: '' }
+  { slug: 'private-serengeti-safari-price-2026', key: '', title: 'Private Serengeti Safari Price 2026' },
+  { slug: '8-day-tanzania-safari-cost', key: '', title: '8 Day Tanzania Safari Cost 2026' },
+  { slug: 'mara-river-crossing-best-time', key: '', title: 'Mara River Crossing Best Time' },
+  { slug: 'machame-vs-lemosho', key: '', title: 'Machame vs Lemosho' },
+  { slug: 'tanzania-safari-from-arusha', key: '', title: 'Tanzania Safari from Arusha' },
+  { slug: 'serengeti-zanzibar-combo', key: '', title: 'Serengeti and Zanzibar Combo' },
+  { slug: 'tanzania-safari-cost-per-person-2026', key: '', title: 'Tanzania Safari Cost per Person 2026' }
 ];
 
 const KILI_SLUGS = new Set([
@@ -95,6 +95,7 @@ function relatedLabel(p) {
   if (translated && translated !== p.key) return translated;
   const g = getGuide(p.slug);
   if (g && g.META && g.META.title) return g.META.title;
+  if (p.title) return p.title;
   return p.slug;
 }
 
@@ -119,6 +120,27 @@ function getGuide(slug) {
   return key ? window[key] : null;
 }
 
+function loadScriptOnce(src) {
+  return new Promise((resolve) => {
+    const bare = src.split('?')[0];
+    if (document.querySelector(`script[src*="${bare}"]`)) return resolve();
+    const s = document.createElement('script');
+    s.src = src;
+    s.async = true;
+    s.onload = () => resolve();
+    s.onerror = () => resolve();
+    document.head.appendChild(s);
+  });
+}
+
+async function ensureGuide(slug) {
+  const existing = getGuide(slug);
+  if (existing) return existing;
+  if (!PILLAR_SLUGS[slug]) return null;
+  await loadScriptOnce('/js/blog-guides/' + slug + '.js?v=2');
+  return getGuide(slug);
+}
+
 async function loadPost() {
   try {
     if (window.TSM_i18n && window.TSM_i18n.ready) await window.TSM_i18n.ready;
@@ -136,7 +158,7 @@ async function loadPost() {
     data = null;
   }
 
-  let guide = getGuide(slug);
+  let guide = await ensureGuide(slug);
   if (guide && window.TSM_guideI18n && typeof window.TSM_guideI18n.localizeGuide === 'function') {
     guide = await window.TSM_guideI18n.localizeGuide(guide);
   }

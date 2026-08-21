@@ -148,6 +148,7 @@
   function renderBadges(root, variant) {
     const host = typeof root === 'string' ? document.querySelector(root) : root;
     if (!host) return;
+    if (host.querySelector('.tsm-trust-badge')) return;
     host.innerHTML = TSM_TRUST_BADGES.map((b) => badgeHtml(b, variant || host.getAttribute('data-trust-variant') || 'default')).join('');
   }
 
@@ -271,33 +272,36 @@
     };
   }
 
+  var trustBusy = false;
   function initTrustUi() {
-    document.querySelectorAll('[data-trust-badges]').forEach((el) => renderBadges(el));
-    injectCtaMicrocopy();
-    renderTeam(document.getElementById('teamGrid'));
-    if (document.getElementById('testimonialsGrid') && !window.__TSM_TESTIMONIALS_API) {
-      renderTestimonials('#testimonialsGrid', []);
-    }
-    const ld = reviewJsonLd();
-    if (ld && !document.getElementById('tsm-review-jsonld')) {
-      const s = document.createElement('script');
-      s.type = 'application/ld+json';
-      s.id = 'tsm-review-jsonld';
-      s.textContent = JSON.stringify(ld);
-      document.head.appendChild(s);
+    if (trustBusy) return;
+    trustBusy = true;
+    try {
+      document.querySelectorAll('[data-trust-badges]').forEach((el) => renderBadges(el));
+      injectCtaMicrocopy();
+      const teamGrid = document.getElementById('teamGrid');
+      if (teamGrid && !teamGrid.getAttribute('data-trust-team-done')) {
+        teamGrid.setAttribute('data-trust-team-done', '1');
+        renderTeam(teamGrid);
+      }
+      if (document.getElementById('testimonialsGrid') && !window.__TSM_TESTIMONIALS_API) {
+        renderTestimonials('#testimonialsGrid', []);
+      }
+      const ld = reviewJsonLd();
+      if (ld && !document.getElementById('tsm-review-jsonld')) {
+        const s = document.createElement('script');
+        s.type = 'application/ld+json';
+        s.id = 'tsm-review-jsonld';
+        s.textContent = JSON.stringify(ld);
+        document.head.appendChild(s);
+      }
+    } finally {
+      trustBusy = false;
     }
   }
 
   function bootTrustUi() {
     initTrustUi();
-    if (!window.__TSM_TRUST_OBS && document.body) {
-      window.__TSM_TRUST_OBS = true;
-      const obs = new MutationObserver(() => {
-        if (document.querySelector('[data-trust-badges]:empty, #teamGrid:empty')) initTrustUi();
-      });
-      obs.observe(document.body, { childList: true, subtree: true });
-      setTimeout(() => obs.disconnect(), 10000);
-    }
   }
 
   if (document.readyState === 'loading') {
