@@ -728,17 +728,87 @@ function resolveSeo(seo = {}, req) {
   });
 }
 
+const HEADER_PATH = path.join(__dirname, '..', 'public', 'includes', 'header.html');
+const FOOTER_PATH = path.join(__dirname, '..', 'public', 'includes', 'footer.html');
+let partialCache = { t: 0, header: '', footer: '' };
+
+function loadLayoutPartials() {
+  try {
+    const t = Math.max(fs.statSync(HEADER_PATH).mtimeMs, fs.statSync(FOOTER_PATH).mtimeMs);
+    if (t !== partialCache.t) {
+      partialCache = {
+        t,
+        header: fs.readFileSync(HEADER_PATH, 'utf8'),
+        footer: fs.readFileSync(FOOTER_PATH, 'utf8')
+      };
+    }
+  } catch (err) {
+    console.warn('[layout] partials', err.message);
+  }
+  return partialCache;
+}
+
+function injectLayoutPartials(html) {
+  const { header, footer } = loadLayoutPartials();
+  if (header && /<div id="header"><\/div>/.test(html) && !html.includes('id="siteHeader"')) {
+    html = html.replace(/<div id="header"><\/div>/, `<div id="header">${header}</div>`);
+  }
+  if (footer && /<div id="footer"><\/div>/.test(html) && !/<footer[\s>]/.test(html)) {
+    html = html.replace(/<div id="footer"><\/div>/, `<div id="footer">${footer}</div>`);
+  }
+  return html;
+}
+
+function optimizeHeadAssets(html) {
+  html = html.replace(
+    /<link rel="stylesheet" href="https:\/\/cdnjs\.cloudflare\.com\/ajax\/libs\/font-awesome\/6\.5\.0\/css\/all\.min\.css">/g,
+    '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" media="print" onload="this.media=\'all\'">'
+  );
+  html = html.replace(
+    /href="https:\/\/fonts\.googleapis\.com\/css2\?family=Poppins:wght@[^"]+"/g,
+    'href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap"'
+  );
+  html = html.replace(
+    /<link href="https:\/\/fonts\.googleapis\.com\/css2\?family=Poppins[^"]*" rel="stylesheet">/g,
+    '<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet" media="print" onload="this.media=\'all\'">'
+  );
+  if (!html.includes('/css/header.css') && /<\/head>/i.test(html)) {
+    html = html.replace(
+      /<\/head>/i,
+      '<link rel="stylesheet" href="/css/header.css?v=5">\n<link rel="stylesheet" href="/css/fluid-responsive.css?v=5">\n</head>'
+    );
+  }
+  if (html.includes('/images/hero.webp') && !html.includes('rel="preload" href="/images/hero.webp"')) {
+    html = html.replace(
+      /<\/head>/i,
+      '<link rel="preload" href="/images/hero.webp" as="image">\n<link rel="preload" href="/images/logo.webp" as="image">\n</head>'
+    );
+  }
+  return html;
+}
+
 function sendSeoHtml(res, viewRelativePath, seo, status = 200) {
   const req = res.req;
   const resolved = resolveSeo(seo, req);
   const filePath = path.join(__dirname, '..', 'views', viewRelativePath);
   let html = fs.readFileSync(filePath, 'utf8');
+  html = injectLayoutPartials(html);
+  html = optimizeHeadAssets(html);
   html = injectSeoIntoHtml(html, resolved);
 
   if (resolved.lang && resolved.lang !== 'en') {
     res.setHeader('Set-Cookie', `tsm_lang=${resolved.lang}; Path=/; Max-Age=31536000; SameSite=Lax`);
   }
 
+  res.status(status).type('html').set('Cache-Control', 'public, max-age=300, stale-while-revalidate=600').send(html);
+}
+
+function sendViewHtml(res, viewRelativePath, status = 200) {
+  const filePath = path.join(__dirname, '..', 'views', viewRelativePath);
+  let html = fs.readFileSync(filePath, 'utf8');
+  html = injectLayoutPartials(html);
+  html = optimizeHeadAssets(html);
+  html = ensureGtagInHtml(html);
   res.status(status).type('html').set('Cache-Control', 'public, max-age=300, stale-while-revalidate=600').send(html);
 }
 
@@ -771,7 +841,9 @@ module.exports = {
   touristDestinationSchema,
   touristDestinationItemListSchema,
   injectSeoIntoHtml,
+  injectLayoutPartials,
   sendSeoHtml,
+  sendViewHtml,
   resolveSeo,
   parseLangFromRequest,
   getPageSeo,

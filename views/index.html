@@ -72,12 +72,12 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="/css/variables.css">
-<link rel="stylesheet" href="/css/main.css?v=7">
-<link rel="stylesheet" href="/css/group-safaris.css?v=4">
-<link rel="stylesheet" href="/css/experience.css?v=2">
+<link rel="stylesheet" href="/css/main.css?v=8">
+<link rel="preload" href="/images/hero.webp" as="image">
+<link rel="preload" href="/images/logo.webp" as="image">
 <style>
 .hero{min-height:80vh;min-height:80svh}
 .hero-bg{background:#b8b8b800}
@@ -531,21 +531,24 @@
 
 <!-- Footer -->
 <div id="footer"></div>
-<script src="/js/layout-loader.js?v=21"></script>
-<script src="/js/api.js?v=2"></script>
-<script src="/js/main.js?v=10"></script>
+<script src="/js/layout-loader.js?v=22" defer></script>
+<script src="/js/api.js?v=2" defer></script>
+<script src="/js/main.js?v=11" defer></script>
 <script>
-(function () {
+window.addEventListener('load', function () {
   var v = document.getElementById('heroVideo');
   if (!v) return;
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var desktop = window.matchMedia && window.matchMedia('(min-width: 768px)').matches;
-  if (!reduce && desktop) {
+  if (reduce || !desktop) return;
+  var start = function () {
     v.setAttribute('autoplay', '');
     var p = v.play();
     if (p && p.catch) p.catch(function () {});
-  }
-})();
+  };
+  if (typeof requestIdleCallback === 'function') requestIdleCallback(start, { timeout: 2500 });
+  else setTimeout(start, 400);
+});
 </script>
 </body>
 </html>

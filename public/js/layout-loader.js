@@ -31,7 +31,7 @@ function ensureI18nLoaded() {
             return;
         }
         const s = document.createElement('script');
-        s.src = '/js/i18n.js?v=6';
+        s.src = '/js/i18n.js?v=7';
         s.onload = () => {
             if (window.TSM_i18n && window.TSM_i18n.ready) window.TSM_i18n.ready.then(resolve);
             else resolve();
@@ -117,28 +117,32 @@ async function loadSafariMegaMenuTours() {
     } catch (_) { /* never block UX */ }
 })();
 
-/* Trust + conversion scripts (all public pages) */
+/* Trust + conversion scripts — after first paint */
 (function injectTrustAssets() {
     if (typeof document === 'undefined') return;
     const path = (window.location && window.location.pathname) || '';
     if (path.startsWith('/admin')) return;
-    function addCss(href) {
-        if (document.querySelector(`link[href^="${href.split('?')[0]}"]`)) return;
-        const l = document.createElement('link');
-        l.rel = 'stylesheet';
-        l.href = href;
-        (document.head || document.documentElement).appendChild(l);
-    }
-    function addJs(src) {
-        if (document.querySelector(`script[src^="${src.split('?')[0]}"]`)) return;
-        const s = document.createElement('script');
-        s.src = src;
-        s.defer = true;
-        (document.head || document.documentElement).appendChild(s);
-    }
-    addCss('/css/trust.css?v=1');
-    addJs('/js/site-trust.js?v=1');
-    addJs('/js/conversion-tracking.js?v=1');
+    const start = () => {
+        function addCss(href) {
+            if (document.querySelector(`link[href^="${href.split('?')[0]}"]`)) return;
+            const l = document.createElement('link');
+            l.rel = 'stylesheet';
+            l.href = href;
+            (document.head || document.documentElement).appendChild(l);
+        }
+        function addJs(src) {
+            if (document.querySelector(`script[src^="${src.split('?')[0]}"]`)) return;
+            const s = document.createElement('script');
+            s.src = src;
+            s.defer = true;
+            (document.head || document.documentElement).appendChild(s);
+        }
+        addCss('/css/trust.css?v=1');
+        addJs('/js/site-trust.js?v=1');
+        addJs('/js/conversion-tracking.js?v=1');
+    };
+    if (typeof requestIdleCallback === 'function') requestIdleCallback(start, { timeout: 4000 });
+    else setTimeout(start, 1);
 })();
 
 /* Inject fluid responsive CSS immediately (all public pages) */
@@ -165,8 +169,14 @@ async function loadSafariMegaMenuTours() {
     else document.addEventListener('DOMContentLoaded', () => document.head.appendChild(link));
 })();
 
-/* Start loading i18n as early as possible */
-ensureI18nLoaded();
+/* Start i18n only when a non-English language is already chosen */
+(function () {
+    try {
+        const q = new URLSearchParams(window.location.search).get('lang');
+        const stored = localStorage.getItem('tsm_lang');
+        if ((q && q !== 'en') || (stored && stored !== 'en')) ensureI18nLoaded();
+    } catch (_) {}
+})();
 
 function ensureAssetCss(href) {
     if (document.querySelector(`link[href*="${href.split('?')[0]}"]`)) return;
@@ -185,44 +195,69 @@ function ensureAssetScript(src) {
     (document.head || document.documentElement).appendChild(s);
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
-    const cb = '?v=21';
-    await ensureI18nLoaded();
-    ensureAssetCss('/css/trust.css?v=1');
-    ensureAssetScript('/js/site-trust.js' + cb);
-    ensureAssetScript('/js/conversion-tracking.js' + cb);
+function whenIdle(fn, timeout) {
+    if (typeof requestIdleCallback === 'function') requestIdleCallback(fn, { timeout: timeout || 3500 });
+    else setTimeout(fn, 1);
+}
 
-    // Load shared SEO helpers early
-    if (!document.querySelector('script[src^="/js/seo.js"]')) {
-        const seo = document.createElement('script');
-        seo.src = '/js/seo.js' + cb;
-        seo.onload = () => { if (typeof initSEO === 'function') initSEO(); };
-        document.head.appendChild(seo);
-    }
-
-    applyPageI18n(document);
-
-    loadComponent('header', '/includes/header.html' + cb, () => {
-        initHeader();
+function hydrateHeader() {
+    initHeader();
+    ensureI18nLoaded().then(() => {
         if (window.TSM_i18n && typeof window.TSM_i18n.initSwitcher === 'function') {
             window.TSM_i18n.initSwitcher();
         }
         applyPageI18n(document.getElementById('header') || document);
-        if (window.TSMTrust && typeof window.TSMTrust.initTrustUi === 'function') {
-            window.TSMTrust.initTrustUi();
-        }
     });
-    loadComponent('footer', '/includes/footer.html' + cb, () => {
-        initFooter();
-        applyPageI18n(document.getElementById('footer') || document);
-        loadChatScripts();
-        initCookieNotice();
-        if (window.TSMTrust && typeof window.TSMTrust.initTrustUi === 'function') {
-            window.TSMTrust.initTrustUi();
+    if (window.TSMTrust && typeof window.TSMTrust.initTrustUi === 'function') {
+        window.TSMTrust.initTrustUi();
+    }
+}
+
+function hydrateFooter() {
+    initFooter();
+    applyPageI18n(document.getElementById('footer') || document);
+    whenIdle(loadChatScripts, 4000);
+    initCookieNotice();
+    if (window.TSMTrust && typeof window.TSMTrust.initTrustUi === 'function') {
+        window.TSMTrust.initTrustUi();
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const cb = '?v=22';
+    const headerReady = document.getElementById('siteHeader') || document.querySelector('#header header');
+    const footerReady = document.querySelector('#footer footer, footer.footer');
+
+    if (headerReady) hydrateHeader();
+    else {
+        loadComponent('header', '/includes/header.html' + cb, hydrateHeader);
+    }
+    if (footerReady) hydrateFooter();
+    else {
+        loadComponent('footer', '/includes/footer.html' + cb, hydrateFooter);
+    }
+
+    whenIdle(() => {
+        ensureI18nLoaded().then(() => {
+            applyPageI18n(document);
+            if (window.TSM_i18n && typeof window.TSM_i18n.initSwitcher === 'function') {
+                window.TSM_i18n.initSwitcher();
+            }
+        });
+        ensureAssetCss('/css/trust.css?v=1');
+        ensureAssetScript('/js/site-trust.js' + cb);
+        ensureAssetScript('/js/conversion-tracking.js' + cb);
+        if (!document.querySelector('script[src^="/js/seo.js"]')) {
+            const seo = document.createElement('script');
+            seo.src = '/js/seo.js' + cb;
+            seo.defer = true;
+            seo.onload = () => { if (typeof initSEO === 'function') initSEO(); };
+            document.head.appendChild(seo);
         }
-    });
-    initSEO();
-    trackPageView();
+        initSEO();
+        trackPageView();
+        lazyPlayVideos();
+    }, 1500);
 });
 
 /**
@@ -239,7 +274,7 @@ function initCookieNotice() {
         const bar = document.createElement('div');
         bar.id = 'tsmCookieNotice';
         bar.setAttribute('role', 'dialog');
-        bar.setAttribute('aria-label', tsmT('cookie.aria'));
+        bar.setAttribute('aria-label', tsmT('cookie.aria') === 'cookie.aria' ? 'Cookie notice' : tsmT('cookie.aria'));
         bar.style.cssText = [
             'position:fixed', 'left:1rem', 'right:1rem', 'bottom:1rem', 'z-index:9998',
             'max-width:32rem', 'margin:0 auto', 'padding:1rem 1.15rem',
@@ -247,9 +282,10 @@ function initCookieNotice() {
             'box-shadow:0 8px 28px rgba(0,0,0,.25)', 'font-size:0.875rem', 'line-height:1.5',
             'display:flex', 'flex-wrap:wrap', 'gap:0.75rem', 'align-items:center', 'justify-content:space-between'
         ].join(';');
+        const cookieHtml = tsmT('cookie.html');
         bar.innerHTML = `
-          <p style="margin:0;flex:1 1 12rem">${tsmT('cookie.html')}</p>
-          <button type="button" id="tsmCookieAccept" style="flex:0 0 auto;border:0;cursor:pointer;background:#c45c26;color:#fff;font-weight:700;padding:0.55rem 1rem;border-radius:8px">${tsmT('common.ok')}</button>
+          <p style="margin:0;flex:1 1 12rem">${cookieHtml === 'cookie.html' ? 'We use cookies to improve your visit. See our <a href="/privacy" style="color:#fff;text-decoration:underline">Privacy Policy</a>.' : cookieHtml}</p>
+          <button type="button" id="tsmCookieAccept" style="flex:0 0 auto;border:0;cursor:pointer;background:#c45c26;color:#fff;font-weight:700;padding:0.55rem 1rem;border-radius:8px">${tsmT('common.ok') === 'common.ok' ? 'OK' : tsmT('common.ok')}</button>
         `;
         document.body.appendChild(bar);
         document.getElementById('tsmCookieAccept')?.addEventListener('click', () => {
@@ -301,30 +337,48 @@ function trackPageView() {
     } catch (_) { /* never block UX */ }
 }
 
+function lazyPlayVideos() {
+    const vids = document.querySelectorAll('video[autoplay], video[src$=".mp4"]');
+    if (!vids.length) return;
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            const v = entry.target;
+            if (entry.isIntersecting) {
+                if (v.getAttribute('preload') === 'none') v.preload = 'metadata';
+                const p = v.play();
+                if (p && p.catch) p.catch(() => {});
+            } else {
+                v.pause();
+            }
+        });
+    }, { rootMargin: '120px', threshold: 0.15 });
+    vids.forEach((v) => {
+        v.removeAttribute('autoplay');
+        v.preload = 'none';
+        v.muted = true;
+        v.playsInline = true;
+        io.observe(v);
+    });
+}
+
 function loadChatScripts() {
+    if (document.querySelector('script[src*="/js/chat.js"]')) return;
+    const loadChat = () => {
+        if (document.querySelector('script[src*="/js/chat.js"]')) return;
+        const chatScript = document.createElement('script');
+        chatScript.src = '/js/chat.js?v=22';
+        chatScript.defer = true;
+        document.body.appendChild(chatScript);
+    };
     if (typeof io === 'undefined') {
         const ioScript = document.createElement('script');
         ioScript.src = '/socket.io/socket.io.js';
-        
-        const loadChat = () => {
-            if (!document.querySelector('script[src^="/js/chat.js"]')) {
-                const chatScript = document.createElement('script');
-                chatScript.src = '/js/chat.js?v=' + Date.now();
-                document.body.appendChild(chatScript);
-            }
-        };
-        
+        ioScript.async = true;
         ioScript.onload = loadChat;
-        ioScript.onerror = () => {
-            console.error('Socket.io failed to load. Chat will run in offline mode.');
-            loadChat();
-        };
-        
+        ioScript.onerror = loadChat;
         document.body.appendChild(ioScript);
     } else {
-        const chatScript = document.createElement('script');
-        chatScript.src = '/js/chat.js?v=' + Date.now();
-        document.body.appendChild(chatScript);
+        loadChat();
     }
 }
 
@@ -468,7 +522,7 @@ function initHeader() {
                 }
             });
         }
-        loadSafariMegaMenuTours();
+        // Tours load on hover/click only — not on every page
 
         // Keep submenu closed unless hovered/toggled — same on every page
         document.addEventListener('click', (e) => {

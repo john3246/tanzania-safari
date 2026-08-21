@@ -7,7 +7,7 @@ const ssr = require('../utils/ssrContent');
 const VIEWS = path.join(__dirname, '../views');
 
 function sendFile(res, name) {
-  res.sendFile(path.join(VIEWS, name));
+  seo.sendViewHtml(res, name);
 }
 
 // Real, answerable questions travelers ask before booking a Tanzania trip.

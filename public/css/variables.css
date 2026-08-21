@@ -64,8 +64,8 @@
   --info-bg:      #E3F2FD;
 
   /* ── Typography */
-  --font-heading: 'Poppins', sans-serif;
-  --font-body:    'Roboto', sans-serif;
+  --font-heading: 'Poppins', system-ui, sans-serif;
+  --font-body:    system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   /* ── Spacing Scale */
   --space-1:  0.25rem;   /*  4px */

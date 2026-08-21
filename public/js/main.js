@@ -126,16 +126,19 @@ async function loadHomepage() {
 
     // Destinations
     try {
-        const { data } = await API.get('/destinations');
         const grid = document.getElementById('destinationsGrid');
-        if (grid && data?.length) {
-            grid.innerHTML = data.slice(0, 4).map(buildDestCard).join('');
-        } else if (grid && !grid.querySelector('.ssr-card, a[href*="/destinations/"]')) {
-            grid.innerHTML = `<p style="text-align:center;color:var(--text-muted);grid-column:1/-1">${t('home.noDestinations')}</p>`;
+        if (grid && grid.querySelector('.ssr-card, a[href*="/destinations/"]')) {
+            /* keep server-rendered cards — do not refetch and swap images */
+        } else {
+            const { data } = await API.get('/destinations');
+            if (grid && data?.length) {
+                grid.innerHTML = data.slice(0, 4).map(buildDestCard).join('');
+            } else if (grid) {
+                grid.innerHTML = `<p style="text-align:center;color:var(--text-muted);grid-column:1/-1">${t('home.noDestinations')}</p>`;
+            }
         }
     } catch (e) {
         const grid = document.getElementById('destinationsGrid');
-        // Keep SSR cards if present so the page never looks empty after a transient API failure
         if (grid && !grid.querySelector('.ssr-card, a[href*="/destinations/"]')) {
             grid.innerHTML = `<p style="color:var(--text-muted);grid-column:1/-1;text-align:center">${t('home.unableDestinations')}</p>`;
         }
@@ -234,8 +237,11 @@ async function loadHomepage() {
     } catch {}
 
     // Safaris
+    const safariGrid = document.getElementById('safarisGrid');
+    const hasSafariSsr = !!(safariGrid && safariGrid.querySelector('.ssr-card, a[href*="/safaris/"]'));
+    if (!hasSafariSsr) {
     try {
-        const { data } = await API.get('/packages?limit=24&sort=random');
+        const { data } = await API.get('/packages?limit=8&sort=random');
         featuredPackages = shuffleList(data || []);
         renderSafaris(featuredPackages, 4);
         // Populate quick-book dropdown
@@ -260,6 +266,7 @@ async function loadHomepage() {
         if (grid && !grid.querySelector('.ssr-card, a[href*="/safaris/"]')) {
             grid.innerHTML = `<p style="color:var(--text-muted);grid-column:1/-1;text-align:center">${t('home.unablePackages')}</p>`;
         }
+    }
     }
 
     // Testimonials — real reviews only (JSON config + approved API rows with a quote)
@@ -350,11 +357,14 @@ document.getElementById('newsletterForm')?.addEventListener('submit', async e =>
 });
 
 // ── Init ───────────────────────────────────────────────────
-(async () => {
-  try {
-    if (window.TSM_i18n && window.TSM_i18n.ready) await window.TSM_i18n.ready;
-  } catch (_) {}
-  loadHomepage();
+(function bootHome() {
+  const destGrid = document.getElementById('destinationsGrid');
+  const safariGrid = document.getElementById('safarisGrid');
+  if (!destGrid && !safariGrid && !document.getElementById('groupHomeTeaser')) return;
+  const hasSsr = !!(safariGrid && safariGrid.querySelector('.ssr-card, a[href*="/safaris/"]'));
+  const start = () => { loadHomepage(); };
+  if (hasSsr && typeof requestIdleCallback === 'function') requestIdleCallback(start, { timeout: 1800 });
+  else start();
 })();
 
 // -- Reveal Animations --

@@ -138,11 +138,21 @@
 
     return chain
       .then(function () {
+        if (lang === 'en' && state._en && Object.keys(state._en).length) {
+          state.dict = state._en;
+          return state.dict;
+        }
+        if (lang === 'en') {
+          state.dict = {};
+          return {};
+        }
         return loadDict(lang);
       })
       .then(function (dict) {
-        state.dict = dict;
-        if (lang === 'en') state._en = dict;
+        if (dict && Object.keys(dict).length) {
+          state.dict = dict;
+          if (lang === 'en') state._en = dict;
+        }
         applyTranslations(document);
         updateSwitcherUI();
         try {

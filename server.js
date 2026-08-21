@@ -203,6 +203,16 @@ const cacheOptions = {
 };
 // Serve WebP when a JPEG/PNG under /images/ has a .webp sibling (keeps old URLs working).
 const imagesRoot = path.join(__dirname, 'public', 'images');
+const webpSiblings = new Set();
+(function indexWebp(dir) {
+    try {
+        for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
+            const full = path.join(dir, ent.name);
+            if (ent.isDirectory()) indexWebp(full);
+            else if (/\.webp$/i.test(ent.name)) webpSiblings.add(full.toLowerCase());
+        }
+    } catch (_) {}
+})(imagesRoot);
 app.use((req, res, next) => {
     if (req.method !== 'GET' && req.method !== 'HEAD') return next();
     const urlPath = (req.path || '').split('?')[0];
@@ -217,7 +227,7 @@ app.use((req, res, next) => {
     }
     if (rel.includes('..')) return next();
     const webpAbs = path.join(imagesRoot, rel.replace(/\.(jpe?g|png)$/i, '.webp'));
-    if (!fs.existsSync(webpAbs)) return next();
+    if (!webpSiblings.has(webpAbs.toLowerCase()) && !fs.existsSync(webpAbs)) return next();
     res.type('image/webp');
     res.set('Cache-Control', 'public, max-age=2592000, immutable');
     return res.sendFile(webpAbs);
