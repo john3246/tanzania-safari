@@ -4,6 +4,9 @@
  * Items with published:false (or empty url for badges) never render as live claims.
  */
 (function (global) {
+  if (global.__TSM_TRUST_SCRIPT) return;
+  global.__TSM_TRUST_SCRIPT = true;
+
   const TSM_SITE_CONFIG = {
     quoteResponseHours: 24,
     whatsappE164: '255695108009',
@@ -273,12 +276,16 @@
   }
 
   var trustBusy = false;
+  var ctaDone = false;
   function initTrustUi() {
     if (trustBusy) return;
     trustBusy = true;
     try {
       document.querySelectorAll('[data-trust-badges]').forEach((el) => renderBadges(el));
-      injectCtaMicrocopy();
+      if (!ctaDone) {
+        ctaDone = true;
+        injectCtaMicrocopy();
+      }
       const teamGrid = document.getElementById('teamGrid');
       if (teamGrid && !teamGrid.getAttribute('data-trust-team-done')) {
         teamGrid.setAttribute('data-trust-team-done', '1');
@@ -301,6 +308,8 @@
   }
 
   function bootTrustUi() {
+    if (global.__TSM_TRUST_BOOTED) return;
+    global.__TSM_TRUST_BOOTED = true;
     initTrustUi();
   }
 

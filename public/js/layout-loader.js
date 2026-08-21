@@ -222,7 +222,7 @@ function hydrateHeader() {
         ensureAssetCss('/css/trust.css?v=2');
         if (!document.querySelector('script[src*="/js/site-trust.js"]')) {
             const s = document.createElement('script');
-            s.src = '/js/site-trust.js?v=2';
+            s.src = '/js/site-trust.js?v=3';
             s.async = true;
             s.onload = runTrust;
             (document.head || document.documentElement).appendChild(s);
@@ -238,7 +238,7 @@ function hydrateFooter() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const cb = '?v=24';
+    const cb = '?v=25';
     const headerReady = document.getElementById('siteHeader') || document.querySelector('#header header');
     const footerReady = document.querySelector('#footer footer, footer.footer');
 
@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const isAdmin = ((window.location && window.location.pathname) || '').startsWith('/admin');
         if (!isAdmin) {
             ensureAssetCss('/css/trust.css?v=2');
-            ensureAssetScript('/js/site-trust.js?v=2');
+            ensureAssetScript('/js/site-trust.js?v=3');
             ensureAssetScript('/js/conversion-tracking.js?v=2');
         }
         if (!document.querySelector('script[src*="/js/seo.js"]')) {

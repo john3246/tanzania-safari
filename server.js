@@ -232,6 +232,13 @@ app.use((req, res, next) => {
     res.set('Cache-Control', 'public, max-age=2592000, immutable');
     return res.sendFile(webpAbs);
 });
+app.use((req, res, next) => {
+    const p = (req.path || '').split('?')[0];
+    if (/^\/js\/(layout-loader|site-trust|main|i18n)\.js$/i.test(p)) {
+        res.set('Cache-Control', 'public, max-age=120, must-revalidate');
+    }
+    next();
+});
 app.use(express.static(path.join(__dirname, 'public'), cacheOptions));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'), cacheOptions));
 

@@ -800,7 +800,7 @@ function sendSeoHtml(res, viewRelativePath, seo, status = 200) {
     res.setHeader('Set-Cookie', `tsm_lang=${resolved.lang}; Path=/; Max-Age=31536000; SameSite=Lax`);
   }
 
-  res.status(status).type('html').set('Cache-Control', 'public, max-age=300, stale-while-revalidate=600').send(html);
+  res.status(status).type('html').set('Cache-Control', 'public, max-age=60, must-revalidate').send(html);
 }
 
 function sendViewHtml(res, viewRelativePath, status = 200) {
@@ -809,7 +809,7 @@ function sendViewHtml(res, viewRelativePath, status = 200) {
   html = injectLayoutPartials(html);
   html = optimizeHeadAssets(html);
   html = ensureGtagInHtml(html);
-  res.status(status).type('html').set('Cache-Control', 'public, max-age=300, stale-while-revalidate=600').send(html);
+  res.status(status).type('html').set('Cache-Control', 'public, max-age=60, must-revalidate').send(html);
 }
 
 const KEYWORD_HUB = {

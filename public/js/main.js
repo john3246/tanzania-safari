@@ -249,8 +249,6 @@ async function loadHomepage(secondary) {
     } catch {}
 
     // Safaris
-    const safariGrid = document.getElementById('safarisGrid');
-    const hasSafariSsr = !!(safariGrid && safariGrid.querySelector('.ssr-card, a[href*="/safaris/"]'));
     if (!hasSafariSsr) {
     try {
         const { data } = await API.get('/packages?limit=8&sort=random');
