@@ -78,33 +78,18 @@
           </div>
         </div>
 
-        <form id="bookingForm">
+        <form id="bookingForm" novalidate>
           <div class="corp-form-card form-card">
-            <h3 style="margin-bottom:1.5rem"><i class="fas fa-user" style="color:var(--primary);margin-right:.5rem"></i><span data-i18n="booking.personalInfo">Personal Information</span></h3>
-            <div class="form-row">
-              <div class="form-group"><label class="form-label"><span data-i18n="booking.fullName">Full Name</span> <span>*</span></label><input class="form-control" name="full_name" required placeholder="John Smith" id="fullName"></div>
-              <div class="form-group"><label class="form-label"><span data-i18n="booking.email">Email Address</span> <span>*</span></label><input class="form-control" type="email" name="email" required placeholder="john@email.com" id="emailInput"></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label class="form-label" data-i18n="booking.phone">Phone Number</label><input class="form-control" name="phone" placeholder="+1 234 567 890"></div>
-              <div class="form-group"><label class="form-label" data-i18n="booking.country">Country</label><input class="form-control" name="country" placeholder="United States" data-i18n-placeholder="booking.countryPh"></div>
-            </div>
-
-            <hr style="margin:2rem 0;border:0;border-top:1px solid var(--border)">
-
             <h3 style="margin-bottom:1.5rem"><i class="fas fa-compass" style="color:var(--primary);margin-right:.5rem"></i><span data-i18n="booking.tripDetails">Trip Details</span></h3>
-            <div class="form-group"><label class="form-label"><span data-i18n="booking.package">Safari Package</span> <span>*</span></label>
-              <select class="form-control" name="package_id" required id="packageSelect" onchange="updateSummary()">
-                <option value="" data-i18n="booking.selectPackage">— Select a Safari Package —</option>
-              </select>
-            </div>
             <div class="form-row">
-              <div class="form-group"><label class="form-label"><span data-i18n="booking.startDate">Start Date</span> <span>*</span></label><input class="form-control" type="date" name="start_date" required id="startDate" onchange="updateEndDate()"></div>
-              <div class="form-group"><label class="form-label" data-i18n="booking.endDate">End Date</label><input class="form-control" type="date" name="end_date" id="endDate" readonly style="background:var(--bg-secondary)"></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label class="form-label"><span data-i18n="booking.adults">Adults</span> <span>*</span></label>
-                <select class="form-control" name="number_of_adults" required onchange="updateSummary()">
+              <div class="form-group">
+                <label class="form-label"><span data-i18n="booking.startDate">Start Date</span> <span>*</span></label>
+                <input class="form-control" type="date" name="start_date" required id="startDate">
+                <p class="form-error" data-error-for="start_date">Please choose a start date.</p>
+              </div>
+              <div class="form-group">
+                <label class="form-label"><span data-i18n="booking.adults">Group size</span> <span>*</span></label>
+                <select class="form-control" name="number_of_adults" required id="adultsSelect">
                   <option value="1" data-i18n="booking.adult1">1 Adult</option>
                   <option value="2" selected data-i18n="booking.adult2">2 Adults</option>
                   <option value="3" data-i18n="booking.adult3">3 Adults</option>
@@ -113,27 +98,86 @@
                   <option value="6" data-i18n="booking.adult6">6+ Adults</option>
                 </select>
               </div>
-              <div class="form-group"><label class="form-label" data-i18n="booking.children">Children (under 12)</label>
-                <select class="form-control" name="number_of_children" onchange="updateSummary()">
-                  <option value="0" data-i18n="booking.noChildren">No Children</option>
-                  <option value="1" data-i18n="booking.child1">1 Child</option>
-                  <option value="2" data-i18n="booking.child2">2 Children</option>
-                  <option value="3" data-i18n="booking.child3">3 Children</option>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Destination interest <span>*</span></label>
+                <select class="form-control" name="destination_interest" required id="interestSelect">
+                  <option value="">— What are you most interested in? —</option>
+                  <option value="serengeti">Serengeti safari</option>
+                  <option value="ngorongoro">Ngorongoro Crater</option>
+                  <option value="migration">Great Migration / Mara River</option>
+                  <option value="northern-circuit">Northern circuit (Tarangire–Serengeti)</option>
+                  <option value="kilimanjaro">Kilimanjaro climb</option>
+                  <option value="zanzibar-combo">Safari + Zanzibar combo</option>
+                  <option value="custom">Not sure — custom itinerary</option>
+                </select>
+                <p class="form-error" data-error-for="destination_interest">Please choose an interest.</p>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Budget range (USD / person)</label>
+                <select class="form-control" name="budget_range" id="budgetSelect">
+                  <option value="">— Optional —</option>
+                  <option value="under-2500">Under $2,500</option>
+                  <option value="2500-4500">$2,500 – $4,500</option>
+                  <option value="4500-8000">$4,500 – $8,000</option>
+                  <option value="8000-plus">$8,000+</option>
+                  <option value="flexible">Flexible / advise me</option>
                 </select>
               </div>
             </div>
-            <div class="form-group"><label class="form-label" data-i18n="booking.dietary">Dietary Requirements</label><input class="form-control" name="dietary_restrictions" placeholder="Vegetarian, vegan, allergies..." data-i18n-placeholder="booking.dietaryPh"></div>
-            <div class="form-group"><label class="form-label" data-i18n="booking.medical">Medical Conditions</label><input class="form-control" name="medical_conditions" placeholder="Any relevant medical information" data-i18n-placeholder="booking.medicalPh"></div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="booking.package">Safari package (optional)</label>
+              <select class="form-control" name="package_id" id="packageSelect">
+                <option value="" data-i18n="booking.selectPackage">— Not sure yet / custom quote —</option>
+              </select>
+            </div>
+            <input type="hidden" name="end_date" id="endDate">
+            <input type="hidden" name="number_of_children" value="0">
 
             <hr style="margin:2rem 0;border:0;border-top:1px solid var(--border)">
+            <h3 style="margin-bottom:1.5rem"><i class="fas fa-user" style="color:var(--primary);margin-right:.5rem"></i>How should we reach you?</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label"><span data-i18n="booking.fullName">Full Name</span> <span>*</span></label>
+                <input class="form-control" name="full_name" required placeholder="Your name" id="fullName" autocomplete="name">
+                <p class="form-error" data-error-for="full_name">Please enter your name.</p>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Preferred contact <span>*</span></label>
+                <select class="form-control" name="contact_method" required id="contactMethod">
+                  <option value="whatsapp">WhatsApp</option>
+                  <option value="email" selected>Email</option>
+                  <option value="phone">Phone call</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label"><span data-i18n="booking.email">Email Address</span></label>
+                <input class="form-control" type="email" name="email" placeholder="you@email.com" id="emailInput" autocomplete="email">
+                <p class="form-error" data-error-for="email">Enter a valid email, or use WhatsApp below.</p>
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-i18n="booking.phone">WhatsApp / phone</label>
+                <input class="form-control" name="phone" placeholder="+255 …" id="phoneInput" autocomplete="tel">
+                <p class="form-error" data-error-for="phone">Add a WhatsApp number or an email so we can reply.</p>
+              </div>
+            </div>
 
-            <h3 style="margin-bottom:1.5rem"><i class="fas fa-check-circle" style="color:var(--primary);margin-right:.5rem"></i><span data-i18n="booking.additional">Additional Details</span></h3>
-            <div class="form-group"><label class="form-label" data-i18n="booking.specialRequests">Special Requests</label><textarea class="form-control" name="special_requests" rows="3" placeholder="Any special requests or additional information..." data-i18n-placeholder="booking.specialPh"></textarea></div>
+            <button type="button" class="form-optional-toggle" id="optionalToggle">+ Dietary, medical, or notes (optional)</button>
+            <div id="optionalFields" hidden>
+              <div class="form-group"><label class="form-label" data-i18n="booking.dietary">Dietary Requirements</label><input class="form-control" name="dietary_restrictions" placeholder="Vegetarian, vegan, allergies..."></div>
+              <div class="form-group"><label class="form-label" data-i18n="booking.medical">Medical Conditions</label><input class="form-control" name="medical_conditions" placeholder="Any relevant medical information"></div>
+              <div class="form-group"><label class="form-label" data-i18n="booking.specialRequests">Notes</label><textarea class="form-control" name="special_requests" rows="3" placeholder="Anything else we should know?"></textarea></div>
+            </div>
+
             <div style="background:var(--bg-secondary);border-radius:var(--radius-md);padding:1rem;font-size:.875rem;color:var(--text-muted);margin-bottom:1.5rem">
               <i class="fas fa-info-circle" style="color:var(--primary)"></i>
-              <span data-i18n-html="booking.agreeHtml">By submitting you agree to our <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>. This is a <strong>quote request</strong> — no payment is taken on this page. After you accept the itinerary, a deposit (typically ~20%) is arranged offline with Our Team.</span>
+              <span data-i18n-html="booking.agreeHtml">By submitting you agree to our <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>. This is a <strong>quote request</strong> — no payment is taken on this page.</span>
             </div>
             <button type="submit" class="btn btn-primary btn-lg" id="submitBtn"><i class="fas fa-paper-plane"></i> <span data-i18n="booking.requestQuote">Request Free Quote</span></button>
+            <p class="booking-reassure js-cta-reassure" data-cta-reassure>No payment required to inquire — free custom quote within 24 hours.</p>
           </div>
         </form>
       </div>
@@ -145,11 +189,7 @@
           <p style="color:var(--text-muted);font-size:.875rem;text-align:center;padding:1rem 0" data-i18n="booking.selectToPrice">Select a package to see pricing</p>
         </div>
         <div style="margin-top:1.5rem;padding:1rem;background:var(--bg-secondary);border-radius:var(--radius-md);font-size:.8125rem;color:var(--text-muted)">
-          <div class="seo-trust-strip" style="justify-content:flex-start;padding:0 0 0.75rem">
-            <div class="seo-trust-item"><i class="fab fa-tripadvisor" style="color:#00af87"></i> TripAdvisor</div>
-            <div class="seo-trust-item"><i class="fas fa-certificate" style="color:#f59e0b"></i> <span data-i18n="home.tatoMember">TATO Member</span></div>
-            <div class="seo-trust-item"><i class="fas fa-shield-alt" style="color:var(--primary)"></i> <span data-i18n="home.safeTravels">Safe Travels</span></div>
-          </div>
+          <div class="seo-trust-strip" data-trust-badges data-trust-variant="default" style="justify-content:flex-start;padding:0 0 0.75rem"></div>
           <div style="display:flex;gap:.5rem;margin-bottom:.5rem"><i class="fas fa-shield-alt" style="color:var(--success)"></i><span data-i18n="booking.secureSsl">Secure SSL booking</span></div>
           <div style="display:flex;gap:.5rem;margin-bottom:.5rem"><i class="fas fa-undo" style="color:var(--success)"></i><span data-i18n="booking.freeCancel">Free cancellation (48h)</span></div>
           <div style="display:flex;gap:.5rem"><i class="fas fa-headset" style="color:var(--success)"></i><span data-i18n="booking.expertSupport">24/7 expert support</span></div>
@@ -163,8 +203,8 @@
 <div id="footer"></div>
 
 <script src="/js/seo.js"></script>
-<script src="/js/layout-loader.js?v=19"></script>
+<script src="/js/layout-loader.js?v=21"></script>
 <script src="/js/api.js?v=2"></script>
-<script src="/js/booking.js?v=2"></script>
+<script src="/js/booking.js?v=3"></script>
 </body>
 </html>

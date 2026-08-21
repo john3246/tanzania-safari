@@ -17,8 +17,13 @@ document.getElementById('contactForm')?.addEventListener('submit', async e => {
     const data = Object.fromEntries(new FormData(e.target));
     try {
         await API.post('/contact', { ...data, enquiry_message: data.message });
-        toast(t('toast.messageSuccess'), 'success');
-        e.target.reset();
+        if (window.TSMAnalytics && typeof window.TSMAnalytics.markFormSuccess === 'function') {
+            window.TSMAnalytics.markFormSuccess('contact');
+        }
+        e.target.style.display = 'none';
+        const ok = document.getElementById('contactSuccess');
+        if (ok) { ok.hidden = false; ok.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+        else toast(t('toast.messageSuccess'), 'success');
     } catch (err) {
         toast(err.message || t('toast.sendFail'), 'error');
     } finally {

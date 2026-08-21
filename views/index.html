@@ -57,13 +57,12 @@
     {"@type": "Place", "name": "Kilimanjaro"}
   ],
   "priceRange": "$$-$$$",
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "5.0",
-    "reviewCount": "48",
-    "bestRating": "5",
-    "worstRating": "1"
-  },
+  "openingHoursSpecification": [{
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+    "opens": "08:00",
+    "closes": "18:00"
+  }],
   "sameAs": [
     "https://wa.me/255695108009",
     "https://www.tripadvisor.com/Attraction_Review-g297913-d28075837-Reviews-Tanzania_Safari_Magic-Arusha_Arusha_Region.html",
@@ -76,8 +75,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="/css/variables.css">
-<link rel="stylesheet" href="/css/main.css?v=6">
+<link rel="stylesheet" href="/css/main.css?v=7">
 <link rel="stylesheet" href="/css/group-safaris.css?v=4">
+<link rel="stylesheet" href="/css/experience.css?v=2">
 <style>
 .hero{min-height:80vh;min-height:80svh}
 .hero-bg{background:#b8b8b800}
@@ -119,7 +119,7 @@
 <!-- Hero -->
     <section class="hero">
       <div class="hero-bg">
-        <video autoplay muted loop playsinline poster="/images/hero.jpg" class="hero-video">
+        <video muted loop playsinline preload="none" poster="/images/hero.webp" class="hero-video" id="heroVideo" width="1920" height="1080">
           <source src="/images/hero-video.mp4" type="video/mp4">
         </video>
       </div>
@@ -133,31 +133,10 @@
             <div class="hero-actions">
               <a href="/safaris" class="btn btn-primary" data-i18n="home.explorePackages">Explore Safari Packages</a>
               <a href="https://wa.me/255695108009?text=Hi%20Tanzania%20Safari%20Magic%2C%20I%27m%20interested%20in%20booking%20a%20custom%20safari." class="btn btn-secondary" target="_blank" rel="noopener" data-i18n="home.whatsappQuote">WhatsApp Free Quote</a>
+              <p class="tsm-cta-note js-cta-reassure" data-cta-reassure>No payment required to inquire — free custom quote within 24 hours.</p>
             </div>
 
-            <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 3rem; opacity: 0.9; margin-top: 5rem;">
-                <div style="display: flex; align-items: center; gap: 0.5rem; color: #fff;">
-                    <i class="fab fa-tripadvisor" style="font-size: 2rem; color: #00af87;"></i>
-                    <div style="display: flex; flex-direction: column; line-height: 1.2; text-align: left;">
-                        <span style="font-weight: 700; font-size: 0.9rem; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">TripAdvisor</span>
-                        <span style="font-size: 0.75rem; color: #00af87; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">★★★★★ 5.0</span>
-                    </div>
-                </div>
-                <div style="display: flex; align-items: center; gap: 0.5rem; color: #fff;">
-                    <i class="fas fa-shield-alt" style="font-size: 1.75rem; color: var(--primary);"></i>
-                    <div style="display: flex; flex-direction: column; line-height: 1.2; text-align: left;">
-                        <span style="font-weight: 700; font-size: 0.9rem; text-shadow: 0 2px 4px rgba(0,0,0,0.8);" data-i18n="home.safeTravels">Safe Travels</span>
-                        <span style="font-size: 0.75rem; color: rgba(255,255,255,0.9); text-shadow: 0 1px 2px rgba(0,0,0,0.8);" data-i18n="home.certifiedOperator">Certified Operator</span>
-                    </div>
-                </div>
-                <div style="display: flex; align-items: center; gap: 0.5rem; color: #fff;">
-                    <i class="fas fa-certificate" style="font-size: 1.75rem; color: #f59e0b;"></i>
-                    <div style="display: flex; flex-direction: column; line-height: 1.2; text-align: left;">
-                        <span style="font-weight: 700; font-size: 0.9rem; text-shadow: 0 2px 4px rgba(0,0,0,0.8);" data-i18n="home.tatoMember">TATO Member</span>
-                        <span style="font-size: 0.75rem; color: rgba(255,255,255,0.9); text-shadow: 0 1px 2px rgba(0,0,0,0.8);" data-i18n="home.licensedVerified">Licensed & Verified</span>
-                    </div>
-                </div>
-            </div>
+            <div data-trust-badges data-trust-variant="hero" style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 3rem; opacity: 0.9; margin-top: 5rem;"></div>
         </div>
       </div>
       
@@ -302,7 +281,7 @@
     </div>
     <div class="home-climb-grid">
       <a href="/kilimanjaro" class="home-climb-feature">
-        <img src="/images/kilimanjaro/kilimanjaro%20(2).jpeg" alt="Mount Kilimanjaro climb" loading="lazy">
+        <img src="/images/kilimanjaro/kilimanjaro%20(2).webp" alt="Mount Kilimanjaro Uhuru Peak climb from Arusha" width="800" height="500" loading="lazy">
         <div class="hcf-overlay">
           <h3 data-i18n="homeClimb.kiliTitle">Mount Kilimanjaro</h3>
           <p data-i18n="homeClimb.kiliDesc">Africa's highest peak — Machame, Lemosho, Marangu and more, with private climbs and climb + safari combos.</p>
@@ -311,14 +290,14 @@
       </a>
       <div class="home-climb-side">
         <a href="/kilimanjaro/routes" class="home-climb-mini">
-          <img src="/images/kilimanjaro/kilimanjaro%20(5).jpeg" alt="Kilimanjaro routes" loading="lazy">
+          <img src="/images/kilimanjaro/kilimanjaro%20(5).webp" alt="Kilimanjaro climbing routes comparison from the western approach" width="640" height="400" loading="lazy">
           <div class="hcm-overlay">
             <h4 data-i18n="homeClimb.routesTitle">Compare routes</h4>
             <span data-i18n="homeClimb.routesDesc">Difficulty, days &amp; success rate</span>
           </div>
         </a>
         <a href="/safaris/6-day-mount-meru-tarangire-ngorongoro" class="home-climb-mini">
-          <img src="/images/kilimanjaro/kilimanjaro%20(6).jpeg" alt="Mount Meru trek" loading="lazy">
+          <img src="/images/kilimanjaro/kilimanjaro%20(6).webp" alt="Mount Meru trek for Kilimanjaro acclimatization near Arusha" width="640" height="400" loading="lazy">
           <div class="hcm-overlay">
             <h4 data-i18n="homeClimb.meruTitle">Mount Meru trek</h4>
             <span data-i18n="homeClimb.meruDesc">Perfect Kilimanjaro warm-up</span>
@@ -344,32 +323,53 @@
     </div>
     <div class="home-routes-grid">
       <a href="/kilimanjaro/routes/machame-route" class="home-route-teaser">
-        <img src="/images/kilimanjaro/kilimanjaro%20(1).jpeg" alt="Machame Route" loading="lazy">
+        <img src="/images/kilimanjaro/kilimanjaro%20(1).webp" alt="Machame Route Kilimanjaro camping climb, 6 to 7 days" width="400" height="280" loading="lazy">
         <div class="hrt-overlay"><h4 data-i18n="homeRoutes.machame">Machame</h4><span data-i18n="homeRoutes.machameMeta">6–7 days · Whiskey Route</span></div>
       </a>
       <a href="/kilimanjaro/routes/marangu-route" class="home-route-teaser">
-        <img src="/images/kilimanjaro/kilimanjaro%20(2).jpeg" alt="Marangu Route" loading="lazy">
+        <img src="/images/kilimanjaro/kilimanjaro%20(2).webp" alt="Marangu Route Kilimanjaro hut climb, the Coca-Cola trail" width="400" height="280" loading="lazy">
         <div class="hrt-overlay"><h4 data-i18n="homeRoutes.marangu">Marangu</h4><span data-i18n="homeRoutes.maranguMeta">5–6 days · Coca-Cola Route</span></div>
       </a>
       <a href="/kilimanjaro/routes/lemosho-route" class="home-route-teaser">
-        <img src="/images/kilimanjaro/kilimanjaro%20(3).jpeg" alt="Lemosho Route" loading="lazy">
+        <img src="/images/kilimanjaro/kilimanjaro%20(3).webp" alt="Lemosho Route Kilimanjaro scenic western approach" width="400" height="280" loading="lazy">
         <div class="hrt-overlay"><h4 data-i18n="homeRoutes.lemosho">Lemosho</h4><span data-i18n="homeRoutes.lemoshoMeta">7–8 days · Most scenic</span></div>
       </a>
       <a href="/kilimanjaro/routes/rongai-route" class="home-route-teaser">
-        <img src="/images/kilimanjaro/kilimanjaro%20(4).jpeg" alt="Rongai Route" loading="lazy">
+        <img src="/images/kilimanjaro/kilimanjaro%20(4).webp" alt="Rongai Route Kilimanjaro northern approach near Kenya" width="400" height="280" loading="lazy">
         <div class="hrt-overlay"><h4 data-i18n="homeRoutes.rongai">Rongai</h4><span data-i18n="homeRoutes.rongaiMeta">6–7 days · Quiet north</span></div>
       </a>
       <a href="/kilimanjaro/routes/northern-circuit-route" class="home-route-teaser">
-        <img src="/images/kilimanjaro/kilimanjaro%20(5).jpeg" alt="Northern Circuit Route" loading="lazy">
+        <img src="/images/kilimanjaro/kilimanjaro%20(5).webp" alt="Northern Circuit Kilimanjaro 8 to 9 day route" width="400" height="280" loading="lazy">
         <div class="hrt-overlay"><h4 data-i18n="homeRoutes.northern">Northern Circuit</h4><span data-i18n="homeRoutes.northernMeta">8–9 days · Best success</span></div>
       </a>
       <a href="/kilimanjaro/routes/umbwe-route" class="home-route-teaser">
-        <img src="/images/kilimanjaro/kilimanjaro%20(6).jpeg" alt="Umbwe Route" loading="lazy">
+        <img src="/images/kilimanjaro/kilimanjaro%20(6).webp" alt="Umbwe Route Kilimanjaro steep direct climb" width="400" height="280" loading="lazy">
         <div class="hrt-overlay"><h4 data-i18n="homeRoutes.umbwe">Umbwe</h4><span data-i18n="homeRoutes.umbweMeta">5–6 days · Steep &amp; direct</span></div>
       </a>
     </div>
     <div class="home-routes-actions">
       <a href="/kilimanjaro/routes" class="btn btn-primary" style="min-height:48px" data-i18n="homeRoutes.exploreAll">Explore all routes</a>
+    </div>
+  </div>
+</section>
+
+<!-- Our Partners -->
+<section class="partners-section" id="our-partners">
+  <div class="container">
+    <div class="section-header" style="max-width:700px;margin:0 auto 2.5rem;text-align:center">
+      <span class="section-eyebrow"><i class="fas fa-handshake"></i> <span data-i18n="partners.eyebrow">Our Partners</span></span>
+      <h2 class="section-title" data-i18n-html="partners.titleHtml">Trusted <span>Field Partners</span></h2>
+      <p class="section-desc" data-i18n="partners.desc">We work with licensed Tanzanian operators so your vehicles, guides and park logistics stay local — starting with Glad of Africa Safari.</p>
+    </div>
+    <div class="partners-grid">
+      <a class="partner-logo-card" href="https://gladofafricasafari.com/" target="_blank" rel="noopener noreferrer">
+        <img src="/images/experience/glado-of-africa-logo.webp" alt="Glad of Africa Safari, Tanzania Safari Magic field partner in Arusha" width="200" height="80" loading="lazy">
+      </a>
+      <div class="partner-copy">
+        <h3 data-i18n="partners.gladTitle">Glad of Africa Safari</h3>
+        <p data-i18n="partners.gladDesc">Our on-the-ground safari partner for 4x4 game-drive vehicles and field crews across the northern circuit. The Glad of Africa fleet and guides you see in our gallery are the same teams that take Tanzania Safari Magic guests into Tarangire, Serengeti, Ngorongoro and Lake Natron.</p>
+        <a href="https://gladofafricasafari.com/" class="btn btn-outline" target="_blank" rel="noopener noreferrer" style="min-height:44px" data-i18n="partners.gladCta">Visit Glad of Africa</a>
+      </div>
     </div>
   </div>
 </section>
@@ -381,7 +381,7 @@
     <div class="section-header" style="max-width: 800px; margin: 0 auto 3rem auto;">
       <span class="section-eyebrow"><i class="fas fa-award"></i> <span data-i18n="home.whyChoose">Why Choose Us</span></span>
       <h2 class="section-title" data-i18n-html="home.trustedPartnerHtml">Your Trusted <span>Safari Partner</span></h2>
-      <p class="section-desc" data-i18n="home.whyDesc">Over a decade of crafting extraordinary safari experiences with unmatched expertise, safety, and passion.</p>
+      <p class="section-desc" data-i18n="home.whyDesc">Private Tanzania safaris with licensed local guides, well-maintained 4x4s, and honest quotes from our Arusha team.</p>
     </div>
     <div class="features-grid">
       <div class="feature-card">
@@ -436,8 +436,20 @@
   </div>
 </section>
 
+<!-- Meet the team -->
+<section class="section" id="teamSection" data-hide-when-empty>
+  <div class="container">
+    <div class="section-header" style="text-align:center;margin-bottom:2rem">
+      <span class="section-eyebrow"><i class="fas fa-users"></i> Meet Your Guides</span>
+      <h2 class="section-title">The people on the ground</h2>
+      <p class="section-desc">Licensed Arusha guides and planners who run your game drives, climbs, and logistics.</p>
+    </div>
+    <div class="tsm-team-grid" id="teamGrid"></div>
+  </div>
+</section>
+
 <!-- Testimonials -->
-<section class="section" style="background-image: url('/images/optimized/boat%20zanzibar.webp'); background-size: cover; background-position: center; position: relative; padding: 5rem 0;">
+<section class="section" id="testimonialsSection" hidden style="background-image: url('/images/optimized/boat%20zanzibar.webp'); background-size: cover; background-position: center; position: relative; padding: 5rem 0;">
   <div style="position: absolute; inset: 0; background: rgba(0,0,0,0);"></div>
   <div class="container home-glass-panel" style="position: relative; z-index: 2; background: rgba(255,255,255,0.92); backdrop-filter: blur(10px); border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); display: flex; flex-direction: column; align-items: center; text-align: center; margin-top: 2rem; margin-bottom: 2rem;">
     <div class="section-header" style="max-width: 800px; margin: 0 auto 3rem auto;">
@@ -445,11 +457,7 @@
       <h2 class="section-title" data-i18n-html="home.guestsSayHtml">What Our <span>Guests Say</span></h2>
       <p class="section-desc" data-i18n="home.testimonialsDesc">Real experiences from adventurers who explored Tanzania with us.</p>
     </div>
-    <div class="testimonials-grid" id="testimonialsGrid">
-      <div class="testimonial-card skeleton-card" style="height:200px"></div>
-      <div class="testimonial-card skeleton-card" style="height:200px"></div>
-      <div class="testimonial-card skeleton-card" style="height:200px"></div>
-    </div>
+    <div class="testimonials-grid" id="testimonialsGrid"></div>
   </div>
 </section>
 
@@ -480,8 +488,9 @@
     <p data-i18n="home.ctaDesc">Let our experts craft the perfect safari experience for you and your family.</p>
     <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
       <a href="/booking" class="btn btn-white btn-lg"><i class="fas fa-calendar-alt"></i> <span data-i18n="home.bookSafari">Book Your Safari</span></a>
-      <a href="/contact" class="btn btn-ghost btn-lg"><i class="fas fa-comments"></i> <span data-i18n="home.freeConsultation">Get Free Consultation</span></a>
+      <a href="https://wa.me/255695108009?text=Hi%20Tanzania%20Safari%20Magic%2C%20I%27m%20interested%20in%20booking%20a%20custom%20safari." class="btn btn-ghost btn-lg" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> WhatsApp Free Quote</a>
     </div>
+    <p class="tsm-cta-note js-cta-reassure" data-cta-reassure style="margin:1rem auto 0">No payment required to inquire — free custom quote within 24 hours.</p>
   </div>
 </section>
 
@@ -516,14 +525,27 @@
   <div class="container" style="max-width:52rem">
     <h2 style="font-size:1.5rem;margin-bottom:1rem;color:var(--earth-dark)" data-i18n="home.seoHubTitle">Tanzania safari tourism from Arusha</h2>
     <p style="color:var(--text-secondary);line-height:1.75;margin-bottom:1rem" data-i18n="home.seoHubP1">Tanzania Safari Magic is your local gateway to Tanzania tourism: private Serengeti safaris, Ngorongoro Crater game drives, Great Wildebeest Migration tours, Mount Kilimanjaro climbs, and Zanzibar beach holidays — all planned from Arusha with licensed guides.</p>
-    <p style="color:var(--text-secondary);line-height:1.75;margin:0" data-i18n-html="home.seoHubLinks">Explore <a href="/safaris">safari packages</a>, <a href="/destinations/serengeti-national-park">Serengeti National Park</a>, <a href="/destinations/ngorongoro-conservation-area">Ngorongoro</a>, <a href="/kilimanjaro">Kilimanjaro treks</a>, <a href="/migrations">migration safaris</a>, <a href="/zanzibar">Zanzibar extensions</a>, and our <a href="/blog/tanzania-safari">Tanzania safari guide</a> — or <a href="/booking">request a free quote</a>.</p>
+    <p style="color:var(--text-secondary);line-height:1.75;margin:0">Explore <a href="/safaris">safari packages</a>, <a href="/blog/private-serengeti-safari-price-2026">private Serengeti safari prices</a>, <a href="/blog/8-day-tanzania-safari-cost">8-day safari cost</a>, <a href="/blog/mara-river-crossing-best-time">Mara River crossing timing</a>, <a href="/blog/machame-vs-lemosho">Machame vs Lemosho</a>, <a href="/blog/tanzania-safari-from-arusha">safaris from Arusha</a>, <a href="/blog/serengeti-zanzibar-combo">Serengeti &amp; Zanzibar combos</a>, and <a href="/booking">request a free quote</a>.</p>
   </div>
 </section>
 
 <!-- Footer -->
 <div id="footer"></div>
-<script src="/js/layout-loader.js?v=19"></script>
+<script src="/js/layout-loader.js?v=21"></script>
 <script src="/js/api.js?v=2"></script>
-<script src="/js/main.js?v=9"></script>
+<script src="/js/main.js?v=10"></script>
+<script>
+(function () {
+  var v = document.getElementById('heroVideo');
+  if (!v) return;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var desktop = window.matchMedia && window.matchMedia('(min-width: 768px)').matches;
+  if (!reduce && desktop) {
+    v.setAttribute('autoplay', '');
+    var p = v.play();
+    if (p && p.catch) p.catch(function () {});
+  }
+})();
+</script>
 </body>
 </html>

@@ -8,16 +8,16 @@ const db = require('./config/db');
 const { buildPackageImages } = require('./utils/localImages');
 
 const KILI_IMGS = [
-  '/images/kilimanjaro/kilimanjaro%20(1).jpeg',
-  '/images/kilimanjaro/kilimanjaro%20(2).jpeg',
-  '/images/kilimanjaro/kilimanjaro%20(3).jpeg',
-  '/images/kilimanjaro/kilimanjaro%20(4).jpeg',
-  '/images/kilimanjaro/kilimanjaro%20(5).jpeg',
-  '/images/kilimanjaro/kilimanjaro%20(6).jpeg',
-  '/images/kilimanjaro/kilimanjaro%20(7).jpeg',
-  '/images/kilimanjaro/kilimanjaro%20(8).jpeg',
-  '/images/kilimanjaro/kilimanjaro%20(9).jpeg',
-  '/images/kilimanjaro/kilimanjaro%20(10).jpeg'
+  '/images/kilimanjaro/kilimanjaro%20(1).webp',
+  '/images/kilimanjaro/kilimanjaro%20(2).webp',
+  '/images/kilimanjaro/kilimanjaro%20(3).webp',
+  '/images/kilimanjaro/kilimanjaro%20(4).webp',
+  '/images/kilimanjaro/kilimanjaro%20(5).webp',
+  '/images/kilimanjaro/kilimanjaro%20(6).webp',
+  '/images/kilimanjaro/kilimanjaro%20(7).webp',
+  '/images/kilimanjaro/kilimanjaro%20(8).webp',
+  '/images/kilimanjaro/kilimanjaro%20(9).webp',
+  '/images/kilimanjaro/kilimanjaro%20(10).webp'
 ];
 
 const TOURS = [
@@ -109,11 +109,11 @@ const TOURS = [
   },
   {
     package_slug: '9-day-mount-meru-northern-tanzania-safari',
-    featured_image_url: '/images/kilimanjaro/kilimanjaro%20(6).jpeg',
+    featured_image_url: '/images/kilimanjaro/kilimanjaro%20(6).webp',
     gallery_lead: [
-      '/images/kilimanjaro/kilimanjaro%20(6).jpeg',
+      '/images/kilimanjaro/kilimanjaro%20(6).webp',
       '/images/optimized/serengeti-national-park.webp',
-      '/images/kilimanjaro/kilimanjaro%20(3).jpeg',
+      '/images/kilimanjaro/kilimanjaro%20(3).webp',
       '/images/optimized/ngorongoro-conservation-area.webp',
       '/images/optimized/tarangire-national-park.webp'
     ],
@@ -273,9 +273,9 @@ async function syncItinerary(packageId, itinerary) {
   await db.query(`DELETE FROM package_itinerary WHERE package_id = $1`, [packageId]);
   for (const item of itinerary) {
     await db.query(
-      `INSERT INTO package_itinerary (itinerary_id, package_id, day_number, day_title, day_description)
-       VALUES ($1, $2, $3, $4, $5)`,
-      [crypto.randomUUID(), packageId, item.day, item.title.slice(0, 200), item.description]
+      `INSERT INTO package_itinerary (itinerary_id, package_id, day_number, day_title, day_description, accommodation_type)
+       VALUES ($1, $2, $3, $4, $5, $6)`,
+      [crypto.randomUUID(), packageId, item.day, item.title.slice(0, 200), item.description, item.accommodation || item.accommodation_type || null]
     );
   }
 }

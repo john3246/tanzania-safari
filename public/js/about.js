@@ -403,35 +403,26 @@ function initZaraGallery() {
 }
 
 async function loadTeamMembers() {
-    if (typeof API === 'undefined' || typeof API.get !== 'function') return;
-    let result;
-    try {
-        result = await API.get('/team-members');
-    } catch (_) {
+    const gridHost = document.createElement('section');
+    gridHost.className = 'corp-section';
+    gridHost.id = 'teamSection';
+    gridHost.innerHTML = `
+      <div class="container">
+        <h2 class="zara-section-title" style="margin-bottom:1.5rem">${escapeHtml(t('about.meetTeam'))}</h2>
+        <div class="tsm-team-grid" id="teamGrid"></div>
+      </div>`;
+    document.getElementById('aboutContent')?.appendChild(gridHost);
+    if (window.TSMTrust && typeof window.TSMTrust.renderTeam === 'function') {
+        window.TSMTrust.renderTeam(document.getElementById('teamGrid'));
         return;
     }
-    if (!(result && result.success && result.data && result.data.length)) return;
-
-    const wrap = document.createElement('div');
-    wrap.className = 'container';
-    wrap.style.paddingBottom = '3rem';
-    wrap.innerHTML = `
-          <h2 class="zara-section-title" style="margin-bottom:1.5rem">${escapeHtml(t('about.meetTeam'))}</h2>
-          <div class="zara-people-grid">
-            ${result.data
-                .map((member) => {
-                    const fullName =
-                        `${member.first_name || ''} ${member.last_name || ''}`.trim() || t('about.teamMember');
-                    return `
-                  <div class="corp-panel zara-person">
-                    <div class="zara-person-avatar"><i class="fas fa-user-circle"></i></div>
-                    <h3>${escapeHtml(fullName)}</h3>
-                    <p>${escapeHtml(member.guide_id ? t('about.safariSpecialist') : t('about.travelConsultant'))}</p>
-                  </div>`;
-                })
-                .join('')}
-          </div>`;
-    document.getElementById('aboutContent')?.appendChild(wrap);
+    if (typeof API === 'undefined' || typeof API.get !== 'function') return;
+    try {
+        const result = await API.get('/team-members');
+        if (result && result.success && result.data && result.data.length && window.TSMTrust) {
+            window.TSMTrust.renderTeam(document.getElementById('teamGrid'));
+        }
+    } catch (_) { /* JSON config is the source of truth */ }
 }
 
 async function loadBlogPosts() {

@@ -33,7 +33,7 @@
     plains2: '/images/optimized/serengeti5.webp',
     zebra: '/images/optimized/zebra%20serengeti.webp',
     balloon: '/images/optimized/balloon.webp',
-    local: '/images/destinations/serengeti-national-park/serengeti.jpg',
+    local: '/images/destinations/serengeti-national-park/serengeti.webp',
     wikiHerd: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Wildebeest_Migration_Masai_Mara.jpg/1280px-Wildebeest_Migration_Masai_Mara.jpg',
     wikiCrossing: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Wildebeests_crossing_the_Mara_River.jpg/1280px-Wildebeests_crossing_the_Mara_River.jpg'
   };

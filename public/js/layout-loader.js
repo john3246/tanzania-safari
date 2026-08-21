@@ -31,7 +31,7 @@ function ensureI18nLoaded() {
             return;
         }
         const s = document.createElement('script');
-        s.src = '/js/i18n.js?v=4';
+        s.src = '/js/i18n.js?v=6';
         s.onload = () => {
             if (window.TSM_i18n && window.TSM_i18n.ready) window.TSM_i18n.ready.then(resolve);
             else resolve();
@@ -117,6 +117,30 @@ async function loadSafariMegaMenuTours() {
     } catch (_) { /* never block UX */ }
 })();
 
+/* Trust + conversion scripts (all public pages) */
+(function injectTrustAssets() {
+    if (typeof document === 'undefined') return;
+    const path = (window.location && window.location.pathname) || '';
+    if (path.startsWith('/admin')) return;
+    function addCss(href) {
+        if (document.querySelector(`link[href^="${href.split('?')[0]}"]`)) return;
+        const l = document.createElement('link');
+        l.rel = 'stylesheet';
+        l.href = href;
+        (document.head || document.documentElement).appendChild(l);
+    }
+    function addJs(src) {
+        if (document.querySelector(`script[src^="${src.split('?')[0]}"]`)) return;
+        const s = document.createElement('script');
+        s.src = src;
+        s.defer = true;
+        (document.head || document.documentElement).appendChild(s);
+    }
+    addCss('/css/trust.css?v=1');
+    addJs('/js/site-trust.js?v=1');
+    addJs('/js/conversion-tracking.js?v=1');
+})();
+
 /* Inject fluid responsive CSS immediately (all public pages) */
 (function injectFluidCss() {
     if (typeof document === 'undefined') return;
@@ -144,9 +168,29 @@ async function loadSafariMegaMenuTours() {
 /* Start loading i18n as early as possible */
 ensureI18nLoaded();
 
+function ensureAssetCss(href) {
+    if (document.querySelector(`link[href*="${href.split('?')[0]}"]`)) return;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = href;
+    (document.head || document.documentElement).appendChild(link);
+}
+
+function ensureAssetScript(src) {
+    const bare = src.split('?')[0];
+    if (document.querySelector(`script[src*="${bare}"]`)) return;
+    const s = document.createElement('script');
+    s.src = src;
+    s.defer = true;
+    (document.head || document.documentElement).appendChild(s);
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
-    const cb = '?v=' + Date.now();
+    const cb = '?v=21';
     await ensureI18nLoaded();
+    ensureAssetCss('/css/trust.css?v=1');
+    ensureAssetScript('/js/site-trust.js' + cb);
+    ensureAssetScript('/js/conversion-tracking.js' + cb);
 
     // Load shared SEO helpers early
     if (!document.querySelector('script[src^="/js/seo.js"]')) {
@@ -164,12 +208,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             window.TSM_i18n.initSwitcher();
         }
         applyPageI18n(document.getElementById('header') || document);
+        if (window.TSMTrust && typeof window.TSMTrust.initTrustUi === 'function') {
+            window.TSMTrust.initTrustUi();
+        }
     });
     loadComponent('footer', '/includes/footer.html' + cb, () => {
         initFooter();
         applyPageI18n(document.getElementById('footer') || document);
         loadChatScripts();
         initCookieNotice();
+        if (window.TSMTrust && typeof window.TSMTrust.initTrustUi === 'function') {
+            window.TSMTrust.initTrustUi();
+        }
     });
     initSEO();
     trackPageView();
@@ -553,9 +603,9 @@ function initFooter() {
         if (heroBg) {
             const slides = [
                 heroBg.src,
-                '/images/serengeti-national-park.jpg',
-                '/images/ngorongoro-conservation-area.jpg',
-                '/images/mount-kilimanjaro-national-park.jpg'
+                '/images/optimized/serengeti-national-park.webp',
+                '/images/destinations/ngorongoro-conservation-area/main.webp',
+                '/images/optimized/mount-kilimanjaro-national-park.webp'
             ];
             let currentSlide = 0;
             setInterval(() => {
@@ -807,10 +857,10 @@ function initSEO() {
     ensure('property', 'og:description', descMeta ? descMeta.getAttribute('content') : 'Experience authentic Tanzania safari tours with expert local guides.');
     ensure('property', 'og:url', window.location.href.split('?')[0]);
     ensure('property', 'og:type', 'website');
-    ensure('property', 'og:image', 'https://tanzaniasafarimagic.com/images/hero.jpg');
+    ensure('property', 'og:image', 'https://tanzaniasafarimagic.com/images/hero.webp');
     ensure('property', 'og:site_name', 'Tanzania Safari Magic');
     ensure('name', 'twitter:card', 'summary_large_image');
     ensure('name', 'twitter:title', document.title);
     ensure('name', 'twitter:description', descMeta ? descMeta.getAttribute('content') : 'Experience authentic Tanzania safari tours.');
-    ensure('name', 'twitter:image', 'https://tanzaniasafarimagic.com/images/hero.jpg');
+    ensure('name', 'twitter:image', 'https://tanzaniasafarimagic.com/images/hero.webp');
 }

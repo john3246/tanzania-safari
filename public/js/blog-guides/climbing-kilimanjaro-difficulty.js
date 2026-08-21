@@ -17,7 +17,7 @@
     meta_title: 'Kilimanjaro Difficulty 2026 | Altitude, Fitness & What to Expect',
     meta_description: 'How hard is climbing Kilimanjaro? Altitude vs technical skill, fitness expectations, success factors, and how Tanzania Safari Magic in Arusha matches you to the right route days.',
     excerpt: 'An honest Arusha-based take on Kilimanjaro difficulty — altitude is the real challenge, not ropes or rock climbing — plus fitness expectations and how to prepare for summit night.',
-    featured_image_url: '/images/kilimanjaro/kilimanjaro%20(3).jpeg',
+    featured_image_url: '/images/kilimanjaro/kilimanjaro%20(3).webp',
     published_at: '2026-08-01T09:00:00.000Z',
     updated_at: '2026-08-05T14:00:00.000Z',
     category_name: 'Kilimanjaro Guides',
@@ -32,7 +32,7 @@
 <p><strong>Tanzania Safari Magic</strong> in Arusha helps you choose route length and pacing so difficulty stays manageable. Start with our <a href="/kilimanjaro">Kilimanjaro climbs</a>, explore the park on <a href="/destinations/mount-kilimanjaro-national-park">Mount Kilimanjaro National Park</a>, and pair trek timing with our <a href="/blog/best-time-to-visit-tanzania">best time to visit Tanzania</a> guide.</p>
 
 <figure class="guide-figure">
-  <img src="/images/kilimanjaro/kilimanjaro%20(3).jpeg" alt="Mount Kilimanjaro snowy summit difficulty guide Tanzania" width="1200" height="750" loading="eager">
+  <img src="/images/kilimanjaro/kilimanjaro%20(3).webp" alt="Mount Kilimanjaro snowy summit difficulty guide Tanzania" width="1200" height="750" loading="eager">
   <figcaption>Uhuru Peak rewards steady pacing — altitude, not technical climbing, decides most outcomes.</figcaption>
 </figure>
 
@@ -80,7 +80,7 @@
 <p>If you can hike several hours on hilly trails at home, you are in the right ballpark. If you have never hiked with a daypack, build that habit before you fly to Arusha. Compare routes in our upcoming planning notes on <a href="/kilimanjaro">Kilimanjaro packages</a> and ask Our Team which length fits your fitness.</p>
 
 <figure class="guide-figure">
-  <img src="/images/kilimanjaro/kilimanjaro%20(4).jpeg" alt="Kilimanjaro landscape Tanzania altitude trekking context" width="1200" height="750" loading="lazy">
+  <img src="/images/kilimanjaro/kilimanjaro%20(4).webp" alt="Kilimanjaro landscape Tanzania altitude trekking context" width="1200" height="750" loading="lazy">
   <figcaption>Northern Tanzania’s high country rewards patience — the same mindset that makes safari days special.</figcaption>
 </figure>
 

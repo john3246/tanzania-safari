@@ -32,7 +32,7 @@ const SITE = {
   phone: '+255695108009',
   email: 'info@tanzaniasafarimagic.com',
   logo: 'https://tanzaniasafarimagic.com/images/logo.png',
-  defaultImage: 'https://tanzaniasafarimagic.com/images/hero.jpg'
+  defaultImage: 'https://tanzaniasafarimagic.com/images/hero.webp'
 };
 
 function escapeHtml(str) {
@@ -271,11 +271,11 @@ function touristTripSchema(safari) {
     };
   }
 
-  if (Number(safari.avg_rating) > 0) {
+  if (Number(safari.avg_rating) > 0 && Number(safari.review_count || safari.reviews?.length || 0) > 0) {
     schema.aggregateRating = {
       '@type': 'AggregateRating',
       ratingValue: Number(safari.avg_rating).toFixed(1),
-      reviewCount: Number(safari.review_count || safari.reviews?.length || 1),
+      reviewCount: Number(safari.review_count || safari.reviews.length),
       bestRating: 5,
       worstRating: 1
     };
@@ -483,13 +483,6 @@ function organizationSchema() {
       'https://www.tripadvisor.com/Attraction_Review-g297913-d28075837-Reviews-Tanzania_Safari_Magic-Arusha_Arusha_Region.html',
       'https://maps.app.goo.gl/36osoUgbeghcvwE89'
     ],
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '5.0',
-      reviewCount: '48',
-      bestRating: '5',
-      worstRating: '1'
-    },
     knowsAbout: [
       'Tanzania safari',
       'visit Tanzania',

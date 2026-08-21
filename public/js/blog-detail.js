@@ -38,7 +38,14 @@ const PILLAR_SLUGS = {
   'kilimanjaro-packing-list': 'KilimanjaroPackingListGuide',
   'train-for-kilimanjaro': 'TrainForKilimanjaroGuide',
   'kilimanjaro-tipping-guide': 'KilimanjaroTippingGuide',
-  'kilimanjaro-acclimatization': 'KilimanjaroAcclimatizationGuide'
+  'kilimanjaro-acclimatization': 'KilimanjaroAcclimatizationGuide',
+  'private-serengeti-safari-price-2026': 'PrivateSerengetiSafariPrice2026Guide',
+  '8-day-tanzania-safari-cost': 'EightDayTanzaniaSafariCostGuide',
+  'mara-river-crossing-best-time': 'MaraRiverCrossingBestTimeGuide',
+  'machame-vs-lemosho': 'MachameVsLemoshoGuide',
+  'tanzania-safari-from-arusha': 'TanzaniaSafariFromArushaGuide',
+  'serengeti-zanzibar-combo': 'SerengetiZanzibarComboGuide',
+  'tanzania-safari-cost-per-person-2026': 'TanzaniaSafariCostPerPerson2026Guide'
 };
 
 const RELATED_PILLAR_KEYS = [
@@ -61,7 +68,14 @@ const RELATED_PILLAR_KEYS = [
   { slug: 'kilimanjaro-packing-list', key: 'blogDetail.pillar.kiliPacking' },
   { slug: 'train-for-kilimanjaro', key: 'blogDetail.pillar.kiliTrain' },
   { slug: 'kilimanjaro-tipping-guide', key: 'blogDetail.pillar.kiliTipping' },
-  { slug: 'kilimanjaro-acclimatization', key: 'blogDetail.pillar.kiliAcclimatization' }
+  { slug: 'kilimanjaro-acclimatization', key: 'blogDetail.pillar.kiliAcclimatization' },
+  { slug: 'private-serengeti-safari-price-2026', key: '' },
+  { slug: '8-day-tanzania-safari-cost', key: '' },
+  { slug: 'mara-river-crossing-best-time', key: '' },
+  { slug: 'machame-vs-lemosho', key: '' },
+  { slug: 'tanzania-safari-from-arusha', key: '' },
+  { slug: 'serengeti-zanzibar-combo', key: '' },
+  { slug: 'tanzania-safari-cost-per-person-2026', key: '' }
 ];
 
 const KILI_SLUGS = new Set([
@@ -72,7 +86,8 @@ const KILI_SLUGS = new Set([
   'kilimanjaro-packing-list',
   'train-for-kilimanjaro',
   'kilimanjaro-tipping-guide',
-  'kilimanjaro-acclimatization'
+  'kilimanjaro-acclimatization',
+  'machame-vs-lemosho'
 ]);
 
 function relatedLabel(p) {

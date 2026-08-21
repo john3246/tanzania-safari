@@ -97,7 +97,7 @@ async function fetchPackageBySlug(slug) {
     if (!pkg) return null;
     const [itin, dests] = await Promise.all([
       db.query(
-        `SELECT day_number AS day, day_title AS title, day_description AS description
+        `SELECT day_number AS day, day_title AS title, day_description AS description, accommodation_type AS accommodation
          FROM package_itinerary WHERE package_id = $1 ORDER BY day_number ASC`,
         [pkg.package_id]
       ),
@@ -195,7 +195,7 @@ function safariDetailSsrHtml(pkg) {
     ? `<ol class="ssr-itinerary">${itin
         .map(
           (d) =>
-            `<li><h3>Day ${escapeHtml(d.day || '')}: ${escapeHtml(d.title || '')}</h3><p>${escapeHtml(truncate(stripHtml(d.description || ''), 220))}</p></li>`
+            `<li><h3>Day ${escapeHtml(d.day || '')}: ${escapeHtml(d.title || '')}</h3><p>${escapeHtml(truncate(stripHtml(d.description || ''), 220))}</p>${d.accommodation ? `<p><strong>Overnight:</strong> ${escapeHtml(d.accommodation)}</p>` : ''}</li>`
         )
         .join('')}</ol>`
     : '';

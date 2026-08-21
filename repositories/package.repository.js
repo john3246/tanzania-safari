@@ -282,7 +282,7 @@ class PackageRepository {
 
     async getItinerary(packageId) {
         try {
-            const query = 'SELECT day_number as day, day_title as title, day_description as description FROM package_itinerary WHERE package_id = $1 ORDER BY day_number ASC';
+            const query = 'SELECT day_number as day, day_title as title, day_description as description, accommodation_type as accommodation FROM package_itinerary WHERE package_id = $1 ORDER BY day_number ASC';
             const result = await db.query(query, [packageId]);
             if (result.rows && result.rows.length > 0) return result.rows;
         } catch (e) {}
@@ -293,7 +293,8 @@ class PackageRepository {
                 return pkgRes.rows[0].itinerary.map((item, idx) => ({
                     day: item.day || item.day_number || (idx + 1),
                     title: item.title || item.day_title || `Day ${idx + 1}`,
-                    description: item.description || item.day_description || ''
+                    description: item.description || item.day_description || '',
+                    accommodation: item.accommodation || item.accommodation_type || ''
                 }));
             }
         } catch (e) {}

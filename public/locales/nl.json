@@ -38,7 +38,12 @@
     "whatsappLabel": "WhatsApp:",
     "planTrip": "Plan een reis",
     "searchAria": "Pakketten zoeken",
-    "searchPlaceholder": "Zoek safari's..."
+    "searchPlaceholder": "Zoek safari's...",
+    "experience": "Beleving",
+    "tourExperience": "Tourbeleving",
+    "gallery": "Galerij",
+    "stories": "Verhalen",
+    "accommodation": "Accommodatie"
   },
   "common": {
     "home": "Home",
@@ -104,7 +109,11 @@
     "whatsappTitle": "WhatsApp Ons Team — gratis safarioffer",
     "whatsappAria": "WhatsApp Ons Team bij Tanzania Safari Magic voor een gratis offerte",
     "kiliRoutes": "Kilimanjaro-routes",
-    "visaGuide": "Tanzania visumgids"
+    "visaGuide": "Tanzania visumgids",
+    "accommodation": "Accommodatie",
+    "experience": "Tourbeleving",
+    "gallery": "Galerij",
+    "stories": "Verhalen"
   },
   "quickBook": {
     "title": "Plan uw safari",
@@ -178,7 +187,7 @@
     "viewAllSafaris": "Bekijk alle safari's",
     "whyChoose": "Waarom voor ons kiezen",
     "trustedPartnerHtml": "Uw vertrouwde <span>safaripartner</span>",
-    "whyDesc": "Ruim tien jaar ervaring in het creëren van buitengewone safari-ervaringen met ongeëvenaarde expertise, veiligheid en passie.",
+    "whyDesc": "Privésafari’s in Tanzania met erkende lokale gidsen, goed onderhouden 4x4’s en eerlijke offertes van ons team in Arusha.",
     "expertGuides": "Deskundige lokale gidsen",
     "expertGuidesDesc": "Gecertificeerde professionals met diepgaande kennis van de Tanzaniaanse fauna en leefgebieden.",
     "safetyFirst": "Veiligheid voorop",
@@ -214,6 +223,72 @@
     "seoHubTitle": "Tanzania-safaritoerisme vanuit Arusha",
     "seoHubP1": "Tanzania Safari Magic is uw lokale toegangspoort tot toerisme in Tanzania: privé-Serengeti-safari's, gamedrives in de Ngorongoro-krater, tours rond de Grote Gnoemigratie, beklimmingen van de Kilimanjaro en strandvakanties op Zanzibar — allemaal gepland vanuit Arusha met gecertificeerde gidsen.",
     "seoHubLinks": "Nieuw hier? Begin met onze <a href=\"/visit-tanzania\">reisgids Tanzania bezoeken</a>. Ontdek <a href=\"/safaris\">safaripakketten</a>, <a href=\"/destinations/serengeti-national-park\">Serengeti National Park</a>, <a href=\"/destinations/ngorongoro-conservation-area\">Ngorongoro</a>, <a href=\"/kilimanjaro\">Kilimanjaro-trekkings</a>, <a href=\"/migrations\">migratiesafari's</a>, <a href=\"/zanzibar\">Zanzibar-uitbreidingen</a> en onze <a href=\"/blog/tanzania-safari\">Tanzania-safarigids</a> — of <a href=\"/booking\">vraag een gratis offerte aan</a>."
+  },
+  "partners": {
+    "eyebrow": "Onze partners",
+    "titleHtml": "Betrouwbare <span>veldpartners</span>",
+    "desc": "We werken met gelicentieerde Tanzaniaanse operators zodat voertuigen, gidsen en logistiek lokaal blijven — te beginnen met Glad of Africa Safari.",
+    "gladTitle": "Glad of Africa Safari",
+    "gladDesc": "Onze partner ter plaatse voor 4x4’s en teams op het noordelijke circuit. De Glad of Africa-vloot in de galerij is dezelfde die gasten van Tanzania Safari Magic naar Tarangire, Serengeti, Ngorongoro en Lake Natron brengt.",
+    "gladCta": "Bezoek Glad of Africa"
+  },
+  "experience": {
+    "eyebrow": "Tourbeleving",
+    "title": "De Tanzania-safari-ervaring",
+    "subtitle": "Gamedrives in 4x4’s, dagen op de vulkaan Ol Doinyo Lengai, Big Five en cultuurbezoeken — foto’s en video’s van onze Tanzania Safari Magic-reizen.",
+    "whatTitle": "Hoe een safaridag voelt",
+    "whatDesc": "Van gamedrives bij zonsopkomst tot kraterranden en Rift Valley-vulkanen: elke route draait om tijd in het veld.",
+    "cardVehiclesTitle": "Privé 4x4-gamedrives",
+    "cardVehiclesDesc": "Raamzitplaatsen, pop-updaken en professionele gidsen in Tarangire, Serengeti en Ngorongoro — met Glad of Africa-voertuigen.",
+    "cardVolcanoTitle": "Ol Doinyo Lengai & Lake Natron",
+    "cardVolcanoDesc": "Voeg de heilige Maasai-berg, alkalische meren en flamingo’s toe aan een noordelijk circuitsafari.",
+    "cardGuidesTitle": "Lokale gidsen, echte verhalen",
+    "cardGuidesDesc": "Gelicentieerde Arusha-gidsen die kuddes, sporen en gemeenschappen kennen.",
+    "ctaGallery": "Open de galerij",
+    "ctaStories": "Lees de verhalen",
+    "ctaBook": "Plan deze ervaring",
+    "wildlifeTitle": "Wildlife in het veld",
+    "wildlifeDesc": "Luipaard, neushoorn en vulkaanland — clips van recente vertrekken."
+  },
+  "gallery": {
+    "eyebrow": "Uit het veld",
+    "title": "Safarigalerij",
+    "subtitle": "Foto’s en clips van Tanzania Safari Magic — vulkanen, Glad of Africa-auto’s en wildlife van het noordelijke circuit.",
+    "cta": "Vraag een safari zoals deze"
+  },
+  "stories": {
+    "eyebrow": "Ons team",
+    "title": "Safariverhalen",
+    "subtitle": "Veldnotities van het noordelijke circuit — vulkaandageraad, Big Five-dagen en de mensen van de reis.",
+    "s1Title": "Dageraad op Ol Doinyo Lengai",
+    "s1P1": "Gasten noemen eerst de Serengeti — daarna de nachtelijke klim. Ol Doinyo Lengai, de Maasai Berg van God, is een asheuvel boven Lake Natron. U start in het donker en ziet de Rift Valley goud kleuren.",
+    "s1P2": "We voegen Lengai en Natron toe aan langere routes wanneer landschappen evenveel tellen als wildlife, vóór de rit naar Noord-Serengeti.",
+    "s2Title": "Een luipaard die bleef",
+    "s2P1": "Seronera en de noordelijke kopjes leveren nog steeds de gewenste waarnemingen. Deze luipaard at in het open veld, zonder in de boom te verdwijnen.",
+    "s2P2": "We garanderen geen katachtige. We garanderen tijd in de juiste habitats, met een gids die weet wanneer te wachten.",
+    "s3Title": "Neushoorn in de bush",
+    "s3P1": "De zwarte neushoorn blijft de zeldzaamste van de Big Five. De Ngorongoro-krater biedt de beste kansen. Komt hij uit het struikgewas, dan valt het voertuig stil.",
+    "s3P2": "Een volle kraterdag, vroege afdaling en picknick op de bodem: dat bouwen we in bijna elke noordelijke safari met Ngorongoro in.",
+    "s4Title": "Het team onderweg",
+    "s4P1": "Tanzania Safari Magic werkt met Glad of Africa voor voertuigen en crews — de auto’s op de vlakte en de gidsen van Tarangire tot Kogatende.",
+    "s4P2": "Vraag een itinerarium op maat: klassieke parken, cultuurdagen in Materuni of Lake Eyasi, of een Mara River-venster. We koppelen lodges aan de route die u écht rijdt.",
+    "cta": "Schrijf uw eigen safariverhaal"
+  },
+  "accom": {
+    "eyebrow": "Lodges & hotels",
+    "title": "Safari-accommodatie in Tanzania",
+    "subtitle": "Lodges en kampen gegroepeerd per route: Arusha, Tarangire, Karatu, Manyara, Serengeti en Ngorongoro. We combineren middenklasse en luxe en bevestigen beschikbaarheid.",
+    "intro": "Kies een regio. Elke kaart linkt naar de hotelsite. Definitieve nachten staan in de offerte.",
+    "allRegions": "Alle regio’s",
+    "luxury": "Luxe",
+    "midrange": "Middenklasse",
+    "regionGuide": "Lodgegids van de regio",
+    "cta": "Koppel lodges aan mijn safari",
+    "overnight": "Overnachting",
+    "overnightIn": "Overnachting in",
+    "comboNote": "Typische lodgecombinatie voor deze nacht (of vergelijkbaar, bevestigd bij boeking):",
+    "seeAllIn": "Alle lodges in",
+    "visitSite": "Naar de officiële website →"
   },
   "homeClimb": {
     "eyebrow": "Bergbeklimmen",

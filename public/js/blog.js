@@ -25,7 +25,14 @@ const PILLAR_ORDER = [
   'kilimanjaro-packing-list',
   'train-for-kilimanjaro',
   'kilimanjaro-tipping-guide',
-  'kilimanjaro-acclimatization'
+  'kilimanjaro-acclimatization',
+  'private-serengeti-safari-price-2026',
+  '8-day-tanzania-safari-cost',
+  'mara-river-crossing-best-time',
+  'machame-vs-lemosho',
+  'tanzania-safari-from-arusha',
+  'serengeti-zanzibar-combo',
+  'tanzania-safari-cost-per-person-2026'
 ];
 
 function pillarFromWindow(slug) {
@@ -49,7 +56,14 @@ function pillarFromWindow(slug) {
     'kilimanjaro-packing-list': window.KilimanjaroPackingListGuide?.META,
     'train-for-kilimanjaro': window.TrainForKilimanjaroGuide?.META,
     'kilimanjaro-tipping-guide': window.KilimanjaroTippingGuide?.META,
-    'kilimanjaro-acclimatization': window.KilimanjaroAcclimatizationGuide?.META
+    'kilimanjaro-acclimatization': window.KilimanjaroAcclimatizationGuide?.META,
+    'private-serengeti-safari-price-2026': window.PrivateSerengetiSafariPrice2026Guide?.META,
+    '8-day-tanzania-safari-cost': window.EightDayTanzaniaSafariCostGuide?.META,
+    'mara-river-crossing-best-time': window.MaraRiverCrossingBestTimeGuide?.META,
+    'machame-vs-lemosho': window.MachameVsLemoshoGuide?.META,
+    'tanzania-safari-from-arusha': window.TanzaniaSafariFromArushaGuide?.META,
+    'serengeti-zanzibar-combo': window.SerengetiZanzibarComboGuide?.META,
+    'tanzania-safari-cost-per-person-2026': window.TanzaniaSafariCostPerPerson2026Guide?.META
   };
   return map[slug] || null;
 }

@@ -64,7 +64,7 @@
       window.SafariSEO.applyPageSeo({
         title: title,
         description: hub.meta_description || '',
-        image: (data.IMG ? data.IMG(1) : '/images/kilimanjaro/kilimanjaro%20(1).jpeg'),
+        image: (data.IMG ? data.IMG(1) : '/images/kilimanjaro/kilimanjaro%20(1).webp'),
         type: 'website',
         keywords: hub.keywords || '',
         canonical: 'https://tanzaniasafarimagic.com/kilimanjaro/routes'

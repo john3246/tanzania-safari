@@ -78,30 +78,90 @@ function buildConfirmSummary() {
     </div>`;
 }
 
+function showFieldError(name, on) {
+    const input = document.querySelector(`[name="${name}"]`);
+    const err = document.querySelector(`[data-error-for="${name}"]`);
+    input?.classList.toggle('is-invalid', !!on);
+    if (err) err.style.display = on ? 'block' : 'none';
+}
+
+function validateBookingForm(data) {
+    let ok = true;
+    const nameOk = String(data.full_name || '').trim().length >= 2;
+    showFieldError('full_name', !nameOk);
+    if (!nameOk) ok = false;
+
+    const dateOk = !!data.start_date;
+    showFieldError('start_date', !dateOk);
+    if (!dateOk) ok = false;
+
+    const interestOk = !!data.destination_interest;
+    showFieldError('destination_interest', !interestOk);
+    if (!interestOk) ok = false;
+
+    const email = String(data.email || '').trim();
+    const phone = String(data.phone || '').trim();
+    const emailOk = !email || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    showFieldError('email', !emailOk);
+    if (!emailOk) ok = false;
+
+    const method = data.contact_method || 'email';
+    const hasContact = (method === 'email' && emailOk && email) || ((method === 'whatsapp' || method === 'phone') && phone.length >= 7) || (email && emailOk) || phone.length >= 7;
+    showFieldError('phone', !hasContact && method !== 'email');
+    showFieldError('email', !hasContact && method === 'email');
+    if (!hasContact) ok = false;
+
+    return ok;
+}
+
+document.getElementById('optionalToggle')?.addEventListener('click', () => {
+    const box = document.getElementById('optionalFields');
+    if (!box) return;
+    box.hidden = !box.hidden;
+});
+
 document.getElementById('bookingForm')?.addEventListener('submit', async e => {
     e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.target));
+    if (!validateBookingForm(data)) {
+        toast(t('toast.sendFail') !== 'toast.sendFail' ? t('toast.sendFail') : 'Please complete the highlighted fields.', 'error');
+        return;
+    }
     const btn = document.getElementById('submitBtn');
     btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${t('common.sending')}`;
     btn.disabled = true;
-    const data = Object.fromEntries(new FormData(e.target));
     const adults = parseInt(data.number_of_adults || 1);
     const children = parseInt(data.number_of_children || 0);
     const basePrice = parseFloat(selectedPkg?.base_price_usd || 0);
     const total = (basePrice * adults) + (basePrice * 0.7 * children);
+    const extraNotes = [
+        data.destination_interest ? `Interest: ${data.destination_interest}` : '',
+        data.budget_range ? `Budget: ${data.budget_range}` : '',
+        data.contact_method ? `Contact via: ${data.contact_method}` : '',
+        data.special_requests || ''
+    ].filter(Boolean).join('\n');
     try {
-        const payload = { ...data, total_price_usd: total, booking_source: 'Website' };
+        const payload = {
+            ...data,
+            special_requests: extraNotes,
+            package_id: data.package_id || null,
+            email: data.email || '',
+            total_price_usd: total,
+            booking_source: 'Website'
+        };
         if (selectedPkg && selectedPkg.package_name) {
             payload.package_name = selectedPkg.package_name;
         }
         const res = await API.post('/bookings', payload);
-        // Hide optional steps bar if present
+        if (window.TSMAnalytics && typeof window.TSMAnalytics.markFormSuccess === 'function') {
+            window.TSMAnalytics.markFormSuccess('booking');
+        }
         if (document.getElementById('stepsBar')) {
           document.getElementById('stepsBar').style.display = 'none';
         }
         document.getElementById('bookingForm').style.display = 'none';
         const sb = document.getElementById('successBox');
         sb.style.display = 'block';
-        // Soft thank-you URL for analytics without leaving the page content
         try {
             window.history.replaceState({}, '', '/thank-you?from=booking');
             if (window.SafariSEO) {
@@ -112,11 +172,13 @@ document.getElementById('bookingForm')?.addEventListener('submit', async e => {
                 });
             }
         } catch (_) {}
+        const hours = (window.TSM_SITE_CONFIG && window.TSM_SITE_CONFIG.quoteResponseHours) || 24;
         document.getElementById('bookingRef').innerHTML = `
-        <div class="summary-row"><span class="summary-label">Booking Ref</span><span class="summary-value">#${res.data?.booking_id || 'TZ-' + Date.now()}</span></div>
-        <div class="summary-row"><span class="summary-label">${t('booking.package')}</span><span class="summary-value">${selectedPkg?.package_name}</span></div>
-        <div class="summary-row"><span class="summary-label">${t('booking.startDate')}</span><span class="summary-value">${new Date(data.start_date).toLocaleDateString('en-US',{dateStyle:'long'})}</span></div>
-        <div class="summary-row"><span class="summary-label">Total</span><span class="summary-value">$${total.toLocaleString()}</span></div>`;
+        <div class="summary-row"><span class="summary-label">Quote ref</span><span class="summary-value">#${res.data?.booking_id || res.data?.booking_reference || 'TZ-' + Date.now()}</span></div>
+        <div class="summary-row"><span class="summary-label">${t('booking.package')}</span><span class="summary-value">${selectedPkg?.package_name || data.destination_interest || 'Custom itinerary'}</span></div>
+        <div class="summary-row"><span class="summary-label">${t('booking.startDate')}</span><span class="summary-value">${data.start_date ? new Date(data.start_date).toLocaleDateString('en-US',{dateStyle:'long'}) : '—'}</span></div>
+        <p style="margin:1rem 0 0;font-size:0.9rem;color:var(--text-muted)">We’ll reply within ${hours} hours. No payment was taken.</p>`;
+        sb.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } catch (err) {
         toast(err.message || t('toast.sendFail'), 'error');
         btn.innerHTML = `<i class="fas fa-paper-plane"></i> ${t('booking.requestQuote')}`;

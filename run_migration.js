@@ -306,6 +306,13 @@ async function migrate() {
         console.error('Mount Meru seed failed:', meruErr.message);
     }
 
+    try {
+        const seedNewSafaris = require('./seed_new_safaris');
+        await seedNewSafaris();
+    } catch (newSafariErr) {
+        console.error('New safari seed failed:', newSafariErr.message);
+    }
+
     console.log('Database migrations completed.');
 }
 

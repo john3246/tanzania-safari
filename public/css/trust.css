@@ -1,0 +1,63 @@
+/* Trust, team, and CTA reassurance — uses existing brand tokens only */
+.tsm-trust-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: inherit;
+  text-decoration: none;
+  line-height: 1.2;
+  text-align: left;
+}
+.tsm-trust-badge[href]:hover { opacity: 0.9; }
+.tsm-badge-copy { display: flex; flex-direction: column; }
+.tsm-badge-label { font-weight: 700; font-size: 0.9rem; }
+.tsm-badge-sub { font-size: 0.75rem; opacity: 0.9; }
+.tsm-trust-badge--hero { color: #fff; }
+.tsm-trust-badge--hero .tsm-badge-label { text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+.tsm-trust-badge--hero .tsm-badge-sub { text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
+.tsm-trust-badge--header { font-size: 0.8rem; }
+
+.tsm-cta-note {
+  margin: 0.45rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--text-muted, #6b7268);
+  font-weight: 500;
+}
+.hero-actions .tsm-cta-note,
+.cta-band .tsm-cta-note { color: rgba(255,255,255,0.88); text-align: center; max-width: 28rem; }
+.hero-actions { flex-wrap: wrap; }
+.hero-actions .tsm-cta-note { flex: 1 1 100%; margin-top: 0.75rem; }
+
+.tsm-team-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+@media (max-width: 1024px) { .tsm-team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .tsm-team-grid { grid-template-columns: 1fr; } }
+.tsm-team-card {
+  background: #fff;
+  border: 1px solid var(--border, #e4ebe4);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 12px 28px rgba(38,62,34,0.06);
+}
+.tsm-team-photo { aspect-ratio: 1; overflow: hidden; background: #1a2e1a; }
+.tsm-team-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tsm-team-body { padding: 1.15rem 1.25rem 1.35rem; }
+.tsm-team-body h3 { margin: 0 0 0.25rem; font-size: 1.1rem; color: var(--earth-dark, #1E311B); }
+.tsm-team-role { margin: 0 0 0.65rem; font-size: 0.82rem; font-weight: 700; color: var(--primary, #263E22); }
+.tsm-team-bio { margin: 0; font-size: 0.92rem; line-height: 1.6; color: var(--text-secondary, #4a5548); }
+.tsm-team-empty { color: var(--text-secondary); line-height: 1.6; text-align: center; max-width: 36rem; margin: 0 auto; }
+.tsm-todo-note { display: block; margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-muted); }
+
+.form-error { color: #b42318; font-size: 0.78rem; margin-top: 0.3rem; display: none; }
+.form-control.is-invalid { border-color: #b42318; }
+.form-optional-toggle { background: none; border: 0; color: var(--primary); font-weight: 700; cursor: pointer; padding: 0; margin: 0 0 1rem; }
+.booking-reassure { font-size: 0.85rem; color: var(--text-muted); margin: 0.75rem 0 0; text-align: center; }
+
+@media (max-width: 375px) {
+  .hero-actions .btn { width: 100%; }
+  .tsm-cta-note { font-size: 0.74rem; }
+}

@@ -17,7 +17,7 @@
     meta_title: 'Best Time to Climb Kilimanjaro 2026 | Seasons & Safari Timing',
     meta_description: 'Best months to climb Kilimanjaro: dry vs wet season trade-offs, crowds, and how to pair trek dates with safari or migration. Plan with Tanzania Safari Magic in Arusha.',
     excerpt: 'When to climb Kilimanjaro in 2026 — preferred dry-leaning windows, wetter months to weigh carefully, and how Our Team in Arusha sequences trek + safari dates.',
-    featured_image_url: '/images/kilimanjaro/kilimanjaro%20(8).jpeg',
+    featured_image_url: '/images/kilimanjaro/kilimanjaro%20(8).webp',
     published_at: '2026-08-03T09:00:00.000Z',
     updated_at: '2026-08-05T16:00:00.000Z',
     category_name: 'Kilimanjaro Guides',
@@ -32,7 +32,7 @@
 <p><strong>Tanzania Safari Magic</strong> in Arusha helps you stack climb days with safari months that actually match your wildlife goals. Explore <a href="/kilimanjaro">Kilimanjaro climbs</a>, the broader <a href="/blog/best-time-to-visit-tanzania">best time to visit Tanzania</a> calendar, and <a href="/migrations">migration</a> timing if herds are on your wishlist.</p>
 
 <figure class="guide-figure">
-  <img src="/images/kilimanjaro/kilimanjaro%20(8).jpeg" alt="Best season to climb Mount Kilimanjaro Tanzania" width="1200" height="750" loading="eager">
+  <img src="/images/kilimanjaro/kilimanjaro%20(8).webp" alt="Best season to climb Mount Kilimanjaro Tanzania" width="1200" height="750" loading="eager">
   <figcaption>Clearer summit mornings are more common in dry-leaning months — never guaranteed day to day.</figcaption>
 </figure>
 
@@ -84,7 +84,7 @@
 <p>Full country-level safari timing lives in <a href="/blog/best-time-to-visit-tanzania">best time to visit Tanzania</a>. Use that guide when your trip is bigger than the mountain alone.</p>
 
 <figure class="guide-figure">
-  <img src="/images/kilimanjaro/kilimanjaro%20(6).jpeg" alt="Tanzania dry season timing for Kilimanjaro and safari" width="1200" height="750" loading="lazy">
+  <img src="/images/kilimanjaro/kilimanjaro%20(6).webp" alt="Tanzania dry season timing for Kilimanjaro and safari" width="1200" height="750" loading="lazy">
   <figcaption>June–October pairs naturally with classic dry-season game drives after your descent.</figcaption>
 </figure>
 
@@ -115,7 +115,7 @@
 <p>Always leave at least one recovery night before long dusty game drives. Tired legs and crater rim days do not mix well with 5 a.m. start times.</p>
 
 <figure class="guide-figure">
-  <img src="/images/kilimanjaro/kilimanjaro%20(2).jpeg" alt="Kilimanjaro seasonal climbing conditions Tanzania" width="1200" height="750" loading="lazy">
+  <img src="/images/kilimanjaro/kilimanjaro%20(2).webp" alt="Kilimanjaro seasonal climbing conditions Tanzania" width="1200" height="750" loading="lazy">
   <figcaption>Sequence matters: summit celebration, shower, sleep, then safari — not the reverse on the same day.</figcaption>
 </figure>
 

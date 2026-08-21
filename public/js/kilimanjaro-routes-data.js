@@ -9,7 +9,7 @@
 (function (global) {
   'use strict';
 
-  const IMG = (n) => `/images/kilimanjaro/kilimanjaro%20(${n}).jpeg`;
+  const IMG = (n) => `/images/kilimanjaro/kilimanjaro%20(${n}).webp`;
 
   const WA = 'https://wa.me/255695108009';
   const WA_ROUTE = (route) =>

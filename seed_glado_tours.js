@@ -315,14 +315,15 @@ async function syncItinerary(packageId, itinerary) {
   for (let i = 0; i < itinerary.length; i++) {
     const item = itinerary[i];
     await db.query(
-      `INSERT INTO package_itinerary (itinerary_id, package_id, day_number, day_title, day_description)
-       VALUES ($1, $2, $3, $4, $5)`,
+      `INSERT INTO package_itinerary (itinerary_id, package_id, day_number, day_title, day_description, accommodation_type)
+       VALUES ($1, $2, $3, $4, $5, $6)`,
       [
         crypto.randomUUID(),
         packageId,
         item.day || item.day_number || i + 1,
         (item.title || `Day ${i + 1}`).slice(0, 200),
         item.description || '',
+        item.accommodation || item.accommodation_type || null,
       ]
     );
   }

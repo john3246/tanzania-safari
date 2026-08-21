@@ -20,10 +20,10 @@ function destName(d) {
 }
 
 const PARK_LOCAL_COVER = {
-    zanzibar: '/images/zanzibar/zanzibar%20(1).jpeg',
-    'serengeti-national-park': '/images/serengeti/Serengeti%20(1).jpeg',
-    'ngorongoro-conservation-area': '/images/ngorongoro/Ngorongoro%20(1).jpeg',
-    'lake-manyara-national-park': '/images/manyara/manyara%20(1).jpeg',
+    zanzibar: '/images/zanzibar/zanzibar%20(1).webp',
+    'serengeti-national-park': '/images/serengeti/Serengeti%20(1).webp',
+    'ngorongoro-conservation-area': '/images/ngorongoro/Ngorongoro%20(1).webp',
+    'lake-manyara-national-park': '/images/manyara/manyara%20(1).webp',
 };
 
 function destImage(d) {
@@ -43,7 +43,7 @@ function destImageFallback(d) {
     const slug = destSlug(d);
     if (!slug) return '/images/optimized/balloon.webp';
     if (PARK_LOCAL_COVER[slug]) return PARK_LOCAL_COVER[slug];
-    return `/images/destinations/${slug}/main.jpg`;
+    return `/images/destinations/${slug}/main.webp`;
 }
 
 function createCorporateCard(d) {

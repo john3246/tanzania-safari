@@ -24,7 +24,7 @@ if (yr) yr.textContent = new Date().getFullYear();
 function buildSafariCard(p) {
     const rating = parseFloat(p.avg_rating || 0).toFixed(1);
     const dest = Array.isArray(p.destinations) ? p.destinations.map(d => d.park_name || d).join(', ') : '';
-    const img = p.featured_image_url || (p.image_urls && p.image_urls.length > 0 ? p.image_urls[0] : `/images/safaris/${p.package_slug}/main.jpg`);
+    const img = p.featured_image_url || (p.image_urls && p.image_urls.length > 0 ? p.image_urls[0] : `/images/safaris/${p.package_slug}/main.webp`);
     return `
     <a href="/safaris/${p.package_slug}" class="safari-card fade-up">
       <div class="safari-card-img">
@@ -60,7 +60,7 @@ function buildDestCard(d) {
         || (d.gallery_urls && d.gallery_urls[0])
         || (d.image_urls && d.image_urls[0])
         || (slug ? `/images/optimized/${slug}.webp` : '/images/optimized/balloon.webp');
-    const fb = slug ? `/images/destinations/${slug}/main.jpg` : '/images/optimized/balloon.webp';
+    const fb = slug ? `/images/destinations/${slug}/main.webp` : '/images/optimized/balloon.webp';
     const count = d.safari_count || d.tour_count || 0;
     const href = slug ? `/destinations/${slug}` : '/destinations';
     return `
@@ -262,16 +262,30 @@ async function loadHomepage() {
         }
     }
 
-    // Testimonials
+    // Testimonials — real reviews only (JSON config + approved API rows with a quote)
     try {
+        window.__TSM_TESTIMONIALS_API = true;
         const { data } = await API.get('/testimonials?limit=6');
-        const grid = document.getElementById('testimonialsGrid');
-        if (grid && data?.length) {
-            grid.innerHTML = data.map(buildTestimonialCard).join('');
-        } else if (grid) {
-            grid.innerHTML = `<p style="color:var(--text-muted);grid-column:1/-1;text-align:center">${t('home.noTestimonials')}</p>`;
+        if (window.TSMTrust && typeof window.TSMTrust.renderTestimonials === 'function') {
+            window.TSMTrust.renderTestimonials('#testimonialsGrid', data || []);
+        } else {
+            const grid = document.getElementById('testimonialsGrid');
+            const section = document.getElementById('testimonialsSection');
+            const list = (data || []).filter((r) => (r.comment || r.review_comment) && r.first_name);
+            if (grid && list.length) {
+                grid.innerHTML = list.map(buildTestimonialCard).join('');
+                if (section) section.hidden = false;
+            } else if (section) {
+                section.hidden = true;
+            }
         }
-    } catch {}
+    } catch {
+        if (window.TSMTrust) window.TSMTrust.renderTestimonials('#testimonialsGrid', []);
+        else {
+            const section = document.getElementById('testimonialsSection');
+            if (section) section.hidden = true;
+        }
+    }
 }
 
 function shuffleList(list) {

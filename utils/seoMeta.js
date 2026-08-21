@@ -450,6 +450,148 @@ const PAGE_SEO = {
       keywords: 'contact safari tanzania, safari-operator arusha, whatsapp safari tanzania'
     }
   },
+  experience: {
+    en: {
+      title: 'Tanzania Safari Experience | Game Drives & Ol Doinyo Lengai',
+      description:
+        'Live the Tanzania safari experience from Arusha: private 4x4 game drives, Ol Doinyo Lengai, wildlife encounters and cultural days with Tanzania Safari Magic.',
+      keywords: 'tanzania safari experience, ol doinyo lengai, game drive tanzania, arusha safari'
+    },
+    it: {
+      title: 'Esperienza safari Tanzania | Game drive e Ol Doinyo Lengai',
+      description:
+        'Vivi l’esperienza safari in Tanzania da Arusha: game drive privati, Ol Doinyo Lengai, fauna e cultura con Tanzania Safari Magic.',
+      keywords: 'esperienza safari tanzania, ol doinyo lengai, safari arusha'
+    },
+    fr: {
+      title: 'Expérience safari Tanzanie | Game drives et Ol Doinyo Lengai',
+      description:
+        'Vivez l’expérience safari en Tanzanie depuis Arusha : game drives privés, Ol Doinyo Lengai, faune et culture avec Tanzania Safari Magic.',
+      keywords: 'expérience safari tanzanie, ol doinyo lengai, safari arusha'
+    },
+    es: {
+      title: 'Experiencia safari Tanzania | Game drives y Ol Doinyo Lengai',
+      description:
+        'Vive la experiencia safari en Tanzania desde Arusha: game drives privados, Ol Doinyo Lengai, fauna y cultura con Tanzania Safari Magic.',
+      keywords: 'experiencia safari tanzania, ol doinyo lengai, safari arusha'
+    },
+    de: {
+      title: 'Tansania-Safari-Erlebnis | Game Drives & Ol Doinyo Lengai',
+      description:
+        'Erleben Sie die Tansania-Safari ab Arusha: private 4x4-Game-Drives, Ol Doinyo Lengai, Wildlife und Kultur mit Tanzania Safari Magic.',
+      keywords: 'tansania safari erlebnis, ol doinyo lengai, safari arusha'
+    },
+    nl: {
+      title: 'Tanzania-safari-ervaring | Game drives & Ol Doinyo Lengai',
+      description:
+        'Beleef de Tanzania-safari vanuit Arusha: privé 4x4-gamedrives, Ol Doinyo Lengai, wildlife en cultuur met Tanzania Safari Magic.',
+      keywords: 'tanzania safari ervaring, ol doinyo lengai, safari arusha'
+    }
+  },
+  gallery: {
+    en: {
+      title: 'Tanzania Safari Gallery | Photos & Videos from the Field',
+      description:
+        'Safari photo and video gallery from Tanzania Safari Magic — Ol Doinyo Lengai, safari vehicles, guides, leopard and rhino encounters.',
+      keywords: 'tanzania safari photos, safari video gallery, ol doinyo lengai photos'
+    },
+    it: {
+      title: 'Galleria safari Tanzania | Foto e video dal campo',
+      description: 'Galleria foto e video di Tanzania Safari Magic: Ol Doinyo Lengai, veicoli, guide, leopardo e rinoceronte.',
+      keywords: 'foto safari tanzania, galleria safari'
+    },
+    fr: {
+      title: 'Galerie safari Tanzanie | Photos et vidéos du terrain',
+      description: 'Galerie photo et vidéo de Tanzania Safari Magic : Ol Doinyo Lengai, véhicules, guides, léopard et rhinocéros.',
+      keywords: 'photos safari tanzanie, galerie safari'
+    },
+    es: {
+      title: 'Galería safari Tanzania | Fotos y vídeos del campo',
+      description: 'Galería de fotos y vídeos de Tanzania Safari Magic: Ol Doinyo Lengai, vehículos, guías, leopardo y rinoceronte.',
+      keywords: 'fotos safari tanzania, galería safari'
+    },
+    de: {
+      title: 'Tansania-Safari-Galerie | Fotos & Videos aus dem Feld',
+      description: 'Foto- und Videogalerie von Tanzania Safari Magic: Ol Doinyo Lengai, Safari-Fahrzeuge, Guides, Leopard und Nashorn.',
+      keywords: 'tansania safari fotos, safari galerie'
+    },
+    nl: {
+      title: 'Tanzania-safarigalerij | Foto’s en video’s uit het veld',
+      description: 'Foto- en videogalerij van Tanzania Safari Magic: Ol Doinyo Lengai, safarivoertuigen, gidsen, luipaard en neushoorn.',
+      keywords: 'tanzania safari foto’s, safari galerij'
+    }
+  },
+  stories: {
+    en: {
+      title: 'Tanzania Safari Stories | Ol Doinyo Lengai & Wildlife',
+      description:
+        'Field stories from Tanzania Safari Magic: climbing Ol Doinyo Lengai, leopard and rhino encounters, and days on the road with Glad of Africa guides.',
+      keywords: 'tanzania safari stories, ol doinyo lengai climb, serengeti leopard'
+    },
+    it: {
+      title: 'Storie safari Tanzania | Ol Doinyo Lengai e fauna',
+      description: 'Storie dal campo di Tanzania Safari Magic: Ol Doinyo Lengai, leopardo, rinoceronte e guide Glad of Africa.',
+      keywords: 'storie safari tanzania, ol doinyo lengai'
+    },
+    fr: {
+      title: 'Récits safari Tanzanie | Ol Doinyo Lengai et faune',
+      description: 'Récits de terrain de Tanzania Safari Magic : Ol Doinyo Lengai, léopard, rhinocéros et guides Glad of Africa.',
+      keywords: 'récits safari tanzanie, ol doinyo lengai'
+    },
+    es: {
+      title: 'Historias safari Tanzania | Ol Doinyo Lengai y fauna',
+      description: 'Historias de campo de Tanzania Safari Magic: Ol Doinyo Lengai, leopardo, rinoceronte y guías Glad of Africa.',
+      keywords: 'historias safari tanzania, ol doinyo lengai'
+    },
+    de: {
+      title: 'Tansania-Safari-Geschichten | Ol Doinyo Lengai & Wildlife',
+      description: 'Feldgeschichten von Tanzania Safari Magic: Ol Doinyo Lengai, Leopard, Nashorn und Glad-of-Africa-Guides.',
+      keywords: 'tansania safari geschichten, ol doinyo lengai'
+    },
+    nl: {
+      title: 'Tanzania-safari-verhalen | Ol Doinyo Lengai & wildlife',
+      description: 'Veldverhalen van Tanzania Safari Magic: Ol Doinyo Lengai, luipaard, neushoorn en Glad of Africa-gidsen.',
+      keywords: 'tanzania safari verhalen, ol doinyo lengai'
+    }
+  },
+  accommodation: {
+    en: {
+      title: 'Tanzania Safari Lodges & Hotels | By Park & Route',
+      description:
+        'Tanzania safari accommodation by location: Arusha hotels, Tarangire, Karatu, Manyara, Serengeti and Ngorongoro lodges — mid-range and luxury, with official hotel websites.',
+      keywords: 'tanzania safari lodges, serengeti hotels, ngorongoro accommodation, tarangire lodge, arusha hotels'
+    },
+    it: {
+      title: 'Lodge e hotel safari Tanzania | Per parco e itinerario',
+      description:
+        'Alloggi safari in Tanzania per zona: hotel Arusha, lodge Tarangire, Karatu, Manyara, Serengeti e Ngorongoro — mid-range e lusso, con siti ufficiali.',
+      keywords: 'lodge safari tanzania, hotel serengeti, alloggi ngorongoro'
+    },
+    fr: {
+      title: 'Lodges et hôtels safari Tanzanie | Par parc et itinéraire',
+      description:
+        'Hébergements safari en Tanzanie par région : hôtels Arusha, lodges Tarangire, Karatu, Manyara, Serengeti et Ngorongoro — milieu de gamme et luxe.',
+      keywords: 'lodges safari tanzanie, hôtels serengeti, hébergement ngorongoro'
+    },
+    es: {
+      title: 'Lodges y hoteles safari Tanzania | Por parque y ruta',
+      description:
+        'Alojamiento safari en Tanzania por zona: hoteles Arusha, lodges Tarangire, Karatu, Manyara, Serengeti y Ngorongoro — gama media y lujo.',
+      keywords: 'lodges safari tanzania, hoteles serengeti, alojamiento ngorongoro'
+    },
+    de: {
+      title: 'Tansania-Safari-Lodges & Hotels | Nach Park und Route',
+      description:
+        'Safari-Unterkünfte in Tansania nach Region: Arusha-Hotels, Lodges in Tarangire, Karatu, Manyara, Serengeti und Ngorongoro — Mittelklasse und Luxus.',
+      keywords: 'tansania safari lodges, serengeti hotels, ngorongoro unterkunft'
+    },
+    nl: {
+      title: 'Tanzania-safarilodges & hotels | Per park en route',
+      description:
+        'Safari-accommodatie in Tanzania per regio: Arusha-hotels, lodges in Tarangire, Karatu, Manyara, Serengeti en Ngorongoro — middenklasse en luxe.',
+      keywords: 'tanzania safari lodges, serengeti hotels, ngorongoro accommodatie'
+    }
+  },
   about: {
     en: {
       title: 'About Tanzania Safari Magic | Arusha-Based Safari Operator',
