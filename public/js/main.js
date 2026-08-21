@@ -24,7 +24,10 @@ if (yr) yr.textContent = new Date().getFullYear();
 function buildSafariCard(p) {
     const rating = parseFloat(p.avg_rating || 0).toFixed(1);
     const dest = Array.isArray(p.destinations) ? p.destinations.map(d => d.park_name || d).join(', ') : '';
-    const img = p.featured_image_url || (p.image_urls && p.image_urls.length > 0 ? p.image_urls[0] : `/images/safaris/${p.package_slug}/main.webp`);
+    const imgRaw = p.featured_image_url || (p.image_urls && p.image_urls.length > 0 ? p.image_urls[0] : `/images/safaris/${p.package_slug}/main.webp`);
+    const img = (/^https?:\/\//i.test(imgRaw) && !/tanzaniasafarimagic\.com/i.test(imgRaw))
+        ? '/images/optimized/serengeti-national-park.webp'
+        : imgRaw;
     return `
     <a href="/safaris/${p.package_slug}" class="safari-card fade-up">
       <div class="safari-card-img">
@@ -112,7 +115,16 @@ function getCatIcon(name, cls) {
 }
 
 // ── Load data ──────────────────────────────────────────────
-async function loadHomepage() {
+async function loadHomepage(secondary) {
+    const destGrid = document.getElementById('destinationsGrid');
+    const safariGrid = document.getElementById('safarisGrid');
+    const hasDestSsr = !!(destGrid && destGrid.querySelector('.ssr-card, a[href*="/destinations/"]'));
+    const hasSafariSsr = !!(safariGrid && safariGrid.querySelector('.ssr-card, a[href*="/safaris/"]'));
+    if (hasDestSsr && hasSafariSsr && !secondary) {
+        setTimeout(function () { loadHomepage(true); }, 3000);
+        return;
+    }
+
     // Stats
     try {
         const { data } = await API.get('/stats');
@@ -363,8 +375,8 @@ document.getElementById('newsletterForm')?.addEventListener('submit', async e =>
   if (!destGrid && !safariGrid && !document.getElementById('groupHomeTeaser')) return;
   const hasSsr = !!(safariGrid && safariGrid.querySelector('.ssr-card, a[href*="/safaris/"]'));
   const start = () => { loadHomepage(); };
-  if (hasSsr && typeof requestIdleCallback === 'function') requestIdleCallback(start, { timeout: 1800 });
-  else start();
+  if (typeof requestIdleCallback === 'function') requestIdleCallback(start, { timeout: 2500 });
+  else setTimeout(start, 400);
 })();
 
 // -- Reveal Animations --

@@ -8,6 +8,8 @@ const { escapeHtml, absoluteUrl, truncate, stripHtml, SITE } = require('./seoRen
 function safeImg(url, fallback = '/images/optimized/balloon.webp') {
   if (!url) return fallback;
   const s = String(url);
+  // Off-site images (WordPress / other operators) stall first paint.
+  if (/^https?:\/\//i.test(s) && !/tanzaniasafarimagic\.com/i.test(s)) return fallback;
   if (s.startsWith('http') || s.startsWith('/')) return s;
   return '/' + s;
 }
@@ -17,10 +19,18 @@ function altFor(name, suffix = 'Tanzania Safari Magic') {
   return `${base} - ${suffix}`;
 }
 
-async function withDb(fn, fallback) {
+async function withDb(fn, fallback, timeoutMs = 1200) {
   try {
     const db = require('../config/db');
-    return await fn(db);
+    let timer;
+    const timeout = new Promise((_, reject) => {
+      timer = setTimeout(() => reject(new Error('db timeout')), timeoutMs);
+    });
+    try {
+      return await Promise.race([fn(db), timeout]);
+    } finally {
+      clearTimeout(timer);
+    }
   } catch (err) {
     console.warn('[ssrContent]', err.message);
     return fallback;
@@ -30,15 +40,11 @@ async function withDb(fn, fallback) {
 async function fetchFeaturedPackages(limit = 6) {
   return withDb(async (db) => {
     const r = await db.query(
-      `SELECT sp.package_id, sp.package_name, sp.package_slug, sp.short_description,
-              sp.featured_image_url, sp.duration_days, sp.base_price_usd,
-              COALESCE(AVG(r.rating), 0) AS avg_rating,
-              COUNT(DISTINCT r.review_id) AS review_count
-       FROM safari_packages sp
-       LEFT JOIN reviews r ON r.package_id = sp.package_id AND r.is_approved = true
-       WHERE sp.is_active = true
-       GROUP BY sp.package_id
-       ORDER BY RANDOM()
+      `SELECT package_id, package_name, package_slug, short_description,
+              featured_image_url, duration_days, base_price_usd
+       FROM safari_packages
+       WHERE is_active = true
+       ORDER BY is_featured DESC NULLS LAST, package_id DESC
        LIMIT $1`,
       [limit]
     );
@@ -49,15 +55,11 @@ async function fetchFeaturedPackages(limit = 6) {
 async function fetchPackages(limit = 24) {
   return withDb(async (db) => {
     const r = await db.query(
-      `SELECT sp.package_id, sp.package_name, sp.package_slug, sp.short_description,
-              sp.featured_image_url, sp.duration_days, sp.base_price_usd,
-              COALESCE(AVG(r.rating), 0) AS avg_rating,
-              COUNT(DISTINCT r.review_id) AS review_count
-       FROM safari_packages sp
-       LEFT JOIN reviews r ON r.package_id = sp.package_id AND r.is_approved = true
-       WHERE sp.is_active = true
-       GROUP BY sp.package_id
-       ORDER BY sp.is_featured DESC NULLS LAST, sp.package_name ASC
+      `SELECT package_id, package_name, package_slug, short_description,
+              featured_image_url, duration_days, base_price_usd
+       FROM safari_packages
+       WHERE is_active = true
+       ORDER BY is_featured DESC NULLS LAST, package_name ASC
        LIMIT $1`,
       [limit]
     );
@@ -70,6 +72,7 @@ async function fetchDestinations(limit = 24) {
     const r = await db.query(
       `SELECT park_id, park_name, park_slug, short_description, featured_image_url
        FROM national_parks
+       WHERE COALESCE(is_active, true) = true
        ORDER BY park_name ASC
        LIMIT $1`,
       [limit]
@@ -138,8 +141,9 @@ function packageCardHtml(p) {
   const days = p.duration_days ? `${p.duration_days} days` : '';
   const price = p.base_price_usd != null ? `From $${Number(p.base_price_usd).toLocaleString()}` : 'Request quote';
   const desc = truncate(stripHtml(p.short_description || ''), 110);
+  const href = escapeHtml(p.card_href || (slug ? `/safaris/${slug}` : '/safaris'));
   return `<article class="ssr-card safari-card">
-  <a href="/safaris/${escapeHtml(slug)}" class="ssr-card-link">
+  <a href="${href}" class="ssr-card-link">
     <img src="${escapeHtml(img)}" alt="${escapeHtml(altFor(name))}" width="640" height="400" loading="lazy" decoding="async">
     <div class="ssr-card-body">
       <h3>${escapeHtml(name)}</h3>

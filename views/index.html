@@ -119,9 +119,7 @@
 <!-- Hero -->
     <section class="hero">
       <div class="hero-bg">
-        <video muted loop playsinline preload="none" poster="/images/hero.webp" class="hero-video" id="heroVideo" width="1920" height="1080">
-          <source src="/images/hero-video.mp4" type="video/mp4">
-        </video>
+        <img src="/images/hero.webp" alt="Tanzania safari landscape" class="hero-video" width="1920" height="1080" decoding="async" fetchpriority="high">
       </div>
       <div class="hero-overlay"></div>
       
@@ -499,14 +497,20 @@
   <div class="map-container" style="position: relative; width: 100%; height: 500px; overflow: hidden; background: #e8ebe6;">
     <iframe
       title="Arusha, Tanzania map"
-      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.737!2d36.677213!3d-3.398144!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x18371c88f2447b77%3A0x1927e7706d87e076!2sArusha%2C%20Tanzania!5e0!3m2!1sen!2stz!4v1714810000000!5m2!1sen!2stz"
+      data-src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.737!2d36.677213!3d-3.398144!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x18371c88f2447b77%3A0x1927e7706d87e076!2sArusha%2C%20Tanzania!5e0!3m2!1sen!2stz!4v1714810000000!5m2!1sen!2stz"
       width="100%"
       height="500"
-      style="border:0; position:absolute; inset:0; width:100%; height:100%; z-index:1;"
+      style="border:0; position:absolute; inset:0; width:100%; height:100%; z-index:1; display:none;"
       allowfullscreen=""
       loading="lazy"
       referrerpolicy="no-referrer-when-downgrade"
     ></iframe>
+    <button type="button" id="loadHomeMap" aria-label="Load Arusha map"
+      style="position:absolute;inset:0;z-index:1;border:0;cursor:pointer;background:url('/images/hero.webp') center/cover no-repeat;">
+      <span style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--primary);color:#fff;padding:0.85rem 1.35rem;border-radius:4px;font-weight:700;font-family:var(--font-heading);">
+        <i class="fas fa-map-marker-alt"></i> Show map
+      </span>
+    </button>
     <div class="map-overlay container" style="position: absolute; inset: 0; display: flex; pointer-events: none; z-index: 2;">
       <div class="map-card" style="background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); pointer-events: auto;">
         <h3 style="font-family: var(--font-heading); font-size: 1.5rem; color: var(--earth-dark); margin-bottom: 0.75rem;"><i class="fas fa-map-marker-alt" style="color: var(--primary); margin-right: 0.5rem;"></i> <span data-i18n="home.ourPresence">Our Presence</span></h3>
@@ -531,23 +535,22 @@
 
 <!-- Footer -->
 <div id="footer"></div>
-<script src="/js/layout-loader.js?v=22" defer></script>
+<script src="/js/layout-loader.js?v=23" defer></script>
 <script src="/js/api.js?v=2" defer></script>
-<script src="/js/main.js?v=11" defer></script>
+<script src="/js/main.js?v=12" defer></script>
 <script>
 window.addEventListener('load', function () {
-  var v = document.getElementById('heroVideo');
-  if (!v) return;
-  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var desktop = window.matchMedia && window.matchMedia('(min-width: 768px)').matches;
-  if (reduce || !desktop) return;
-  var start = function () {
-    v.setAttribute('autoplay', '');
-    var p = v.play();
-    if (p && p.catch) p.catch(function () {});
-  };
-  if (typeof requestIdleCallback === 'function') requestIdleCallback(start, { timeout: 2500 });
-  else setTimeout(start, 400);
+  var mapBtn = document.getElementById('loadHomeMap');
+  if (mapBtn) {
+    mapBtn.addEventListener('click', function () {
+      var iframe = mapBtn.parentNode.querySelector('iframe');
+      if (iframe && iframe.dataset.src) {
+        iframe.src = iframe.dataset.src;
+        iframe.style.display = 'block';
+      }
+      mapBtn.remove();
+    }, { once: true });
+  }
 });
 </script>
 </body>

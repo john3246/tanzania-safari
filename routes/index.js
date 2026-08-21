@@ -3,6 +3,7 @@ const router = express.Router();
 const path = require('path');
 const seo = require('../utils/seoRender');
 const ssr = require('../utils/ssrContent');
+const ssrCache = require('../utils/ssrCache');
 
 const VIEWS = path.join(__dirname, '../views');
 
@@ -44,13 +45,10 @@ const HOME_FAQS = [
 ];
 
 // ── Home ──────────────────────────────────────────────────────
-router.get('/', async (req, res) => {
+router.get('/', (req, res) => {
   try {
     const lang = seo.parseLangFromRequest(req);
-    const [featured, destinations] = await Promise.all([
-      ssr.fetchFeaturedPackages(6),
-      ssr.fetchDestinations(4)
-    ]);
+    const { featured, destinations } = ssrCache.getHome();
     const jsonLd = [
       seo.websiteSchema(lang),
       seo.organizationSchema(),
@@ -471,10 +469,9 @@ router.get('/unsubscribe', (req, res) => {
   }
 });
 
-router.get('/safaris', async (req, res) => {
+router.get('/safaris', (req, res) => {
   try {
-    // Filter/query pages share one canonical to avoid duplicate indexation
-    const packages = await ssr.fetchPackages(24);
+    const { packages } = ssrCache.getSafaris();
     const jsonLd = [
       seo.organizationSchema(),
       seo.breadcrumbSchema([
@@ -781,9 +778,9 @@ router.get('/safaris/:slug', async (req, res) => {
   }
 });
 
-router.get('/destinations', async (req, res) => {
+router.get('/destinations', (req, res) => {
   try {
-    const destinations = await ssr.fetchDestinations(24);
+    const { destinations } = ssrCache.getDestinations();
     const jsonLd = [
       seo.organizationSchema(),
       seo.breadcrumbSchema([

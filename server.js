@@ -539,6 +539,9 @@ async function startServer() {
       console.log(`Admin Panel: http://localhost:${PORT}/admin/login`);
       console.log(`API:         http://localhost:${PORT}/api`);
       console.log(`Health:      http://localhost:${PORT}/health\n`);
+      try {
+        require('./utils/ssrCache').warm();
+      } catch (_) {}
     });
   } catch (error) {
     logger.error({ event: 'server_startup_failed', error: error.message }, 'Failed to start server');

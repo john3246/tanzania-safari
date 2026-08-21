@@ -216,7 +216,7 @@ function hydrateHeader() {
 function hydrateFooter() {
     initFooter();
     applyPageI18n(document.getElementById('footer') || document);
-    whenIdle(loadChatScripts, 4000);
+    whenIdle(loadChatScripts, 8000);
     initCookieNotice();
     if (window.TSMTrust && typeof window.TSMTrust.initTrustUi === 'function') {
         window.TSMTrust.initTrustUi();
@@ -224,7 +224,7 @@ function hydrateFooter() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const cb = '?v=22';
+    const cb = '?v=23';
     const headerReady = document.getElementById('siteHeader') || document.querySelector('#header header');
     const footerReady = document.querySelector('#footer footer, footer.footer');
 
