@@ -17,9 +17,9 @@ const OG_LOCALE = {
 const PAGE_SEO = {
   home: {
     en: {
-      title: 'Visit Tanzania 2026 | Safaris & Kilimanjaro | Tanzania Safari Magic',
+      title: 'Private Tanzania Safari 2026 | Serengeti Prices from Arusha',
       description:
-        'Visit Tanzania with local Arusha experts — private Serengeti safaris, Ngorongoro Crater, Great Migration, Kilimanjaro climbs & Zanzibar beaches. Free quote.',
+        'From $350/person/day — private Serengeti, Ngorongoro & Migration safaris from Arusha. WhatsApp +255 695 108 009 for live availability.',
       keywords:
         'tanzania safari, visit tanzania, travel to tanzania, tanzania holidays, private tanzania safari, serengeti safari, ngorongoro crater, great wildebeest migration, climb kilimanjaro, tanzania safari from arusha, safari packages tanzania, tanzania tourism, africa safari tours'
     },
@@ -61,9 +61,9 @@ const PAGE_SEO = {
   },
   visitTanzania: {
     en: {
-      title: 'Visit Tanzania 2026 | Safaris, Kilimanjaro & Beach Holidays',
+      title: 'Visit Tanzania 2026 | Safari Cost, Best Time & Itineraries',
       description:
-        'Planning to visit Tanzania? Safaris, Kilimanjaro climbs & Zanzibar beaches from Arusha. Best time to go, costs, visas & top experiences. Get a free quote today.',
+        'From $350/person/day — plan a Tanzania safari, Kilimanjaro climb or Zanzibar beach trip from Arusha. WhatsApp for live 2026 availability.',
       keywords:
         'visit tanzania, travel to tanzania, tanzania holidays, tanzania tourism, best time to visit tanzania, tanzania safari packages, africa safari tanzania, tanzania travel guide, tanzania vacation'
     },
@@ -105,9 +105,9 @@ const PAGE_SEO = {
   },
   safaris: {
     en: {
-      title: 'Tanzania Safari Packages 2026 | Private Tours from Arusha',
+      title: 'Tanzania Safari Packages 2026 | Prices & Itineraries',
       description:
-        'Compare 2026 Tanzania safari packages — Serengeti Migration, Ngorongoro, Kilimanjaro & Zanzibar combos. Filter by days & budget. Free quote from Arusha.',
+        'Compare private Tanzania safari packages from $350/person/day — Serengeti, Ngorongoro, Kilimanjaro & Zanzibar. WhatsApp for live availability.',
       keywords:
         'tanzania safari packages, tanzania safari 2026, private safari tours tanzania, serengeti safari package, ngorongoro safari, kilimanjaro trek packages, africa safari packages, tanzania safari cost'
     },
@@ -183,9 +183,9 @@ const PAGE_SEO = {
   },
   group: {
     en: {
-      title: 'Open Group Safaris Tanzania | Join Shared Safari Tours',
+      title: 'Group Safaris Tanzania 2026 | Shared Dates & Prices',
       description:
-        'Join fixed-date group safaris in Tanzania — ideal for solo travelers and couples. Shared costs, expert guides from Arusha, Serengeti to Ngorongoro.',
+        'Join a shared Tanzania group safari from Arusha — Serengeti to Ngorongoro. WhatsApp +255 695 108 009 for live 2026 departure availability.',
       keywords: 'group safari tanzania, shared safari tours, open group departure tanzania, affordable group safari'
     },
     it: {
@@ -221,9 +221,9 @@ const PAGE_SEO = {
   },
   kilimanjaro: {
     en: {
-      title: 'Climb Kilimanjaro 2026 | Machame, Lemosho & Marangu Routes',
+      title: 'Climb Kilimanjaro 2026 | Machame, Lemosho & Prices',
       description:
-        'Guided Mount Kilimanjaro climbs in 2026 from Arusha — Machame, Lemosho & Marangu routes to Uhuru Peak (5,895 m). Free quote & climb + safari combos.',
+        'Guided Kilimanjaro climbs from Arusha — Machame, Lemosho & Marangu to Uhuru Peak. WhatsApp for 2026 dates, route fit and a live quote.',
       keywords:
         'climb kilimanjaro, kilimanjaro 2026, mount kilimanjaro, kilimanjaro climb cost, kilimanjaro trek, machame route, lemosho route, marangu route, uhuru peak, kilimanjaro from arusha'
     },
@@ -260,9 +260,9 @@ const PAGE_SEO = {
   },
   kilimanjaroRoutes: {
     en: {
-      title: 'Kilimanjaro Routes | Machame, Lemosho, Marangu & More',
+      title: 'Kilimanjaro Routes Compared 2026 | Machame vs Lemosho',
       description:
-        'Compare all Mount Kilimanjaro climbing routes — Machame, Lemosho, Marangu, Rongai, Northern Circuit and Umbwe — by difficulty, days and summit success rate.',
+        'Compare Kilimanjaro routes by days, difficulty and success rate. WhatsApp Our Team in Arusha for a 2026 climb quote and live availability.',
       keywords:
         'kilimanjaro routes, machame route, lemosho route, marangu route, rongai route, northern circuit, umbwe route, best kilimanjaro route, kilimanjaro route comparison'
     },
@@ -299,9 +299,9 @@ const PAGE_SEO = {
   },
   migrations: {
     en: {
-      title: 'Great Migration Safaris | Serengeti & Ndutu Wildebeest Tours',
+      title: 'Great Migration Safari 2026 | Best Months & Prices',
       description:
-        'See the Great Wildebeest Migration in Serengeti and Ndutu — calving season, river crossings, and predator action. Private and group migration safaris from Arusha.',
+        'Plan a Serengeti Great Migration safari — calving, Grumeti and Mara River months. WhatsApp for live herd location and 2026 availability.',
       keywords:
         'great wildebeest migration, serengeti migration safari, ndutu calving, mara river crossing, tanzania migration tours'
     },
@@ -338,9 +338,9 @@ const PAGE_SEO = {
   },
   zanzibar: {
     en: {
-      title: 'Zanzibar Beach Holidays | Bush-to-Beach Safari Packages',
+      title: 'Safari + Zanzibar 2026 | Bush-to-Beach Packages & Prices',
       description:
-        'Add Zanzibar after your Tanzania safari — white-sand beaches, Stone Town, snorkeling, and spice tours. Bush-to-beach packages from Arusha.',
+        'Combine a Tanzania safari with Zanzibar beaches. WhatsApp +255 695 108 009 for a 2026 bush-to-beach quote and live lodge availability.',
       keywords: 'zanzibar beach holiday, bush to beach tanzania, zanzibar after safari, stone town, zanzibar packages'
     },
     it: {
@@ -376,9 +376,9 @@ const PAGE_SEO = {
   },
   booking: {
     en: {
-      title: 'Book a Tanzania Safari | Free Quote from Arusha Experts',
+      title: 'Book a Tanzania Safari 2026 | Free Quote — WhatsApp Us',
       description:
-        'Request a free quote or book your Tanzania safari online. Private mid-range and luxury itineraries with expert local guides. WhatsApp +255 695 108 009.',
+        'Request a free Tanzania safari quote from Arusha. We usually reply within 2 hours on WhatsApp +255 695 108 009 — no payment to enquire.',
       keywords: 'book tanzania safari, safari quote arusha, inquire tanzania tour, private safari booking'
     },
     it: {
@@ -416,7 +416,7 @@ const PAGE_SEO = {
     en: {
       title: 'Contact Tanzania Safari Magic | WhatsApp +255 695 108 009',
       description:
-        'Contact our Arusha safari experts for a free custom itinerary quote. Call or WhatsApp +255 695 108 009, or email info@tanzaniasafarimagic.com.',
+        'WhatsApp +255 695 108 009 — we usually reply within 2 hours. Free custom safari quote from Arusha. Email info@tanzaniasafarimagic.com.',
       keywords: 'contact tanzania safari, arusha safari operator, whatsapp safari tanzania'
     },
     it: {

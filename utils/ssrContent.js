@@ -80,19 +80,36 @@ async function fetchDestinations(limit = 24) {
 
 async function fetchPackageBySlug(slug) {
   return withDb(async (db) => {
-    const r = await db.query(
-      `SELECT sp.package_id, sp.package_name, sp.package_slug, sp.short_description, sp.detailed_description,
-              sp.featured_image_url, sp.duration_days, sp.base_price_usd, sp.meta_title, sp.meta_description,
-              sp.difficulty_level, sp.max_group_size,
-              COALESCE(AVG(r.rating), 0) AS avg_rating,
-              COUNT(DISTINCT r.review_id) AS review_count
-       FROM safari_packages sp
-       LEFT JOIN reviews r ON r.package_id = sp.package_id AND r.is_approved = true
-       WHERE sp.package_slug = $1 AND sp.is_active = true
-       GROUP BY sp.package_id
-       LIMIT 1`,
-      [slug]
-    );
+    let r;
+    try {
+      r = await db.query(
+        `SELECT sp.package_id, sp.package_name, sp.package_slug, sp.short_description, sp.detailed_description,
+                sp.featured_image_url, sp.duration_days, sp.base_price_usd, sp.meta_title, sp.meta_description,
+                sp.difficulty_level, sp.max_group_size, sp.included_features, sp.excluded_features,
+                COALESCE(AVG(rev.rating), 0) AS avg_rating,
+                COUNT(DISTINCT rev.review_id) AS review_count
+         FROM safari_packages sp
+         LEFT JOIN reviews rev ON rev.package_id = sp.package_id AND rev.is_approved = true
+         WHERE sp.package_slug = $1 AND sp.is_active = true
+         GROUP BY sp.package_id
+         LIMIT 1`,
+        [slug]
+      );
+    } catch (_) {
+      r = await db.query(
+        `SELECT sp.package_id, sp.package_name, sp.package_slug, sp.short_description, sp.detailed_description,
+                sp.featured_image_url, sp.duration_days, sp.base_price_usd, sp.meta_title, sp.meta_description,
+                sp.difficulty_level, sp.max_group_size,
+                COALESCE(AVG(rev.rating), 0) AS avg_rating,
+                COUNT(DISTINCT rev.review_id) AS review_count
+         FROM safari_packages sp
+         LEFT JOIN reviews rev ON rev.package_id = sp.package_id AND rev.is_approved = true
+         WHERE sp.package_slug = $1 AND sp.is_active = true
+         GROUP BY sp.package_id
+         LIMIT 1`,
+        [slug]
+      );
+    }
     const pkg = r.rows[0];
     if (!pkg) return null;
     const [itin, dests] = await Promise.all([
@@ -206,16 +223,28 @@ function safariDetailSsrHtml(pkg) {
         .join(' · ')}</p>`
     : '';
 
+  const included = Array.isArray(pkg.included_features) ? pkg.included_features.filter(Boolean) : [];
+  const excluded = Array.isArray(pkg.excluded_features) ? pkg.excluded_features.filter(Boolean) : [];
+  const includedHtml = included.length
+    ? `<h2>What's included</h2><ul>${included.map((item) => `<li>${escapeHtml(stripHtml(item))}</li>`).join('')}</ul>`
+    : '';
+  const excludedHtml = excluded.length
+    ? `<h2>What's not included</h2><ul>${excluded.map((item) => `<li>${escapeHtml(stripHtml(item))}</li>`).join('')}</ul>`
+    : '';
+
   return `<div class="ssr-detail corp-panel" id="ssrPackageDetail" data-ssr="1">
   <img src="${escapeHtml(img)}" alt="${escapeHtml(altFor(name))}" width="1200" height="675" loading="eager" decoding="async" style="width:100%;max-height:380px;object-fit:cover;border-radius:4px;margin-bottom:1.25rem">
   <p class="ssr-lead">${escapeHtml(truncate(desc, 320))}</p>
   <p class="ssr-meta"><strong>${escapeHtml(days)}</strong> Tanzania safari · From <strong>${escapeHtml(price)}</strong> per person</p>
   ${destLinks}
+  ${includedHtml}
+  ${excludedHtml}
   ${itinHtml ? `<h2>Itinerary</h2>${itinHtml}` : ''}
   <p style="margin-top:1.5rem">
     <a class="btn btn-primary" href="/booking?package=${encodeURIComponent(pkg.package_slug || '')}" style="min-height:48px">Get a free quote</a>
     <a class="btn btn-outline" href="/safaris" style="min-height:48px;margin-left:0.5rem">All safari packages</a>
   </p>
+  <p style="margin-top:1rem;font-size:0.92rem">Planning help: <a href="/blog/serengeti-safari-cost-2026">Serengeti safari cost 2026</a> · <a href="/blog/tanzania-safari-zanzibar-combo">Safari + Zanzibar combo</a> · <a href="/blog/great-wildebeest-migration">Great Migration months</a></p>
 </div>`;
 }
 
@@ -265,12 +294,46 @@ function toDestinationListItems(destinations) {
   }));
 }
 
+async function fetchReviewStats() {
+  return withDb(async (db) => {
+    const r = await db.query(
+      `SELECT COUNT(*)::int AS "reviewCount",
+              ROUND(AVG(rating)::numeric, 1) AS "ratingValue"
+       FROM reviews
+       WHERE is_approved = true AND rating BETWEEN 1 AND 5`
+    );
+    const row = r.rows[0] || {};
+    return {
+      reviewCount: Number(row.reviewCount || 0),
+      ratingValue: Number(row.ratingValue || 0)
+    };
+  }, { reviewCount: 0, ratingValue: 0 });
+}
+
+async function fetchApprovedReviews(limit = 6) {
+  return withDb(async (db) => {
+    const r = await db.query(
+      `SELECT first_name, last_name, rating, comment, review_comment, country
+       FROM reviews
+       WHERE is_approved = true
+         AND rating BETWEEN 1 AND 5
+         AND COALESCE(NULLIF(comment, ''), NULLIF(review_comment, '')) IS NOT NULL
+       ORDER BY created_at DESC
+       LIMIT $1`,
+      [limit]
+    );
+    return r.rows || [];
+  }, []);
+}
+
 module.exports = {
   fetchFeaturedPackages,
   fetchPackages,
   fetchDestinations,
   fetchPackageBySlug,
   fetchDestinationBySlug,
+  fetchReviewStats,
+  fetchApprovedReviews,
   packageListHtml,
   destinationListHtml,
   safariDetailSsrHtml,

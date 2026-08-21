@@ -82,7 +82,9 @@ app.use(helmet({
                 "https://www.google-analytics.com",
                 "https://www.googleadservices.com",
                 "https://googleads.g.doubleclick.net",
-                "https://tagmanager.google.com"
+                "https://tagmanager.google.com",
+                "https://www.clarity.ms",
+                "https://scripts.clarity.ms"
             ],
             scriptSrcAttr: ["'unsafe-inline'"],
             styleSrc: [
@@ -125,6 +127,8 @@ app.use(helmet({
                 "https://analytics.google.com",
                 "https://region1.google-analytics.com",
                 "https://stats.g.doubleclick.net",
+                "https://www.clarity.ms",
+                "https://scripts.clarity.ms",
                 ...renderConnectSrc
             ],
             fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com", "https://unpkg.com", "https://fonts.googleapis.com", "https://cdn.jsdelivr.net", "data:", "https://ka-f.fontawesome.com"],

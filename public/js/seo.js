@@ -132,13 +132,6 @@
                 'https://maps.app.goo.gl/36osoUgbeghcvwE89'
             ],
             priceRange: '$$-$$$',
-            aggregateRating: {
-                '@type': 'AggregateRating',
-                ratingValue: '5.0',
-                reviewCount: '48',
-                bestRating: '5',
-                worstRating: '1'
-            },
             knowsAbout: [
                 'Tanzania safari',
                 'visit Tanzania',
@@ -215,12 +208,15 @@
             };
         }
 
-        if (safari.avg_rating > 0) {
+        const reviewCount = Number(safari.review_count || safari.reviews?.length || 0);
+        const avgRating = Number(safari.avg_rating || 0);
+        if (avgRating > 0 && reviewCount > 0) {
             schema.aggregateRating = {
                 '@type': 'AggregateRating',
-                ratingValue: Number(safari.avg_rating).toFixed(1),
-                reviewCount: safari.review_count || safari.reviews?.length || 1,
-                bestRating: 5
+                ratingValue: avgRating.toFixed(1),
+                reviewCount,
+                bestRating: 5,
+                worstRating: 1
             };
         }
 
@@ -369,6 +365,7 @@
     }
 
     function initGlobalSchemas() {
+        if (document.getElementById('ssr-jsonld-0')) return;
         injectJsonLd('localbusiness-jsonld', localBusinessSchema());
         injectJsonLd('website-jsonld', websiteSchema());
     }

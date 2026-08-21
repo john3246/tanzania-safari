@@ -47,16 +47,20 @@ const HOME_FAQS = [
 router.get('/', async (req, res) => {
   try {
     const lang = seo.parseLangFromRequest(req);
-    const [featured, destinations] = await Promise.all([
+    const [featured, destinations, reviewStats, reviews] = await Promise.all([
       ssr.fetchFeaturedPackages(6),
-      ssr.fetchDestinations(4)
+      ssr.fetchDestinations(4),
+      ssr.fetchReviewStats(),
+      ssr.fetchApprovedReviews(6)
     ]);
     const jsonLd = [
       seo.websiteSchema(lang),
-      seo.organizationSchema(),
+      seo.organizationSchema(reviewStats),
       seo.faqPageSchema(HOME_FAQS),
       seo.breadcrumbSchema([{ name: 'Home', url: '/' }])
     ];
+    const reviewLd = seo.reviewListSchema(reviews);
+    if (reviewLd) jsonLd.push(reviewLd);
     if (featured.length) jsonLd.push(seo.touristTripItemListSchema(ssr.toTripListItems(featured)));
     if (destinations.length) {
       jsonLd.push(seo.touristDestinationItemListSchema(ssr.toDestinationListItems(destinations)));
@@ -327,7 +331,10 @@ router.get('/sitemap.xml', async (req, res) => {
       'kilimanjaro-packing-list': '0.9',
       'train-for-kilimanjaro': '0.9',
       'kilimanjaro-tipping-guide': '0.85',
-      'kilimanjaro-acclimatization': '0.9'
+      'kilimanjaro-acclimatization': '0.9',
+      'serengeti-safari-cost-2026': '0.95',
+      'tanzania-safari-zanzibar-combo': '0.95',
+      'kilimanjaro-route-comparison': '0.95'
     };
 
     let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
@@ -730,12 +737,8 @@ router.get('/safaris/:slug', async (req, res) => {
   try {
     const row = await ssr.fetchPackageBySlug(slug);
 
-    const title = (row?.meta_title || (row
-      ? `${row.package_name} | ${row.duration_days || ''}-Day Tanzania Safari`
-      : 'Tanzania Safari Package | Tours from Arusha')).slice(0, 70);
-    const description = row?.meta_description
-      || seo.truncate(row?.short_description || row?.detailed_description
-        || 'Private Tanzania safari itinerary with expert local guides from Arusha. Serengeti, Ngorongoro & more.', 160);
+    const title = seo.packagePageTitle(row);
+    const description = seo.packagePageDescription(row);
 
     const jsonLd = [
       seo.organizationSchema(),
@@ -945,6 +948,41 @@ router.get('/blog', (req, res) => {
 
 router.get('/blog/:slug', async (req, res) => {
   const slug = req.params.slug;
+  const PILLAR_PAGE_SEO = {
+    'serengeti-safari-cost-2026': {
+      title: 'Serengeti Safari Cost 2026 | What\'s Included from Arusha',
+      description: 'Serengeti safari cost 2026: typical USD per person, park fees, lodges, and what is included vs excluded. WhatsApp for live availability.',
+      image: '/images/optimized/serengeti-national-park.webp',
+      faqs: [
+        { q: 'How much does a Serengeti safari cost in 2026?', a: 'A private mid-range Serengeti safari with a local Arusha operator typically costs about USD $450–$650+ per person per day, depending on lodges and season.' },
+        { q: 'What is included in a Serengeti safari price?', a: 'A complete quote should include park fees, a private 4x4, a licensed guide, and named lodges. Flights, visas, tips, drinks, and balloon safaris are usually extra.' }
+      ]
+    },
+    'tanzania-safari-zanzibar-combo': {
+      title: 'Safari + Zanzibar 2026 | How to Combine Beach & Bush',
+      description: 'How to combine a Tanzania safari with Zanzibar in 2026: days, flights from Arusha, costs, and sample itineraries. WhatsApp for live availability.',
+      image: '/images/optimized/boat%20zanzibar.webp',
+      faqs: [
+        { q: 'How do you combine a Tanzania safari with Zanzibar?', a: 'Do 5–8 northern-circuit safari days from Arusha, then fly to Zanzibar for 3–5 beach nights. We book both on one quote.' },
+        { q: 'How many days for safari plus Zanzibar?', a: 'Ten to twelve days is the most comfortable first trip. Eight to nine days works with a shorter beach stay.' }
+      ]
+    },
+    'kilimanjaro-route-comparison': {
+      title: 'Kilimanjaro Route Comparison 2026 | Machame vs Lemosho',
+      description: 'Compare 6–8 day Kilimanjaro routes: Machame, Lemosho, Marangu — days, difficulty, huts vs camping. WhatsApp Arusha for a 2026 climb quote.',
+      image: '/images/kilimanjaro/kilimanjaro%20(1).jpeg',
+      faqs: [
+        { q: 'Which Kilimanjaro route is best for 7 days?', a: 'Machame in 7 days or Lemosho in 7–8 days are the usual picks for camping. Marangu uses huts and is often 5–6 days.' },
+        { q: 'Machame vs Lemosho — which should I book?', a: 'Book Lemosho if you can take the extra day. Book 7-day Machame for the classic southern-circuit trail.' }
+      ]
+    },
+    'great-wildebeest-migration': {
+      title: 'Best Time for the Great Migration 2026 | Month-by-Month',
+      description: 'Month-by-month Great Migration calendar: Ndutu calving, Grumeti, Mara River crossings. WhatsApp for live herd location and 2026 availability.',
+      image: '/images/optimized/8-day-northern-serengeti-mara-river-crossing.webp'
+    }
+  };
+  const pillar = PILLAR_PAGE_SEO[slug];
   try {
     const db = require('../config/db');
     let row = null;
@@ -959,43 +997,46 @@ router.get('/blog/:slug', async (req, res) => {
       row = r.rows[0];
     } catch (_) { /* fall through */ }
 
-    const title = (row?.meta_title || row?.post_title || 'Tanzania Safari Guide').slice(0, 70);
+    const title = (row?.meta_title || pillar?.title || row?.post_title || 'Tanzania Safari Guide').slice(0, 65);
     const description = row?.meta_description
-      || seo.truncate(row?.post_excerpt || seo.stripHtml(row?.post_content), 160)
+      || pillar?.description
+      || seo.truncate(row?.post_excerpt || seo.stripHtml(row?.post_content), 158)
       || 'Tanzania safari planning guide from Tanzania Safari Magic in Arusha.';
     const tags = Array.isArray(row?.post_tags) ? row.post_tags.join(', ') : '';
+    const jsonLd = [
+      seo.breadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Blog', url: '/blog' },
+        { name: row?.post_title || pillar?.title || 'Guide', url: `/blog/${slug}` }
+      ]),
+      {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: title,
+        description,
+        image: seo.absoluteUrl(row?.featured_image_url || pillar?.image),
+        author: { '@type': 'Person', name: 'John Raphael Shayo' },
+        publisher: {
+          '@type': 'Organization',
+          name: seo.SITE.name,
+          logo: { '@type': 'ImageObject', url: seo.SITE.logo }
+        },
+        datePublished: row?.published_at || '2026-08-21',
+        dateModified: row?.updated_at || row?.published_at || '2026-08-21',
+        mainEntityOfPage: `${seo.SITE.url}/blog/${slug}`
+      }
+    ];
+    if (pillar?.faqs?.length) jsonLd.push(seo.faqPageSchema(pillar.faqs));
 
     seo.sendSeoHtml(res, 'blog-detail.html', {
       title,
       description,
       canonical: `${seo.SITE.url}/blog/${encodeURIComponent(slug)}`,
-      image: row?.featured_image_url || '/images/optimized/serengeti-national-park.webp',
+      image: row?.featured_image_url || pillar?.image || '/images/optimized/serengeti-national-park.webp',
       keywords: tags || seo.KEYWORD_HUB.blog,
       type: 'article',
-      h1: row?.post_title || title,
-      jsonLd: [
-        seo.breadcrumbSchema([
-          { name: 'Home', url: '/' },
-          { name: 'Blog', url: '/blog' },
-          { name: row?.post_title || 'Guide', url: `/blog/${slug}` }
-        ]),
-        {
-          '@context': 'https://schema.org',
-          '@type': 'Article',
-          headline: title,
-          description,
-          image: seo.absoluteUrl(row?.featured_image_url),
-          author: { '@type': 'Person', name: 'John Raphael Shayo' },
-          publisher: {
-            '@type': 'Organization',
-            name: seo.SITE.name,
-            logo: { '@type': 'ImageObject', url: seo.SITE.logo }
-          },
-          datePublished: row?.published_at || undefined,
-          dateModified: row?.updated_at || row?.published_at || undefined,
-          mainEntityOfPage: `${seo.SITE.url}/blog/${slug}`
-        }
-      ]
+      h1: row?.post_title || pillar?.title || title,
+      jsonLd
     });
   } catch (e) {
     console.error('blog SEO:', e.message);

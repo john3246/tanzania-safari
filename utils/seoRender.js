@@ -53,6 +53,44 @@ function truncate(str, n = 160) {
   return String(str || '').replace(/\s+/g, ' ').trim().slice(0, n);
 }
 
+function clipTitle(str, n = 65) {
+  const s = String(str || '').replace(/\s+/g, ' ').trim();
+  if (s.length <= n) return s;
+  const cut = s.slice(0, n);
+  const sp = cut.lastIndexOf(' ');
+  return (sp > 40 ? cut.slice(0, sp) : cut).replace(/[—,\s:-]+$/, '');
+}
+
+/**
+ * High-intent package <title> / meta description (head only).
+ * Uses real package name + duration + price when present — never invents a price.
+ */
+function packagePageTitle(safari) {
+  if (!safari) return 'Tanzania Safari Package | Prices & Itinerary 2026';
+  if (safari.meta_title) return clipTitle(safari.meta_title);
+  const name = String(safari.package_name || 'Tanzania Safari').trim();
+  const days = parseInt(safari.duration_days, 10);
+  const hasDays = days > 0 && !/^\d+[\s-]*day/i.test(name);
+  const prefix = hasDays ? `${days}-Day ` : '';
+  return clipTitle(`${prefix}${name} — Prices & Itinerary 2026`);
+}
+
+function packagePageDescription(safari) {
+  if (!safari) {
+    return 'Private Tanzania safari from Arusha. WhatsApp +255 695 108 009 for live availability and a free quote.';
+  }
+  if (safari.meta_description) return truncate(safari.meta_description, 158);
+  const price = Number(safari.base_price_usd || safari.price || 0);
+  const days = parseInt(safari.duration_days, 10);
+  const name = String(safari.package_name || 'this safari').trim();
+  const priceBit = price > 0 ? `From $${Math.round(price).toLocaleString()}/person` : 'Custom quote';
+  const dayBit = days > 0 ? `${days}-day ` : '';
+  return truncate(
+    `${priceBit} — ${dayBit}${name}. Park fees & lodges as listed. WhatsApp for live 2026 availability.`,
+    158
+  );
+}
+
 function stripHtml(str) {
   return String(str || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 }
@@ -75,8 +113,8 @@ function buildHeadTags({
   geoPlacename = 'Arusha, Tanzania'
 }) {
   const locale = normalizeLang(lang);
-  const t = escapeHtml((title || SITE.name).slice(0, 70));
-  const d = escapeHtml(truncate(description, 160));
+  const t = escapeHtml(clipTitle(title || SITE.name, 65));
+  const d = escapeHtml(truncate(description, 158));
   const canon = escapeHtml(canonical || SITE.url);
   const img = escapeHtml(absoluteUrl(image));
   const kw = escapeHtml(keywords || '');
@@ -271,11 +309,13 @@ function touristTripSchema(safari) {
     };
   }
 
-  if (Number(safari.avg_rating) > 0) {
+  const reviewCount = Number(safari.review_count || safari.reviews?.length || 0);
+  const avgRating = Number(safari.avg_rating || 0);
+  if (avgRating > 0 && reviewCount > 0) {
     schema.aggregateRating = {
       '@type': 'AggregateRating',
-      ratingValue: Number(safari.avg_rating).toFixed(1),
-      reviewCount: Number(safari.review_count || safari.reviews?.length || 1),
+      ratingValue: avgRating.toFixed(1),
+      reviewCount,
       bestRating: 5,
       worstRating: 1
     };
@@ -340,6 +380,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   gtag('js', new Date());
 
 ${configIds.map((id) => `  gtag('config', '${escapeHtml(id)}');`).join('\n')}
+</script>`;
+  }
+
+  const clarity = (process.env.CLARITY_ID || process.env.MICROSOFT_CLARITY_ID || '').trim();
+  if (clarity) {
+    parts.head += `
+<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){
+    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window, document, "clarity", "script", "${escapeHtml(clarity)}");
 </script>`;
   }
 
@@ -417,8 +469,8 @@ function touristTripItemListSchema(items) {
   };
 }
 
-function organizationSchema() {
-  return {
+function organizationSchema(opts = {}) {
+  const schema = {
     '@context': 'https://schema.org',
     '@type': ['TravelAgency', 'TouristInformationCenter', 'LocalBusiness'],
     '@id': SITE.url + '/#organization',
@@ -481,15 +533,10 @@ function organizationSchema() {
       'https://youtube.com/tanzaniasafarimagic',
       'https://wa.me/255695108009',
       'https://www.tripadvisor.com/Attraction_Review-g297913-d28075837-Reviews-Tanzania_Safari_Magic-Arusha_Arusha_Region.html',
-      'https://maps.app.goo.gl/36osoUgbeghcvwE89'
+      'https://maps.app.goo.gl/36osoUgbeghcvwE89',
+      'https://www.tato.or.tz/',
+      'https://wttc.org/initiatives/safe-travels'
     ],
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '5.0',
-      reviewCount: '48',
-      bestRating: '5',
-      worstRating: '1'
-    },
     knowsAbout: [
       'Tanzania safari',
       'visit Tanzania',
@@ -563,6 +610,44 @@ function organizationSchema() {
         }
       ]
     }
+  };
+  const reviewCount = Number(opts.reviewCount || 0);
+  const ratingValue = Number(opts.ratingValue || 0);
+  if (reviewCount > 0 && ratingValue > 0) {
+    schema.aggregateRating = {
+      '@type': 'AggregateRating',
+      ratingValue: ratingValue.toFixed(1),
+      reviewCount,
+      bestRating: '5',
+      worstRating: '1'
+    };
+  }
+  return schema;
+}
+
+function reviewListSchema(reviews) {
+  const list = (Array.isArray(reviews) ? reviews : []).filter(
+    (r) => r && (r.comment || r.review_comment) && Number(r.rating) > 0
+  );
+  if (!list.length) return null;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'TravelAgency',
+    '@id': SITE.url + '/#organization',
+    review: list.slice(0, 8).map((r) => ({
+      '@type': 'Review',
+      author: {
+        '@type': 'Person',
+        name: [r.first_name, r.last_name].filter(Boolean).join(' ') || 'Safari guest'
+      },
+      reviewRating: {
+        '@type': 'Rating',
+        ratingValue: Number(r.rating),
+        bestRating: 5,
+        worstRating: 1
+      },
+      reviewBody: truncate(stripHtml(r.comment || r.review_comment), 400)
+    }))
   };
 }
 
@@ -766,12 +851,16 @@ module.exports = {
   absoluteUrl,
   truncate,
   stripHtml,
+  clipTitle,
+  packagePageTitle,
+  packagePageDescription,
   buildHeadTags,
   buildGoogleTags,
   breadcrumbSchema,
   faqSchema,
   websiteSchema,
   organizationSchema,
+  reviewListSchema,
   faqPageSchema,
   touristTripSchema,
   touristTripItemListSchema,

@@ -64,6 +64,9 @@ Allow: /blog/tanzania-visa-guide
 Allow: /blog/first-tanzania-safari
 Allow: /blog/tanzania-solo-travel
 Allow: /blog/things-to-do-in-arusha
+Allow: /blog/serengeti-safari-cost-2026
+Allow: /blog/tanzania-safari-zanzibar-combo
+Allow: /blog/kilimanjaro-route-comparison
 
 Allow: /llms.txt
 Allow: /sitemap.xml
