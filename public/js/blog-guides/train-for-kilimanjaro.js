@@ -18,7 +18,7 @@
     meta_title: 'Train for Kilimanjaro 2026 | Hiking, Cardio & Altitude Prep Mindset',
     meta_description: 'How to train for Kilimanjaro: hiking practice, cardio base, strength for descents, and altitude prep mindset (not medical advice). Plan your climb with Tanzania Safari Magic in Arusha.',
     excerpt: 'A practical training mindset for Kilimanjaro from Tanzania Safari Magic — trail time, cardio, downhill strength, and how fitness connects to route days — not a medical protocol.',
-    featured_image_url: '/images/kilimanjaro/kilimanjaro%20(4).webp',
+    featured_image_url: '/images/kilimanjaro/kilimanjaro%20(4).jpeg',
     published_at: '2026-08-06T09:00:00.000Z',
     updated_at: '2026-08-06T12:00:00.000Z',
     category_name: 'Kilimanjaro Guides',
@@ -33,7 +33,7 @@
 <p>This is general preparation guidance from <strong>Tanzania Safari Magic</strong> in Arusha, <em>not medical advice</em>. Clear health questions with your own clinician. Match training to difficulty realities in <a href="/blog/climbing-kilimanjaro-difficulty">climbing Kilimanjaro difficulty</a>, then browse <a href="/kilimanjaro">Kilimanjaro</a> dates and <a href="/booking">booking</a>.</p>
 
 <figure class="guide-figure">
-  <img src="/images/kilimanjaro/kilimanjaro%20(4).webp" alt="Train for Kilimanjaro hiking fitness Tanzania" width="1200" height="750" loading="eager">
+  <img src="/images/kilimanjaro/kilimanjaro%20(4).jpeg" alt="Train for Kilimanjaro hiking fitness Tanzania" width="1200" height="750" loading="eager">
   <figcaption>Gym miles help — trail miles with elevation help more.</figcaption>
 </figure>
 
@@ -86,7 +86,7 @@
 <p>Starting from a sofa baseline? Give yourself more months or choose a longer route profile with Our Team so the mountain schedule helps your lungs.</p>
 
 <figure class="guide-figure">
-  <img src="/images/kilimanjaro/kilimanjaro%20(8).webp" alt="Cardio and hiking training for Kilimanjaro Tanzania trip" width="1200" height="750" loading="lazy">
+  <img src="/images/kilimanjaro/kilimanjaro%20(8).jpeg" alt="Cardio and hiking training for Kilimanjaro Tanzania trip" width="1200" height="750" loading="lazy">
   <figcaption>Think multi-hour days outdoors — summit night is a long, cold hike in the dark.</figcaption>
 </figure>
 
@@ -123,7 +123,7 @@
 <p>Stop if pain (not normal training discomfort) appears — see a qualified professional. We are safari and mountain logistics specialists, not physiotherapists.</p>
 
 <figure class="guide-figure">
-  <img src="/images/kilimanjaro/kilimanjaro%20(1).webp" alt="Active travel Tanzania after training for Kilimanjaro" width="1200" height="750" loading="lazy">
+  <img src="/images/kilimanjaro/kilimanjaro%20(1).jpeg" alt="Active travel Tanzania after training for Kilimanjaro" width="1200" height="750" loading="lazy">
   <figcaption>Many climbers add a safari after the trek — train enough that you still enjoy long vehicle days.</figcaption>
 </figure>
 

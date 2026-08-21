@@ -38,12 +38,7 @@
     "whatsappLabel": "WhatsApp :",
     "planTrip": "Planifier un voyage",
     "searchAria": "Rechercher des circuits",
-    "searchPlaceholder": "Rechercher un safari...",
-    "experience": "Expérience",
-    "tourExperience": "Expérience tour",
-    "gallery": "Galerie",
-    "stories": "Récits",
-    "accommodation": "Hébergements"
+    "searchPlaceholder": "Rechercher un safari..."
   },
   "common": {
     "home": "Accueil",
@@ -109,11 +104,7 @@
     "whatsappTitle": "WhatsApp notre équipe — Devis safari gratuit",
     "whatsappAria": "WhatsApp Tanzania Safari Magic pour un devis gratuit",
     "kiliRoutes": "Voies du Kilimandjaro",
-    "visaGuide": "Guide visa Tanzanie",
-    "accommodation": "Hébergements",
-    "experience": "Expérience tour",
-    "gallery": "Galerie",
-    "stories": "Récits"
+    "visaGuide": "Guide visa Tanzanie"
   },
   "quickBook": {
     "title": "Planifiez votre safari",
@@ -187,7 +178,7 @@
     "viewAllSafaris": "Voir tous les safaris",
     "whyChoose": "Pourquoi nous choisir",
     "trustedPartnerHtml": "Votre <span>partenaire safari</span> de confiance",
-    "whyDesc": "Safaris privés en Tanzanie avec des guides locaux licenciés, des 4x4 bien entretenus et des devis honnêtes depuis Arusha.",
+    "whyDesc": "Plus d'une décennie d'expériences safari exceptionnelles avec expertise, sécurité et passion.",
     "expertGuides": "Guides locaux experts",
     "expertGuidesDesc": "Professionnels certifiés avec une connaissance approfondie de la faune et des habitats tanzaniens.",
     "safetyFirst": "Sécurité d'abord",
@@ -223,72 +214,6 @@
     "seoHubTitle": "Tourisme safari en Tanzanie depuis Arusha",
     "seoHubP1": "Tanzania Safari Magic est votre porte d’entrée locale au tourisme en Tanzanie : safaris privés au Serengeti, game drives au cratère Ngorongoro, tours de la Grande Migration, ascensions du Kilimandjaro et séjours à Zanzibar — le tout planifié depuis Arusha avec des guides licenciés.",
     "seoHubLinks": "Nouveau ? Commencez par notre <a href=\"/visit-tanzania\">guide de voyage Visiter la Tanzanie</a>. Explorez les <a href=\"/safaris\">forfaits safari</a>, le <a href=\"/destinations/serengeti-national-park\">parc national du Serengeti</a>, <a href=\"/destinations/ngorongoro-conservation-area\">Ngorongoro</a>, les <a href=\"/kilimanjaro\">treks Kilimandjaro</a>, les <a href=\"/migrations\">safaris migration</a>, les <a href=\"/zanzibar\">extensions Zanzibar</a>, notre <a href=\"/blog/tanzania-safari\">guide safari Tanzanie</a>, <a href=\"/blog/first-tanzania-safari\">préparer un premier safari</a> et le <a href=\"/blog/kilimanjaro-cost\">guide des coûts Kilimandjaro</a> — ou <a href=\"/booking\">demandez un devis gratuit</a>."
-  },
-  "partners": {
-    "eyebrow": "Nos partenaires",
-    "titleHtml": "Partenaires <span>de terrain</span> de confiance",
-    "desc": "Nous travaillons avec des opérateurs tanzaniens licenciés pour que véhicules, guides et logistique restent locaux — à commencer par Glad of Africa Safari.",
-    "gladTitle": "Glad of Africa Safari",
-    "gladDesc": "Notre partenaire terrain pour les 4x4 et les équipes du circuit nord. La flotte Glad of Africa de la galerie est la même qui emmène les voyageurs de Tanzania Safari Magic à Tarangire, Serengeti, Ngorongoro et Lake Natron.",
-    "gladCta": "Visiter Glad of Africa"
-  },
-  "experience": {
-    "eyebrow": "Expérience tour",
-    "title": "L’expérience safari en Tanzanie",
-    "subtitle": "Game drives en 4x4, jours sur le volcan Ol Doinyo Lengai, Big Five et visites culturelles — photos et vidéos de nos circuits Tanzania Safari Magic.",
-    "whatTitle": "Une journée en safari",
-    "whatDesc": "Des game drives à l’aube aux bords du cratère et aux volcans de la Rift Valley : chaque itinéraire privilégie le temps sur le terrain.",
-    "cardVehiclesTitle": "Game drives privés en 4x4",
-    "cardVehiclesDesc": "Places à la fenêtre, toit pop-up et guides professionnels à Tarangire, Serengeti et Ngorongoro — avec les véhicules Glad of Africa.",
-    "cardVolcanoTitle": "Ol Doinyo Lengai et Lake Natron",
-    "cardVolcanoDesc": "Ajoutez la montagne sacrée massaï, les lacs alcalins et les flamants à un safari du circuit nord.",
-    "cardGuidesTitle": "Guides locaux, vrais récits",
-    "cardGuidesDesc": "Guides licenciés d’Arusha qui connaissent les troupeaux, les pistes et les communautés.",
-    "ctaGallery": "Ouvrir la galerie",
-    "ctaStories": "Lire les récits",
-    "ctaBook": "Planifier cette expérience",
-    "wildlifeTitle": "Faune sur le terrain",
-    "wildlifeDesc": "Léopard, rhinocéros et paysages volcaniques — extraits de départs récents."
-  },
-  "gallery": {
-    "eyebrow": "Du terrain",
-    "title": "Galerie safari",
-    "subtitle": "Photos et clips des voyages Tanzania Safari Magic — volcans, voitures Glad of Africa et faune du circuit nord.",
-    "cta": "Demander un safari comme celui-ci"
-  },
-  "stories": {
-    "eyebrow": "Notre équipe",
-    "title": "Récits safari",
-    "subtitle": "Notes du circuit nord — aubes sur le volcan, journées Big Five et les personnes du voyage.",
-    "s1Title": "Aube sur l’Ol Doinyo Lengai",
-    "s1P1": "Les voyageurs citent d’abord le Serengeti — puis la montée de nuit. Ol Doinyo Lengai, Montagne de Dieu massaï, est un cône de cendres au-dessus du lac Natron. On part dans le noir et la Rift Valley vire à l’or au sommet.",
-    "s1P2": "Nous ajoutons Lengai et Natron aux itinéraires longs quand les paysages comptent autant que la faune, avant la route vers le Serengeti Nord.",
-    "s2Title": "Un léopard qui est resté",
-    "s2P1": "Seronera et les kopjes du nord offrent encore les observations espérées. Ce léopard s’est nourri à découvert, sans se fondre dans l’arbre.",
-    "s2P2": "Nous ne garantissons pas un félin. Nous garantissons du temps dans les bons habitats, avec un guide qui sait attendre.",
-    "s3Title": "Rhinocéros dans le bush",
-    "s3P1": "Le rhinocéros noir reste le plus rare des Big Five. Le cratère du Ngorongoro offre les meilleures chances. Quand il sort du couvert, le véhicule se tait.",
-    "s3P2": "Une journée complète dans le cratère, une descente tôt et un pique-nique au fond : nous l’incluons dans presque chaque safari nord avec Ngorongoro.",
-    "s4Title": "L’équipe sur la route",
-    "s4P1": "Tanzania Safari Magic s’associe à Glad of Africa pour les véhicules et les équipes — les voitures des plaines et les guides de Tarangire à Kogatende.",
-    "s4P2": "Demandez un itinéraire sur mesure : parcs classiques, jours culturels à Materuni ou Lake Eyasi, ou fenêtre Mara River. Nous associons les lodges à l’itinéraire réel.",
-    "cta": "Écrivez votre propre récit safari"
-  },
-  "accom": {
-    "eyebrow": "Lodges et hôtels",
-    "title": "Hébergements safari en Tanzanie",
-    "subtitle": "Lodges et camps groupés selon l’itinéraire : Arusha, Tarangire, Karatu, Manyara, Serengeti et Ngorongoro. Nous combinons milieu de gamme et luxe, puis confirmons les disponibilités.",
-    "intro": "Choisissez une région. Chaque fiche mène au site de l’établissement. Les nuits définitives sont confirmées sur le devis.",
-    "allRegions": "Toutes les régions",
-    "luxury": "Luxe",
-    "midrange": "Milieu de gamme",
-    "regionGuide": "Guide lodges de la zone",
-    "cta": "Associer les lodges à mon safari",
-    "overnight": "Nuit",
-    "overnightIn": "Nuit à",
-    "comboNote": "Combinaison typique pour cette nuit (ou similaire, confirmée à la réservation) :",
-    "seeAllIn": "Voir tous les lodges à",
-    "visitSite": "Voir le site officiel →"
   },
   "homeClimb": {
     "eyebrow": "Alpinisme",

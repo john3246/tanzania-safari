@@ -17,7 +17,7 @@
     meta_title: 'Kilimanjaro Cost 2026 | Climb Prices from Arusha | Tanzania Safari Magic',
     meta_description: 'Kilimanjaro climb cost guide 2026: price ranges, park fees mindset, what’s included, tipping, and combining a trek with safari. Free quote from Tanzania Safari Magic in Arusha.',
     excerpt: 'What a Kilimanjaro climb really costs in 2026 — route days, park fees, inclusions, and how to budget a trek–safari combination with a local Arusha operator.',
-    featured_image_url: '/images/kilimanjaro/kilimanjaro%20(6).webp',
+    featured_image_url: '/images/kilimanjaro/kilimanjaro%20(6).jpeg',
     published_at: '2026-08-02T09:00:00.000Z',
     updated_at: '2026-08-05T15:00:00.000Z',
     category_name: 'Kilimanjaro Guides',
@@ -32,7 +32,7 @@
 <p><strong>Tanzania Safari Magic</strong> prices climbs transparently and can attach a northern-circuit safari afterward. Compare trek options on <a href="/kilimanjaro">Kilimanjaro</a>, safari day rates in our <a href="/blog/tanzania-safari-cost">Tanzania safari cost</a> guide, and live packages on <a href="/safaris">safaris</a>.</p>
 
 <figure class="guide-figure">
-  <img src="/images/kilimanjaro/kilimanjaro%20(6).webp" alt="Mount Kilimanjaro climb cost Tanzania Safari Magic" width="1200" height="750" loading="eager">
+  <img src="/images/kilimanjaro/kilimanjaro%20(6).jpeg" alt="Mount Kilimanjaro climb cost Tanzania Safari Magic" width="1200" height="750" loading="eager">
   <figcaption>More days on the mountain usually mean higher park fees — and better acclimatisation value.</figcaption>
 </figure>
 
@@ -84,7 +84,7 @@
 <p>We show fee-aware totals on quotes so you understand why days and routes move the needle. For safari-side park fees and daily rates, see <a href="/blog/tanzania-safari-cost">Tanzania safari cost 2026</a>.</p>
 
 <figure class="guide-figure">
-  <img src="/images/kilimanjaro/kilimanjaro%20(7).webp" alt="Northern Tanzania travel cost Kilimanjaro and safari" width="1200" height="750" loading="lazy">
+  <img src="/images/kilimanjaro/kilimanjaro%20(7).jpeg" alt="Northern Tanzania travel cost Kilimanjaro and safari" width="1200" height="750" loading="lazy">
   <figcaption>Many travellers budget Kilimanjaro first, then add Serengeti or Ngorongoro nights from Arusha.</figcaption>
 </figure>
 

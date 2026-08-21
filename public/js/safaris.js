@@ -19,7 +19,7 @@ let currentPage = 1;
 const LIMIT = 9;
 
 function buildSafariCard(p) {
-    const img = p.featured_image_url || (p.image_urls && p.image_urls.length > 0 ? p.image_urls[0] : `/images/safaris/${p.package_slug}/main.webp`);
+    const img = p.featured_image_url || (p.image_urls && p.image_urls.length > 0 ? p.image_urls[0] : `/images/safaris/${p.package_slug}/main.jpg`);
     const rating = parseFloat(p.avg_rating || 0).toFixed(1);
     const dest = Array.isArray(p.destinations) ? p.destinations.map(d => d.park_name || d).join(', ') : '';
     return `

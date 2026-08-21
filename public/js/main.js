@@ -24,10 +24,7 @@ if (yr) yr.textContent = new Date().getFullYear();
 function buildSafariCard(p) {
     const rating = parseFloat(p.avg_rating || 0).toFixed(1);
     const dest = Array.isArray(p.destinations) ? p.destinations.map(d => d.park_name || d).join(', ') : '';
-    const imgRaw = p.featured_image_url || (p.image_urls && p.image_urls.length > 0 ? p.image_urls[0] : `/images/safaris/${p.package_slug}/main.webp`);
-    const img = (/^https?:\/\//i.test(imgRaw) && !/tanzaniasafarimagic\.com/i.test(imgRaw))
-        ? '/images/optimized/serengeti-national-park.webp'
-        : imgRaw;
+    const img = p.featured_image_url || (p.image_urls && p.image_urls.length > 0 ? p.image_urls[0] : `/images/safaris/${p.package_slug}/main.jpg`);
     return `
     <a href="/safaris/${p.package_slug}" class="safari-card fade-up">
       <div class="safari-card-img">
@@ -63,7 +60,7 @@ function buildDestCard(d) {
         || (d.gallery_urls && d.gallery_urls[0])
         || (d.image_urls && d.image_urls[0])
         || (slug ? `/images/optimized/${slug}.webp` : '/images/optimized/balloon.webp');
-    const fb = slug ? `/images/destinations/${slug}/main.webp` : '/images/optimized/balloon.webp';
+    const fb = slug ? `/images/destinations/${slug}/main.jpg` : '/images/optimized/balloon.webp';
     const count = d.safari_count || d.tour_count || 0;
     const href = slug ? `/destinations/${slug}` : '/destinations';
     return `
@@ -115,16 +112,7 @@ function getCatIcon(name, cls) {
 }
 
 // ── Load data ──────────────────────────────────────────────
-async function loadHomepage(secondary) {
-    const destGrid = document.getElementById('destinationsGrid');
-    const safariGrid = document.getElementById('safarisGrid');
-    const hasDestSsr = !!(destGrid && destGrid.querySelector('.ssr-card, a[href*="/destinations/"]'));
-    const hasSafariSsr = !!(safariGrid && safariGrid.querySelector('.ssr-card, a[href*="/safaris/"]'));
-    if (hasDestSsr && hasSafariSsr && !secondary) {
-        setTimeout(function () { loadHomepage(true); }, 3000);
-        return;
-    }
-
+async function loadHomepage() {
     // Stats
     try {
         const { data } = await API.get('/stats');
@@ -138,19 +126,16 @@ async function loadHomepage(secondary) {
 
     // Destinations
     try {
+        const { data } = await API.get('/destinations');
         const grid = document.getElementById('destinationsGrid');
-        if (grid && grid.querySelector('.ssr-card, a[href*="/destinations/"]')) {
-            /* keep server-rendered cards — do not refetch and swap images */
-        } else {
-            const { data } = await API.get('/destinations');
-            if (grid && data?.length) {
-                grid.innerHTML = data.slice(0, 4).map(buildDestCard).join('');
-            } else if (grid) {
-                grid.innerHTML = `<p style="text-align:center;color:var(--text-muted);grid-column:1/-1">${t('home.noDestinations')}</p>`;
-            }
+        if (grid && data?.length) {
+            grid.innerHTML = data.slice(0, 4).map(buildDestCard).join('');
+        } else if (grid && !grid.querySelector('.ssr-card, a[href*="/destinations/"]')) {
+            grid.innerHTML = `<p style="text-align:center;color:var(--text-muted);grid-column:1/-1">${t('home.noDestinations')}</p>`;
         }
     } catch (e) {
         const grid = document.getElementById('destinationsGrid');
+        // Keep SSR cards if present so the page never looks empty after a transient API failure
         if (grid && !grid.querySelector('.ssr-card, a[href*="/destinations/"]')) {
             grid.innerHTML = `<p style="color:var(--text-muted);grid-column:1/-1;text-align:center">${t('home.unableDestinations')}</p>`;
         }
@@ -249,9 +234,8 @@ async function loadHomepage(secondary) {
     } catch {}
 
     // Safaris
-    if (!hasSafariSsr) {
     try {
-        const { data } = await API.get('/packages?limit=8&sort=random');
+        const { data } = await API.get('/packages?limit=24&sort=random');
         featuredPackages = shuffleList(data || []);
         renderSafaris(featuredPackages, 4);
         // Populate quick-book dropdown
@@ -277,32 +261,17 @@ async function loadHomepage(secondary) {
             grid.innerHTML = `<p style="color:var(--text-muted);grid-column:1/-1;text-align:center">${t('home.unablePackages')}</p>`;
         }
     }
-    }
 
-    // Testimonials — real reviews only (JSON config + approved API rows with a quote)
+    // Testimonials
     try {
-        window.__TSM_TESTIMONIALS_API = true;
         const { data } = await API.get('/testimonials?limit=6');
-        if (window.TSMTrust && typeof window.TSMTrust.renderTestimonials === 'function') {
-            window.TSMTrust.renderTestimonials('#testimonialsGrid', data || []);
-        } else {
-            const grid = document.getElementById('testimonialsGrid');
-            const section = document.getElementById('testimonialsSection');
-            const list = (data || []).filter((r) => (r.comment || r.review_comment) && r.first_name);
-            if (grid && list.length) {
-                grid.innerHTML = list.map(buildTestimonialCard).join('');
-                if (section) section.hidden = false;
-            } else if (section) {
-                section.hidden = true;
-            }
+        const grid = document.getElementById('testimonialsGrid');
+        if (grid && data?.length) {
+            grid.innerHTML = data.map(buildTestimonialCard).join('');
+        } else if (grid) {
+            grid.innerHTML = `<p style="color:var(--text-muted);grid-column:1/-1;text-align:center">${t('home.noTestimonials')}</p>`;
         }
-    } catch {
-        if (window.TSMTrust) window.TSMTrust.renderTestimonials('#testimonialsGrid', []);
-        else {
-            const section = document.getElementById('testimonialsSection');
-            if (section) section.hidden = true;
-        }
-    }
+    } catch {}
 }
 
 function shuffleList(list) {
@@ -367,14 +336,11 @@ document.getElementById('newsletterForm')?.addEventListener('submit', async e =>
 });
 
 // ── Init ───────────────────────────────────────────────────
-(function bootHome() {
-  const destGrid = document.getElementById('destinationsGrid');
-  const safariGrid = document.getElementById('safarisGrid');
-  if (!destGrid && !safariGrid && !document.getElementById('groupHomeTeaser')) return;
-  const hasSsr = !!(safariGrid && safariGrid.querySelector('.ssr-card, a[href*="/safaris/"]'));
-  const start = () => { loadHomepage(); };
-  if (typeof requestIdleCallback === 'function') requestIdleCallback(start, { timeout: 2500 });
-  else setTimeout(start, 400);
+(async () => {
+  try {
+    if (window.TSM_i18n && window.TSM_i18n.ready) await window.TSM_i18n.ready;
+  } catch (_) {}
+  loadHomepage();
 })();
 
 // -- Reveal Animations --

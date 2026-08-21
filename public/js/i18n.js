@@ -113,7 +113,7 @@
   }
 
   function loadDict(lang) {
-    return fetch('/locales/' + lang + '.json?v=5')
+    return fetch('/locales/' + lang + '.json?v=1')
       .then(function (res) {
         if (!res.ok) throw new Error('locale ' + lang);
         return res.json();
@@ -138,21 +138,11 @@
 
     return chain
       .then(function () {
-        if (lang === 'en' && state._en && Object.keys(state._en).length) {
-          state.dict = state._en;
-          return state.dict;
-        }
-        if (lang === 'en') {
-          state.dict = {};
-          return {};
-        }
         return loadDict(lang);
       })
       .then(function (dict) {
-        if (dict && Object.keys(dict).length) {
-          state.dict = dict;
-          if (lang === 'en') state._en = dict;
-        }
+        state.dict = dict;
+        if (lang === 'en') state._en = dict;
         applyTranslations(document);
         updateSwitcherUI();
         try {

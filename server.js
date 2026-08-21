@@ -201,44 +201,6 @@ const cacheOptions = {
     maxAge: '30d',
     etag: true
 };
-// Serve WebP when a JPEG/PNG under /images/ has a .webp sibling (keeps old URLs working).
-const imagesRoot = path.join(__dirname, 'public', 'images');
-const webpSiblings = new Set();
-(function indexWebp(dir) {
-    try {
-        for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
-            const full = path.join(dir, ent.name);
-            if (ent.isDirectory()) indexWebp(full);
-            else if (/\.webp$/i.test(ent.name)) webpSiblings.add(full.toLowerCase());
-        }
-    } catch (_) {}
-})(imagesRoot);
-app.use((req, res, next) => {
-    if (req.method !== 'GET' && req.method !== 'HEAD') return next();
-    const urlPath = (req.path || '').split('?')[0];
-    if (!urlPath.startsWith('/images/')) return next();
-    if (!/\.(jpe?g|png)$/i.test(urlPath)) return next();
-    if (urlPath.toLowerCase() === '/images/logo.png') return next();
-    let rel;
-    try {
-        rel = decodeURIComponent(urlPath.replace(/^\/images\//, ''));
-    } catch (_) {
-        return next();
-    }
-    if (rel.includes('..')) return next();
-    const webpAbs = path.join(imagesRoot, rel.replace(/\.(jpe?g|png)$/i, '.webp'));
-    if (!webpSiblings.has(webpAbs.toLowerCase()) && !fs.existsSync(webpAbs)) return next();
-    res.type('image/webp');
-    res.set('Cache-Control', 'public, max-age=2592000, immutable');
-    return res.sendFile(webpAbs);
-});
-app.use((req, res, next) => {
-    const p = (req.path || '').split('?')[0];
-    if (/^\/js\/(layout-loader|site-trust|main|i18n)\.js$/i.test(p)) {
-        res.set('Cache-Control', 'public, max-age=120, must-revalidate');
-    }
-    next();
-});
 app.use(express.static(path.join(__dirname, 'public'), cacheOptions));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'), cacheOptions));
 
@@ -546,9 +508,6 @@ async function startServer() {
       console.log(`Admin Panel: http://localhost:${PORT}/admin/login`);
       console.log(`API:         http://localhost:${PORT}/api`);
       console.log(`Health:      http://localhost:${PORT}/health\n`);
-      try {
-        require('./utils/ssrCache').warm();
-      } catch (_) {}
     });
   } catch (error) {
     logger.error({ event: 'server_startup_failed', error: error.message }, 'Failed to start server');

@@ -18,7 +18,7 @@
     meta_title: 'Kilimanjaro Tipping Guide 2026 | Climb Crew & Safari Tips',
     meta_description: 'Ethical tipping on Kilimanjaro and Tanzania safaris: typical crew and guide ranges, how to budget, and fair practices — Tanzania Safari Magic, Arusha.',
     excerpt: 'How to tip ethically on Kilimanjaro climbs and wildlife safaris — typical planning ranges, crew roles, and fair habits from our Arusha team.',
-    featured_image_url: '/images/kilimanjaro/kilimanjaro%20(5).webp',
+    featured_image_url: '/images/kilimanjaro/kilimanjaro%20(5).jpeg',
     published_at: '2026-08-03T14:00:00.000Z',
     updated_at: '2026-08-06T10:00:00.000Z',
     category_name: 'Travel Tips',
@@ -56,7 +56,7 @@
 <p>I’m <strong>John Raphael Shayo</strong> with <strong>Tanzania Safari Magic</strong> in Arusha. Ranges below are <em>typical planning figures</em> we share with guests — not rigid rules, and not copied from other companies. Adjust for trip length, group size, and service quality. Explore climbs on our <a href="/kilimanjaro">Kilimanjaro page</a> and wildlife trips on <a href="/safaris">safaris</a>.</p>
 
 <figure class="guide-figure">
-  <img src="/images/kilimanjaro/kilimanjaro%20(5).webp" alt="Mount Kilimanjaro climb crew tipping guide Tanzania" width="1200" height="750" loading="eager">
+  <img src="/images/kilimanjaro/kilimanjaro%20(5).jpeg" alt="Mount Kilimanjaro climb crew tipping guide Tanzania" width="1200" height="750" loading="eager">
   <figcaption>Kilimanjaro success depends on a large support crew — tipping is part of ethical travel here.</figcaption>
 </figure>
 

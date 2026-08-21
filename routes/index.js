@@ -3,12 +3,11 @@ const router = express.Router();
 const path = require('path');
 const seo = require('../utils/seoRender');
 const ssr = require('../utils/ssrContent');
-const ssrCache = require('../utils/ssrCache');
 
 const VIEWS = path.join(__dirname, '../views');
 
 function sendFile(res, name) {
-  seo.sendViewHtml(res, name);
+  res.sendFile(path.join(VIEWS, name));
 }
 
 // Real, answerable questions travelers ask before booking a Tanzania trip.
@@ -45,10 +44,13 @@ const HOME_FAQS = [
 ];
 
 // ── Home ──────────────────────────────────────────────────────
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const lang = seo.parseLangFromRequest(req);
-    const { featured, destinations } = ssrCache.getHome();
+    const [featured, destinations] = await Promise.all([
+      ssr.fetchFeaturedPackages(6),
+      ssr.fetchDestinations(4)
+    ]);
     const jsonLd = [
       seo.websiteSchema(lang),
       seo.organizationSchema(),
@@ -148,7 +150,7 @@ const VISIT_TZ_TRIPS = [
   {
     name: 'Zanzibar Beach Extension',
     url: '/zanzibar',
-    image: '/images/zanzibar/zanzibar%20(1).webp',
+    image: '/images/zanzibar/zanzibar%20(1).jpeg',
     description: 'Add white-sand beaches, Stone Town and spice tours after your Tanzania safari.'
   }
 ];
@@ -325,14 +327,7 @@ router.get('/sitemap.xml', async (req, res) => {
       'kilimanjaro-packing-list': '0.9',
       'train-for-kilimanjaro': '0.9',
       'kilimanjaro-tipping-guide': '0.85',
-      'kilimanjaro-acclimatization': '0.9',
-      'private-serengeti-safari-price-2026': '0.96',
-      '8-day-tanzania-safari-cost': '0.96',
-      'mara-river-crossing-best-time': '0.96',
-      'machame-vs-lemosho': '0.95',
-      'tanzania-safari-from-arusha': '0.96',
-      'serengeti-zanzibar-combo': '0.95',
-      'tanzania-safari-cost-per-person-2026': '0.96'
+      'kilimanjaro-acclimatization': '0.9'
     };
 
     let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
@@ -347,10 +342,6 @@ router.get('/sitemap.xml', async (req, res) => {
       { path: '/kilimanjaro/routes', priority: '0.95', changefreq: 'weekly' },
       { path: '/migrations', priority: '0.98', changefreq: 'weekly' },
       { path: '/zanzibar', priority: '0.95', changefreq: 'weekly' },
-      { path: '/experience', priority: '0.88', changefreq: 'weekly' },
-      { path: '/gallery', priority: '0.8', changefreq: 'weekly' },
-      { path: '/stories', priority: '0.8', changefreq: 'weekly' },
-      { path: '/accommodation', priority: '0.92', changefreq: 'weekly' },
       { path: '/destinations', priority: '0.95', changefreq: 'weekly' },
       { path: '/destinations/serengeti-national-park', priority: '0.95', changefreq: 'weekly' },
       { path: '/destinations/ngorongoro-conservation-area', priority: '0.95', changefreq: 'weekly' },
@@ -469,9 +460,10 @@ router.get('/unsubscribe', (req, res) => {
   }
 });
 
-router.get('/safaris', (req, res) => {
+router.get('/safaris', async (req, res) => {
   try {
-    const { packages } = ssrCache.getSafaris();
+    // Filter/query pages share one canonical to avoid duplicate indexation
+    const packages = await ssr.fetchPackages(24);
     const jsonLd = [
       seo.organizationSchema(),
       seo.breadcrumbSchema([
@@ -569,49 +561,49 @@ const KILI_ROUTE_SEO = {
     title: 'Machame Route Kilimanjaro | 6–7 Day Camping Climb',
     description:
       'Climb the Machame Route on Kilimanjaro with Tanzania Safari Magic in Arusha. 6–7 day camping itinerary, day-by-day overview, difficulty, pros and cons, and free quotes.',
-    image: '/images/kilimanjaro/kilimanjaro%20(1).webp'
+    image: '/images/kilimanjaro/kilimanjaro%20(1).jpeg'
   },
   'marangu-route': {
     name: 'Marangu Route',
     title: 'Marangu Route Kilimanjaro | Hut Climb, 5–6 Days',
     description:
       'The Marangu "Coca-Cola" Route on Kilimanjaro — the only hut trail. 5–6 day itinerary, day-by-day overview, pros and cons, and free quotes from Tanzania Safari Magic in Arusha.',
-    image: '/images/kilimanjaro/kilimanjaro%20(2).webp'
+    image: '/images/kilimanjaro/kilimanjaro%20(2).jpeg'
   },
   'lemosho-route': {
     name: 'Lemosho Route',
     title: 'Lemosho Route Kilimanjaro | 7–8 Day Scenic Climb',
     description:
       'Climb the Lemosho Route on Kilimanjaro — a scenic 7–8 day western approach with high success rates. Day-by-day overview, pros and cons, and free quotes from Tanzania Safari Magic.',
-    image: '/images/kilimanjaro/kilimanjaro%20(3).webp'
+    image: '/images/kilimanjaro/kilimanjaro%20(3).jpeg'
   },
   'rongai-route': {
     name: 'Rongai Route',
     title: 'Rongai Route Kilimanjaro | Northern Approach, 6–7 Days',
     description:
       'The Rongai Route climbs Kilimanjaro from the quiet northern side near Kenya. 6–7 day itinerary, day-by-day overview, pros and cons, and free quotes from Tanzania Safari Magic.',
-    image: '/images/kilimanjaro/kilimanjaro%20(4).webp'
+    image: '/images/kilimanjaro/kilimanjaro%20(4).jpeg'
   },
   'northern-circuit-route': {
     name: 'Northern Circuit Route',
     title: 'Northern Circuit Kilimanjaro | 8–9 Day Route',
     description:
       'The Northern Circuit is Kilimanjaro’s longest, quietest route with the highest success rate. 8–9 day day-by-day overview, pros and cons, and free quotes from Tanzania Safari Magic.',
-    image: '/images/kilimanjaro/kilimanjaro%20(5).webp'
+    image: '/images/kilimanjaro/kilimanjaro%20(5).jpeg'
   },
   'umbwe-route': {
     name: 'Umbwe Route',
     title: 'Umbwe Route Kilimanjaro | Steep Direct Climb, 6–7 Days',
     description:
       'The Umbwe Route is Kilimanjaro’s steepest, most direct and challenging trail. 6–7 day day-by-day overview, who it suits, pros and cons, and free quotes from Tanzania Safari Magic.',
-    image: '/images/kilimanjaro/kilimanjaro%20(6).webp'
+    image: '/images/kilimanjaro/kilimanjaro%20(6).jpeg'
   },
   'shira-route': {
     name: 'Shira Route',
     title: 'Shira Route Kilimanjaro | High-Start Western Climb, 7–8 Days',
     description:
       'The Shira Route drives high onto the Shira Plateau before joining the Lemosho and Machame trail. 7–8 day day-by-day overview, pros and cons, and free quotes from Tanzania Safari Magic.',
-    image: '/images/kilimanjaro/kilimanjaro%20(3).webp'
+    image: '/images/kilimanjaro/kilimanjaro%20(3).jpeg'
   }
 };
 const KILI_ROUTE_SLUGS = Object.keys(KILI_ROUTE_SEO);
@@ -621,7 +613,7 @@ router.get('/kilimanjaro/routes', (req, res) => {
     seo.sendSeoHtml(res, 'kilimanjaro-routes.html', {
       pageKey: 'kilimanjaroRoutes',
       canonical: seo.SITE.url + '/kilimanjaro/routes',
-      image: '/images/kilimanjaro/kilimanjaro%20(1).webp',
+      image: '/images/kilimanjaro/kilimanjaro%20(1).jpeg',
       keywords: 'kilimanjaro routes, machame route, lemosho route, marangu route, rongai route, northern circuit, umbwe route, best kilimanjaro route',
       h1: 'Kilimanjaro Climbing Routes',
       hreflangPath: '/kilimanjaro/routes',
@@ -696,7 +688,7 @@ router.get(['/kilimanjaro', '/migrations', '/zanzibar'], (req, res) => {
     '/zanzibar': {
       pageKey: 'zanzibar',
       keywords: 'zanzibar safari package, bush to beach tanzania, safari and zanzibar, spice island holiday',
-      image: '/images/zanzibar/zanzibar%20(1).webp',
+      image: '/images/zanzibar/zanzibar%20(1).jpeg',
       h1: 'Zanzibar Beach Extensions',
       eyebrow: 'Spice Island',
       crumb: 'Zanzibar'
@@ -719,10 +711,10 @@ router.get(['/kilimanjaro', '/migrations', '/zanzibar'], (req, res) => {
         ...(req.path === '/kilimanjaro'
           ? [
               seo.touristTripItemListSchema([
-                { name: 'Machame Route', url: '/kilimanjaro/routes/machame-route', image: '/images/kilimanjaro/kilimanjaro%20(1).webp', description: 'Popular 6–7 day Kilimanjaro camping route.' },
-                { name: 'Lemosho Route', url: '/kilimanjaro/routes/lemosho-route', image: '/images/kilimanjaro/kilimanjaro%20(3).webp', description: 'Scenic western approach with strong acclimatization.' },
-                { name: 'Marangu Route', url: '/kilimanjaro/routes/marangu-route', image: '/images/kilimanjaro/kilimanjaro%20(2).webp', description: 'Classic hut route to Uhuru Peak.' },
-                { name: 'Northern Circuit', url: '/kilimanjaro/routes/northern-circuit-route', image: '/images/kilimanjaro/kilimanjaro%20(5).webp', description: 'Longest route with the highest summit success profile.' }
+                { name: 'Machame Route', url: '/kilimanjaro/routes/machame-route', image: '/images/kilimanjaro/kilimanjaro%20(1).jpeg', description: 'Popular 6–7 day Kilimanjaro camping route.' },
+                { name: 'Lemosho Route', url: '/kilimanjaro/routes/lemosho-route', image: '/images/kilimanjaro/kilimanjaro%20(3).jpeg', description: 'Scenic western approach with strong acclimatization.' },
+                { name: 'Marangu Route', url: '/kilimanjaro/routes/marangu-route', image: '/images/kilimanjaro/kilimanjaro%20(2).jpeg', description: 'Classic hut route to Uhuru Peak.' },
+                { name: 'Northern Circuit', url: '/kilimanjaro/routes/northern-circuit-route', image: '/images/kilimanjaro/kilimanjaro%20(5).jpeg', description: 'Longest route with the highest summit success profile.' }
               ])
             ]
           : [])
@@ -738,11 +730,8 @@ router.get('/safaris/:slug', async (req, res) => {
   try {
     const row = await ssr.fetchPackageBySlug(slug);
 
-    const days = row?.duration_days ? `${row.duration_days}-Day` : '';
-    const price = Number(row?.base_price_usd || row?.price || 0);
-    const priceBit = price > 0 ? ` from $${Math.round(price)}` : '';
     const title = (row?.meta_title || (row
-      ? `${row.package_name} | ${days}${priceBit} | Tanzania Safari Magic`
+      ? `${row.package_name} | ${row.duration_days || ''}-Day Tanzania Safari`
       : 'Tanzania Safari Package | Tours from Arusha')).slice(0, 70);
     const description = row?.meta_description
       || seo.truncate(row?.short_description || row?.detailed_description
@@ -778,9 +767,9 @@ router.get('/safaris/:slug', async (req, res) => {
   }
 });
 
-router.get('/destinations', (req, res) => {
+router.get('/destinations', async (req, res) => {
   try {
-    const { destinations } = ssrCache.getDestinations();
+    const destinations = await ssr.fetchDestinations(24);
     const jsonLd = [
       seo.organizationSchema(),
       seo.breadcrumbSchema([
@@ -871,63 +860,6 @@ router.get('/destinations/:slug', async (req, res) => {
   } catch (e) {
     console.error('destination SEO:', e.message);
     sendFile(res, 'destination-detail.html');
-  }
-});
-
-router.get('/experience', (req, res) => {
-  try {
-    seo.sendSeoHtml(res, 'experience.html', {
-      pageKey: 'experience',
-      canonical: seo.SITE.url + '/experience',
-      image: '/images/experience/ol-doinyo-lengai-volcano.webp',
-      h1: 'The Tanzania Safari Experience',
-      hreflangPath: '/experience'
-    });
-  } catch {
-    sendFile(res, 'experience.html');
-  }
-});
-
-router.get('/gallery', (req, res) => {
-  try {
-    seo.sendSeoHtml(res, 'gallery.html', {
-      pageKey: 'gallery',
-      canonical: seo.SITE.url + '/gallery',
-      image: '/images/experience/ol-doinyo-lengai.webp',
-      h1: 'Safari Gallery',
-      hreflangPath: '/gallery'
-    });
-  } catch {
-    sendFile(res, 'gallery.html');
-  }
-});
-
-router.get('/stories', (req, res) => {
-  try {
-    seo.sendSeoHtml(res, 'stories.html', {
-      pageKey: 'stories',
-      canonical: seo.SITE.url + '/stories',
-      image: '/images/experience/ol-doinyo-lengai-summit.webp',
-      h1: 'Safari Stories',
-      hreflangPath: '/stories'
-    });
-  } catch {
-    sendFile(res, 'stories.html');
-  }
-});
-
-router.get('/accommodation', (req, res) => {
-  try {
-    seo.sendSeoHtml(res, 'accommodation.html', {
-      pageKey: 'accommodation',
-      canonical: seo.SITE.url + '/accommodation',
-      image: '/images/optimized/serengeti-national-park.webp',
-      h1: 'Safari Accommodation in Tanzania',
-      hreflangPath: '/accommodation',
-      keywords: 'tanzania safari lodges, serengeti hotels, ngorongoro accommodation, tarangire lodge, arusha hotels'
-    });
-  } catch {
-    sendFile(res, 'accommodation.html');
   }
 });
 
@@ -1027,107 +959,43 @@ router.get('/blog/:slug', async (req, res) => {
       row = r.rows[0];
     } catch (_) { /* fall through */ }
 
-    const GUIDE_SSR = {
-      'private-serengeti-safari-price-2026': {
-        title: 'Private Serengeti Safari Price 2026 | Cost from Arusha',
-        description: 'Private Serengeti safari price 2026: typical USD per person rates, 4–8 day itineraries, park fees, and a free quote from Arusha.',
-        image: '/images/optimized/serengeti-national-park.webp',
-        faqs: [
-          { q: 'How much is a private Serengeti safari in 2026?', a: 'Mid-range private safaris with a local Arusha operator usually run about $450–$650+ per person per day including park fees and lodges.' },
-          { q: 'Do I pay online to get a Serengeti price?', a: 'No. A quote from Tanzania Safari Magic is free. Payment is arranged later as an offline deposit after you approve the itinerary.' }
-        ]
-      },
-      '8-day-tanzania-safari-cost': {
-        title: '8 Day Tanzania Safari Cost 2026 | Price per Person',
-        description: '8 day Tanzania safari cost in 2026: typical per-person totals for private mid-range, budget, and luxury northern-circuit trips from Arusha.',
-        image: '/images/optimized/8-day-northern-serengeti-mara-river-crossing.webp',
-        faqs: [
-          { q: 'How much does an 8-day Tanzania safari cost per person in 2026?', a: 'Plan roughly $3,600–$5,200+ per person for a private mid-range 8-day northern circuit, or from about $2,800 pp on a private budget.' }
-        ]
-      },
-      'mara-river-crossing-best-time': {
-        title: 'Mara River Crossing Best Time | Wildebeest Migration',
-        description: 'Best time to see the wildebeest migration Mara River crossing: usually July–September in northern Serengeti. Book a timed safari from Arusha.',
-        image: '/images/optimized/8-day-northern-serengeti-mara-river-crossing.webp',
-        faqs: [
-          { q: 'When is the best time to see the wildebeest Mara River crossing?', a: 'Usually July through September in northern Serengeti. August is often excellent, but crossings are not guaranteed every day.' }
-        ]
-      },
-      'machame-vs-lemosho': {
-        title: 'Machame vs Lemosho Route | Which Kilimanjaro Is Better',
-        description: 'Machame route vs Lemosho route: days, difficulty, scenery, and which Kilimanjaro climb is better for you. Free quote from Arusha.',
-        image: '/images/kilimanjaro/kilimanjaro%20(3).webp',
-        faqs: [
-          { q: 'Machame route vs Lemosho route — which is better?', a: 'Lemosho is usually better if you can spare 7–8 days. Machame is better for a classic 6–7 day camping climb and a shorter holiday.' }
-        ]
-      },
-      'tanzania-safari-from-arusha': {
-        title: 'Tanzania Safari from Arusha Booking | Free Quote 2026',
-        description: 'Book a Tanzania safari from Arusha: airport meet, private 4x4, Serengeti and Ngorongoro. Free quote, no payment to inquire.',
-        image: '/images/optimized/balloon.webp',
-        faqs: [
-          { q: 'How do I book a Tanzania safari from Arusha?', a: 'Share dates, group size, and interests with Tanzania Safari Magic. We send a private itinerary. No payment is required just to inquire.' }
-        ]
-      },
-      'serengeti-zanzibar-combo': {
-        title: 'Serengeti and Zanzibar Combo Safari | Bush to Beach',
-        description: 'Serengeti and Zanzibar combo safari: typical 8–12 day bush-to-beach itineraries, flights, and how to book from Arusha.',
-        image: '/images/zanzibar/zanzibar%20(1).webp',
-        faqs: [
-          { q: 'How many days for a Serengeti and Zanzibar combo safari?', a: 'Plan 8–12 days: typically 5–7 safari nights from Arusha plus 3–5 nights in Zanzibar.' }
-        ]
-      },
-      'tanzania-safari-cost-per-person-2026': {
-        title: 'Tanzania Safari Cost per Person 2026 | Prices from Arusha',
-        description: 'Tanzania safari cost per person 2026: daily and trip totals for private budget, mid-range, and luxury safaris from Arusha.',
-        image: '/images/optimized/balloon.webp',
-        faqs: [
-          { q: 'What is Tanzania safari cost per person in 2026?', a: 'Private budget from about $350 per person per day; mid-range about $450–$650+; luxury from about $650 per person per day with a local Arusha operator.' }
-        ]
-      }
-    };
-    const guideMeta = GUIDE_SSR[slug];
-
-    const title = (row?.meta_title || row?.post_title || guideMeta?.title || 'Tanzania Safari Guide').slice(0, 70);
+    const title = (row?.meta_title || row?.post_title || 'Tanzania Safari Guide').slice(0, 70);
     const description = row?.meta_description
       || seo.truncate(row?.post_excerpt || seo.stripHtml(row?.post_content), 160)
-      || guideMeta?.description
       || 'Tanzania safari planning guide from Tanzania Safari Magic in Arusha.';
     const tags = Array.isArray(row?.post_tags) ? row.post_tags.join(', ') : '';
-    const jsonLd = [
-      seo.breadcrumbSchema([
-        { name: 'Home', url: '/' },
-        { name: 'Blog', url: '/blog' },
-        { name: row?.post_title || guideMeta?.title || 'Guide', url: `/blog/${slug}` }
-      ]),
-      {
-        '@context': 'https://schema.org',
-        '@type': 'Article',
-        headline: title,
-        description,
-        image: seo.absoluteUrl(row?.featured_image_url || guideMeta?.image),
-        author: { '@type': 'Person', name: 'John Raphael Shayo' },
-        publisher: {
-          '@type': 'Organization',
-          name: seo.SITE.name,
-          logo: { '@type': 'ImageObject', url: seo.SITE.logo }
-        },
-        datePublished: row?.published_at || '2026-08-21',
-        dateModified: row?.updated_at || row?.published_at || '2026-08-21',
-        mainEntityOfPage: `${seo.SITE.url}/blog/${slug}`
-      }
-    ];
-    if (guideMeta?.faqs?.length) jsonLd.push(seo.faqPageSchema(guideMeta.faqs));
 
     seo.sendSeoHtml(res, 'blog-detail.html', {
       title,
       description,
       canonical: `${seo.SITE.url}/blog/${encodeURIComponent(slug)}`,
-      image: row?.featured_image_url || guideMeta?.image || '/images/optimized/serengeti-national-park.webp',
+      image: row?.featured_image_url || '/images/optimized/serengeti-national-park.webp',
       keywords: tags || seo.KEYWORD_HUB.blog,
       type: 'article',
-      h1: row?.post_title || guideMeta?.title || title,
-      jsonLd
+      h1: row?.post_title || title,
+      jsonLd: [
+        seo.breadcrumbSchema([
+          { name: 'Home', url: '/' },
+          { name: 'Blog', url: '/blog' },
+          { name: row?.post_title || 'Guide', url: `/blog/${slug}` }
+        ]),
+        {
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: title,
+          description,
+          image: seo.absoluteUrl(row?.featured_image_url),
+          author: { '@type': 'Person', name: 'John Raphael Shayo' },
+          publisher: {
+            '@type': 'Organization',
+            name: seo.SITE.name,
+            logo: { '@type': 'ImageObject', url: seo.SITE.logo }
+          },
+          datePublished: row?.published_at || undefined,
+          dateModified: row?.updated_at || row?.published_at || undefined,
+          mainEntityOfPage: `${seo.SITE.url}/blog/${slug}`
+        }
+      ]
     });
   } catch (e) {
     console.error('blog SEO:', e.message);

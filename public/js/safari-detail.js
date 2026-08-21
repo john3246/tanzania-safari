@@ -391,7 +391,7 @@ function injectJSONLDSchema(safari) {
         "@context": "https://schema.org",
         "@type": "Product",
         "name": safari.package_name,
-        "image": safari.image_urls && safari.image_urls.length > 0 ? safari.image_urls : [safari.featured_image_url || 'https://tanzaniasafarimagic.com/images/hero.webp'],
+        "image": safari.image_urls && safari.image_urls.length > 0 ? safari.image_urls : [safari.featured_image_url || 'https://tanzaniasafarimagic.com/images/hero.jpg'],
         "description": safari.short_description || safari.detailed_description,
         "offers": {
             "@type": "Offer",
@@ -438,16 +438,13 @@ function renderItinerary(items) {
             <div class="itinerary-desc">${escapeHtml(item.description).replace(/\n/g, '<br>')}</div>
             <div class="itinerary-meta">
         `;
+        if (item.accommodation) {
+            html += `<span><i class="fas fa-bed"></i> ${escapeHtml(item.accommodation)}</span>`;
+        }
         if (item.meals_included) {
             html += `<span><i class="fas fa-utensils"></i> ${escapeHtml(item.meals_included)}</span>`;
         }
-        html += `</div>`;
-        if (window.TSM_ACCOM && typeof window.TSM_ACCOM.renderOvernight === 'function') {
-            html += window.TSM_ACCOM.renderOvernight(item, t, escapeHtml);
-        } else if (item.accommodation) {
-            html += `<div class="itin-stay"><span><i class="fas fa-bed"></i> ${escapeHtml(item.accommodation)}</span></div>`;
-        }
-        html += `</div>`;
+        html += `</div></div>`;
     });
     html += '</div>';
     return html;
@@ -643,16 +640,13 @@ function renderItinerary(items) {
             <div class="itinerary-desc">${escapeHtml(item.description).replace(/\n/g, '<br>')}</div>
             <div class="itinerary-meta">
         `;
+        if (item.accommodation) {
+            html += `<span><i class="fas fa-bed"></i> ${escapeHtml(item.accommodation)}</span>`;
+        }
         if (item.meals_included) {
             html += `<span><i class="fas fa-utensils"></i> ${escapeHtml(item.meals_included)}</span>`;
         }
-        html += `</div>`;
-        if (window.TSM_ACCOM && typeof window.TSM_ACCOM.renderOvernight === 'function') {
-            html += window.TSM_ACCOM.renderOvernight(item, t, escapeHtml);
-        } else if (item.accommodation) {
-            html += `<div class="itin-stay"><span><i class="fas fa-bed"></i> ${escapeHtml(item.accommodation)}</span></div>`;
-        }
-        html += `</div>`;
+        html += `</div></div>`;
     });
     html += '</div>';
     return html;

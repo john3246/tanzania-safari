@@ -160,19 +160,16 @@ class PackageRepository {
             case 'price-desc': orderBy = 'ORDER BY sp.base_price_usd DESC'; break;
             case 'duration-asc': orderBy = 'ORDER BY sp.duration_days ASC'; break;
             case 'rating': orderBy = 'ORDER BY avg_rating DESC NULLS LAST'; break;
-            case 'random':
+            case 'random': orderBy = 'ORDER BY RANDOM()'; break;
             case 'featured':
-            default: orderBy = 'ORDER BY sp.is_featured DESC NULLS LAST, sp.package_id DESC'; break;
+            default: orderBy = 'ORDER BY sp.is_featured DESC, sp.created_at DESC'; break;
         }
 
         const query = `
-            SELECT sp.package_id, sp.package_name, sp.package_slug, sp.short_description,
-                   sp.featured_image_url, sp.duration_days, sp.duration_nights,
-                   sp.base_price_usd, sp.is_featured, sp.difficulty_level,
-                   pc.category_name, pc.category_slug,
+            SELECT sp.*, pc.category_name, pc.category_slug,
                    COALESCE(AVG(r.rating), 0) as avg_rating,
                    COUNT(DISTINCT r.review_id) as review_count,
-                   COALESCE(sp.featured_image_url, sp.image_urls[1], '/images/safaris/' || sp.package_slug || '/main.webp') as image_url,
+                   COALESCE(sp.featured_image_url, sp.image_urls[1], '/images/safaris/' || sp.package_slug || '/main.jpg') as image_url,
                    (SELECT json_agg(json_build_object('park_name', np.park_name, 'park_slug', np.park_slug))
                     FROM package_destinations pd 
                     JOIN national_parks np ON pd.park_id = np.park_id 
@@ -267,18 +264,16 @@ class PackageRepository {
 
     async getFeatured(limit = 6) {
         const query = `
-            SELECT sp.package_id, sp.package_name, sp.package_slug, sp.short_description,
-                   sp.featured_image_url, sp.duration_days, sp.base_price_usd,
-                   pc.category_name, pc.category_slug,
+            SELECT sp.*, pc.category_name, pc.category_slug,
                    COALESCE(AVG(r.rating), 0) as avg_rating,
                    COUNT(DISTINCT r.review_id) as review_count,
-                   COALESCE(sp.featured_image_url, sp.image_urls[1], '/images/safaris/' || sp.package_slug || '/main.webp') as image_url
+                   COALESCE(sp.featured_image_url, sp.image_urls[1], '/images/safaris/' || sp.package_slug || '/main.jpg') as image_url
             FROM safari_packages sp
             LEFT JOIN package_categories pc ON sp.category_id = pc.category_id
             LEFT JOIN reviews r ON sp.package_id = r.package_id AND r.is_approved = true
             WHERE sp.is_active = true AND sp.is_featured = true AND (sp.is_group_tour IS NOT TRUE)
             GROUP BY sp.package_id, pc.category_name, pc.category_slug
-            ORDER BY sp.package_id DESC
+            ORDER BY RANDOM()
             LIMIT $1
         `;
         const result = await db.query(query, [limit]);
@@ -287,7 +282,7 @@ class PackageRepository {
 
     async getItinerary(packageId) {
         try {
-            const query = 'SELECT day_number as day, day_title as title, day_description as description, accommodation_type as accommodation FROM package_itinerary WHERE package_id = $1 ORDER BY day_number ASC';
+            const query = 'SELECT day_number as day, day_title as title, day_description as description FROM package_itinerary WHERE package_id = $1 ORDER BY day_number ASC';
             const result = await db.query(query, [packageId]);
             if (result.rows && result.rows.length > 0) return result.rows;
         } catch (e) {}
@@ -298,8 +293,7 @@ class PackageRepository {
                 return pkgRes.rows[0].itinerary.map((item, idx) => ({
                     day: item.day || item.day_number || (idx + 1),
                     title: item.title || item.day_title || `Day ${idx + 1}`,
-                    description: item.description || item.day_description || '',
-                    accommodation: item.accommodation || item.accommodation_type || ''
+                    description: item.description || item.day_description || ''
                 }));
             }
         } catch (e) {}

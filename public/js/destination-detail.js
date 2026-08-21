@@ -303,8 +303,8 @@ function renderDestinationDetails(destination) {
                                         '/images/optimized/serengeti5.webp',
                                         '/images/optimized/zebra%20serengeti.webp',
                                         '/images/optimized/8-day-northern-serengeti-mara-river-crossing.webp',
-                                        '/images/destinations/serengeti-national-park/serengeti.webp',
-                                        '/images/destinations/serengeti-national-park/serengeti2.webp',
+                                        '/images/destinations/serengeti-national-park/serengeti.jpg',
+                                        '/images/destinations/serengeti-national-park/serengeti2.jpeg',
                                         'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Wildebeest_Migration_Masai_Mara.jpg/1280px-Wildebeest_Migration_Masai_Mara.jpg'
                                     ];
                                     extras.forEach(u => { if (u && !images.includes(u)) images.push(u); });
@@ -318,7 +318,7 @@ function renderDestinationDetails(destination) {
                                     ];
                                     extras.forEach(u => { if (u && !images.includes(u)) images.push(u); });
                                 }
-                                if (!images.length && slug) images.push(`/images/destinations/${slug}/main.webp`, `/images/optimized/${slug}.webp`);
+                                if (!images.length && slug) images.push(`/images/destinations/${slug}/main.jpg`, `/images/optimized/${slug}.webp`);
                                 if (!images.length) images.push(heroImg);
                                 if (images.length > 0) {
                                     return `
@@ -927,7 +927,7 @@ function injectDestinationSchema(destination) {
         "@type": "TouristDestination",
         "name": destination.park_name || destination.name,
         "description": destination.park_description || destination.description,
-        "image": destination.image_urls && destination.image_urls.length > 0 ? destination.image_urls[0] : (destination.featured_image_url || destination.image_url || 'https://tanzaniasafarimagic.com/images/hero.webp'),
+        "image": destination.image_urls && destination.image_urls.length > 0 ? destination.image_urls[0] : (destination.featured_image_url || destination.image_url || 'https://tanzaniasafarimagic.com/images/hero.jpg'),
         "url": `https://tanzaniasafarimagic.com/destinations/${destination.park_slug || destination.slug || ''}`,
         "provider": {
             "@type": "TravelAgency",

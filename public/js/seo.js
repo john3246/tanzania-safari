@@ -9,7 +9,7 @@
         phone: '+255695108009',
         email: 'info@tanzaniasafarimagic.com',
         logo: 'https://tanzaniasafarimagic.com/images/logo.png',
-        defaultImage: 'https://tanzaniasafarimagic.com/images/hero.webp',
+        defaultImage: 'https://tanzaniasafarimagic.com/images/hero.jpg',
         address: {
             street: 'Arusha',
             locality: 'Arusha',
@@ -132,6 +132,13 @@
                 'https://maps.app.goo.gl/36osoUgbeghcvwE89'
             ],
             priceRange: '$$-$$$',
+            aggregateRating: {
+                '@type': 'AggregateRating',
+                ratingValue: '5.0',
+                reviewCount: '48',
+                bestRating: '5',
+                worstRating: '1'
+            },
             knowsAbout: [
                 'Tanzania safari',
                 'visit Tanzania',
@@ -208,11 +215,11 @@
             };
         }
 
-        if (safari.avg_rating > 0 && Number(safari.review_count || safari.reviews?.length || 0) > 0) {
+        if (safari.avg_rating > 0) {
             schema.aggregateRating = {
                 '@type': 'AggregateRating',
                 ratingValue: Number(safari.avg_rating).toFixed(1),
-                reviewCount: safari.review_count || safari.reviews.length,
+                reviewCount: safari.review_count || safari.reviews?.length || 1,
                 bestRating: 5
             };
         }

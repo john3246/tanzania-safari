@@ -17,7 +17,7 @@
     meta_title: 'Kilimanjaro Packing List 2026 | Gear Checklist from Arusha',
     meta_description: 'Kilimanjaro packing list: base layers, insulated jackets, broken-in boots, daypack, and what Tanzania Safari Magic operators typically provide. Free climb quote from Arusha.',
     excerpt: 'A practical Kilimanjaro packing list from Tanzania Safari Magic — layering system, footwear, daypack contents, and a clear split between your kit and crew-supplied gear.',
-    featured_image_url: '/images/kilimanjaro/kilimanjaro%20(9).webp',
+    featured_image_url: '/images/kilimanjaro/kilimanjaro%20(9).jpeg',
     published_at: '2026-08-05T09:00:00.000Z',
     updated_at: '2026-08-06T10:00:00.000Z',
     category_name: 'Kilimanjaro Guides',
@@ -32,7 +32,7 @@
 <p><strong>Tanzania Safari Magic</strong> runs a gear check mindset before you leave Arusha. Review climb options on <a href="/kilimanjaro">Kilimanjaro</a>, request kit questions via <a href="/booking">booking</a>, or message us through <a href="/contact">contact</a>.</p>
 
 <figure class="guide-figure">
-  <img src="/images/kilimanjaro/kilimanjaro%20(9).webp" alt="Kilimanjaro packing list cold summit gear Tanzania" width="1200" height="750" loading="eager">
+  <img src="/images/kilimanjaro/kilimanjaro%20(9).jpeg" alt="Kilimanjaro packing list cold summit gear Tanzania" width="1200" height="750" loading="eager">
   <figcaption>Summit night is where thin gloves and damp socks become real problems — pack for cold, not Instagram.</figcaption>
 </figure>
 
@@ -87,7 +87,7 @@
 <p>Foot pain ends more climbs than ego admits. Train in the same boots you will wear on the mountain — see <a href="/blog/train-for-kilimanjaro">train for Kilimanjaro</a>.</p>
 
 <figure class="guide-figure">
-  <img src="/images/kilimanjaro/kilimanjaro%20(10).webp" alt="Tanzania trek packing preparation Kilimanjaro" width="1200" height="750" loading="lazy">
+  <img src="/images/kilimanjaro/kilimanjaro%20(10).jpeg" alt="Tanzania trek packing preparation Kilimanjaro" width="1200" height="750" loading="lazy">
   <figcaption>Pack light where porters carry bulk bags — but never skimp on summit insulation.</figcaption>
 </figure>
 

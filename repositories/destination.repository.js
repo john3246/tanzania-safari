@@ -3,10 +3,8 @@ const db = require('../config/db');
 class DestinationRepository {
     async getAll() {
         const query = `
-            SELECT np.park_id, np.park_name, np.park_slug, np.short_description,
-                   np.featured_image_url,
-                   COUNT(DISTINCT pd.package_id) as safari_count,
-                   COALESCE(np.featured_image_url, np.image_urls[1], '/images/destinations/' || np.park_slug || '/main.webp') as image_url
+            SELECT np.*, COUNT(DISTINCT pd.package_id) as safari_count,
+                   COALESCE(np.image_urls[1], '/images/destinations/' || np.park_slug || '/main.jpg') as image_url
             FROM national_parks np
             LEFT JOIN package_destinations pd ON np.park_id = pd.park_id
             LEFT JOIN safari_packages sp ON pd.package_id = sp.package_id AND sp.is_active = true

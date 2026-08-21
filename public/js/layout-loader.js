@@ -21,66 +21,24 @@ function escapeNavHtml(str) {
 
 function ensureI18nLoaded() {
     if (window.TSM_i18n && window.TSM_i18n.ready) return window.TSM_i18n.ready;
-    if (window.__TSM_I18N_LOADING) return window.__TSM_I18N_LOADING;
-    window.__TSM_I18N_LOADING = new Promise((resolve) => {
-        const finish = () => {
-            if (window.TSM_i18n && window.TSM_i18n.ready) window.TSM_i18n.ready.then(resolve);
-            else resolve();
-        };
+    return new Promise((resolve) => {
         if (document.querySelector('script[src*="/js/i18n.js"]')) {
-            let n = 0;
             const wait = () => {
-                if (window.TSM_i18n && window.TSM_i18n.ready) return finish();
-                if (++n > 80) return resolve();
-                setTimeout(wait, 30);
+                if (window.TSM_i18n && window.TSM_i18n.ready) window.TSM_i18n.ready.then(resolve);
+                else setTimeout(wait, 30);
             };
             wait();
             return;
         }
         const s = document.createElement('script');
-        s.src = '/js/i18n.js?v=8';
-        s.async = true;
-        s.onload = finish;
+        s.src = '/js/i18n.js?v=4';
+        s.onload = () => {
+            if (window.TSM_i18n && window.TSM_i18n.ready) window.TSM_i18n.ready.then(resolve);
+            else resolve();
+        };
         s.onerror = () => resolve();
         (document.head || document.documentElement).appendChild(s);
     });
-    return window.__TSM_I18N_LOADING;
-}
-
-function preferredLang() {
-    try {
-        const q = new URLSearchParams(window.location.search).get('lang');
-        if (q) return q;
-        return localStorage.getItem('tsm_lang') || 'en';
-    } catch (_) {
-        return 'en';
-    }
-}
-
-function mountLangSwitcher() {
-    const host = document.getElementById('langSwitcherMount');
-    const start = () => {
-        if (window.TSM_i18n && typeof window.TSM_i18n.initSwitcher === 'function') {
-            window.TSM_i18n.initSwitcher();
-        }
-        applyPageI18n(document.getElementById('header') || document);
-    };
-    if (preferredLang() !== 'en') {
-        ensureI18nLoaded().then(start);
-        return;
-    }
-    if (!host || host.querySelector('#langSwitcher, .lang-switcher-btn')) return;
-    host.innerHTML =
-        '<div class="lang-switcher" id="langSwitcher"><button type="button" class="lang-switcher-btn" aria-haspopup="listbox" aria-expanded="false" aria-label="Choose language"><span class="lang-current"><span class="lang-flag" aria-hidden="true">🇬🇧</span><span class="lang-code">EN</span></span><i class="fas fa-chevron-down lang-caret" aria-hidden="true"></i></button></div>';
-    host.querySelector('.lang-switcher-btn')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        host.innerHTML = '';
-        ensureI18nLoaded().then(() => {
-            start();
-            document.querySelector('.lang-switcher-btn')?.click();
-        });
-    }, { once: true });
 }
 
 function applyPageI18n(root) {
@@ -159,8 +117,6 @@ async function loadSafariMegaMenuTours() {
     } catch (_) { /* never block UX */ }
 })();
 
-/* Trust + conversion scripts load once after header inject / idle callback */
-
 /* Inject fluid responsive CSS immediately (all public pages) */
 (function injectFluidCss() {
     if (typeof document === 'undefined') return;
@@ -179,99 +135,44 @@ async function loadSafariMegaMenuTours() {
     if (document.querySelector('link[href*="/css/header.css"]')) return;
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '/css/header.css?v=5';
+    link.href = '/css/header.css?v=4';
     const head = document.head || document.getElementsByTagName('head')[0];
     if (head) head.appendChild(link);
     else document.addEventListener('DOMContentLoaded', () => document.head.appendChild(link));
 })();
 
-/* i18n.js loads only for a stored/URL non-English language, or when the switcher is opened */
+/* Start loading i18n as early as possible */
+ensureI18nLoaded();
 
-function ensureAssetCss(href) {
-    if (document.querySelector(`link[href*="${href.split('?')[0]}"]`)) return;
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = href;
-    (document.head || document.documentElement).appendChild(link);
-}
+document.addEventListener('DOMContentLoaded', async () => {
+    const cb = '?v=' + Date.now();
+    await ensureI18nLoaded();
 
-function ensureAssetScript(src) {
-    const bare = src.split('?')[0];
-    if (document.querySelector(`script[src*="${bare}"]`)) return;
-    const s = document.createElement('script');
-    s.src = src;
-    s.defer = true;
-    (document.head || document.documentElement).appendChild(s);
-}
-
-function whenIdle(fn, timeout) {
-    if (typeof requestIdleCallback === 'function') requestIdleCallback(fn, { timeout: timeout || 3500 });
-    else setTimeout(fn, 1);
-}
-
-function hydrateHeader() {
-    initHeader();
-    mountLangSwitcher();
-    const runTrust = () => {
-        if (window.TSMTrust && typeof window.TSMTrust.initTrustUi === 'function') {
-            window.TSMTrust.initTrustUi();
-        }
-    };
-    runTrust();
-    if (!window.TSMTrust && !((window.location.pathname || '').startsWith('/admin'))) {
-        ensureAssetCss('/css/trust.css?v=2');
-        if (!document.querySelector('script[src*="/js/site-trust.js"]')) {
-            const s = document.createElement('script');
-            s.src = '/js/site-trust.js?v=3';
-            s.async = true;
-            s.onload = runTrust;
-            (document.head || document.documentElement).appendChild(s);
-        }
-    }
-}
-
-function hydrateFooter() {
-    initFooter();
-    if (window.TSM_i18n) applyPageI18n(document.getElementById('footer') || document);
-    loadChatOnIntent();
-    initCookieNotice();
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    const cb = '?v=25';
-    const headerReady = document.getElementById('siteHeader') || document.querySelector('#header header');
-    const footerReady = document.querySelector('#footer footer, footer.footer');
-
-    if (headerReady) hydrateHeader();
-    else {
-        loadComponent('header', '/includes/header.html' + cb, hydrateHeader);
-    }
-    if (footerReady) hydrateFooter();
-    else {
-        loadComponent('footer', '/includes/footer.html' + cb, hydrateFooter);
+    // Load shared SEO helpers early
+    if (!document.querySelector('script[src^="/js/seo.js"]')) {
+        const seo = document.createElement('script');
+        seo.src = '/js/seo.js' + cb;
+        seo.onload = () => { if (typeof initSEO === 'function') initSEO(); };
+        document.head.appendChild(seo);
     }
 
-    whenIdle(() => {
-        if (window.TSM_i18n) applyPageI18n(document);
-        const isAdmin = ((window.location && window.location.pathname) || '').startsWith('/admin');
-        if (!isAdmin) {
-            ensureAssetCss('/css/trust.css?v=2');
-            ensureAssetScript('/js/site-trust.js?v=3');
-            ensureAssetScript('/js/conversion-tracking.js?v=2');
+    applyPageI18n(document);
+
+    loadComponent('header', '/includes/header.html' + cb, () => {
+        initHeader();
+        if (window.TSM_i18n && typeof window.TSM_i18n.initSwitcher === 'function') {
+            window.TSM_i18n.initSwitcher();
         }
-        if (!document.querySelector('script[src*="/js/seo.js"]')) {
-            const seo = document.createElement('script');
-            seo.src = '/js/seo.js?v=24';
-            seo.defer = true;
-            seo.onload = () => { if (typeof initSEO === 'function') initSEO(); };
-            document.head.appendChild(seo);
-        }
-        initSEO();
-        if (!isAdmin) {
-            trackPageView();
-            lazyPlayVideos();
-        }
-    }, 1500);
+        applyPageI18n(document.getElementById('header') || document);
+    });
+    loadComponent('footer', '/includes/footer.html' + cb, () => {
+        initFooter();
+        applyPageI18n(document.getElementById('footer') || document);
+        loadChatScripts();
+        initCookieNotice();
+    });
+    initSEO();
+    trackPageView();
 });
 
 /**
@@ -288,7 +189,7 @@ function initCookieNotice() {
         const bar = document.createElement('div');
         bar.id = 'tsmCookieNotice';
         bar.setAttribute('role', 'dialog');
-        bar.setAttribute('aria-label', tsmT('cookie.aria') === 'cookie.aria' ? 'Cookie notice' : tsmT('cookie.aria'));
+        bar.setAttribute('aria-label', tsmT('cookie.aria'));
         bar.style.cssText = [
             'position:fixed', 'left:1rem', 'right:1rem', 'bottom:1rem', 'z-index:9998',
             'max-width:32rem', 'margin:0 auto', 'padding:1rem 1.15rem',
@@ -296,10 +197,9 @@ function initCookieNotice() {
             'box-shadow:0 8px 28px rgba(0,0,0,.25)', 'font-size:0.875rem', 'line-height:1.5',
             'display:flex', 'flex-wrap:wrap', 'gap:0.75rem', 'align-items:center', 'justify-content:space-between'
         ].join(';');
-        const cookieHtml = tsmT('cookie.html');
         bar.innerHTML = `
-          <p style="margin:0;flex:1 1 12rem">${cookieHtml === 'cookie.html' ? 'We use cookies to improve your visit. See our <a href="/privacy" style="color:#fff;text-decoration:underline">Privacy Policy</a>.' : cookieHtml}</p>
-          <button type="button" id="tsmCookieAccept" style="flex:0 0 auto;border:0;cursor:pointer;background:#c45c26;color:#fff;font-weight:700;padding:0.55rem 1rem;border-radius:8px">${tsmT('common.ok') === 'common.ok' ? 'OK' : tsmT('common.ok')}</button>
+          <p style="margin:0;flex:1 1 12rem">${tsmT('cookie.html')}</p>
+          <button type="button" id="tsmCookieAccept" style="flex:0 0 auto;border:0;cursor:pointer;background:#c45c26;color:#fff;font-weight:700;padding:0.55rem 1rem;border-radius:8px">${tsmT('common.ok')}</button>
         `;
         document.body.appendChild(bar);
         document.getElementById('tsmCookieAccept')?.addEventListener('click', () => {
@@ -351,58 +251,30 @@ function trackPageView() {
     } catch (_) { /* never block UX */ }
 }
 
-function lazyPlayVideos() {
-    const vids = document.querySelectorAll('video[autoplay], video[src$=".mp4"]');
-    if (!vids.length) return;
-    const io = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-            const v = entry.target;
-            if (entry.isIntersecting) {
-                if (v.getAttribute('preload') === 'none') v.preload = 'metadata';
-                const p = v.play();
-                if (p && p.catch) p.catch(() => {});
-            } else {
-                v.pause();
-            }
-        });
-    }, { rootMargin: '120px', threshold: 0.15 });
-    vids.forEach((v) => {
-        v.removeAttribute('autoplay');
-        v.preload = 'none';
-        v.muted = true;
-        v.playsInline = true;
-        io.observe(v);
-    });
-}
-
-function loadChatOnIntent() {
-    if (window.__TSM_CHAT_INTENT) return;
-    window.__TSM_CHAT_INTENT = true;
-    const start = () => loadChatScripts();
-    ['pointerdown', 'keydown', 'scroll', 'touchstart'].forEach((ev) => {
-        window.addEventListener(ev, start, { once: true, passive: true });
-    });
-    setTimeout(start, 12000);
-}
-
 function loadChatScripts() {
-    if (document.querySelector('script[src*="/js/chat.js"]')) return;
-    const loadChat = () => {
-        if (document.querySelector('script[src*="/js/chat.js"]')) return;
-        const chatScript = document.createElement('script');
-        chatScript.src = '/js/chat.js?v=24';
-        chatScript.defer = true;
-        document.body.appendChild(chatScript);
-    };
     if (typeof io === 'undefined') {
         const ioScript = document.createElement('script');
         ioScript.src = '/socket.io/socket.io.js';
-        ioScript.async = true;
+        
+        const loadChat = () => {
+            if (!document.querySelector('script[src^="/js/chat.js"]')) {
+                const chatScript = document.createElement('script');
+                chatScript.src = '/js/chat.js?v=' + Date.now();
+                document.body.appendChild(chatScript);
+            }
+        };
+        
         ioScript.onload = loadChat;
-        ioScript.onerror = loadChat;
+        ioScript.onerror = () => {
+            console.error('Socket.io failed to load. Chat will run in offline mode.');
+            loadChat();
+        };
+        
         document.body.appendChild(ioScript);
     } else {
-        loadChat();
+        const chatScript = document.createElement('script');
+        chatScript.src = '/js/chat.js?v=' + Date.now();
+        document.body.appendChild(chatScript);
     }
 }
 
@@ -430,8 +302,6 @@ async function loadComponent(id, url, callback) {
  * Initializes header functionality after injection
  */
 function initHeader() {
-    if (window.__TSM_HEADER_INIT) return;
-    window.__TSM_HEADER_INIT = true;
     // Prefer the real <header.header> — views wrap includes in <div id="header">,
     // so getElementById('header') can hit the wrapper and break .header.menu-open stacking.
     const header =
@@ -548,7 +418,7 @@ function initHeader() {
                 }
             });
         }
-        // Tours load on hover/click only — not on every page
+        loadSafariMegaMenuTours();
 
         // Keep submenu closed unless hovered/toggled — same on every page
         document.addEventListener('click', (e) => {
@@ -626,8 +496,6 @@ function initHeader() {
  * Initializes footer functionality after injection
  */
 function initFooter() {
-    if (window.__TSM_FOOTER_INIT) return;
-    window.__TSM_FOOTER_INIT = true;
     // Update current year
     const yearSpan = document.getElementById('year');
     if (yearSpan) yearSpan.textContent = new Date().getFullYear();
@@ -642,11 +510,9 @@ function initFooter() {
             socialFloatBtn.classList.toggle('active');
         });
 
-        document.addEventListener('click', (e) => {
-            if (!socialFloat.contains(e.target)) {
-                socialFloat.classList.remove('active');
-                socialFloatBtn.classList.remove('active');
-            }
+        document.addEventListener('click', () => {
+            socialFloat.classList.remove('active');
+            socialFloatBtn.classList.remove('active');
         });
     }
 
@@ -659,20 +525,37 @@ function initFooter() {
             } else {
                 backToTop.classList.remove('visible');
             }
-        }, { passive: true });
+        });
+
+        // Social float
+        const floatBtn = document.getElementById('socialFloatBtn');
+        const floatWrap = document.querySelector('.social-float');
+        if (floatBtn && floatWrap) {
+            floatBtn.addEventListener('click', () => {
+                floatWrap.classList.toggle('active');
+                floatBtn.classList.toggle('active');
+            });
+            // Close on outside click
+            document.addEventListener('click', (e) => {
+                if (!floatWrap.contains(e.target)) {
+                    floatWrap.classList.remove('active');
+                    floatBtn.classList.remove('active');
+                }
+            });
+        }
 
         backToTop.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
+        // Hero Slideshow (inner pages)
         const heroBg = document.querySelector('.page-hero .hero-bg img');
-        if (heroBg && !window.__TSM_HERO_SLIDES) {
-            window.__TSM_HERO_SLIDES = true;
+        if (heroBg) {
             const slides = [
                 heroBg.src,
-                '/images/optimized/serengeti-national-park.webp',
-                '/images/destinations/ngorongoro-conservation-area/main.webp',
-                '/images/optimized/mount-kilimanjaro-national-park.webp'
+                '/images/serengeti-national-park.jpg',
+                '/images/ngorongoro-conservation-area.jpg',
+                '/images/mount-kilimanjaro-national-park.jpg'
             ];
             let currentSlide = 0;
             setInterval(() => {
@@ -924,10 +807,10 @@ function initSEO() {
     ensure('property', 'og:description', descMeta ? descMeta.getAttribute('content') : 'Experience authentic Tanzania safari tours with expert local guides.');
     ensure('property', 'og:url', window.location.href.split('?')[0]);
     ensure('property', 'og:type', 'website');
-    ensure('property', 'og:image', 'https://tanzaniasafarimagic.com/images/hero.webp');
+    ensure('property', 'og:image', 'https://tanzaniasafarimagic.com/images/hero.jpg');
     ensure('property', 'og:site_name', 'Tanzania Safari Magic');
     ensure('name', 'twitter:card', 'summary_large_image');
     ensure('name', 'twitter:title', document.title);
     ensure('name', 'twitter:description', descMeta ? descMeta.getAttribute('content') : 'Experience authentic Tanzania safari tours.');
-    ensure('name', 'twitter:image', 'https://tanzaniasafarimagic.com/images/hero.webp');
+    ensure('name', 'twitter:image', 'https://tanzaniasafarimagic.com/images/hero.jpg');
 }

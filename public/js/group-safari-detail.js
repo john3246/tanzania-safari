@@ -36,25 +36,13 @@ function renderItinerary(itinerary) {
   if (!itinerary || !itinerary.length) {
     return `<p style="color:var(--text-muted)">${escapeHtml(t('groupDetail.itineraryEmpty'))}</p>`;
   }
-  return itinerary.map((day, i) => {
-    const item = {
-      day: day.day || i + 1,
-      title: day.title || t('groupDetail.safariDay'),
-      description: day.description || '',
-      accommodation: day.accommodation || day.accommodation_type
-    };
-    const stay = window.TSM_ACCOM && typeof window.TSM_ACCOM.renderOvernight === 'function'
-      ? window.TSM_ACCOM.renderOvernight(item, t, escapeHtml)
-      : '';
-    return `
+  return itinerary.map((day, i) => `
     <div class="group-itinerary-day">
-      <div class="day-label">${escapeHtml(t('groupDetail.dayN', { n: item.day }))}</div>
-      <h3>${escapeHtml(item.title)}</h3>
-      <p style="margin:0;color:var(--text-secondary);line-height:1.65">${escapeHtml(item.description)}</p>
-      ${stay}
+      <div class="day-label">${escapeHtml(t('groupDetail.dayN', { n: day.day || i + 1 }))}</div>
+      <h3>${escapeHtml(day.title || t('groupDetail.safariDay'))}</h3>
+      <p style="margin:0;color:var(--text-secondary);line-height:1.65">${escapeHtml(day.description || '')}</p>
     </div>
-  `;
-  }).join('');
+  `).join('');
 }
 
 function depositFor(price, travelers) {

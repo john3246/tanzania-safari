@@ -18,7 +18,7 @@
     meta_title: 'Kilimanjaro Acclimatization Guide 2026 | Pole Pole & Longer Routes',
     meta_description: 'Kilimanjaro acclimatization tips: pole pole pacing, longer routes, listening to guides, and when descending is wise — educational guidance from Tanzania Safari Magic.',
     excerpt: 'How climbers improve acclimatization chances on Kilimanjaro — slow pacing, route length, guide trust, and descent decisions. Educational, not medical advice.',
-    featured_image_url: '/images/kilimanjaro/kilimanjaro%20(7).webp',
+    featured_image_url: '/images/kilimanjaro/kilimanjaro%20(7).jpeg',
     published_at: '2026-08-04T10:00:00.000Z',
     updated_at: '2026-08-06T10:00:00.000Z',
     category_name: 'Travel Tips',
@@ -56,7 +56,7 @@
 <p>I’m <strong>John Raphael Shayo</strong> at <strong>Tanzania Safari Magic</strong>. This article is <strong>educational, not medical advice</strong>. Speak with a clinician about your personal health before any high-altitude trek. For climb packages, see <a href="/kilimanjaro">Kilimanjaro</a>; for route and difficulty context, read <a href="/blog/kilimanjaro-routes-guide">Kilimanjaro routes</a> and <a href="/blog/climbing-kilimanjaro-difficulty">climbing difficulty</a>.</p>
 
 <figure class="guide-figure">
-  <img src="/images/kilimanjaro/kilimanjaro%20(7).webp" alt="Kilimanjaro acclimatization pole pole climbing Tanzania" width="1200" height="750" loading="eager">
+  <img src="/images/kilimanjaro/kilimanjaro%20(7).jpeg" alt="Kilimanjaro acclimatization pole pole climbing Tanzania" width="1200" height="750" loading="eager">
   <figcaption>Uhuru Peak rewards patience — acclimatization is built day by day, not forced on summit night.</figcaption>
 </figure>
 
@@ -122,7 +122,7 @@
 <p>Difficulty context: <a href="/blog/climbing-kilimanjaro-difficulty">climbing Kilimanjaro difficulty</a>.</p>
 
 <figure class="guide-figure">
-  <img src="/images/kilimanjaro/kilimanjaro%20(9).webp" alt="Clear planning Kilimanjaro climb Tanzania Safari Magic" width="1200" height="750" loading="lazy">
+  <img src="/images/kilimanjaro/kilimanjaro%20(9).jpeg" alt="Clear planning Kilimanjaro climb Tanzania Safari Magic" width="1200" height="750" loading="lazy">
   <figcaption>Clear planning before you lace boots matters as much as summit photos afterward.</figcaption>
 </figure>
 

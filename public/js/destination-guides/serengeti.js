@@ -46,8 +46,8 @@
     river: '/images/optimized/8-day-northern-serengeti-mara-river-crossing.webp',
     balloon: '/images/optimized/balloon.webp',
     chui: '/images/optimized/serengeti%20chui.webp',
-    local1: '/images/destinations/serengeti-national-park/serengeti.webp',
-    local2: '/images/destinations/serengeti-national-park/serengeti2.webp',
+    local1: '/images/destinations/serengeti-national-park/serengeti.jpg',
+    local2: '/images/destinations/serengeti-national-park/serengeti2.jpeg',
     wikiHerd: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Wildebeest_Migration_Masai_Mara.jpg/1280px-Wildebeest_Migration_Masai_Mara.jpg',
     wikiPlains: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Serengeti_Landscape.jpg/1280px-Serengeti_Landscape.jpg'
   };

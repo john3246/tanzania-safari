@@ -49,44 +49,31 @@ function toPublicUrl(absoluteFile) {
   );
 }
 
-function preferWebpNames(names) {
-  const webpStems = new Set(
-    names.filter((n) => n.toLowerCase().endsWith('.webp')).map((n) => n.replace(/\.webp$/i, '').toLowerCase())
-  );
-  return names.filter((name) => {
-    if (!/\.(jpe?g|png)$/i.test(name)) return true;
-    return !webpStems.has(name.replace(/\.(jpe?g|png)$/i, '').toLowerCase());
-  });
-}
-
 function listImageFiles(dirAbs) {
   if (!fs.existsSync(dirAbs)) return [];
-  return preferWebpNames(
-    fs.readdirSync(dirAbs).filter((name) => IMAGE_EXT.test(name) && !name.startsWith('.'))
-  )
+  return fs
+    .readdirSync(dirAbs)
+    .filter((name) => IMAGE_EXT.test(name) && !name.startsWith('.'))
     .sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }))
     .map((name) => toPublicUrl(path.join(dirAbs, name)));
 }
 
 function listRecursiveImages(dirAbs, limit = 40) {
   if (!fs.existsSync(dirAbs)) return [];
-  const files = [];
+  const out = [];
   const walk = (d) => {
     const entries = fs
       .readdirSync(d, { withFileTypes: true })
       .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }));
     for (const ent of entries) {
+      if (out.length >= limit) return;
       const full = path.join(d, ent.name);
       if (ent.isDirectory()) walk(full);
-      else if (IMAGE_EXT.test(ent.name)) files.push(full);
+      else if (IMAGE_EXT.test(ent.name)) out.push(toPublicUrl(full));
     }
   };
   walk(dirAbs);
-  const keep = new Set(preferWebpNames(files.map((f) => path.basename(f))).map((n) => n.toLowerCase()));
-  return files
-    .filter((full) => keep.has(path.basename(full).toLowerCase()))
-    .slice(0, limit)
-    .map((full) => toPublicUrl(full));
+  return out;
 }
 
 function stableIndex(key, modulo) {
@@ -328,10 +315,8 @@ function buildPackageImages({
 function buildDestinationImages(parkSlug, { minCount = 4, maxCount = 16 } = {}) {
   let gallery = uniqueUrls(imagesForParkSlug(parkSlug), maxCount);
   if (gallery.length < minCount) {
-    const destMainWebp = path.join(IMAGES_ROOT, 'destinations', parkSlug, 'main.webp');
     const destMain = path.join(IMAGES_ROOT, 'destinations', parkSlug, 'main.jpg');
-    const destFile = fs.existsSync(destMainWebp) ? destMainWebp : fs.existsSync(destMain) ? destMain : null;
-    if (destFile) gallery = uniqueUrls([...gallery, toPublicUrl(destFile)], maxCount);
+    if (fs.existsSync(destMain)) gallery = uniqueUrls([...gallery, toPublicUrl(destMain)], maxCount);
   }
   return gallery;
 }

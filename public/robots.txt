@@ -18,10 +18,6 @@ Allow: /visit-tanzania
 Allow: /booking
 Allow: /contact
 Allow: /about
-Allow: /experience
-Allow: /gallery
-Allow: /stories
-Allow: /accommodation
 Allow: /privacy
 Allow: /terms
 
@@ -68,13 +64,6 @@ Allow: /blog/tanzania-visa-guide
 Allow: /blog/first-tanzania-safari
 Allow: /blog/tanzania-solo-travel
 Allow: /blog/things-to-do-in-arusha
-Allow: /blog/private-serengeti-safari-price-2026
-Allow: /blog/8-day-tanzania-safari-cost
-Allow: /blog/mara-river-crossing-best-time
-Allow: /blog/machame-vs-lemosho
-Allow: /blog/tanzania-safari-from-arusha
-Allow: /blog/serengeti-zanzibar-combo
-Allow: /blog/tanzania-safari-cost-per-person-2026
 
 Allow: /llms.txt
 Allow: /sitemap.xml
