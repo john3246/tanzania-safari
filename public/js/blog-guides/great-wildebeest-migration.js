@@ -14,9 +14,9 @@
 
   const META = {
     slug: 'great-wildebeest-migration',
-    title: 'Great Wildebeest Migration Safari Guide | Serengeti Tanzania',
-    meta_title: 'Great Wildebeest Migration Guide 2026 | Serengeti Safari from Arusha',
-    meta_description: 'Plan a Serengeti Great Wildebeest Migration safari: best months, calving, Grumeti & Mara River crossings, costs, and private itineraries from Tanzania Safari Magic in Arusha.',
+    title: 'Best Time for the Great Migration 2026 (Month-by-Month)',
+    meta_title: 'Best Time for the Great Migration 2026 | Month-by-Month',
+    meta_description: 'Month-by-month Great Migration calendar: Ndutu calving, Grumeti, Mara River crossings. WhatsApp for live herd location and 2026 safari availability.',
     excerpt: 'Everything you need to witness the Great Migration in Serengeti — month-by-month herd map, river crossings, calving season, costs, and how to book with a local Arusha operator.',
     featured_image_url: '/images/optimized/8-day-northern-serengeti-mara-river-crossing.webp',
     published_at: '2026-07-28T10:00:00.000Z',

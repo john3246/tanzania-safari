@@ -38,10 +38,16 @@ const PILLAR_SLUGS = {
   'kilimanjaro-packing-list': 'KilimanjaroPackingListGuide',
   'train-for-kilimanjaro': 'TrainForKilimanjaroGuide',
   'kilimanjaro-tipping-guide': 'KilimanjaroTippingGuide',
-  'kilimanjaro-acclimatization': 'KilimanjaroAcclimatizationGuide'
+  'kilimanjaro-acclimatization': 'KilimanjaroAcclimatizationGuide',
+  'serengeti-safari-cost-2026': 'SerengetiSafariCost2026Guide',
+  'tanzania-safari-zanzibar-combo': 'TanzaniaSafariZanzibarComboGuide',
+  'kilimanjaro-route-comparison': 'KilimanjaroRouteComparisonGuide'
 };
 
 const RELATED_PILLAR_KEYS = [
+  { slug: 'serengeti-safari-cost-2026', key: '' },
+  { slug: 'tanzania-safari-zanzibar-combo', key: '' },
+  { slug: 'kilimanjaro-route-comparison', key: '' },
   { slug: 'tanzania-safari', key: 'blogDetail.pillar.ultimateSafari' },
   { slug: 'best-time-to-visit-tanzania', key: 'blogDetail.pillar.bestTime' },
   { slug: 'tanzania-safari-cost', key: 'blogDetail.pillar.cost2026' },
@@ -72,7 +78,8 @@ const KILI_SLUGS = new Set([
   'kilimanjaro-packing-list',
   'train-for-kilimanjaro',
   'kilimanjaro-tipping-guide',
-  'kilimanjaro-acclimatization'
+  'kilimanjaro-acclimatization',
+  'kilimanjaro-route-comparison'
 ]);
 
 function relatedLabel(p) {
@@ -104,6 +111,19 @@ function getGuide(slug) {
   return key ? window[key] : null;
 }
 
+function loadGuideScript(slug) {
+  if (getGuide(slug)) return Promise.resolve(getGuide(slug));
+  const file = slug && PILLAR_SLUGS[slug] ? `/js/blog-guides/${slug}.js` : '';
+  if (!file) return Promise.resolve(null);
+  return new Promise((resolve) => {
+    const s = document.createElement('script');
+    s.src = file;
+    s.onload = () => resolve(getGuide(slug));
+    s.onerror = () => resolve(null);
+    document.head.appendChild(s);
+  });
+}
+
 async function loadPost() {
   try {
     if (window.TSM_i18n && window.TSM_i18n.ready) await window.TSM_i18n.ready;
@@ -122,6 +142,7 @@ async function loadPost() {
   }
 
   let guide = getGuide(slug);
+  if (!guide) guide = await loadGuideScript(slug);
   if (guide && window.TSM_guideI18n && typeof window.TSM_guideI18n.localizeGuide === 'function') {
     guide = await window.TSM_guideI18n.localizeGuide(guide);
   }

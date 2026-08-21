@@ -6,6 +6,9 @@ function t(key, vars) {
 const DEFAULT_AUTHOR = 'John Raphael Shayo';
 
 const PILLAR_ORDER = [
+  'serengeti-safari-cost-2026',
+  'tanzania-safari-zanzibar-combo',
+  'kilimanjaro-route-comparison',
   'best-time-to-visit-tanzania',
   'serengeti-national-park',
   'ngorongoro-crater',
@@ -49,7 +52,10 @@ function pillarFromWindow(slug) {
     'kilimanjaro-packing-list': window.KilimanjaroPackingListGuide?.META,
     'train-for-kilimanjaro': window.TrainForKilimanjaroGuide?.META,
     'kilimanjaro-tipping-guide': window.KilimanjaroTippingGuide?.META,
-    'kilimanjaro-acclimatization': window.KilimanjaroAcclimatizationGuide?.META
+    'kilimanjaro-acclimatization': window.KilimanjaroAcclimatizationGuide?.META,
+    'serengeti-safari-cost-2026': window.SerengetiSafariCost2026Guide?.META,
+    'tanzania-safari-zanzibar-combo': window.TanzaniaSafariZanzibarComboGuide?.META,
+    'kilimanjaro-route-comparison': window.KilimanjaroRouteComparisonGuide?.META
   };
   return map[slug] || null;
 }
