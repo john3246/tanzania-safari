@@ -278,18 +278,23 @@ function renderInternalLinkBlock(safari) {
     if (cat === 'migrations') {
         links.push({ href: '/blog/great-wildebeest-migration', label: t('safariDetail.migrationGuide') });
         links.push({ href: '/destinations/serengeti-national-park', label: t('safariDetail.serengetiPark') });
+        links.push({ href: '/blog/serengeti-safari-cost-2026', label: 'Serengeti safari cost 2026' });
     } else if (cat === 'kilimanjaro') {
         links.push({ href: '/destinations/mount-kilimanjaro-national-park', label: t('safariDetail.kiliParkGuide') });
+        links.push({ href: '/blog/kilimanjaro-route-comparison', label: 'Kilimanjaro route comparison' });
         links.push({ href: '/blog/tanzania-safari', label: t('safariDetail.tanzaniaSafariGuide') });
     } else if (cat === 'zanzibar') {
         links.push({ href: '/destinations/zanzibar', label: t('safariDetail.zanzibarDestGuide') });
         links.push({ href: '/blog/zanzibar-guide', label: t('safariDetail.zanzibarBeachGuide') });
+        links.push({ href: '/blog/tanzania-safari-zanzibar-combo', label: 'Safari + Zanzibar combo' });
     } else if (cat === 'group-safaris') {
         links.push({ href: '/group-safaris', label: t('safariDetail.groupCalendar') });
         links.push({ href: '/safaris', label: t('safariDetail.privatePackages') });
     } else {
         links.push({ href: '/blog/tanzania-safari', label: t('safariDetail.ultimateGuide') });
         links.push({ href: '/blog/best-time-to-visit-tanzania', label: t('safariDetail.bestTimeGuide') });
+        links.push({ href: '/blog/serengeti-safari-cost-2026', label: 'Serengeti safari cost 2026' });
+        links.push({ href: '/blog/tanzania-safari-zanzibar-combo', label: 'Safari + Zanzibar combo' });
     }
 
     links.push({ href: '/blog/tanzania-safari-cost', label: t('safariDetail.costGuide') });
@@ -313,28 +318,19 @@ function renderInternalLinkBlock(safari) {
 
 function applySafariSeo(safari) {
     if (!window.SafariSEO) return;
-    const days = safari.duration_days ? `${safari.duration_days}-Day ` : '';
     const name = safari.package_name || 'Tanzania Safari';
     const hub = hubMeta(safari.category_slug);
-    let title = safari.meta_title || `${name} | Tanzania Safari Magic`;
-    let description = safari.meta_description || safari.short_description || safari.detailed_description || '';
-
-    if (!safari.meta_title) {
-        if (safari.category_slug === 'migrations') {
-            title = `${name} | Serengeti Migration Safari Tanzania`;
-        } else if (safari.category_slug === 'kilimanjaro') {
-            title = `${name} | Kilimanjaro Trek from Arusha`;
-        } else if (safari.category_slug === 'zanzibar') {
-            title = `${name} | Tanzania Safari and Zanzibar Package`;
-        } else if (safari.category_slug === 'group-safaris') {
-            title = `${name} | Group Safari Tanzania`;
-        } else {
-            title = `${days}${name} | Private Tanzania Safari from Arusha`;
-        }
+    const price = Number(safari.base_price_usd || safari.price || 0);
+    const days = parseInt(safari.duration_days, 10);
+    let title = safari.meta_title || '';
+    if (!title) {
+        const prefix = days > 0 && !/^\d+[\s-]*day/i.test(name) ? `${days}-Day ` : '';
+        title = `${prefix}${name} — Prices & Itinerary 2026`;
     }
-
+    let description = safari.meta_description || '';
     if (!description || description.length < 80) {
-        description = `Private ${name} with expert local guides from Arusha. Inquire for a free quote with Tanzania Safari Magic.`;
+        const priceBit = price > 0 ? `From $${Math.round(price).toLocaleString()}/person` : 'Custom quote';
+        description = `${priceBit} — WhatsApp for live availability. Private ${name} from Arusha with park fees and lodges as listed.`;
     }
 
     const parkKeywords = (safari.destinations || [])
@@ -343,8 +339,8 @@ function applySafariSeo(safari) {
         .join(', ');
 
     SafariSEO.applyPageSeo({
-        title: title.slice(0, 70),
-        description: String(description).replace(/\s+/g, ' ').trim().slice(0, 160),
+        title: title.slice(0, 65),
+        description: String(description).replace(/\s+/g, ' ').trim().slice(0, 158),
         image: safari.featured_image_url || safari.image_urls?.[0],
         type: 'product',
         keywords: [

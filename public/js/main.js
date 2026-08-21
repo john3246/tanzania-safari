@@ -262,16 +262,24 @@ async function loadHomepage() {
         }
     }
 
-    // Testimonials
+    // Testimonials — hide the whole section if there are no real reviews
     try {
         const { data } = await API.get('/testimonials?limit=6');
         const grid = document.getElementById('testimonialsGrid');
-        if (grid && data?.length) {
-            grid.innerHTML = data.map(buildTestimonialCard).join('');
+        const section = document.getElementById('homeTestimonials');
+        const real = (data || []).filter((r) => (r.comment || r.review_comment || '').trim());
+        if (grid && real.length) {
+            grid.innerHTML = real.map(buildTestimonialCard).join('');
+            if (section) section.style.display = '';
+        } else if (section) {
+            section.style.display = 'none';
         } else if (grid) {
-            grid.innerHTML = `<p style="color:var(--text-muted);grid-column:1/-1;text-align:center">${t('home.noTestimonials')}</p>`;
+            grid.innerHTML = '';
         }
-    } catch {}
+    } catch {
+        const section = document.getElementById('homeTestimonials');
+        if (section) section.style.display = 'none';
+    }
 }
 
 function shuffleList(list) {

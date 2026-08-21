@@ -145,7 +145,7 @@ async function loadSafariMegaMenuTours() {
 ensureI18nLoaded();
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const cb = '?v=' + Date.now();
+    const cb = '?v=24';
     await ensureI18nLoaded();
 
     // Load shared SEO helpers early
@@ -173,7 +173,34 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
     initSEO();
     trackPageView();
+    initConversionTracking();
+    enhanceBelowFoldImages();
 });
+
+function initConversionTracking() {
+    if (document.querySelector('script[src^="/js/conversion-tracking.js"]')) return;
+    const s = document.createElement('script');
+    s.src = '/js/conversion-tracking.js?v=1';
+    s.defer = true;
+    document.body.appendChild(s);
+}
+
+function enhanceBelowFoldImages() {
+    try {
+        const imgs = document.querySelectorAll('img');
+        imgs.forEach((img, i) => {
+            if (!img.hasAttribute('loading') && i > 1) {
+                img.loading = 'lazy';
+                img.decoding = 'async';
+            }
+            if (!img.getAttribute('alt')) {
+                const src = img.getAttribute('src') || '';
+                const base = src.split('/').pop().split('?')[0].replace(/\.[a-z0-9]+$/i, '').replace(/[-_%20]+/g, ' ').trim();
+                img.alt = base || 'Tanzania safari with Tanzania Safari Magic';
+            }
+        });
+    } catch (_) { /* never block UX */ }
+}
 
 /**
  * Simple first-visit cookie / analytics notice (Privacy Policy link).
@@ -259,7 +286,7 @@ function loadChatScripts() {
         const loadChat = () => {
             if (!document.querySelector('script[src^="/js/chat.js"]')) {
                 const chatScript = document.createElement('script');
-                chatScript.src = '/js/chat.js?v=' + Date.now();
+                chatScript.src = '/js/chat.js?v=24';
                 document.body.appendChild(chatScript);
             }
         };
@@ -273,7 +300,7 @@ function loadChatScripts() {
         document.body.appendChild(ioScript);
     } else {
         const chatScript = document.createElement('script');
-        chatScript.src = '/js/chat.js?v=' + Date.now();
+        chatScript.src = '/js/chat.js?v=24';
         document.body.appendChild(chatScript);
     }
 }

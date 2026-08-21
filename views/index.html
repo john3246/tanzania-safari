@@ -57,12 +57,11 @@
     {"@type": "Place", "name": "Kilimanjaro"}
   ],
   "priceRange": "$$-$$$",
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "5.0",
-    "reviewCount": "48",
-    "bestRating": "5",
-    "worstRating": "1"
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+    "opens": "08:00",
+    "closes": "18:00"
   },
   "sameAs": [
     "https://wa.me/255695108009",
@@ -119,7 +118,7 @@
 <!-- Hero -->
     <section class="hero">
       <div class="hero-bg">
-        <video autoplay muted loop playsinline poster="/images/hero.jpg" class="hero-video">
+        <video autoplay muted loop playsinline preload="metadata" poster="/images/hero.jpg" class="hero-video" width="1920" height="1080">
           <source src="/images/hero-video.mp4" type="video/mp4">
         </video>
       </div>
@@ -134,29 +133,30 @@
               <a href="/safaris" class="btn btn-primary" data-i18n="home.explorePackages">Explore Safari Packages</a>
               <a href="https://wa.me/255695108009?text=Hi%20Tanzania%20Safari%20Magic%2C%20I%27m%20interested%20in%20booking%20a%20custom%20safari." class="btn btn-secondary" target="_blank" rel="noopener" data-i18n="home.whatsappQuote">WhatsApp Free Quote</a>
             </div>
+            <p style="margin-top:0.85rem;font-size:0.85rem;color:rgba(255,255,255,0.88)">We usually reply within 2 hours on WhatsApp.</p>
 
             <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 3rem; opacity: 0.9; margin-top: 5rem;">
-                <div style="display: flex; align-items: center; gap: 0.5rem; color: #fff;">
+                <a href="https://www.tripadvisor.com/Attraction_Review-g297913-d28075837-Reviews-Tanzania_Safari_Magic-Arusha_Arusha_Region.html" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; gap: 0.5rem; color: #fff; text-decoration: none;">
                     <i class="fab fa-tripadvisor" style="font-size: 2rem; color: #00af87;"></i>
                     <div style="display: flex; flex-direction: column; line-height: 1.2; text-align: left;">
                         <span style="font-weight: 700; font-size: 0.9rem; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">TripAdvisor</span>
-                        <span style="font-size: 0.75rem; color: #00af87; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">★★★★★ 5.0</span>
+                        <span style="font-size: 0.75rem; color: #00af87; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">Guest reviews</span>
                     </div>
-                </div>
-                <div style="display: flex; align-items: center; gap: 0.5rem; color: #fff;">
+                </a>
+                <a href="https://wttc.org/initiatives/safe-travels" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; gap: 0.5rem; color: #fff; text-decoration: none;">
                     <i class="fas fa-shield-alt" style="font-size: 1.75rem; color: var(--primary);"></i>
                     <div style="display: flex; flex-direction: column; line-height: 1.2; text-align: left;">
                         <span style="font-weight: 700; font-size: 0.9rem; text-shadow: 0 2px 4px rgba(0,0,0,0.8);" data-i18n="home.safeTravels">Safe Travels</span>
                         <span style="font-size: 0.75rem; color: rgba(255,255,255,0.9); text-shadow: 0 1px 2px rgba(0,0,0,0.8);" data-i18n="home.certifiedOperator">Certified Operator</span>
                     </div>
-                </div>
-                <div style="display: flex; align-items: center; gap: 0.5rem; color: #fff;">
+                </a>
+                <a href="https://www.tato.or.tz/" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; gap: 0.5rem; color: #fff; text-decoration: none;">
                     <i class="fas fa-certificate" style="font-size: 1.75rem; color: #f59e0b;"></i>
                     <div style="display: flex; flex-direction: column; line-height: 1.2; text-align: left;">
                         <span style="font-weight: 700; font-size: 0.9rem; text-shadow: 0 2px 4px rgba(0,0,0,0.8);" data-i18n="home.tatoMember">TATO Member</span>
                         <span style="font-size: 0.75rem; color: rgba(255,255,255,0.9); text-shadow: 0 1px 2px rgba(0,0,0,0.8);" data-i18n="home.licensedVerified">Licensed & Verified</span>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
       </div>
@@ -437,7 +437,7 @@
 </section>
 
 <!-- Testimonials -->
-<section class="section" style="background-image: url('/images/optimized/boat%20zanzibar.webp'); background-size: cover; background-position: center; position: relative; padding: 5rem 0;">
+<section class="section" id="homeTestimonials" style="background-image: url('/images/optimized/boat%20zanzibar.webp'); background-size: cover; background-position: center; position: relative; padding: 5rem 0;">
   <div style="position: absolute; inset: 0; background: rgba(0,0,0,0);"></div>
   <div class="container home-glass-panel" style="position: relative; z-index: 2; background: rgba(255,255,255,0.92); backdrop-filter: blur(10px); border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); display: flex; flex-direction: column; align-items: center; text-align: center; margin-top: 2rem; margin-bottom: 2rem;">
     <div class="section-header" style="max-width: 800px; margin: 0 auto 3rem auto;">
@@ -516,14 +516,14 @@
   <div class="container" style="max-width:52rem">
     <h2 style="font-size:1.5rem;margin-bottom:1rem;color:var(--earth-dark)" data-i18n="home.seoHubTitle">Tanzania safari tourism from Arusha</h2>
     <p style="color:var(--text-secondary);line-height:1.75;margin-bottom:1rem" data-i18n="home.seoHubP1">Tanzania Safari Magic is your local gateway to Tanzania tourism: private Serengeti safaris, Ngorongoro Crater game drives, Great Wildebeest Migration tours, Mount Kilimanjaro climbs, and Zanzibar beach holidays — all planned from Arusha with licensed guides.</p>
-    <p style="color:var(--text-secondary);line-height:1.75;margin:0" data-i18n-html="home.seoHubLinks">Explore <a href="/safaris">safari packages</a>, <a href="/destinations/serengeti-national-park">Serengeti National Park</a>, <a href="/destinations/ngorongoro-conservation-area">Ngorongoro</a>, <a href="/kilimanjaro">Kilimanjaro treks</a>, <a href="/migrations">migration safaris</a>, <a href="/zanzibar">Zanzibar extensions</a>, and our <a href="/blog/tanzania-safari">Tanzania safari guide</a> — or <a href="/booking">request a free quote</a>.</p>
+    <p style="color:var(--text-secondary);line-height:1.75;margin:0" data-i18n-html="home.seoHubLinks">Explore <a href="/safaris">safari packages</a>, <a href="/destinations/serengeti-national-park">Serengeti National Park</a>, <a href="/destinations/ngorongoro-conservation-area">Ngorongoro</a>, <a href="/kilimanjaro">Kilimanjaro treks</a>, <a href="/migrations">migration safaris</a>, <a href="/zanzibar">Zanzibar extensions</a>, <a href="/blog/serengeti-safari-cost-2026">Serengeti safari cost 2026</a>, <a href="/blog/tanzania-safari-zanzibar-combo">safari + Zanzibar</a>, and our <a href="/blog/tanzania-safari">Tanzania safari guide</a> — or <a href="/booking">request a free quote</a>.</p>
   </div>
 </section>
 
 <!-- Footer -->
 <div id="footer"></div>
-<script src="/js/layout-loader.js?v=19"></script>
+<script src="/js/layout-loader.js?v=24"></script>
 <script src="/js/api.js?v=2"></script>
-<script src="/js/main.js?v=9"></script>
+<script src="/js/main.js?v=10"></script>
 </body>
 </html>

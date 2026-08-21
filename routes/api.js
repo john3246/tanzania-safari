@@ -85,7 +85,7 @@ router.get(['/testimonials', '/reviews'], async (req, res) => {
             SELECT r.*, 
                    COALESCE(NULLIF(r.first_name, ''), NULLIF(u.first_name, ''), 'Safari Guest') AS first_name, 
                    COALESCE(NULLIF(r.last_name, ''), NULLIF(u.last_name, ''), '') AS last_name, 
-                   COALESCE(NULLIF(r.comment, ''), NULLIF(r.review_comment, ''), 'Wonderful safari experience!') AS comment,
+                   COALESCE(NULLIF(r.comment, ''), NULLIF(r.review_comment, '')) AS comment,
                    COALESCE(sp.package_name, 'Tanzania Safari Magic') AS safari_name
             FROM reviews r
             LEFT JOIN users u ON r.user_id = u.user_id
