@@ -198,6 +198,36 @@ function destinationListHtml(destinations) {
   return destinations.map(destinationCardHtml).join('\n');
 }
 
+function loadPartners() {
+  try {
+    return require('../public/data/partners.json');
+  } catch (err) {
+    console.warn('[ssrContent] partners.json', err.message);
+    return [];
+  }
+}
+
+function partnerLogoHtml(p) {
+  const name = p.name || 'Partner';
+  const href = p.websiteUrl || '#';
+  const webp = p.logoUrl || '';
+  const fallback = webp.replace(/\.webp$/i, '.png');
+  const w = Number(p.width) || 304;
+  const h = Number(p.height) || 72;
+  return `<a class="partner-logo" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">
+  <picture>
+    <source type="image/webp" srcset="${escapeHtml(webp)}">
+    <img src="${escapeHtml(fallback)}" alt="${escapeHtml(name)}" width="${w}" height="${h}" loading="lazy" decoding="async">
+  </picture>
+</a>`;
+}
+
+function partnersListHtml(partners) {
+  const list = Array.isArray(partners) ? partners : loadPartners();
+  if (!list.length) return '';
+  return list.map(partnerLogoHtml).join('\n');
+}
+
 function safariDetailSsrHtml(pkg) {
   if (!pkg) return '';
   const name = pkg.package_name || 'Tanzania Safari';
@@ -336,6 +366,8 @@ module.exports = {
   fetchApprovedReviews,
   packageListHtml,
   destinationListHtml,
+  loadPartners,
+  partnersListHtml,
   safariDetailSsrHtml,
   destinationDetailSsrHtml,
   toTripListItems,

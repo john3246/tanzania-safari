@@ -99,6 +99,25 @@ function buildTestimonialCard(r) {
     </div>`;
 }
 
+function escapeAttr(s) {
+    return String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+}
+
+function buildPartnerLogo(p) {
+    const name = p.name || 'Partner';
+    const href = p.websiteUrl || '#';
+    const webp = p.logoUrl || '';
+    const fallback = webp.replace(/\.webp$/i, '.png');
+    const w = Number(p.width) || 304;
+    const h = Number(p.height) || 72;
+    return `<a class="partner-logo" href="${escapeAttr(href)}" target="_blank" rel="noopener noreferrer">
+      <picture>
+        <source type="image/webp" srcset="${escapeAttr(webp)}">
+        <img src="${escapeAttr(fallback)}" alt="${escapeAttr(name)}" width="${w}" height="${h}" loading="lazy" decoding="async">
+      </picture>
+    </a>`;
+}
+
 // ── Category card builder ──────────────────────────────────
 const catIcons = {
     'wildlife': 'fa-paw', 'mountain': 'fa-mountain', 'beach': 'fa-umbrella-beach',
@@ -280,6 +299,18 @@ async function loadHomepage() {
         const section = document.getElementById('homeTestimonials');
         if (section) section.style.display = 'none';
     }
+
+    // Partners — data file so logos can be added without changing this renderer
+    try {
+        const grid = document.getElementById('partnersGrid');
+        if (grid && !grid.querySelector('.partner-logo')) {
+            const res = await fetch('/data/partners.json', { cache: 'no-cache' });
+            const partners = await res.json();
+            if (Array.isArray(partners) && partners.length) {
+                grid.innerHTML = partners.map(buildPartnerLogo).join('');
+            }
+        }
+    } catch {}
 }
 
 function shuffleList(list) {

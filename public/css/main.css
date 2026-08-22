@@ -844,3 +844,11 @@ textarea.form-control{resize:vertical;min-height:120px}
 }
 .group-home-card .btn-sm{padding:.55rem 1rem;font-size:.75rem;min-height:40px}
 
+/* ── Partners logo grid ── */
+#homePartners{background:#fff;padding:4rem 0;border-top:1px solid var(--border-light)}
+.partners-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,220px));gap:1.5rem;justify-content:center;align-items:center}
+.partner-logo{display:flex;align-items:center;justify-content:center;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;min-height:100px;box-shadow:var(--shadow-sm);transition:var(--transition)}
+.partner-logo:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);border-color:var(--primary-pale)}
+.partner-logo picture,.partner-logo img{display:block;max-height:56px;width:auto;height:56px;object-fit:contain}
+@media(max-width:767px){.partners-grid{grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}.partner-logo{min-height:88px;padding:1rem}}
+

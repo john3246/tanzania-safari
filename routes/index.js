@@ -77,7 +77,8 @@ router.get('/', async (req, res) => {
       jsonLd,
       replaceHtml: {
         destinationsGrid: ssr.destinationListHtml(destinations),
-        safarisGrid: ssr.packageListHtml(featured)
+        safarisGrid: ssr.packageListHtml(featured),
+        partnersGrid: ssr.partnersListHtml(ssr.loadPartners())
       }
     });
   } catch (e) {
