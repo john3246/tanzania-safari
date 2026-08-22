@@ -32,32 +32,21 @@ const PILLAR_ORDER = [
 ];
 
 function pillarFromWindow(slug) {
-  const map = {
-    'tanzania-safari': window.TanzaniaSafariGuide?.META,
-    'tanzania-safari-cost': window.TanzaniaSafariCostGuide?.META,
-    'great-wildebeest-migration': window.GreatWildebeestMigrationGuide?.META,
-    'zanzibar-guide': window.ZanzibarGuide?.META,
-    'ngorongoro-crater': window.NgorongoroCraterGuide?.META,
-    'serengeti-national-park': window.SerengetiNationalParkGuide?.META,
-    'arusha-national-park': window.ArushaNationalParkGuide?.META,
-    'best-time-to-visit-tanzania': window.BestTimeToVisitTanzaniaGuide?.META,
-    'first-tanzania-safari': window.FirstTanzaniaSafariGuide?.META,
-    'tanzania-solo-travel': window.TanzaniaSoloTravelGuide?.META,
-    'things-to-do-in-arusha': window.ThingsToDoInArushaGuide?.META,
-    'tanzania-visa-guide': window.TanzaniaVisaGuide?.META,
-    'climbing-kilimanjaro-difficulty': window.ClimbingKilimanjaroDifficultyGuide?.META,
-    'kilimanjaro-cost': window.KilimanjaroCostGuide?.META,
-    'best-time-to-climb-kilimanjaro': window.BestTimeClimbKilimanjaroGuide?.META,
-    'kilimanjaro-routes-guide': window.KilimanjaroRoutesGuide?.META,
-    'kilimanjaro-packing-list': window.KilimanjaroPackingListGuide?.META,
-    'train-for-kilimanjaro': window.TrainForKilimanjaroGuide?.META,
-    'kilimanjaro-tipping-guide': window.KilimanjaroTippingGuide?.META,
-    'kilimanjaro-acclimatization': window.KilimanjaroAcclimatizationGuide?.META,
-    'serengeti-safari-cost-2026': window.SerengetiSafariCost2026Guide?.META,
-    'tanzania-safari-zanzibar-combo': window.TanzaniaSafariZanzibarComboGuide?.META,
-    'kilimanjaro-route-comparison': window.KilimanjaroRouteComparisonGuide?.META
-  };
+  const map = window.TSM_BLOG_PILLARS || {};
   return map[slug] || null;
+}
+
+async function loadPillarMeta() {
+  if (window.TSM_BLOG_PILLARS) return window.TSM_BLOG_PILLARS;
+  try {
+    const res = await fetch('/data/blog-pillars.json', { cache: 'force-cache' });
+    if (res.ok) {
+      window.TSM_BLOG_PILLARS = await res.json();
+      return window.TSM_BLOG_PILLARS;
+    }
+  } catch (_) {}
+  window.TSM_BLOG_PILLARS = {};
+  return window.TSM_BLOG_PILLARS;
 }
 
 function ensurePillars(posts) {
@@ -133,6 +122,8 @@ function cardHtml(post, index) {
 async function loadBlog() {
   const container = document.getElementById('blogContainer');
   if (!container) return;
+
+  await loadPillarMeta();
 
   let posts = [];
   try {

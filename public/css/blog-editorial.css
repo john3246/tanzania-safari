@@ -281,12 +281,13 @@
 /* ── Magazine blog listing (tanzania-specialist inspired) ── */
 .blog-mag-hero {
   position: relative;
-  min-height: clamp(280px, 48vh, 520px);
+  min-height: clamp(280px, 42vh, 480px);
   display: flex;
   align-items: flex-end;
   color: #fff;
   overflow: hidden;
   background: #0f1a0e;
+  padding-top: var(--site-header-offset, 132px);
 }
 .blog-mag-hero-bg {
   position: absolute;
@@ -304,8 +305,11 @@
 .blog-mag-hero-inner {
   position: relative;
   z-index: 2;
-  padding: calc(var(--site-header-offset, 92px) + 2rem) 0 2.5rem;
+  padding: 2rem 1.25rem 2.5rem !important;
   max-width: 820px;
+  width: min(100% - 2rem, 820px) !important;
+  margin-left: 1.25rem;
+  margin-right: auto;
 }
 .blog-mag-hero h1 {
   margin: 0.5rem 0 0.85rem;
@@ -393,6 +397,15 @@
 }
 .blog-mag-link:hover .blog-mag-title {
   color: var(--accent, #FF6F00);
+}
+.blog-mag-more {
+  display: inline-block;
+  margin-top: 0.55rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--primary);
 }
 .blog-mag-cta {
   margin-top: 3rem;

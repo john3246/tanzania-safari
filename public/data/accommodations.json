@@ -1,0 +1,301 @@
+{
+  "regions": [
+    {
+      "id": "arusha",
+      "name": "Arusha",
+      "keywords": [
+        "arusha",
+        "jro",
+        "kilimanjaro airport"
+      ]
+    },
+    {
+      "id": "tarangire",
+      "name": "Tarangire",
+      "keywords": [
+        "tarangire"
+      ]
+    },
+    {
+      "id": "karatu",
+      "name": "Karatu",
+      "keywords": [
+        "karatu",
+        "rift valley escarpment",
+        "ngorongoro highlands"
+      ]
+    },
+    {
+      "id": "manyara",
+      "name": "Lake Manyara",
+      "keywords": [
+        "manyara",
+        "burunge",
+        "mto wa mbu"
+      ]
+    },
+    {
+      "id": "serengeti-central",
+      "name": "Central Serengeti",
+      "keywords": [
+        "central serengeti",
+        "seronera",
+        "serengeti"
+      ]
+    },
+    {
+      "id": "serengeti-north",
+      "name": "Northern Serengeti",
+      "keywords": [
+        "northern serengeti",
+        "mara river",
+        "kogatende",
+        "lamai",
+        "wogakuria"
+      ]
+    },
+    {
+      "id": "ngorongoro",
+      "name": "Ngorongoro",
+      "keywords": [
+        "ngorongoro",
+        "crater rim",
+        "conservation area"
+      ]
+    }
+  ],
+  "properties": [
+    {
+      "name": "Gran Meliá Arusha",
+      "region": "arusha",
+      "description": "Five-star Arusha hotel on Simeon Road with Mount Meru views, spa, infinity pool and a comfortable start or end to a northern-circuit safari.",
+      "officialWebsiteUrl": "https://www.melia.com/en/hotels/tanzania/arusha/gran-melia-arusha",
+      "imageUrl": "/images/accommodation/gran-melia-arusha.webp",
+      "imageSource": "https://www.melia.com/en/hotels/tanzania/arusha/gran-melia-arusha"
+    },
+    {
+      "name": "Four Points by Sheraton Arusha, The Arusha Hotel",
+      "region": "arusha",
+      "description": "Historic city-centre hotel on Fire Road, convenient for Arusha arrivals and overnight stays before game-drive days.",
+      "officialWebsiteUrl": "https://www.marriott.com/en-us/hotels/jrofp-four-points-arusha-the-arusha-hotel/overview/",
+      "imageUrl": "",
+      "imageSource": "https://www.marriott.com/en-us/hotels/jrofp-four-points-arusha-the-arusha-hotel/overview/"
+    },
+    {
+      "name": "Kibo Palace Hotel",
+      "region": "arusha",
+      "description": "Named after Kilimanjaro’s Kibo peak. A modern Arusha hotel about 45 minutes from JRO and a short walk from the business district.",
+      "officialWebsiteUrl": "https://kibopalacehotel.com/",
+      "imageUrl": "/images/accommodation/kibo-palace-hotel.webp",
+      "imageSource": "https://kibopalacehotel.com/"
+    },
+    {
+      "name": "Mount Meru Hotel",
+      "region": "arusha",
+      "description": "Large garden hotel facing Mount Meru, with pool, restaurants and easy access to JRO, Arusha Airport and the city centre.",
+      "officialWebsiteUrl": "https://www.mountmeruhotel.co.tz/",
+      "imageUrl": "/images/accommodation/mount-meru-hotel.webp",
+      "imageSource": "https://www.mountmeruhotel.co.tz/"
+    },
+    {
+      "name": "Legendary Lodge",
+      "region": "arusha",
+      "description": "Boutique cottages on a working coffee estate in Arusha — a quiet first or last night before the northern safari circuit.",
+      "officialWebsiteUrl": "https://www.legendaryexpeditions.co.tz/legendary-lodge",
+      "imageUrl": "/images/accommodation/legendary-lodge.webp",
+      "imageSource": "https://www.legendaryexpeditions.co.tz/legendary-lodge"
+    },
+    {
+      "name": "Tarangire Sopa Lodge",
+      "region": "tarangire",
+      "description": "Circular suites among baobabs inside Tarangire National Park, known for elephant country and unfenced wildlife around the lodge.",
+      "officialWebsiteUrl": "https://www.sopalodges.com/tarangire-sopa-lodge/",
+      "imageUrl": "/images/accommodation/tarangire-sopa-lodge.webp",
+      "imageSource": "https://www.sopalodges.com/tarangire-sopa-lodge/"
+    },
+    {
+      "name": "Tarangire Safari Lodge",
+      "region": "tarangire",
+      "description": "Family-owned lodge inside the park since 1985, set for panoramic views over the Tarangire River and classic game-drive access.",
+      "officialWebsiteUrl": "https://www.tarangiresafarilodge.com/",
+      "imageUrl": "/images/accommodation/tarangire-safari-lodge.webp",
+      "imageSource": "https://www.tarangiresafarilodge.com/"
+    },
+    {
+      "name": "Farm of Dreams Lodge",
+      "region": "karatu",
+      "description": "Garden lodge in Karatu on the Ngorongoro slopes, a practical overnight between Tarangire, Lake Manyara and crater days.",
+      "officialWebsiteUrl": "https://farmofdreamslodge.com/",
+      "imageUrl": "/images/accommodation/farm-of-dreams-lodge.webp",
+      "imageSource": "https://farmofdreamslodge.com/"
+    },
+    {
+      "name": "Bougainvillea Safari Lodge",
+      "region": "karatu",
+      "description": "Small Karatu lodge with garden rooms and homestyle meals — a comfortable pause off the dusty park roads.",
+      "officialWebsiteUrl": "https://bougainvilleasafarilodge.com/",
+      "imageUrl": "/images/accommodation/bougainvillea-safari-lodge.webp",
+      "imageSource": "https://bougainvilleasafarilodge.com/"
+    },
+    {
+      "name": "Marera Valley Lodge",
+      "region": "karatu",
+      "description": "Karatu lodge near Rhotia with valley views, cottages in tropical gardens and easy access to Manyara and Ngorongoro.",
+      "officialWebsiteUrl": "https://mareravalley.com/",
+      "imageUrl": "/images/accommodation/marera-valley-lodge.webp",
+      "imageSource": "https://mareravalley.com/"
+    },
+    {
+      "name": "Maramboi Tented Lodge",
+      "region": "manyara",
+      "description": "Raised tented suites on the Lake Manyara floodplain with Rift Valley views, between Tarangire and the northern circuit.",
+      "officialWebsiteUrl": "https://twctanzania.com/tarangire/maramboi-tented-lodge/",
+      "imageUrl": "/images/accommodation/maramboi-tented-lodge.webp",
+      "imageSource": "https://twctanzania.com/tarangire/maramboi-tented-lodge/"
+    },
+    {
+      "name": "Lake Burunge Tented Lodge",
+      "region": "manyara",
+      "description": "Tented lodge near Lake Burunge, used as a Tarangire / Manyara overnight with easy park access.",
+      "officialWebsiteUrl": "https://twctanzania.com/tarangire/lake-burunge-tented-lodge/",
+      "imageUrl": "/images/accommodation/lake-burunge-tented-lodge.webp",
+      "imageSource": "https://twctanzania.com/tarangire/lake-burunge-tented-lodge/"
+    },
+    {
+      "name": "Mawe Mawe Lodge",
+      "region": "manyara",
+      "description": "Boutique villas on the Rift Valley escarpment with views toward Lake Manyara National Park.",
+      "officialWebsiteUrl": "https://mawemawemanyaralodge.com/",
+      "imageUrl": "/images/accommodation/mawe-mawe-lodge.webp",
+      "imageSource": "https://mawemawemanyaralodge.com/"
+    },
+    {
+      "name": "Meliá Serengeti Lodge",
+      "region": "serengeti-central",
+      "description": "Meliá Collection lodge in the Nyamuma Hills of Serengeti National Park — a full-service base for central-plains game drives.",
+      "officialWebsiteUrl": "https://www.melia.com/en/hotels/tanzania/serengeti-national-park/hotel-serengeti-lodge-melia-collection",
+      "imageUrl": "/images/accommodation/melia-serengeti-lodge.webp",
+      "imageSource": "https://www.melia.com/en/hotels/tanzania/serengeti-national-park/hotel-serengeti-lodge-melia-collection"
+    },
+    {
+      "name": "Four Seasons Safari Lodge Serengeti",
+      "region": "serengeti-central",
+      "description": "Elevated lodge beside an active watering hole in central Serengeti, with infinity pool, spa and Big Five game-drive access.",
+      "officialWebsiteUrl": "https://www.fourseasons.com/serengeti/",
+      "imageUrl": "/images/accommodation/four-seasons-serengeti.webp",
+      "imageSource": "https://www.fourseasons.com/serengeti/"
+    },
+    {
+      "name": "Serengeti Serena Safari Lodge",
+      "region": "serengeti-central",
+      "description": "Thatched rondavels on an acacia ridge overlooking the Serengeti plains — a classic central-park overnight.",
+      "officialWebsiteUrl": "https://www.serenahotels.com/serengeti",
+      "imageUrl": "/images/accommodation/serengeti-serena-safari-lodge.webp",
+      "imageSource": "https://www.serenahotels.com/serengeti"
+    },
+    {
+      "name": "Ngorongoro Serena Safari Lodge",
+      "region": "ngorongoro",
+      "description": "Rim lodge on the Ngorongoro crater, positioned for early descent onto the crater floor.",
+      "officialWebsiteUrl": "https://www.serenahotels.com/ngorongoro",
+      "imageUrl": "/images/accommodation/ngorongoro-serena-safari-lodge.webp",
+      "imageSource": "https://www.serenahotels.com/ngorongoro"
+    },
+    {
+      "name": "Ngorongoro Coffee Lodge",
+      "region": "karatu",
+      "description": "Karatu-area lodge convenient to Ngorongoro Gate, used as a highlands overnight before or after crater day.",
+      "officialWebsiteUrl": "https://www.bougainvilleagroup.com/ngorongoro-coffee-lodge/",
+      "imageUrl": "/images/accommodation/ngorongoro-coffee-lodge.webp",
+      "imageSource": "https://www.bougainvilleagroup.com/ngorongoro-coffee-lodge/"
+    },
+    {
+      "name": "Arusha Planet Lodge",
+      "region": "arusha",
+      "description": "Garden lodge in Moshono with hut-style rooms, pool and Mount Meru views — a practical Arusha overnight before the northern circuit.",
+      "officialWebsiteUrl": "https://planet-lodges.com/lodges/arusha-planet-lodge/",
+      "imageUrl": "/images/accommodation/arusha-planet-lodge.webp",
+      "imageSource": "https://planet-lodges.com/lodges/arusha-planet-lodge/"
+    },
+    {
+      "name": "Ang'ata Tarangire Camp",
+      "region": "tarangire",
+      "description": "Tented camp inside Tarangire National Park with en-suite safari tents, used for game drives, night drives and walking safaris.",
+      "officialWebsiteUrl": "https://www.angatacamps.com/tarangire",
+      "imageUrl": "/images/accommodation/angata-tarangire-camp.webp",
+      "imageSource": "https://www.angatacamps.com/tarangire"
+    },
+    {
+      "name": "Lemala Mpingo Ridge Lodge",
+      "region": "tarangire",
+      "description": "Escarpment lodge overlooking the Tarangire River valley, with tented suites and full-service game-drive access inside the park.",
+      "officialWebsiteUrl": "https://www.lemalacamps.com/stay/mpingo-ridge-lodge/",
+      "imageUrl": "/images/accommodation/lemala-mpingo-ridge.webp",
+      "imageSource": "https://www.lemalacamps.com/stay/mpingo-ridge-lodge/"
+    },
+    {
+      "name": "Tarangire Kuro Treetops Lodge",
+      "region": "tarangire",
+      "description": "Raised tented lodge near Kuro Airstrip, set along baobabs inside Tarangire National Park.",
+      "officialWebsiteUrl": "https://wellworthcollection.co.tz/tarangire-kuro/",
+      "imageUrl": "/images/accommodation/tarangire-kuro-treetops-lodge.webp",
+      "imageSource": "https://wellworthcollection.co.tz/tarangire-kuro/"
+    },
+    {
+      "name": "The Retreat at Ngorongoro",
+      "region": "karatu",
+      "description": "Karatu highlands lodge in Tloma on 60 acres of restored forest, used as a crater-gate overnight with cottages, pool and spa.",
+      "officialWebsiteUrl": "https://theretreatatngorongoro.co.tz/",
+      "imageUrl": "/images/accommodation/the-retreat-at-ngorongoro.webp",
+      "imageSource": "https://theretreatatngorongoro.co.tz/"
+    },
+    {
+      "name": "Ngorongoro Oldeani Mountain Lodge",
+      "region": "karatu",
+      "description": "Hilltop lodge near Ngorongoro Gate with Oldeani Mountain and crater-rim views, a highlands base before crater day.",
+      "officialWebsiteUrl": "https://wellworthcollection.co.tz/ngorongoro-oldeani/",
+      "imageUrl": "/images/accommodation/ngorongoro-oldeani-mountain-lodge.webp",
+      "imageSource": "https://wellworthcollection.co.tz/ngorongoro-oldeani/"
+    },
+    {
+      "name": "Serengeti Explorer by Elewana",
+      "region": "serengeti-central",
+      "description": "Contemporary lodge in south-central Serengeti with plains views, pool and a full-service base for Seronera game drives.",
+      "officialWebsiteUrl": "https://explorer.africa/",
+      "imageUrl": "/images/accommodation/serengeti-explorer-by-elewana.webp",
+      "imageSource": "https://explorer.africa/"
+    },
+    {
+      "name": "Nyikani Migration Camp — Kogatende",
+      "region": "serengeti-north",
+      "description": "Seasonal tented camp near the Mara River in northern Serengeti, positioned for wildebeest river-crossing season.",
+      "officialWebsiteUrl": "https://nyikani.com/nyikani-migrations-serengeti-kogatende/",
+      "imageUrl": "/images/accommodation/nyikani-migration-kogatende.webp",
+      "imageSource": "https://nyikani.com/nyikani-migrations-serengeti-kogatende/"
+    },
+    {
+      "name": "Serengeti Ark Safari Lodge",
+      "region": "serengeti-north",
+      "description": "Northern Serengeti lodge in Kogatende, about 30 minutes from the Mara River crossing points.",
+      "officialWebsiteUrl": "https://ark-tz.com/",
+      "imageUrl": "",
+      "imageSource": "https://ark-tz.com/"
+    },
+    {
+      "name": "Ngorongoro Lodge Meliá Collection",
+      "region": "ngorongoro",
+      "description": "Meliá Collection lodge in the Ngorongoro Conservation Area, a full-service crater overnight with spa and dining.",
+      "officialWebsiteUrl": "https://www.melia.com/en/hotels/tanzania/ngorongoro-conservation-area/ngorongoro-lodge-melia-collection",
+      "imageUrl": "/images/accommodation/ngorongoro-lodge-melia.webp",
+      "imageSource": "https://www.melia.com/en/hotels/tanzania/ngorongoro-conservation-area/ngorongoro-lodge-melia-collection"
+    },
+    {
+      "name": "Ang'ata Ngorongoro Camp",
+      "region": "ngorongoro",
+      "description": "Tented camp in the Ngorongoro Conservation Area from Ang'ata Camps, used as a crater-area overnight.",
+      "officialWebsiteUrl": "https://www.angatacamps.com/",
+      "imageUrl": "/images/accommodation/angata-ngorongoro-camp.webp",
+      "imageSource": "https://www.angatacamps.com/"
+    }
+  ]
+}

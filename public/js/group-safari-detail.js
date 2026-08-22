@@ -41,6 +41,7 @@ function renderItinerary(itinerary) {
       <div class="day-label">${escapeHtml(t('groupDetail.dayN', { n: day.day || i + 1 }))}</div>
       <h3>${escapeHtml(day.title || t('groupDetail.safariDay'))}</h3>
       <p style="margin:0;color:var(--text-secondary);line-height:1.65">${escapeHtml(day.description || '')}</p>
+      ${window.TSM_ACCOM && typeof window.TSM_ACCOM.cardsHtml === 'function' ? window.TSM_ACCOM.cardsHtml(day) : ''}
     </div>
   `).join('');
 }
@@ -176,6 +177,7 @@ async function loadGroupDetail() {
       <p class="group-deposit-note">${t('groupDetail.priceDepositNoteHtml')}</p>
       <p style="color:var(--text-secondary);margin:0.85rem 0 0;line-height:1.65">${escapeHtml(t('groupDetail.priceSharingNote'))}</p>`;
 
+    if (window.TSM_ACCOM && window.TSM_ACCOM.ready) await window.TSM_ACCOM.ready;
     document.getElementById('groupItinerary').innerHTML = renderItinerary(data.itinerary);
 
     document.getElementById('groupInclusions').innerHTML = data.inclusions_html

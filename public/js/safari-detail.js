@@ -131,6 +131,7 @@ async function loadSafariDetails(slug) {
             currentSafari = result.data;
             document.getElementById('loadingState').style.display = 'none';
             document.getElementById('detailContent').style.display = 'block';
+            if (window.TSM_ACCOM && window.TSM_ACCOM.ready) await window.TSM_ACCOM.ready;
             renderSafariDetails(result.data);
             updatePageTitle(result.data.package_name);
             applySafariSeo(result.data);
@@ -144,6 +145,7 @@ async function loadSafariDetails(slug) {
                         if (updateRes && updateRes.success && updateRes.data) {
                             if (JSON.stringify(currentSafari) !== JSON.stringify(updateRes.data)) {
                                 currentSafari = updateRes.data;
+                                if (window.TSM_ACCOM && window.TSM_ACCOM.ready) await window.TSM_ACCOM.ready;
                                 renderSafariDetails(updateRes.data);
                             }
                         }
@@ -440,7 +442,11 @@ function renderItinerary(items) {
         if (item.meals_included) {
             html += `<span><i class="fas fa-utensils"></i> ${escapeHtml(item.meals_included)}</span>`;
         }
-        html += `</div></div>`;
+        html += `</div>`;
+        if (window.TSM_ACCOM && typeof window.TSM_ACCOM.cardsHtml === 'function') {
+            html += window.TSM_ACCOM.cardsHtml(item);
+        }
+        html += `</div>`;
     });
     html += '</div>';
     return html;
@@ -642,7 +648,11 @@ function renderItinerary(items) {
         if (item.meals_included) {
             html += `<span><i class="fas fa-utensils"></i> ${escapeHtml(item.meals_included)}</span>`;
         }
-        html += `</div></div>`;
+        html += `</div>`;
+        if (window.TSM_ACCOM && typeof window.TSM_ACCOM.cardsHtml === 'function') {
+            html += window.TSM_ACCOM.cardsHtml(item);
+        }
+        html += `</div>`;
     });
     html += '</div>';
     return html;

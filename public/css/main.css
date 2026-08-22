@@ -852,3 +852,16 @@ textarea.form-control{resize:vertical;min-height:120px}
 .partner-logo picture,.partner-logo img{display:block;max-height:56px;width:auto;height:56px;object-fit:contain}
 @media(max-width:767px){.partners-grid{grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}.partner-logo{min-height:88px;padding:1rem}}
 
+/* ── Itinerary accommodation cards ── */
+.accom-day-block{margin-top:1rem}
+.accom-day-label{margin:0 0 .65rem;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--primary)}
+.accom-card-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+.accom-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm);display:flex;flex-direction:column}
+.accom-card-media{aspect-ratio:16/10;background:#e8ebe6;overflow:hidden}
+.accom-card-media img{width:100%;height:100%;object-fit:cover}
+.accom-card-body{padding:1rem 1.1rem 1.15rem;display:flex;flex-direction:column;gap:.45rem;flex:1}
+.accom-card-title{margin:0;font-size:1.05rem;color:var(--earth-dark)}
+.accom-card-desc{margin:0;font-size:.88rem;line-height:1.55;color:var(--text-secondary);flex:1}
+.accom-card-link{font-size:.85rem;font-weight:700;color:var(--primary);text-decoration:none}
+.accom-card-link:hover{color:var(--accent)}
+

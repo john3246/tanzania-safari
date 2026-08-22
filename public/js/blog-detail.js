@@ -415,12 +415,6 @@ function escapeHtml(str) {
 }
 
 function boot() {
-  const slug = window.location.pathname.split('/').filter(Boolean).pop();
-  const key = PILLAR_SLUGS[slug];
-  if (key && !window[key]) {
-    setTimeout(boot, 50);
-    return;
-  }
   loadPost();
 }
 
