@@ -226,7 +226,7 @@ async function loadPost() {
   container.innerHTML = `
     <article class="blog-article-main">
       <nav class="blog-crumb" aria-label="Breadcrumb">
-        <a href="/">${escapeHtml(t('blogDetail.home'))}</a><span>/</span><a href="/blog">${escapeHtml(t('blogDetail.blog'))}</a><span>/</span><span>${escapeHtml(title.slice(0, 42))}${title.length > 42 ? '…' : ''}</span>
+        <a href="/">${escapeHtml(t('blogDetail.home'))}</a><span>/</span><a href="/blog">${escapeHtml(t('blogDetail.blog'))}</a><span>/</span><span>${escapeHtml(title)}</span>
       </nav>
       <h1 class="blog-h1">${escapeHtml(title)}</h1>
       <div class="blog-byline">

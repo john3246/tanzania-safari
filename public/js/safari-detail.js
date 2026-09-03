@@ -43,7 +43,8 @@ function initLoadingScreen() {
     
     setTimeout(() => {
         loadingScreen.classList.add('hidden');
-        document.body.style.overflow = 'visible';
+        document.body.style.overflow = '';
+        document.body.style.overflowX = 'hidden';
     }, 800);
 }
 

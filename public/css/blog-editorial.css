@@ -2,19 +2,20 @@
 
 .blog-editorial {
   background: #fff;
-  padding: clamp(1rem, 2.5vw, 2rem) 0 clamp(2rem, 4vw, 3.5rem);
+  padding: clamp(1rem, 2.5vw, 2rem) max(1.15rem, env(safe-area-inset-right)) clamp(2rem, 4vw, 3.5rem) max(1.15rem, env(safe-area-inset-left));
 }
 .blog-editorial-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
+  grid-template-columns: minmax(0, 1fr) minmax(min(100%, 260px), 320px);
   gap: clamp(1.25rem, 3vw, 2.5rem);
   align-items: start;
-  max-width: min(1200px, 100% - 2rem);
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0;
+  width: 100%;
 }
 @media (max-width: 960px) {
-  .blog-editorial-grid { grid-template-columns: 1fr; }
+  .blog-editorial-grid { grid-template-columns: minmax(0, 1fr); }
 }
 
 .blog-article-main { min-width: 0; order: 1; }
@@ -22,17 +23,20 @@
   font-size: 0.85rem;
   color: var(--text-muted);
   margin-bottom: 0.75rem;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
 }
 .blog-crumb a { color: var(--primary); text-decoration: none; font-weight: 600; }
 .blog-crumb span { margin: 0 0.35rem; opacity: 0.6; }
 
 .blog-h1 {
   font-family: var(--font-heading, Fraunces, serif);
-  font-size: clamp(1.65rem, 1.2rem + 1.8vw, 2.5rem);
-  line-height: 1.18;
+  font-size: clamp(1.45rem, 1.15rem + 1.6vw, 2.5rem);
+  line-height: 1.22;
   color: #111;
   margin: 0 0 0.85rem;
   letter-spacing: -0.02em;
+  overflow-wrap: break-word;
 }
 .blog-byline {
   display: flex;
@@ -55,6 +59,34 @@
   font-size: clamp(1.02rem, 0.98rem + 0.2vw, 1.125rem);
   line-height: 1.75;
   color: #333;
+  min-width: 0;
+  max-width: 100%;
+}
+.blog-prose img,
+.blog-prose video {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: 1rem auto;
+  border-radius: 12px;
+  object-fit: cover;
+  object-position: center;
+}
+.blog-prose iframe {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  margin: 1rem auto;
+  border: 0;
+}
+.blog-prose table {
+  width: 100%;
+  max-width: 100%;
+  display: block;
+  overflow-x: auto;
 }
 .blog-prose .guide-lead { font-size: 1.12rem; line-height: 1.65; margin-bottom: 1.1rem; }
 .blog-prose p { margin: 0 0 1.1rem; }
@@ -145,9 +177,10 @@
 
 .guide-pkg-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
   gap: 1rem;
   margin: 1.1rem 0 1.75rem;
+}
 }
 .guide-pkg-card {
   display: flex;

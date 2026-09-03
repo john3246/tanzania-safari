@@ -16,6 +16,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 .seo-faq-item summary::-webkit-details-marker { display: none; }
 .seo-faq-item summary::after {

@@ -10,16 +10,20 @@ html {
   text-size-adjust: 100%;
   scroll-behavior: smooth;
   overflow-x: hidden;
+  max-width: 100%;
 }
 body {
-  overflow-x: visible;
+  overflow-x: hidden;
   max-width: 100%;
+  width: 100%;
 }
 body.nav-drawer-open {
   overflow: hidden !important;
 }
-img, video, svg, canvas {
+img, video, svg, canvas, iframe, embed, object {
   max-width: 100%;
+}
+img, video, canvas {
   height: auto;
 }
 iframe {
@@ -34,15 +38,20 @@ iframe {
 img { display: block; }
 table { max-width: 100%; }
 .container {
-  width: min(100% - 1.5rem, 1180px) !important;
+  width: 100% !important;
+  max-width: 1180px !important;
   margin-inline: auto;
-  padding-inline: 0 !important;
+  padding-inline: max(1.15rem, env(safe-area-inset-left, 0px))
+    max(1.15rem, env(safe-area-inset-right, 0px)) !important;
 }
 @media (min-width: 640px) {
-  .container { width: min(100% - 2rem, 1180px) !important; }
+  .container {
+    padding-inline: max(1.75rem, env(safe-area-inset-left, 0px))
+      max(1.75rem, env(safe-area-inset-right, 0px)) !important;
+  }
 }
 @media (min-width: 1440px) {
-  .container { width: min(100% - 3rem, 1280px) !important; }
+  .container { max-width: 1280px !important; }
 }
 
 /* Touch targets */
@@ -208,7 +217,15 @@ table { max-width: 100%; }
   .drawer-header { display: none !important; }
 }
 
-/* Intermediate tablet: hide crowded nav labels earlier */
+@media (max-width: 1024px) {
+  .header,
+  .header.header--zara,
+  .header-top,
+  .header-nav-bar {
+    max-width: 100%;
+    min-width: 0;
+  }
+}
 @media (min-width: 1025px) and (max-width: 1180px) {
   .header:not(.header--zara) .header-trust { display: none !important; }
   .header.header--zara .nav { gap: 0.7rem !important; }
@@ -342,13 +359,27 @@ body > .corp-page-hero,
   }
 }
 
-/* Galleries */
-.corp-gallery,
-.zara-gallery-thumbs {
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+/* Galleries — keep main image full-width; thumbs sit on their own row */
+.gallery,
+.corp-gallery {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.5rem;
 }
-@media (min-width: 900px) {
-  .corp-gallery { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+.gallery-thumbs,
+.zara-gallery-thumbs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+  width: 100%;
+  min-width: 0;
+}
+@media (max-width: 480px) {
+  .gallery-thumbs,
+  .zara-gallery-thumbs { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
 /* Tables */
@@ -513,9 +544,11 @@ body > .corp-page-hero,
 }
 .itinerary-timeline { padding-left: 0.75rem !important; }
 
-/* Prevent horizontal page scroll from absolute children */
-.section, .corp-section, main, #destinationDetailContent {
-  overflow-x: clip;
+/* Contain layout without clipping readable content */
+.section, .corp-section, main, #destinationDetailContent,
+#detailContent, #mainContent, #postContainer {
+  max-width: 100%;
+  min-width: 0;
 }
 
 /* Safe area for notched phones */
@@ -537,7 +570,14 @@ body > .corp-page-hero,
   .dest-table { min-width: 0 !important; }
   .gallery,
   .gallery-thumbs { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .gallery-main { grid-column: 1 / -1 !important; max-height: min(52vw, 360px); height: auto !important; min-height: 180px; }
+  .gallery-main {
+    grid-column: 1 / -1 !important;
+    width: 100%;
+    height: auto !important;
+    max-height: none;
+    aspect-ratio: 16 / 10;
+    min-height: 0;
+  }
   .zara-gallery-thumbs,
   .corp-stat-row,
   .zara-roles { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
@@ -555,6 +595,7 @@ body > .corp-page-hero,
     min-width: 0 !important;
     max-width: 100%;
   }
+  .form-group { min-width: 0 !important; }
   .search-filter-section {
     margin-left: 0.75rem !important;
     margin-right: 0.75rem !important;
@@ -571,9 +612,9 @@ body > .corp-page-hero,
   .map-stats { gap: 1.25rem !important; flex-wrap: wrap; }
   .filter-bar { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; padding-bottom: 0.35rem; }
   .filter-btn { flex-shrink: 0; }
-  .gallery,
-  .gallery-thumbs { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
-  .gallery-thumb { height: 72px !important; }
+  .gallery { grid-template-columns: minmax(0, 1fr) !important; }
+  .gallery-thumbs { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+  .gallery-thumb { height: 58px !important; }
   .detail-card { position: static !important; }
   .itinerary-meta { flex-wrap: wrap; gap: 0.65rem !important; }
   .newsletter-form { flex-direction: column !important; }
@@ -605,5 +646,341 @@ body > .corp-page-hero,
 
 @media (max-width: 480px) {
   .header.header--zara .logo-text { display: none; }
-  .gallery-thumbs { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .gallery-thumbs { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+  .gallery-thumb { height: 48px !important; }
+}
+
+/* ── Overflow containment + detail-page media (phones → desktops) ── */
+html, body, #header, #footer, main, .container,
+.corp-section, .corp-detail-grid, .detail-layout,
+.layout-main, .layout-sidebar, .corp-panel, .corp-book-card,
+.blog-editorial, .blog-editorial-grid, .blog-article-main, .blog-sidebar,
+.blog-prose, .dest-guide, .dest-guide-panel, .content-section,
+.group-detail-layout, .group-detail-main, .group-section,
+.tab-panel, #detailContent, #destinationDetailContent, #postContainer {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.corp-detail-grid,
+.detail-layout,
+.blog-editorial-grid,
+.group-detail-layout,
+.corp-booking-grid,
+.dest-layout-ngoro {
+  width: 100%;
+}
+
+.corp-detail-grid > *,
+.detail-layout > *,
+.blog-editorial-grid > *,
+.group-detail-layout > *,
+.corp-about-grid > *,
+.zara-split > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+h1, h2, h3, h4, p, li, td, th, label, blockquote {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+.blog-prose,
+.dest-guide,
+.tab-panel,
+.group-section,
+.route-body,
+.content-section {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+#tsmCookieNotice,
+#tsmCookieNotice p {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.corp-breadcrumb,
+.blog-crumb,
+.page-hero-breadcrumb {
+  overflow-wrap: anywhere;
+  max-width: 100%;
+}
+.blog-prose img,
+.dest-guide img,
+.dest-guide-panel img,
+.guide-figure img,
+.group-section img,
+.route-body img,
+.tab-panel img,
+.content-section img,
+#packageDescription img,
+#itineraryList img,
+#groupOverview img,
+#groupPacking img,
+#groupItinerary img,
+#groupInclusions img,
+#groupExclusions img,
+#groupVisa img,
+.corp-blog-article img,
+.about-prose img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin-inline: auto;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 12px;
+}
+
+.gallery-main img,
+.gallery-thumb img,
+.accom-card-media img,
+.safari-card-img img,
+.corp-dest-img img,
+.blog-card-img img,
+.author-card img,
+.blog-team-card img {
+  width: 100%;
+  max-width: 100%;
+  margin-inline: 0;
+  border-radius: 0;
+}
+
+.gallery-main,
+.corp-gallery .gallery-main {
+  width: 100%;
+  max-width: 100%;
+  margin-inline: auto;
+  overflow: hidden;
+  height: auto !important;
+  aspect-ratio: 16 / 10;
+  background: #1a2418;
+}
+.gallery-main img,
+.corp-gallery .gallery-main img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+}
+
+.lightbox {
+  padding: 1rem;
+  box-sizing: border-box;
+}
+.lightbox img,
+.lightbox.active img {
+  max-width: min(100%, 92vw) !important;
+  max-height: min(86vh, 86dvh) !important;
+  width: auto;
+  height: auto;
+  margin: auto;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+figure, .guide-figure {
+  width: 100%;
+  max-width: 100%;
+  margin-inline: auto;
+  overflow: hidden;
+}
+
+iframe, video, embed, object {
+  max-width: 100%;
+}
+.blog-prose iframe,
+.dest-guide iframe,
+.group-section iframe,
+.tab-panel iframe {
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  display: block;
+  margin-inline: auto;
+}
+
+.blog-prose table,
+.dest-guide table,
+.group-section table,
+.tab-panel table,
+.route-body table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+pre, code {
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Grids that used a hard min column width overflowed on 320–380px phones */
+.safari-grid,
+.packages-grid,
+.related-grid,
+.guide-pkg-grid,
+.kr-related-grid,
+.group-highlights,
+.accom-card-row,
+#relatedGrid {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)) !important;
+}
+
+.itinerary-timeline,
+.itinerary-item,
+.corp-itinerary,
+.group-itinerary-day {
+  max-width: 100%;
+  min-width: 0;
+}
+.itinerary-timeline {
+  padding-left: 1.15rem !important;
+  margin-left: 0.15rem;
+}
+
+.mobile-sticky-booking {
+  width: 100%;
+  max-width: 100%;
+  gap: 0.75rem;
+  box-sizing: border-box;
+}
+.mobile-sticky-booking > div {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.mobile-sticky-booking .btn,
+.mobile-sticky-booking a.btn {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  max-width: 55%;
+}
+
+.corp-meta-row,
+.detail-meta-row,
+.group-summary-row {
+  gap: 0.75rem;
+}
+.corp-meta-row strong,
+.detail-meta-value,
+.group-summary-row strong {
+  text-align: right;
+  min-width: 0;
+}
+
+/* Stop iOS zoom-on-focus (inputs < 16px zoom the whole page) */
+@media (max-width: 1024px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+  .btn {
+    white-space: normal;
+    max-width: 100%;
+  }
+}
+
+/* Phones: more air, slightly smaller type so copy doesn’t feel oversized */
+@media (max-width: 768px) {
+  .corp-panel,
+  .dest-guide-panel,
+  .corp-form-card {
+    padding: 1.1rem 1rem !important;
+  }
+  .corp-book-card,
+  .detail-card,
+  .group-summary-card {
+    padding: 1.15rem 1rem !important;
+  }
+  .page-hero-title,
+  .corp-page-hero .page-hero-title,
+  #heroTitle,
+  #groupDetailTitle {
+    font-size: clamp(1.35rem, 6.4vw, 1.95rem) !important;
+    line-height: 1.22 !important;
+    overflow-wrap: anywhere;
+  }
+  .blog-h1 {
+    font-size: clamp(1.4rem, 6.2vw, 1.9rem) !important;
+  }
+  .blog-prose,
+  .dest-guide-panel.blog-prose,
+  .tab-panel,
+  .route-body {
+    font-size: 0.98rem !important;
+    line-height: 1.7;
+  }
+  .tab-nav,
+  .corp-tabs,
+  .group-tabs {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+    gap: 0.35rem;
+  }
+  .inc-exc,
+  .review-form-grid,
+  .pros-cons {
+    grid-template-columns: 1fr !important;
+  }
+  .review-card-header {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .seo-trust-strip {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 0.5rem;
+  }
+  .layout-main,
+  .layout-sidebar,
+  .dest-main-col,
+  .corp-dest-sidebar {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .corp-panel,
+  .dest-guide-panel {
+    padding: 0.95rem 0.85rem !important;
+    border-radius: 12px;
+  }
+  .gallery-main,
+  .corp-gallery .gallery-main {
+    aspect-ratio: 4 / 3;
+    border-radius: 10px;
+  }
+}
+
+/* Grid minmax(auto, 1fr) lets 1200px images blow out the page — lock tracks */
+@media (max-width: 960px) {
+  .blog-editorial-grid,
+  .corp-detail-grid,
+  .detail-layout,
+  .group-detail-layout,
+  .dest-layout-ngoro,
+  .corp-booking-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
+
+body:has(#tsmCookieNotice) {
+  padding-bottom: 6.5rem;
+}
+body.has-mobile-book-bar:has(#tsmCookieNotice) {
+  padding-bottom: 10.5rem;
+}
+#tsmCookieNotice {
+  bottom: max(0.75rem, env(safe-area-inset-bottom, 0px)) !important;
 }

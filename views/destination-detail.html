@@ -19,7 +19,7 @@
     <meta name="robots" content="index, follow">
     <link rel="stylesheet" href="/css/seo.css">
     <link rel="stylesheet" href="/css/corporate-ui.css">
-    <link rel="stylesheet" href="/css/blog-editorial.css">
+    <link rel="stylesheet" href="/css/blog-editorial.css?v=4">
     <script src="/js/seo.js"></script>
     <script src="/js/destination-guides/ngorongoro.js"></script>
     <script src="/js/destination-guides/serengeti.js"></script>
@@ -30,8 +30,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;500;600;700;800&family=Nunito+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/variables.css">
-    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/main.css?v=9">
+    <link rel="stylesheet" href="/css/header.css?v=9">
     <link rel="stylesheet" href="/css/responsive.css">
+    <link rel="stylesheet" href="/css/fluid-responsive.css?v=11">
     <style>
         .months-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0.35rem; margin-bottom: 1rem; }
         @media(max-width: 768px) { .months-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.4rem; } }
@@ -47,9 +49,9 @@
         .legend-color.good { background: #f59e0b; }
         .legend-color.poor { background: var(--text-muted); opacity: 0.5; }
         .packages-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 1.25rem; }
-        .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; align-items: center; justify-content: center; }
+        .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; }
         .lightbox.active { display: flex; }
-        .lightbox img { max-width: 90%; max-height: 90vh; object-fit: contain; border-radius: 8px; }
+        .lightbox img { max-width: min(100%, 92vw); max-height: 86vh; width: auto; height: auto; object-fit: contain; margin: auto; border-radius: 8px; }
         .lightbox-close { position: fixed; top: 1.5rem; right: 1.5rem; background: rgba(255,255,255,0.1); border: none; color: #fff; font-size: 1.5rem; width: 48px; height: 48px; border-radius: 50%; cursor: pointer; }
         .dest-guide { margin-top: 1.5rem; }
         .dest-guide .guide-lead { font-size: 1.12rem; line-height: 1.75; }
@@ -58,7 +60,7 @@
         .dest-table th, .dest-table td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(0,0,0,0.06); }
         .dest-table th { background: #f4f7f4; font-weight: 700; color: var(--earth-dark); }
         .dest-table tr:last-child td { border-bottom: none; }
-        .dest-guide-panel { background: #fff; border-radius: 16px; border: 1px solid rgba(70, 91, 45,0.08); padding: clamp(1.25rem, 3vw, 2rem); box-shadow: 0 8px 28px rgba(70, 91, 45,0.05); margin-bottom: 1.25rem; }
+        .dest-guide-panel { background: #fff; border-radius: 16px; border: 1px solid rgba(70, 91, 45,0.08); padding: clamp(1.25rem, 3vw, 2rem); box-shadow: 0 8px 28px rgba(70, 91, 45,0.05); margin-bottom: 1.25rem; min-width: 0; max-width: 100%; }
     </style>
 </head>
 <body>
@@ -76,9 +78,9 @@
 <!-- Footer -->
 <div id="footer"></div>
 
-<script src="/js/layout-loader.js?v=27"></script>
+<script src="/js/layout-loader.js?v=28"></script>
 <script src="/js/api.js?v=2"></script>
 <script src="/js/guide-i18n.js?v=1"></script>
-<script src="/js/destination-detail.js?v=4"></script>
+<script src="/js/destination-detail.js?v=5"></script>
 </body>
 </html>

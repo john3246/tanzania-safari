@@ -190,7 +190,18 @@
   .header-top{flex:none;width:100%;border-bottom:none;overflow:visible;background:#fff}
   .header-top .container.header-top-inner,
   .header-nav-bar .container.header-nav-inner{
-    width:100%!important;max-width:none!important;
+    width:100%!important;max-width:100%!important;
+    padding-inline:max(.5rem, env(safe-area-inset-left)) max(.5rem, env(safe-area-inset-right))!important;
+  }
+  .header-utility{
+    grid-column:1/-1;grid-row:1;width:100%;max-width:100%;border-radius:0;justify-content:stretch;
+    min-width:0;overflow:hidden;
+  }
+  .header-utility a,
+  .header-utility-chat{
+    flex:1 1 0;min-width:0;justify-content:center;padding:.42rem .25rem;font-size:.68rem;
+    min-height:34px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    border-right:1px solid rgba(255,255,255,.28);
   }
   .header.header--zara.scrolled .header-top-inner{min-height:0;padding:0}
   .header.header--zara.scrolled .logo-img{width:64px!important;height:64px!important}
@@ -200,12 +211,14 @@
   }
   .header-top-end{display:contents}
   .header-utility{
-    grid-column:1/-1;grid-row:1;width:100%;border-radius:0;justify-content:stretch;
+    grid-column:1/-1;grid-row:1;width:100%;max-width:100%;border-radius:0;justify-content:stretch;
+    min-width:0;overflow:hidden;
   }
   .header-utility a,
   .header-utility-chat{
-    flex:1;justify-content:center;padding:.42rem .3rem;font-size:.68rem;
-    min-height:34px;white-space:nowrap;border-right:1px solid rgba(255,255,255,.28);
+    flex:1 1 0;min-width:0;justify-content:center;padding:.42rem .25rem;font-size:.68rem;
+    min-height:34px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    border-right:1px solid rgba(255,255,255,.28);
   }
   .header-phone-row{display:none}
   .header-top-mid{
@@ -232,14 +245,17 @@
   }
   .header-nav-inner{
     display:flex;align-items:center;justify-content:flex-end;
-    min-height:52px;height:52px;padding:0 .5rem 0 5.5rem;gap:.4rem;
+    min-height:52px;height:auto;padding:.35rem .65rem .35rem 5.25rem;gap:.4rem;
   }
   .header-nav-phone{
     display:flex;flex-direction:column;justify-content:center;flex:1;min-width:0;
     color:#fff;line-height:1.2;
   }
   .header-nav-phone-q{font-size:.72rem;opacity:.9;font-weight:600}
-  .header-nav-phone-link{color:#fff;text-decoration:none;font-size:.84rem;font-weight:700}
+  .header-nav-phone-link{
+    color:#fff;text-decoration:none;font-size:clamp(.72rem,3.1vw,.84rem);font-weight:700;
+    overflow-wrap:anywhere;max-width:100%;
+  }
   .header-nav-phone-link strong{font-weight:800;letter-spacing:.01em}
   .header-nav-phone-link:hover{color:var(--accent,#C8860A)}
   .header-plan-btn{display:none}
@@ -280,10 +296,16 @@
   }
 }
 
+@media(max-width:640px){
+  .header-utility a span,
+  .header-utility-chat span{display:none}
+  .header-utility i{font-size:.95rem}
+}
 @media(max-width:480px){
-  .header.header--zara .logo{margin-left:.5rem;margin-bottom:-1.5rem}
-  .header.header--zara .logo-img{width:58px!important;height:58px!important}
-  .header-nav-inner{padding-left:4.85rem}
+  .header.header--zara .logo{margin-left:.5rem;margin-bottom:-0.85rem}
+  .header.header--zara .logo-img{width:54px!important;height:54px!important}
+  .header-nav-inner{padding:.4rem .65rem .4rem 4.5rem}
+  .header-nav-phone-q{display:none}
   .header-utility a span,
   .header-utility-chat span{display:none}
   .header-utility i{font-size:.95rem}

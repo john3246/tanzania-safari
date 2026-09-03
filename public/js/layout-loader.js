@@ -123,10 +123,48 @@ async function loadSafariMegaMenuTours() {
     if (document.querySelector('link[href*="fluid-responsive.css"]')) return;
     const fluid = document.createElement('link');
     fluid.rel = 'stylesheet';
-    fluid.href = '/css/fluid-responsive.css?v=7';
+    fluid.href = '/css/fluid-responsive.css?v=11';
     const head = document.head || document.getElementsByTagName('head')[0];
     if (head) head.appendChild(fluid);
     else document.addEventListener('DOMContentLoaded', () => document.head.appendChild(fluid));
+})();
+
+/* Keep the viewport from zooming sideways when detail/CMS content loads */
+(function keepViewportStable() {
+    if (typeof document === 'undefined') return;
+
+    function ensureViewportMeta() {
+        let meta = document.querySelector('meta[name="viewport"]');
+        if (!meta) {
+            meta = document.createElement('meta');
+            meta.name = 'viewport';
+            (document.head || document.documentElement).appendChild(meta);
+        }
+        const desired = 'width=device-width, initial-scale=1, viewport-fit=cover';
+        if (meta.getAttribute('content') !== desired) {
+            meta.setAttribute('content', desired);
+        }
+    }
+
+    function resetHorizontalScroll() {
+        if (window.scrollX || document.documentElement.scrollLeft || document.body.scrollLeft) {
+            window.scrollTo(0, window.scrollY || window.pageYOffset || 0);
+        }
+    }
+
+    ensureViewportMeta();
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', resetHorizontalScroll);
+    } else {
+        resetHorizontalScroll();
+    }
+    window.addEventListener('load', resetHorizontalScroll);
+    window.addEventListener('orientationchange', () => {
+        ensureViewportMeta();
+        setTimeout(resetHorizontalScroll, 50);
+        setTimeout(resetHorizontalScroll, 300);
+    });
+    window.addEventListener('resize', resetHorizontalScroll, { passive: true });
 })();
 
 /* Zara-style header layout (all public pages) */
@@ -135,7 +173,7 @@ async function loadSafariMegaMenuTours() {
     if (document.querySelector('link[href*="/css/header.css"]')) return;
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '/css/header.css?v=7';
+    link.href = '/css/header.css?v=9';
     const head = document.head || document.getElementsByTagName('head')[0];
     if (head) head.appendChild(link);
     else document.addEventListener('DOMContentLoaded', () => document.head.appendChild(link));
@@ -218,15 +256,18 @@ function initCookieNotice() {
         bar.setAttribute('role', 'dialog');
         bar.setAttribute('aria-label', tsmT('cookie.aria'));
         bar.style.cssText = [
-            'position:fixed', 'left:1rem', 'right:1rem', 'bottom:1rem', 'z-index:9998',
-            'max-width:32rem', 'margin:0 auto', 'padding:1rem 1.15rem',
+            'position:fixed', 'left:max(0.75rem, env(safe-area-inset-left))',
+            'right:max(0.75rem, env(safe-area-inset-right))', 'bottom:max(0.75rem, env(safe-area-inset-bottom))',
+            'z-index:9998', 'width:auto', 'max-width:min(32rem, calc(100vw - 1.5rem))', 'margin:0 auto',
+            'padding:0.9rem 1rem', 'box-sizing:border-box',
             'background:#1a2a17', 'color:#f5f5f0', 'border-radius:12px',
-            'box-shadow:0 8px 28px rgba(0,0,0,.25)', 'font-size:0.875rem', 'line-height:1.5',
-            'display:flex', 'flex-wrap:wrap', 'gap:0.75rem', 'align-items:center', 'justify-content:space-between'
+            'box-shadow:0 8px 28px rgba(0,0,0,.25)', 'font-size:0.85rem', 'line-height:1.5',
+            'display:flex', 'flex-wrap:wrap', 'gap:0.75rem', 'align-items:center', 'justify-content:space-between',
+            'overflow-wrap:anywhere'
         ].join(';');
         bar.innerHTML = `
-          <p style="margin:0;flex:1 1 12rem">${tsmT('cookie.html')}</p>
-          <button type="button" id="tsmCookieAccept" style="flex:0 0 auto;border:0;cursor:pointer;background:#c45c26;color:#fff;font-weight:700;padding:0.55rem 1rem;border-radius:8px">${tsmT('common.ok')}</button>
+          <p style="margin:0;flex:1 1 140px;min-width:0;overflow-wrap:anywhere">${tsmT('cookie.html')}</p>
+          <button type="button" id="tsmCookieAccept" style="flex:0 0 auto;border:0;cursor:pointer;background:#c45c26;color:#fff;font-weight:700;padding:0.55rem 1rem;border-radius:8px;min-height:44px">${tsmT('common.ok')}</button>
         `;
         document.body.appendChild(bar);
         document.getElementById('tsmCookieAccept')?.addEventListener('click', () => {

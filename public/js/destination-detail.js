@@ -54,7 +54,8 @@ function initLoadingScreen() {
     
     setTimeout(() => {
         loadingScreen.classList.add('hidden');
-        document.body.style.overflow = 'visible';
+        document.body.style.overflow = '';
+        document.body.style.overflowX = 'hidden';
     }, 500);
 }
 
@@ -311,7 +312,7 @@ function renderDestinationDetails(destination) {
                                                 <img src="${imgSrc(images[0])}" alt="${escapeHtml(t('destDetail.galleryAlt', { name }))}" width="1200" height="675" loading="eager" decoding="async">
                                             </div>
                                             ${images.length > 1 ? `
-                                            <div class="gallery-thumbs" style="display:contents">
+                                            <div class="gallery-thumbs">
                                                 ${images.slice(1, 5).map((url, i) => `
                                                     <div class="gallery-thumb" onclick="document.querySelector('.gallery-main img').src='${imgSrc(url)}'; document.querySelector('.gallery-main').setAttribute('onclick', 'openLightbox(\\'${imgSrc(url)}\\')')">
                                                         <img src="${imgSrc(url)}" alt="${escapeHtml(t('destDetail.galleryN', { name, n: i + 1 }))}" width="400" height="300" loading="lazy" decoding="async">
@@ -1267,11 +1268,11 @@ function showError(message) {
     const mainContent = document.getElementById('destinationDetailContent');
     if (mainContent) {
         mainContent.innerHTML = `
-            <div style="text-align: center; padding: 4rem;">
-                <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #ef4444; margin-bottom: 1rem;"></i>
-                <h2>${escapeHtml(message)}</h2>
+            <div style="text-align:center;padding:4rem 1.25rem;max-width:36rem;margin:0 auto">
+                <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #ef4444; margin-bottom: 1rem;"></i>
+                <h2 style="overflow-wrap:anywhere">${escapeHtml(message)}</h2>
                 <p style="margin-top: 1rem;">${escapeHtml(t('destDetail.mightNotExist'))}</p>
-                <a href="/destinations" class="btn btn-primary" style="margin-top: 2rem; display: inline-block;">
+                <a href="/destinations" class="btn btn-primary" style="margin-top: 2rem; display: inline-flex;">
                     <i class="fas fa-arrow-left"></i> ${escapeHtml(t('destDetail.browseAll'))}
                 </a>
             </div>
