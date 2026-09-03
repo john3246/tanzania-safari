@@ -55,7 +55,7 @@ function initLoadingScreen() {
     setTimeout(() => {
         loadingScreen.classList.add('hidden');
         document.body.style.overflow = '';
-        document.body.style.overflowX = 'hidden';
+        document.body.style.overflowX = '';
     }, 500);
 }
 
@@ -433,6 +433,7 @@ function renderDestinationDetails(destination) {
     
     mainContent.innerHTML = html;
     document.body.classList.add('has-mobile-book-bar');
+    if (typeof window.TSM_promoteMobileChrome === 'function') window.TSM_promoteMobileChrome();
     if (isGuideDest) {
         const tocId = isNgorongoro ? 'ngoro-toc' : (isSerengeti ? 'serengeti-toc' : 'kilimanjaro-toc');
         mountGuideSideToc(tocId);

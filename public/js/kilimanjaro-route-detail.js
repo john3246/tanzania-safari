@@ -323,6 +323,7 @@
     var waBtn = document.getElementById('waBtn');
     if (bookBtn) bookBtn.href = book;
     if (mobileBookBtn) mobileBookBtn.href = book;
+    if (typeof window.TSM_promoteMobileChrome === 'function') window.TSM_promoteMobileChrome();
     if (waBtn) waBtn.href = wa;
     document.getElementById('mobilePriceLabel').textContent = route.name + (route.days ? ' · ' + route.days : '');
 

@@ -152,7 +152,10 @@
     "welcome": "Willkommen bei Tanzania Safari Magic! Wie können wir Ihnen heute bei der Planung Ihrer Traumsafari helfen?",
     "messagePlaceholder": "Nachricht eingeben...",
     "sendAria": "Nachricht senden",
-    "closed": "Dieser Chat wurde geschlossen. Sie können jederzeit ein neues Gespräch beginnen."
+    "closed": "Dieser Chat wurde geschlossen. Sie können jederzeit ein neues Gespräch beginnen.",
+    "newConversation": "Neues Gespräch beginnen",
+    "nameEmailRequired": "Name und E-Mail sind erforderlich",
+    "invalidEmail": "Bitte geben Sie eine gültige E-Mail ein"
   },
   "home": {
     "tag": "Private Safaris ab Arusha",

@@ -44,7 +44,7 @@ function initLoadingScreen() {
     setTimeout(() => {
         loadingScreen.classList.add('hidden');
         document.body.style.overflow = '';
-        document.body.style.overflowX = 'hidden';
+        document.body.style.overflowX = '';
     }, 800);
 }
 
@@ -826,6 +826,7 @@ function renderCard(pkg) {
     if (mobilePriceEl) mobilePriceEl.textContent = formattedPrice;
     const mobileBookBtn = document.getElementById('mobileBookBtn');
     if (mobileBookBtn) mobileBookBtn.href = `/booking?package=${pkg.package_slug}`;
+    if (typeof window.TSM_promoteMobileChrome === 'function') window.TSM_promoteMobileChrome();
 
     const meta = [
         { icon: 'fa-clock', label: t('detail.duration'), value: t('safariDetail.daysNights', { days: pkg.duration_days, nights: pkg.duration_nights || pkg.duration_days - 1 }) },

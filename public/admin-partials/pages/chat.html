@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <div class="p-3 sm:p-4 border-t border-gray-200 bg-white shrink-0">
-                    <form id="adminChatForm" class="flex gap-2" onsubmit="handleChatSubmit(event)">
+                    <form id="adminChatForm" class="flex gap-2" onsubmit="if(event){event.preventDefault();} if(window.sendAdminMessage){window.sendAdminMessage();} return false;">
                         <input type="text" id="adminChatInput" class="flex-1 rounded-lg border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-gray-900" placeholder="Type your reply..." maxlength="2000" disabled autocomplete="off">
                         <button type="submit" id="adminChatSendBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-lg font-semibold transition-all shadow-sm flex items-center justify-center min-w-[48px]" disabled>
                             <i class="fa-solid fa-paper-plane text-sm"></i>

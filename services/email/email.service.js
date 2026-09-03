@@ -70,7 +70,7 @@ function normalizeTemplateData(data = {}) {
   const siteUrl = process.env.SITE_URL || 'https://tanzaniasafarimagic.com';
   // Templates historically used {{#with booking|enquiry|payment}} while callers spread
   // fields at the root. Nest aliases so both styles resolve to the same values.
-  const nestedKeys = ['booking', 'enquiry', 'payment', 'refund', 'user', 'content', 'alert'];
+  const nestedKeys = ['booking', 'enquiry', 'payment', 'refund', 'user', 'content', 'alert', 'chat'];
   const normalized = {
     site_url: data.site_url || siteUrl,
     year: data.year || new Date().getFullYear(),
@@ -577,6 +577,30 @@ async function sendAdminContactNotification(enquiry) {
   return sendEmailQueued('admin-contact-notification', data);
 }
 
+async function sendAdminChatNotification(chat) {
+  if (!process.env.ADMIN_EMAIL) {
+    logger.warn({ event: 'admin_email_missing' }, 'ADMIN_EMAIL not set, skipping live chat notification');
+    return { success: false, error: 'ADMIN_EMAIL not set' };
+  }
+
+  const data = {
+    to: process.env.ADMIN_EMAIL,
+    subject: `New live chat from ${chat.visitor_name || 'a website visitor'}`,
+    templateName: 'admin-chat-notification',
+    templateData: {
+      ...chat,
+      admin_url: process.env.ADMIN_URL || process.env.SITE_URL || 'http://localhost:3000/admin',
+      hide_signature: true,
+      header: {
+        title: 'New live chat',
+        subtitle: 'A visitor is waiting for a reply'
+      }
+    },
+    priority: 'high'
+  };
+  return sendEmailQueued('admin-chat-notification', data);
+}
+
 async function sendEnquiryResponse(enquiry, responseNotes) {
   const subject = 'A personal reply from Tanzania Safari Magic';
   const data = {
@@ -831,6 +855,7 @@ module.exports = {
   // Contact emails
   sendContactAcknowledgment,
   sendAdminContactNotification,
+  sendAdminChatNotification,
   sendAdminBookingNotification,
   sendAdminBookingCancelled,
   sendAdminPaymentFailed,

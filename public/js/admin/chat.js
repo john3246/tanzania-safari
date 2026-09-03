@@ -158,6 +158,21 @@ function initAdminChat() {
     chatActiveDot = document.getElementById('chatActiveDot');
     ensureConnBanner();
 
+    if (chatForm && !chatForm.dataset.bound) {
+      chatForm.dataset.bound = '1';
+      chatForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        sendAdminMessage();
+      });
+    }
+    if (chatSendBtn && !chatSendBtn.dataset.bound) {
+      chatSendBtn.dataset.bound = '1';
+      chatSendBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        sendAdminMessage();
+      });
+    }
+
     if (adminSocket) {
       if (adminSocket.connected) {
         adminSocket.emit('admin_join');
@@ -511,3 +526,7 @@ window.initChatPage = initAdminChat;
 window.initAdminChat = initAdminChat;
 window.sendAdminMessage = sendAdminMessage;
 window.closeCurrentChat = closeCurrentChat;
+window.handleChatSubmit = function handleChatSubmit(e) {
+  if (e && typeof e.preventDefault === 'function') e.preventDefault();
+  sendAdminMessage();
+};

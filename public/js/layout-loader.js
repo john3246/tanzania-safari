@@ -31,7 +31,7 @@ function ensureI18nLoaded() {
             return;
         }
         const s = document.createElement('script');
-        s.src = '/js/i18n.js?v=7';
+        s.src = '/js/i18n.js?v=8';
         s.onload = () => {
             if (window.TSM_i18n && window.TSM_i18n.ready) window.TSM_i18n.ready.then(resolve);
             else resolve();
@@ -123,7 +123,7 @@ async function loadSafariMegaMenuTours() {
     if (document.querySelector('link[href*="fluid-responsive.css"]')) return;
     const fluid = document.createElement('link');
     fluid.rel = 'stylesheet';
-    fluid.href = '/css/fluid-responsive.css?v=11';
+    fluid.href = '/css/fluid-responsive.css?v=12';
     const head = document.head || document.getElementsByTagName('head')[0];
     if (head) head.appendChild(fluid);
     else document.addEventListener('DOMContentLoaded', () => document.head.appendChild(fluid));
@@ -182,8 +182,21 @@ async function loadSafariMegaMenuTours() {
 /* Start loading i18n as early as possible */
 ensureI18nLoaded();
 
+function promoteMobileChrome() {
+    try {
+        document.querySelectorAll('.mobile-sticky-booking, .y27-sticky').forEach((bar) => {
+            if (bar.parentElement !== document.body) {
+                document.body.appendChild(bar);
+            }
+            document.body.classList.add('has-mobile-book-bar');
+        });
+    } catch (_) { /* never block UX */ }
+}
+window.TSM_promoteMobileChrome = promoteMobileChrome;
+
 document.addEventListener('DOMContentLoaded', async () => {
-    const cb = '?v=27';
+    const cb = '?v=29';
+    promoteMobileChrome();
     await ensureI18nLoaded();
 
     // Load shared SEO helpers early
@@ -195,6 +208,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     applyPageI18n(document);
+
+    loadChatScripts();
 
     loadComponent('header', '/includes/header.html' + cb, () => {
         initHeader();
@@ -208,11 +223,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         applyPageI18n(document.getElementById('footer') || document);
         loadChatScripts();
         initCookieNotice();
+        promoteMobileChrome();
     });
     initSEO();
     trackPageView();
     initConversionTracking();
     enhanceBelowFoldImages();
+    promoteMobileChrome();
 });
 
 function initConversionTracking() {
@@ -274,6 +291,7 @@ function initCookieNotice() {
             localStorage.setItem('tsm_cookie_ok', '1');
             bar.remove();
         });
+        promoteMobileChrome();
     } catch (_) { /* non-blocking */ }
 }
 /**
@@ -320,14 +338,25 @@ function trackPageView() {
 }
 
 function loadChatScripts() {
+    if ((window.location.pathname || '').startsWith('/admin')) return;
     if (typeof io === 'undefined') {
+        if (document.querySelector('script[src*="socket.io"]')) {
+            const waitIo = setInterval(() => {
+                if (typeof io !== 'undefined') {
+                    clearInterval(waitIo);
+                    loadChatScripts();
+                }
+            }, 50);
+            setTimeout(() => clearInterval(waitIo), 8000);
+            return;
+        }
         const ioScript = document.createElement('script');
         ioScript.src = '/socket.io/socket.io.js';
         
         const loadChat = () => {
             if (!document.querySelector('script[src^="/js/chat.js"]')) {
                 const chatScript = document.createElement('script');
-                chatScript.src = '/js/chat.js?v=24';
+                chatScript.src = '/js/chat.js?v=27';
                 document.body.appendChild(chatScript);
             }
         };
@@ -339,9 +368,9 @@ function loadChatScripts() {
         };
         
         document.body.appendChild(ioScript);
-    } else {
+    } else if (!document.querySelector('script[src^="/js/chat.js"]')) {
         const chatScript = document.createElement('script');
-        chatScript.src = '/js/chat.js?v=24';
+        chatScript.src = '/js/chat.js?v=27';
         document.body.appendChild(chatScript);
     }
 }

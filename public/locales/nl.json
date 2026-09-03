@@ -152,7 +152,10 @@
     "welcome": "Welkom bij Tanzania Safari Magic! Hoe kunnen we u vandaag helpen bij het plannen van uw droomsafari?",
     "messagePlaceholder": "Typ een bericht...",
     "sendAria": "Bericht versturen",
-    "closed": "Deze chat is gesloten. U kunt op elk moment een nieuw gesprek starten."
+    "closed": "Deze chat is gesloten. U kunt op elk moment een nieuw gesprek starten.",
+    "newConversation": "Nieuw gesprek starten",
+    "nameEmailRequired": "Naam en e-mail zijn verplicht",
+    "invalidEmail": "Voer een geldig e-mailadres in"
   },
   "home": {
     "tag": "Privésafari's vanuit Arusha",

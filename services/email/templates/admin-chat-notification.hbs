@@ -1,0 +1,27 @@
+{{#with chat}}
+<p class="greeting"><strong>New live chat session</strong></p>
+<p class="lead">A website visitor started a live chat and is waiting for a reply. Open the CMS to respond in real time.</p>
+
+<p class="section-label">Visitor details</p>
+<div class="data-card">
+  {{#if visitor_name}}
+  <div class="row"><span class="label">Name</span><span class="value">{{visitor_name}}</span></div>
+  {{/if}}
+  {{#if visitor_email}}
+  <div class="row"><span class="label">Email</span><span class="value"><a href="mailto:{{visitor_email}}">{{visitor_email}}</a></span></div>
+  {{/if}}
+  {{#if page_url}}
+  <div class="row"><span class="label">Page</span><span class="value">{{page_url}}</span></div>
+  {{/if}}
+  {{#if chat_id}}
+  <div class="row"><span class="label">Session</span><span class="value">{{chat_id}}</span></div>
+  {{/if}}
+</div>
+
+<div class="cta-row">
+  <a href="{{admin_url}}/chat" class="btn">Open live chat</a>
+  {{#if visitor_email}}
+  <a href="mailto:{{visitor_email}}" class="btn-secondary">Email the visitor</a>
+  {{/if}}
+</div>
+{{/with}}

@@ -386,10 +386,12 @@
   display: none;
   position: fixed;
   left: 0; right: 0; bottom: 0;
-  z-index: 40;
+  z-index: 10240;
   background: var(--primary-dark);
   padding: 0.7rem 1rem;
   box-shadow: 0 -8px 24px rgba(0,0,0,0.18);
+  pointer-events: auto;
+  isolation: isolate;
 }
 .y27-sticky a {
   display: flex;
@@ -401,6 +403,10 @@
   font-weight: 800;
   text-decoration: none;
   border-radius: 10px;
+  pointer-events: auto;
+  position: relative;
+  z-index: 2;
+  touch-action: manipulation;
 }
 @media (max-width: 768px) {
   .y27-sticky { display: block; }

@@ -119,22 +119,15 @@ router.post(['/enquiry', '/contact'], validate(contactSchema), async (req, res) 
 
         try {
             const CustomerRepository = require('../repositories/CustomerRepository');
-            const NotificationRepository = require('../repositories/NotificationRepository');
+            const { notifyAdmins } = require('../services/adminEvents');
             await CustomerRepository.upsertFromEnquiry({ name: full_name, email, phone });
-            await NotificationRepository.create({
+            await notifyAdmins({
                 type: 'enquiry',
                 title: 'New enquiry',
                 message: `${full_name}: ${(msg || '').slice(0, 100)}`,
                 relatedId: String(result.rows[0].enquiry_id),
                 actionUrl: '/admin/enquiries'
             });
-            if (global.__chatIo) {
-                global.__chatIo.to('admin_room').emit('admin_notification', {
-                    type: 'enquiry',
-                    title: 'New enquiry',
-                    message: `${full_name} submitted an enquiry`
-                });
-            }
         } catch (crmErr) {
             console.error('CRM/notification error:', crmErr.message);
         }

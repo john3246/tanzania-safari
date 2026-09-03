@@ -23,9 +23,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;500;600;700;800&family=Nunito+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="/css/variables.css">
-<link rel="stylesheet" href="/css/main.css?v=8">
+<link rel="stylesheet" href="/css/main.css?v=10">
 <link rel="stylesheet" href="/css/header.css?v=9">
-<link rel="stylesheet" href="/css/fluid-responsive.css?v=11">
+<link rel="stylesheet" href="/css/fluid-responsive.css?v=12">
 <style>
 .detail-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(min(100%, 260px), 320px); gap: 2rem; align-items: start; margin-top: 2rem; width: 100%; }
 @media(max-width:1024px) { .detail-layout { grid-template-columns: minmax(0, 1fr); } }
@@ -104,9 +104,9 @@
 
 .mobile-sticky-booking { display: none; }
 @media(max-width: 768px) {
-  .mobile-sticky-booking { display: flex; position: fixed; bottom: 0; left: 0; right: 0; background: #fff; padding: 0.85rem 1rem; padding-bottom: max(0.85rem, env(safe-area-inset-bottom)); box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 100; align-items: center; justify-content: space-between; gap: 0.75rem; border-top: 1px solid var(--border-light); }
+  .mobile-sticky-booking { display: flex; position: fixed; bottom: 0; left: 0; right: 0; background: #fff; padding: 0.85rem 1rem; padding-bottom: max(0.85rem, env(safe-area-inset-bottom)); box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 10240; align-items: center; justify-content: space-between; gap: 0.75rem; border-top: 1px solid var(--border-light); pointer-events: auto; }
   .mobile-sticky-booking .price { font-size: 1.15rem; font-weight: 700; color: var(--earth-dark); }
-  .mobile-sticky-booking > div { min-width: 0; flex: 1; }
+  .mobile-sticky-booking > div { min-width: 0; flex: 1; pointer-events: none; }
   .detail-card .btn-primary { display: none; }
 }
 </style>
@@ -256,16 +256,6 @@
         </div>
         </div>
       </div>
-      
-      <!-- Mobile Sticky Booking CTA -->
-      <div class="mobile-sticky-booking" id="mobileStickyBooking">
-        <div>
-          <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;" data-i18n="detail.from">From</div>
-          <div class="price" id="mobilePrice">$0</div>
-        </div>
-        <a href="/booking" id="mobileBookBtn" class="btn btn-primary" data-i18n="detail.bookNow">Book Now</a>
-      </div>
-
     </div>
     <div id="notFound" style="display:none;text-align:center;padding:4rem">
       <i class="fas fa-exclamation-triangle fa-3x" style="color:var(--primary);margin-bottom:1rem"></i>
@@ -282,12 +272,21 @@
   <img id="lightboxImg" src="" alt="">
 </div>
 
+<!-- Mobile Sticky Booking CTA — on body so phone overlays cannot trap the tap -->
+<div class="mobile-sticky-booking" id="mobileStickyBooking">
+  <div>
+    <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;" data-i18n="detail.from">From</div>
+    <div class="price" id="mobilePrice">$0</div>
+  </div>
+  <a href="/booking" id="mobileBookBtn" class="btn btn-primary" style="min-height:48px;min-width:7.5rem;pointer-events:auto;z-index:2;position:relative" data-i18n="detail.bookNow">Book Now</a>
+</div>
+
 <!-- Footer -->
 <div id="footer"></div>
 
-<script src="/js/layout-loader.js?v=28"></script>
+<script src="/js/layout-loader.js?v=30"></script>
 <script src="/js/api.js?v=2"></script>
 <script src="/js/accommodation.js?v=2"></script>
-<script src="/js/safari-detail.js?v=7"></script>
+<script src="/js/safari-detail.js?v=8"></script>
 </body>
 </html>

@@ -557,8 +557,8 @@ button.nav-dropdown-toggle{
 .toast-close:hover{color:var(--text-primary)}
 
 /* ── MODAL ── */
-.modal-backdrop{position:fixed;inset:0;background:rgba(42,26,14,.6);z-index: 1000;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;visibility:hidden;transition:var(--transition)}
-.modal-backdrop.active{opacity:1;visibility:visible}
+.modal-backdrop{position:fixed;inset:0;background:rgba(42,26,14,.6);z-index: 1000;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;visibility:hidden;pointer-events:none;transition:var(--transition)}
+.modal-backdrop.active{opacity:1;visibility:visible;pointer-events:auto}
 .modal{background:#fff;border-radius:var(--radius-xl);width:100%;max-width:520px;max-height:90vh;overflow-y:auto;transform:translateY(20px);transition:var(--transition)}
 .modal-backdrop.active .modal{transform:translateY(0)}
 .modal-header{padding:1.75rem 2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
@@ -583,8 +583,8 @@ textarea.form-control{resize:vertical;min-height:120px}
 .form-control.is-invalid{border-color:var(--error)}
 
 /* ── BACK TO TOP ── */
-.back-to-top{position:fixed;bottom:2rem;right:2rem;width:48px;height:48px;background:var(--gradient-primary);color:#fff;border:none;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-md);opacity:0;transform:translateY(20px);transition:var(--transition);z-index:var(--z-fixed)}
-.back-to-top.visible{opacity:1;transform:translateY(0)}
+.back-to-top{position:fixed;bottom:2rem;right:2rem;width:48px;height:48px;background:var(--gradient-primary);color:#fff;border:none;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-md);opacity:0;visibility:hidden;pointer-events:none;transform:translateY(20px);transition:var(--transition);z-index:var(--z-fixed)}
+.back-to-top.visible{opacity:1;visibility:visible;pointer-events:auto;transform:translateY(0)}
 .back-to-top:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
 
 /* ── FILTER BAR ── */

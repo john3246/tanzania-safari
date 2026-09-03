@@ -23,6 +23,29 @@ class ChatRepository {
         };
     }
 
+    newExternalId() {
+        return 'chat_' + Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
+    }
+
+    /**
+     * Join an existing open session, or mint a new one if missing/closed.
+     * Closed chats are never reused so visitors can start a fresh conversation.
+     */
+    async joinVisitorSession(externalId, metadata = {}) {
+        const existing = await this.getByExternalId(externalId);
+        if (!existing) {
+            const chat = await this.getOrCreate(externalId, metadata);
+            return { chat, created: true, externalId };
+        }
+        if (existing.status === 'closed') {
+            const freshId = this.newExternalId();
+            const chat = await this.getOrCreate(freshId, metadata);
+            return { chat, created: true, externalId: freshId };
+        }
+        const chat = await this.getOrCreate(externalId, metadata);
+        return { chat, created: false, externalId };
+    }
+
     async getOrCreate(externalId, metadata = {}) {
         const existing = await db.query(
             'SELECT * FROM chats WHERE external_id = $1',

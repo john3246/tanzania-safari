@@ -6,7 +6,7 @@
 /* ── Fluid type & base ─────────────────────────────────────── */
 html { scroll-behavior: smooth; }
 body {
-  overflow-x: hidden;
+  overflow-x: visible;
   font-size: clamp(0.9375rem, 0.9rem + 0.2vw, 1.05rem);
   line-height: 1.65;
 }
@@ -599,7 +599,7 @@ h3 { font-size: clamp(1.1rem, 1rem + 0.4vw, 1.35rem); }
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 100;
+  z-index: 10240;
   background: #fff;
   padding: 0.85rem 1rem;
   padding-bottom: max(0.85rem, env(safe-area-inset-bottom));
@@ -608,15 +608,17 @@ h3 { font-size: clamp(1.1rem, 1rem + 0.4vw, 1.35rem); }
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+  pointer-events: auto;
+  isolation: isolate;
 }
 @media (max-width: 768px) {
   .desktop-only { display: none !important; }
   .mobile-sticky-booking { display: flex; }
   body.has-mobile-book-bar { padding-bottom: 88px; }
   .social-float-whatsapp {
-    bottom: 92px !important;
-    right: 1rem !important;
-    left: auto !important;
+    bottom: calc(5.75rem + env(safe-area-inset-bottom, 0px)) !important;
+    right: auto !important;
+    left: max(0.85rem, env(safe-area-inset-left, 0px)) !important;
   }
 }
 

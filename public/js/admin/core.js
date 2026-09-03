@@ -28,6 +28,10 @@ async function initAdminApp() {
         // Inject modals at the end of body
         document.body.insertAdjacentHTML('beforeend', modalsHtml);
 
+        activateInjectedScripts(document.getElementById('sidebar'));
+        activateInjectedScripts(document.getElementById('adminHeader'));
+        activateInjectedScripts(adminMain);
+
         // Setup routing (load dashboard by default)
         const initialPage = window.location.hash.replace('#', '') || window.location.pathname.split('/').pop();
         const validPages = ['dashboard', 'analytics', 'packages', 'categories', 'bookings', 'booking-details', 'enquiries', 'settings', 'destinations', 'blog', 'reviews', 'users', 'images', 'communications', 'system-logs', 'edit-tour', 'edit-destination', 'customers', 'chat', 'group-safaris'];
@@ -122,6 +126,29 @@ function closeModal(id) {
     document.getElementById(id)?.classList.remove('active');
 }
 
+/** Scripts inside fetch()'d HTML do not run until re-inserted as real <script> nodes. */
+function activateScriptTag(oldScript) {
+    if (!oldScript || oldScript.tagName !== 'SCRIPT' || oldScript.dataset.activated === '1') return;
+    const script = document.createElement('script');
+    Array.from(oldScript.attributes).forEach((attr) => {
+        script.setAttribute(attr.name, attr.value);
+    });
+    script.textContent = oldScript.textContent;
+    script.dataset.activated = '1';
+    oldScript.replaceWith(script);
+}
+
+function activateInjectedScripts(root) {
+    if (!root) return;
+    if (root.tagName === 'SCRIPT') {
+        activateScriptTag(root);
+        return;
+    }
+    root.querySelectorAll('script').forEach(activateScriptTag);
+    const sibling = root.nextElementSibling;
+    if (sibling && sibling.tagName === 'SCRIPT') activateScriptTag(sibling);
+}
+
 // ── Navigation Logic ──────────────────────────────────────────
 async function navigate(page, pushState = true) {
     // Check if partial is already loaded
@@ -136,6 +163,7 @@ async function navigate(page, pushState = true) {
                 const container = document.querySelector('main');
                 container.insertAdjacentHTML('beforeend', html);
                 targetPage = document.getElementById(`page-${page}`);
+                if (targetPage) activateInjectedScripts(targetPage);
             } else {
                 console.error(`Failed to load page: ${page}`);
                 showToast(`Failed to load ${page}`, 'error');

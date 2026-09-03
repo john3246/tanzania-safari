@@ -89,6 +89,40 @@ async function createNotification(payload) {
     }
 }
 
+function notifyNewLiveChatSession({ chatId, visitorName, visitorEmail, pageUrl }) {
+    const name = visitorName || 'Visitor';
+    try {
+        const { notifyAdmins } = require('../services/adminEvents');
+        notifyAdmins({
+            type: 'chat',
+            title: 'New live chat',
+            message: `${name} started a live chat`,
+            relatedId: chatId,
+            actionUrl: '/admin/chat'
+        }).catch((err) => {
+            logger.warn({ event: 'chat_notify_admins_failed', error: err.message });
+        });
+    } catch (err) {
+        logger.warn({ event: 'chat_notify_admins_failed', error: err.message });
+    }
+
+    try {
+        const emailService = require('../services/email');
+        if (typeof emailService.sendAdminChatNotification === 'function') {
+            emailService.sendAdminChatNotification({
+                visitor_name: name,
+                visitor_email: visitorEmail || '',
+                page_url: pageUrl || '',
+                chat_id: chatId
+            }).catch((err) => {
+                logger.warn({ event: 'chat_email_failed', error: err.message }, 'Live chat admin email failed');
+            });
+        }
+    } catch (err) {
+        logger.warn({ event: 'chat_email_failed', error: err.message }, 'Live chat admin email failed');
+    }
+}
+
 function initChatSocket(io) {
     // Expose for booking/enquiry notifications
     global.__chatIo = io;
@@ -108,17 +142,23 @@ function initChatSocket(io) {
 
         socket.on('join_chat', async (data) => {
             try {
-                const chatId = (data && data.chatId) ? String(data.chatId) : socket.id;
-                socket.chatId = chatId;
-                socket.join(chatId);
-                trackVisitor(chatId, socket.id);
-
-                const chat = await ChatRepository.getOrCreate(chatId, {
+                const requestedId = (data && data.chatId) ? String(data.chatId) : socket.id;
+                const session = await ChatRepository.joinVisitorSession(requestedId, {
                     visitorName: data?.visitorName,
                     visitorEmail: data?.visitorEmail,
                     pageUrl: data?.pageUrl,
                     userAgent: data?.userAgent
                 });
+                const chatId = session.externalId;
+
+                if (socket.chatId && socket.chatId !== chatId) {
+                    socket.leave(socket.chatId);
+                    untrackVisitor(socket.chatId, socket.id);
+                }
+
+                socket.chatId = chatId;
+                socket.join(chatId);
+                trackVisitor(chatId, socket.id);
 
                 // Upsert customer from chat visitor info
                 if (data?.visitorEmail) {
@@ -137,19 +177,12 @@ function initChatSocket(io) {
                 io.to('admin_room').emit('chat_updated', fullChat);
                 socket.emit('chat_joined', { chatId, chat: fullChat });
 
-                // Notify admins of new chat only when first created / no messages yet
-                if (fullChat && (!fullChat.messages || fullChat.messages.length === 0)) {
-                    await createNotification({
-                        type: 'chat',
-                        title: 'New live chat',
-                        message: `${data?.visitorName || 'Visitor'} started a chat`,
-                        relatedId: chatId,
-                        actionUrl: '/admin/chat'
-                    });
-                    io.to('admin_room').emit('admin_notification', {
-                        type: 'chat',
-                        title: 'New live chat',
-                        message: `${data?.visitorName || 'Visitor'} started a chat`
+                if (session.created) {
+                    notifyNewLiveChatSession({
+                        chatId,
+                        visitorName: data?.visitorName,
+                        visitorEmail: data?.visitorEmail,
+                        pageUrl: data?.pageUrl
                     });
                 }
             } catch (err) {
@@ -175,13 +208,22 @@ function initChatSocket(io) {
         });
 
         // Admin opens a specific conversation — join that room so broadcasts reach both sides
-        socket.on('admin_open_chat', (data) => {
+        socket.on('admin_open_chat', async (data) => {
             if (!socket.isAdmin) return;
             const chatId = data?.chatId ? String(data.chatId) : null;
             if (!chatId) return;
-            if (socket.activeChatId) socket.leave(socket.activeChatId);
+            if (socket.activeChatId && socket.activeChatId !== chatId) {
+                socket.leave(socket.activeChatId);
+            }
             socket.activeChatId = chatId;
             socket.join(chatId);
+
+            try {
+                const fullChat = await ChatRepository.getChatWithMessages(chatId);
+                if (fullChat) socket.emit('chat_updated', fullChat);
+            } catch (err) {
+                logger.warn({ event: 'admin_open_chat_error', error: err.message });
+            }
         });
 
         socket.on('send_message', async (data) => {
@@ -237,17 +279,12 @@ function initChatSocket(io) {
                 } else {
                     io.to('admin_room').emit('new_message', payload);
                     io.to('admin_room').emit('chat_list_touch', listTouch);
-                    await createNotification({
-                        type: 'chat',
-                        title: 'New chat message',
-                        message: message.slice(0, 120),
-                        relatedId: chatId,
-                        actionUrl: '/admin/chat'
-                    });
                     io.to('admin_room').emit('admin_notification', {
                         type: 'chat',
                         title: 'New chat message',
-                        message: message.slice(0, 120)
+                        message: `${updatedChat?.visitorName || 'Visitor'}: ${message.slice(0, 80)}`,
+                        relatedId: chatId,
+                        actionUrl: '/admin/chat'
                     });
                 }
             } catch (err) {

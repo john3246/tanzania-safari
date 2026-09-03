@@ -9,11 +9,11 @@ html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   scroll-behavior: smooth;
-  overflow-x: hidden;
+  overflow-x: clip;
   max-width: 100%;
 }
 body {
-  overflow-x: hidden;
+  overflow-x: visible !important;
   max-width: 100%;
   width: 100%;
 }
@@ -54,11 +54,18 @@ table { max-width: 100%; }
   .container { max-width: 1280px !important; }
 }
 
-/* Touch targets */
+/* Touch targets — 48px on phones/tablets, no 300ms click delay */
+a, button, [role="button"], input, select, textarea, label, summary, .btn {
+  touch-action: manipulation;
+}
 @media (max-width: 1024px) {
   .btn, .nav-link, .nav-cta, button.mobile-toggle,
   .drawer-close, .tab-btn, .corp-tab,
-  a.btn, input[type="submit"] {
+  a.btn, input[type="submit"], .safari-card, .dest-card,
+  .blog-card, .gallery-thumb, .filter-btn, .page-btn {
+    min-height: 44px;
+  }
+  .btn, a.btn, button.mobile-toggle, .nav-cta, input[type="submit"] {
     min-height: 48px;
   }
 }
@@ -466,16 +473,18 @@ body > .corp-page-hero,
 @media (max-width: 768px) {
   .social-float-whatsapp,
   #stickyWhatsAppCta {
-    bottom: calc(88px + env(safe-area-inset-bottom, 0px)) !important;
+    bottom: calc(1rem + env(safe-area-inset-bottom, 0px)) !important;
     right: 1rem !important;
     left: auto !important;
     width: 56px !important;
     height: 56px !important;
+    z-index: 10120 !important;
   }
-  .chat-widget,
-  .chat-window {
-    width: min(calc(100vw - 1.5rem), 400px) !important;
-    max-width: calc(100vw - 1.5rem) !important;
+  body.has-mobile-book-bar .social-float-whatsapp,
+  body.has-mobile-book-bar #stickyWhatsAppCta {
+    right: auto !important;
+    left: max(0.85rem, env(safe-area-inset-left, 0px)) !important;
+    bottom: calc(5.75rem + env(safe-area-inset-bottom, 0px)) !important;
   }
   .footer-grid,
   .footer-columns {
@@ -621,9 +630,14 @@ body > .corp-page-hero,
   .newsletter-form input,
   .newsletter-form .btn { width: 100% !important; }
   .footer-bottom { flex-direction: column; text-align: center; justify-content: center; }
-  .chat-window {
-    width: min(calc(100vw - 1.25rem), 360px) !important;
-    height: min(70dvh, 520px) !important;
+  body:not(.chat-open) .chat-window {
+    pointer-events: none !important;
+    visibility: hidden !important;
+  }
+  .chat-window.active {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
     right: 0;
   }
   .live-chat-widget {
@@ -847,21 +861,34 @@ pre, code {
   margin-left: 0.15rem;
 }
 
-.mobile-sticky-booking {
+.mobile-sticky-booking,
+.y27-sticky {
   width: 100%;
   max-width: 100%;
   gap: 0.75rem;
   box-sizing: border-box;
+  z-index: 10240 !important;
+  pointer-events: auto !important;
+  isolation: isolate;
+  touch-action: manipulation;
 }
 .mobile-sticky-booking > div {
   min-width: 0;
   flex: 1 1 auto;
+  pointer-events: none;
 }
 .mobile-sticky-booking .btn,
 .mobile-sticky-booking a.btn {
-  flex: 0 0 auto;
+  flex: 1 1 auto;
   white-space: nowrap;
-  max-width: 55%;
+  max-width: 62%;
+  min-height: 48px !important;
+  min-width: 7.5rem;
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 2;
+  justify-content: center;
+  -webkit-tap-highlight-color: rgba(70, 91, 45, 0.18);
 }
 
 .corp-meta-row,
@@ -979,8 +1006,49 @@ body:has(#tsmCookieNotice) {
   padding-bottom: 6.5rem;
 }
 body.has-mobile-book-bar:has(#tsmCookieNotice) {
-  padding-bottom: 10.5rem;
+  padding-bottom: 12.5rem;
 }
 #tsmCookieNotice {
   bottom: max(0.75rem, env(safe-area-inset-bottom, 0px)) !important;
+  z-index: 10250 !important;
+  pointer-events: auto !important;
+}
+body.has-mobile-book-bar #tsmCookieNotice {
+  bottom: calc(5.75rem + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+/* Hidden chrome must not steal taps */
+.back-to-top:not(.visible) {
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+.modal-backdrop:not(.active) {
+  pointer-events: none !important;
+}
+.lightbox:not(.active) {
+  pointer-events: none;
+}
+.chat-window:not(.active) {
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
+/* Lift FABs and back-to-top off the Book Now bar */
+@media (max-width: 768px) {
+  body.has-mobile-book-bar .back-to-top {
+    right: 1rem;
+    bottom: calc(5.75rem + env(safe-area-inset-bottom, 0px)) !important;
+  }
+  body.has-mobile-book-bar .chat-widget {
+    right: 1rem !important;
+    left: auto !important;
+    top: auto !important;
+    bottom: calc(5.75rem + env(safe-area-inset-bottom, 0px)) !important;
+    width: auto !important;
+    height: auto !important;
+    pointer-events: none !important;
+  }
+  body.has-mobile-book-bar .chat-button {
+    pointer-events: auto;
+  }
 }
