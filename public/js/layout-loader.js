@@ -31,7 +31,7 @@ function ensureI18nLoaded() {
             return;
         }
         const s = document.createElement('script');
-        s.src = '/js/i18n.js?v=6';
+        s.src = '/js/i18n.js?v=7';
         s.onload = () => {
             if (window.TSM_i18n && window.TSM_i18n.ready) window.TSM_i18n.ready.then(resolve);
             else resolve();
