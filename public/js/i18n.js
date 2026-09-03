@@ -113,7 +113,7 @@
   }
 
   function loadDict(lang) {
-    return fetch('/locales/' + lang + '.json?v=2')
+    return fetch('/locales/' + lang + '.json?v=3')
       .then(function (res) {
         if (!res.ok) throw new Error('locale ' + lang);
         return res.json();
