@@ -123,7 +123,7 @@ async function loadSafariMegaMenuTours() {
     if (document.querySelector('link[href*="fluid-responsive.css"]')) return;
     const fluid = document.createElement('link');
     fluid.rel = 'stylesheet';
-    fluid.href = '/css/fluid-responsive.css?v=12';
+    fluid.href = '/css/fluid-responsive.css?v=13';
     const head = document.head || document.getElementsByTagName('head')[0];
     if (head) head.appendChild(fluid);
     else document.addEventListener('DOMContentLoaded', () => document.head.appendChild(fluid));
@@ -356,7 +356,7 @@ function loadChatScripts() {
         const loadChat = () => {
             if (!document.querySelector('script[src^="/js/chat.js"]')) {
                 const chatScript = document.createElement('script');
-                chatScript.src = '/js/chat.js?v=27';
+                chatScript.src = '/js/chat.js?v=28';
                 document.body.appendChild(chatScript);
             }
         };
@@ -370,7 +370,7 @@ function loadChatScripts() {
         document.body.appendChild(ioScript);
     } else if (!document.querySelector('script[src^="/js/chat.js"]')) {
         const chatScript = document.createElement('script');
-        chatScript.src = '/js/chat.js?v=27';
+        chatScript.src = '/js/chat.js?v=28';
         document.body.appendChild(chatScript);
     }
 }

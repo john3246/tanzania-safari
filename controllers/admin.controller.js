@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const userRepository = require('../repositories/user.repository');
 const statRepository = require('../repositories/stat.repository');
-const { JWT_SECRET } = require('../middleware/auth.middleware');
+const { getJwtSecret } = require('../middleware/auth.middleware');
 const emailService = require('../services/email');
 
 class AdminController {
@@ -22,7 +22,7 @@ class AdminController {
             
             const token = jwt.sign(
                 { userId: user.user_id, email: user.email, role: user.role_name },
-                JWT_SECRET,
+                getJwtSecret(),
                 { expiresIn: '24h' }
             );
             

@@ -155,7 +155,8 @@
     "closed": "Deze chat is gesloten. U kunt op elk moment een nieuw gesprek starten.",
     "newConversation": "Nieuw gesprek starten",
     "nameEmailRequired": "Naam en e-mail zijn verplicht",
-    "invalidEmail": "Voer een geldig e-mailadres in"
+    "invalidEmail": "Voer een geldig e-mailadres in",
+    "tooltip": "Chat met ons safari team"
   },
   "home": {
     "tag": "Privésafari's vanuit Arusha",

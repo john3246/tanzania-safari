@@ -65,6 +65,7 @@ class LiveChat {
         if (this.sendBtn) this.sendBtn.setAttribute('aria-label', t('chat.sendAria'));
         if (this.newBtn) this.newBtn.textContent = t('chat.newConversation');
         if (this.fab) this.fab.setAttribute('aria-label', t('chat.title'));
+        if (this.tooltip) this.tooltip.textContent = t('chat.tooltip');
         const welcome = this.body && this.body.querySelector('.chat-message.system');
         if (welcome && !this.joined) welcome.textContent = t('chat.welcome');
         if (this.statusEl && !this.socket) {
@@ -83,6 +84,10 @@ class LiveChat {
         this.fab.id = 'chatFabBtn';
         this.fab.setAttribute('aria-label', t('chat.title'));
         this.fab.innerHTML = '<i class="fas fa-comments" aria-hidden="true"></i>';
+
+        this.tooltip = document.createElement('div');
+        this.tooltip.className = 'chat-tooltip';
+        this.tooltip.textContent = t('chat.tooltip');
 
         this.window = document.createElement('div');
         this.window.className = 'chat-window';
@@ -117,6 +122,7 @@ class LiveChat {
         `;
 
         this.container.appendChild(this.window);
+        this.container.appendChild(this.tooltip);
         this.container.appendChild(this.fab);
         document.body.appendChild(this.container);
         this.window.setAttribute('aria-hidden', 'true');
@@ -294,7 +300,7 @@ class LiveChat {
             this.window.classList.add('active');
             this.window.setAttribute('aria-hidden', 'false');
             document.body.classList.add('chat-open');
-            if (this.fab) this.fab.style.visibility = 'hidden';
+            if (this.tooltip) this.tooltip.style.display = 'none';
             if (this.hasVisitorInfo() && !this.chatClosed) {
                 this.showChatUI();
                 this.ensureConnected();
@@ -313,7 +319,6 @@ class LiveChat {
             this.window.classList.remove('active');
             this.window.setAttribute('aria-hidden', 'true');
             document.body.classList.remove('chat-open');
-            if (this.fab) this.fab.style.visibility = '';
         }
     }
 
@@ -510,7 +515,7 @@ function initLiveChatWidget() {
     if (!document.querySelector('link[href*="chat.css"]')) {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
-        link.href = '/css/chat.css?v=6';
+        link.href = '/css/chat.css?v=7';
         document.head.appendChild(link);
     }
 

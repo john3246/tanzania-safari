@@ -155,7 +155,8 @@
     "closed": "Ce chat a été fermé. Vous pouvez démarrer une nouvelle conversation à tout moment.",
     "newConversation": "Nouvelle conversation",
     "nameEmailRequired": "Nom et e-mail requis",
-    "invalidEmail": "Veuillez entrer un e-mail valide"
+    "invalidEmail": "Veuillez entrer un e-mail valide",
+    "tooltip": "Discutez avec notre équipe safari"
   },
   "home": {
     "tag": "Safaris privés depuis Arusha",

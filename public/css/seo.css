@@ -54,22 +54,26 @@
 }
 .seo-trust-item i { font-size: 1.25rem; }
 
-/* Sticky WhatsApp — ensure above chat, mobile safe */
+/* Sticky WhatsApp — lower FAB in the right-side stack */
 .social-float-whatsapp {
   position: fixed !important;
-  bottom: 30px !important;
-  right: 30px !important;
-  z-index: 1001 !important;
+  bottom: 24px !important;
+  right: 24px !important;
+  left: auto !important;
+  z-index: 10120 !important;
 }
 @media (max-width: 640px) {
   .social-float-whatsapp {
-    bottom: 20px !important;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px)) !important;
     right: 16px !important;
     width: 56px !important;
     height: 56px !important;
     font-size: 1.85rem !important;
   }
-  .chat-widget { bottom: 5.5rem; right: 1rem; }
+  .chat-widget {
+    right: 16px;
+    bottom: calc(16px + 56px + 12px + env(safe-area-inset-bottom, 0px));
+  }
 }
 
 /* Google review CTA */

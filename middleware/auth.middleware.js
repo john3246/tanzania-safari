@@ -49,3 +49,7 @@ const verifyUser = async (req, res, next) => {
 };
 
 module.exports = { verifyAdmin, verifyUser, getJwtSecret };
+Object.defineProperty(module.exports, 'JWT_SECRET', {
+    enumerable: true,
+    get: getJwtSecret
+});

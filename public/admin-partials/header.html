@@ -160,7 +160,11 @@
         if (window.__adminNotifSocket) { clearInterval(waitSocket); return; }
         const token = localStorage.getItem('adminToken') || localStorage.getItem('token');
         if (!token) return;
-        window.__adminNotifSocket = io({ auth: { role: 'admin', token }, transports: ['websocket', 'polling'] });
+        window.__adminNotifSocket = io({
+            auth: { role: 'admin', token },
+            query: { role: 'admin', token },
+            transports: ['websocket', 'polling']
+        });
         window.__adminNotifSocket.on('connect', () => window.__adminNotifSocket.emit('admin_join'));
         window.__adminNotifSocket.on('admin_notification', (n) => {
             if (typeof showToast === 'function') showToast(n.message || n.title || 'New update', 'success', n.title || 'Notification');

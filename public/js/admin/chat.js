@@ -199,6 +199,7 @@ function initAdminChat() {
 
     adminSocket = io({
       auth: { role: 'admin', token },
+      query: { role: 'admin', token },
       transports: ['websocket', 'polling'],
       reconnection: true,
       reconnectionAttempts: Infinity,
@@ -235,8 +236,16 @@ function initAdminChat() {
         msg === 'Unauthorized' ? 'Unauthorized — please log in again.' : 'Connection failed — retrying…'
       );
       if (msg === 'Unauthorized') {
-        // Don't hammer unauthorized
-        adminSocket.io.opts.reconnection = false;
+        setTimeout(() => {
+          try {
+            const nextToken = getAdminToken();
+            if (!nextToken) return;
+            adminSocket.auth = { role: 'admin', token: nextToken };
+            adminSocket.io.opts.query = { role: 'admin', token: nextToken };
+            adminSocket.io.opts.reconnection = true;
+            adminSocket.connect();
+          } catch (_) {}
+        }, 2500);
       }
     });
 

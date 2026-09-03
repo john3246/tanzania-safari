@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const xss = require('xss');
 const ChatRepository = require('../repositories/ChatRepository');
-const { JWT_SECRET } = require('../middleware/auth.middleware');
+const { getJwtSecret } = require('../middleware/auth.middleware');
 const db = require('../config/db');
 const logger = require('../utils/logger');
 
@@ -48,11 +48,18 @@ function emitToVisitors(io, chatId, event, payload) {
 
 async function verifyAdminToken(token) {
     if (!token) return null;
+    let decoded;
     try {
-        const decoded = jwt.verify(token, JWT_SECRET);
-        const targetId = decoded.userId || decoded.id || decoded.sub;
-        const tokenRole = decoded.role || '';
+        decoded = jwt.verify(token, getJwtSecret());
+    } catch (err) {
+        logger.warn({ event: 'chat_admin_jwt_invalid', error: err.message });
+        return null;
+    }
 
+    const targetId = decoded.userId || decoded.id || decoded.sub;
+    const tokenRole = decoded.role || '';
+
+    try {
         if (targetId) {
             const userQuery = await db.query(
                 `SELECT u.*, ur.role_name FROM users u
@@ -64,19 +71,19 @@ async function verifyAdminToken(token) {
                 return userQuery.rows[0];
             }
         }
-
-        if (tokenRole || targetId) {
-            return {
-                user_id: targetId || 'admin',
-                first_name: decoded.name || 'Admin',
-                email: decoded.email || 'admin@tanzaniasafari.com',
-                role_name: tokenRole || 'Super Admin'
-            };
-        }
-        return null;
-    } catch {
-        return null;
+    } catch (err) {
+        logger.warn({ event: 'chat_admin_db_verify_failed', error: err.message });
     }
+
+    if (tokenRole || targetId) {
+        return {
+            user_id: targetId || 'admin',
+            first_name: decoded.name || 'Admin',
+            email: decoded.email || 'admin@tanzaniasafari.com',
+            role_name: tokenRole || 'Super Admin'
+        };
+    }
+    return null;
 }
 
 async function createNotification(payload) {
@@ -128,8 +135,10 @@ function initChatSocket(io) {
     global.__chatIo = io;
 
     io.use(async (socket, next) => {
-        if (socket.handshake.auth?.role === 'admin') {
-            const admin = await verifyAdminToken(socket.handshake.auth.token);
+        const role = socket.handshake.auth?.role || socket.handshake.query?.role;
+        const token = socket.handshake.auth?.token || socket.handshake.query?.token;
+        if (role === 'admin') {
+            const admin = await verifyAdminToken(token);
             if (!admin) return next(new Error('Unauthorized'));
             socket.isAdmin = true;
             socket.adminUser = admin;
