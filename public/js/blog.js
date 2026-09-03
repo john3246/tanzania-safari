@@ -80,10 +80,18 @@ function ensurePillars(posts) {
 function fmtDateShort(d) {
   if (!d) return '';
   const dt = new Date(d);
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
   const dd = String(dt.getDate()).padStart(2, '0');
-  const mm = String(dt.getMonth() + 1).padStart(2, '0');
-  const yy = String(dt.getFullYear()).slice(-2);
-  return `${dd}-${mm}-${yy}`;
+  return `${dd} ${months[dt.getMonth()]} ${dt.getFullYear()}`;
+}
+
+function excerptText(post, max = 180) {
+  const raw = String(post.post_excerpt || post.excerpt || '')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (!raw) return '';
+  return raw.length > max ? `${raw.slice(0, max).trim()}…` : raw;
 }
 
 function imgSrc(src, fallback = '/images/optimized/balloon.webp') {
@@ -105,16 +113,23 @@ function cardHtml(post, index) {
   const title = post.post_title || 'Safari Guide';
   const img = imgSrc(post.featured_image_url, '/images/optimized/serengeti-national-park.webp');
   const date = fmtDateShort(post.published_at);
+  const category = post.category_name || 'Adventure';
+  const excerpt = excerptText(post);
   return `
-    <article class="blog-mag-card">
-      <a href="/blog/${escapeHtml(slug)}" class="blog-mag-link">
-        <div class="blog-mag-media">
-          <img src="${img}" alt="${escapeHtml(title)}" width="800" height="600" loading="${index < 4 ? 'eager' : 'lazy'}"
+    <article class="blog-ms-card">
+      <a href="/blog/${escapeHtml(slug)}" class="blog-ms-link">
+        <div class="blog-ms-media">
+          <img src="${img}" alt="${escapeHtml(title)}" width="800" height="500" loading="${index < 4 ? 'eager' : 'lazy'}"
                onerror="this.src='/images/optimized/mbugani.webp'">
-          ${date ? `<time class="blog-mag-date" datetime="${escapeHtml(post.published_at || '')}">${date}</time>` : ''}
         </div>
-        <h2 class="blog-mag-title">${escapeHtml(title)}</h2>
-        <span class="blog-mag-more">${t('blog.readMore')}</span>
+        <div class="blog-ms-body">
+          <div class="blog-ms-meta">
+            <span class="blog-ms-cat">${escapeHtml(category)}</span>
+            ${date ? `<time class="blog-ms-date" datetime="${escapeHtml(post.published_at || '')}">${date}</time>` : ''}
+          </div>
+          <h2 class="blog-ms-title">${escapeHtml(title)}</h2>
+          ${excerpt ? `<p class="blog-ms-excerpt">${escapeHtml(excerpt)}</p>` : ''}
+        </div>
       </a>
     </article>`;
 }
@@ -143,7 +158,7 @@ async function loadBlog() {
   }
 
   container.innerHTML = `
-    <div class="blog-mag-grid">
+    <div class="blog-ms-grid">
       ${posts.map((p, i) => cardHtml(p, i)).join('')}
     </div>
     ${ctaHtml()}

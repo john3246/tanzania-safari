@@ -1,6 +1,6 @@
 /* ── Zara-style site header: full-width bars, brand colors ── */
 :root{--site-header-offset:132px}
-@media(max-width:1024px){:root{--site-header-offset:64px}}
+@media(max-width:1024px){:root{--site-header-offset:142px}}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
 #header{width:100%;max-width:none}
@@ -100,12 +100,12 @@
   min-height:50px;position:relative;
 }
 .header.header--zara .nav{
-  display:flex;align-items:center;gap:1.35rem;flex:1;min-width:0;
+  display:flex;align-items:center;gap:1.05rem;flex:1;min-width:0;
   justify-content:flex-start;
   padding-left:7.5rem; /* shift nav content right of the logo column */
 }
 .header.header--zara .nav-link{
-  font-size:.78rem;font-weight:700;color:#fff;letter-spacing:.8px;
+  font-size:.74rem;font-weight:700;color:#fff;letter-spacing:.6px;
   text-transform:uppercase;opacity:1;text-shadow:none;white-space:nowrap;
   text-decoration:none;border-bottom:none!important;padding-bottom:0;
 }
@@ -147,11 +147,14 @@
   flex:1;min-height:44px;border:0;border-radius:8px;padding:.6rem 1rem;font-size:.95rem;
 }
 .nav-link-drawer-only{display:none}
+.header-nav-phone{display:none}
+.header-nav-actions #langSwitcherMount{display:flex;align-items:center}
 
 @media(min-width:1025px){
   .header.header--zara .mobile-toggle{display:none!important}
   .header.header--zara .drawer-header{display:none!important}
   .nav-link-drawer-only{display:none!important}
+  .header-nav-phone{display:none!important}
 
   .header.header--zara .nav-dropdown{position:static}
   .header.header--zara .nav-mega-menu,
@@ -165,11 +168,11 @@
   }
 }
 
-@media(min-width:1025px) and (max-width:1200px){
+@media(min-width:1025px) and (max-width:1280px){
   .header-email,.header-phone-sep{display:none}
   .header.header--zara .header-trust{display:none}
-  .header.header--zara .nav{padding-left:4.5rem;gap:1rem}
-  .header.header--zara .nav-link{font-size:.72rem}
+  .header.header--zara .nav{padding-left:4.5rem;gap:.7rem}
+  .header.header--zara .nav-link{font-size:.68rem;letter-spacing:.4px}
 }
 
 .header.header--zara.scrolled .logo-img{width:48px;height:48px}
@@ -178,33 +181,111 @@
 .header.header--zara .nav-mega-menu{z-index:220}
 
 @media(max-width:1024px){
-  .header-top-inner{min-height:56px;padding:.3rem 0}
-  .header.header--zara .logo-img{width:42px;height:42px}
-  .header.header--zara .logo-text .brand{font-size:.9rem}
-  .header.header--zara .logo-text .sub{display:none}
-  .header-top-mid,
-  .header-top-end{display:none}
-  .header-nav-inner{min-height:0;padding:0}
-  .header-nav-bar{position:absolute;top:0;right:0;background:transparent;width:auto;height:100%}
-  .header-nav-inner{height:100%;padding-right:.15rem}
-  .header.header--zara .nav{
-    padding-left:0;
-    position:fixed;top:0;right:-100%;width:min(320px,88vw);max-width:88vw;
-    height:100dvh;background:#fff!important;flex-direction:column;align-items:flex-start;
-    gap:0;z-index:9999!important;overflow-y:auto;
+  .header.header--zara{
+    flex-direction:column;align-items:stretch;min-height:0;
+    transform:none!important;filter:none!important;
+    backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+    contain:none!important;perspective:none;overflow:visible;
   }
-  .header.header--zara .nav.active{right:0}
+  .header-top{flex:none;width:100%;border-bottom:none;overflow:visible;background:#fff}
+  .header-top .container.header-top-inner,
+  .header-nav-bar .container.header-nav-inner{
+    width:100%!important;max-width:none!important;
+  }
+  .header.header--zara.scrolled .header-top-inner{min-height:0;padding:0}
+  .header.header--zara.scrolled .logo-img{width:64px!important;height:64px!important}
+  .header-top-inner{
+    display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;
+    align-items:center;gap:0;min-height:0;padding:0;position:relative;
+  }
+  .header-top-end{display:contents}
+  .header-utility{
+    grid-column:1/-1;grid-row:1;width:100%;border-radius:0;justify-content:stretch;
+  }
+  .header-utility a,
+  .header-utility-chat{
+    flex:1;justify-content:center;padding:.42rem .3rem;font-size:.68rem;
+    min-height:34px;white-space:nowrap;border-right:1px solid rgba(255,255,255,.28);
+  }
+  .header-phone-row{display:none}
+  .header-top-mid{
+    display:flex!important;flex-direction:column;justify-content:center;
+    text-align:left;grid-column:2;grid-row:2;min-width:0;
+    padding:.45rem .65rem .5rem .55rem;
+  }
+  .header.header--zara .header-trust{display:none!important}
+  .header-tagline{
+    margin:0;font-size:clamp(.82rem,3.4vw,1.05rem);line-height:1.25;
+    color:var(--primary,#263E22);
+  }
+  .header.header--zara .logo{
+    grid-column:1;grid-row:2;z-index:4;align-self:end;
+    margin:0 0 -1.65rem .75rem;
+  }
+  .header.header--zara .logo-img{
+    width:64px!important;height:64px!important;
+    box-shadow:0 3px 12px rgba(0,0,0,.2);border:2px solid #fff;
+  }
+  .header.header--zara .logo-text{display:none}
+  .header-nav-bar{
+    position:static;background:var(--primary-dark,#1E311B);width:100%;height:auto;
+  }
+  .header-nav-inner{
+    display:flex;align-items:center;justify-content:flex-end;
+    min-height:52px;height:52px;padding:0 .5rem 0 5.5rem;gap:.4rem;
+  }
+  .header-nav-phone{
+    display:flex;flex-direction:column;justify-content:center;flex:1;min-width:0;
+    color:#fff;line-height:1.2;
+  }
+  .header-nav-phone-q{font-size:.72rem;opacity:.9;font-weight:600}
+  .header-nav-phone-link{color:#fff;text-decoration:none;font-size:.84rem;font-weight:700}
+  .header-nav-phone-link strong{font-weight:800;letter-spacing:.01em}
+  .header-nav-phone-link:hover{color:var(--accent,#FF6F00)}
+  .header-plan-btn{display:none}
+  .header-search-btn{width:42px;height:42px;color:#fff!important}
+  .header.header--zara .mobile-toggle{
+    display:flex!important;align-items:center;justify-content:center;
+    width:46px;height:46px;min-width:46px;min-height:46px;
+    background:var(--accent,#FF6F00)!important;color:#1E311B!important;
+    border-radius:8px;box-shadow:0 2px 8px rgba(255,111,0,.4);
+  }
+  .header.header--zara .nav,
+  #mainNav.nav{
+    padding-left:0;
+    position:fixed!important;top:0;right:0;left:auto;bottom:0;
+    width:min(22rem,90vw);max-width:90vw;
+    height:100dvh;height:100svh;max-height:100dvh;
+    background:#fff!important;flex-direction:column;align-items:stretch;
+    gap:0;z-index:10060!important;overflow-y:auto;-webkit-overflow-scrolling:touch;
+    transform:translateX(110%);visibility:hidden;pointer-events:none;
+    transition:transform .35s cubic-bezier(.4,0,.2,1),visibility .35s;
+    isolation:isolate;
+  }
+  .header.header--zara .nav.active,
+  #mainNav.nav.active,
+  body.nav-drawer-open #mainNav.nav{
+    transform:translateX(0)!important;visibility:visible!important;pointer-events:auto!important;
+  }
+  .header.header--zara .nav-link,
+  .header.header--zara .nav-dropdown-toggle.nav-link,
+  .header.header--zara button.nav-dropdown-toggle{
+    color:#1a1a1a!important;text-shadow:none;
+  }
+  .header.header--zara .nav-cta,
+  .header.header--zara .nav-link-inquire{color:#fff!important}
   .nav-link-drawer-only{display:flex!important}
-  .header-plan-btn span{display:none}
-  .header-plan-btn{padding:.5rem;border-radius:50%;width:40px;height:40px;justify-content:center}
-  .header-search-btn{width:40px;height:40px;color:var(--primary-dark,#1E311B)}
-  .header.header--zara .mobile-toggle{display:flex!important;color:var(--primary-dark,#1E311B)!important}
   .header-search-panel{
-    position:fixed;left:0;right:0;top:var(--site-header-offset,64px);padding:.75rem 1rem;z-index:20;
+    position:fixed;left:0;right:0;top:var(--site-header-offset,142px);padding:.75rem 1rem;z-index:20;
   }
 }
 
 @media(max-width:480px){
-  .header.header--zara .logo-text{display:none}
+  .header.header--zara .logo{margin-left:.5rem;margin-bottom:-1.5rem}
+  .header.header--zara .logo-img{width:58px!important;height:58px!important}
+  .header-nav-inner{padding-left:4.85rem}
+  .header-utility a span,
+  .header-utility-chat span{display:none}
+  .header-utility i{font-size:.95rem}
   .header-plan-btn{display:none}
 }

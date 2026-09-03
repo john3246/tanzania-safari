@@ -5,8 +5,6 @@ function t(key, vars) {
 
 const header = document.getElementById('header');
 window.addEventListener('scroll', () => header?.classList.toggle('scrolled', window.scrollY > 50), { passive: true });
-document.getElementById('mobileToggle')?.addEventListener('click', () => { document.getElementById('mainNav')?.classList.toggle('active'); document.getElementById('menuOverlay')?.classList.toggle('active'); });
-document.getElementById('menuOverlay')?.addEventListener('click', () => { document.getElementById('mainNav')?.classList.remove('active'); document.getElementById('menuOverlay')?.classList.remove('active'); });
 const yr = document.getElementById('year'); if (yr) yr.textContent = new Date().getFullYear();
 
 document.getElementById('contactForm')?.addEventListener('submit', async e => {

@@ -78,23 +78,7 @@ function initBackToTop() {
 }
 
 function initMobileMenu() {
-    const mobileToggle = document.getElementById('mobileToggle');
-    const navMenu = document.getElementById('navMenu');
-    const overlay = document.getElementById('menuOverlay');
-    
-    if (!mobileToggle || !navMenu || !overlay) return;
-    
-    mobileToggle.addEventListener('click', () => {
-        navMenu.classList.toggle('active');
-        overlay.classList.toggle('active');
-        document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
-    });
-    
-    overlay.addEventListener('click', () => {
-        navMenu.classList.remove('active');
-        overlay.classList.remove('active');
-        document.body.style.overflow = '';
-    });
+    /* Mobile nav is owned by layout-loader.js — do not bind a second handler. */
 }
 
 function buildGallery(mediaItems) {

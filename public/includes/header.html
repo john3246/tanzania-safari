@@ -38,7 +38,6 @@
             <span class="header-phone-sep" aria-hidden="true">·</span>
             <a href="mailto:info@tanzaniasafarimagic.com" class="header-email">info@tanzaniasafarimagic.com</a>
           </p>
-          <div id="langSwitcherMount" aria-label="Language"></div>
         </div>
       </div>
     </div>
@@ -55,6 +54,7 @@
         </div>
         <a href="/" class="nav-link" data-i18n="nav.home">Home</a>
         <a href="/visit-tanzania" class="nav-link" data-i18n="nav.visitTanzania">Visit Tanzania</a>
+        <a href="/2027-safaris" class="nav-link nav-link-emphasis" data-i18n="nav.safaris2027">2027 Safaris</a>
         <div class="nav-dropdown" id="safarisNavDropdown">
           <button type="button" class="nav-link nav-dropdown-toggle" aria-expanded="false" aria-haspopup="true">
             <span data-i18n="nav.safaris">Safaris</span> <i class="fas fa-chevron-down nav-caret" aria-hidden="true"></i>
@@ -85,15 +85,10 @@
                 <div class="nav-mega-tours" data-category="migrations"></div>
                 <a href="/migrations" class="nav-mega-all" data-i18n="nav.viewAllMigrations">View all migrations →</a>
               </div>
-              <div class="nav-mega-col" data-hub="zanzibar">
-                <a href="/zanzibar" class="nav-mega-heading" role="menuitem" data-i18n="nav.zanzibar">Zanzibar Safaris</a>
-                <p class="nav-mega-note" data-i18n="nav.zanzibarNote">Beach &amp; bush-to-beach</p>
-                <div class="nav-mega-tours" data-category="zanzibar"></div>
-                <a href="/zanzibar" class="nav-mega-all" data-i18n="nav.viewAllZanzibar">View all Zanzibar →</a>
-              </div>
             </div>
           </div>
         </div>
+        <a href="/zanzibar" class="nav-link" data-i18n="nav.zanzibarNav">Zanzibar</a>
         <a href="/destinations" class="nav-link" data-i18n="nav.destinations">Destinations</a>
         <a href="/blog" class="nav-link nav-link-drawer-only" data-i18n="nav.blog">Blog</a>
         <a href="/about" class="nav-link nav-link-drawer-only" data-i18n="nav.about">About</a>
@@ -102,7 +97,15 @@
         <a href="/contact" class="nav-cta nav-link-drawer-only" data-i18n="nav.contactCta">Contact Us Now</a>
       </nav>
 
+      <div class="header-nav-phone">
+        <span class="header-nav-phone-q" data-i18n="nav.haveQuestions">Have questions?</span>
+        <a href="https://wa.me/255695108009" class="header-nav-phone-link">
+          <span data-i18n="nav.whatsappLabel">WhatsApp:</span>
+          <strong>+255 695 108 009</strong>
+        </a>
+      </div>
       <div class="header-nav-actions">
+        <div id="langSwitcherMount" aria-label="Language"></div>
         <a href="/booking" class="header-plan-btn">
           <i class="fas fa-suitcase" aria-hidden="true"></i>
           <span data-i18n="nav.planTrip">Let's Plan a Trip</span>
@@ -110,7 +113,7 @@
         <button type="button" class="header-search-btn" id="headerSearchToggle" data-i18n-aria="nav.searchAria" aria-label="Search packages" aria-expanded="false" aria-controls="headerSearchPanel">
           <i class="fas fa-search" aria-hidden="true"></i>
         </button>
-        <button class="mobile-toggle" id="mobileToggle" data-i18n-aria="nav.toggleMenu" aria-label="Toggle navigation menu">
+        <button type="button" class="mobile-toggle" id="mobileToggle" data-i18n-aria="nav.toggleMenu" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mainNav">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
         </button>
       </div>
