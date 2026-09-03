@@ -136,7 +136,7 @@ async function loadFilters() {
         const { data: cats } = await API.get('/categories');
         const catEl = document.getElementById('categorySelect');
         if (catEl && cats?.length) {
-            const withTours = cats.filter((c) => Number(c.safari_count) > 0);
+            const withTours = cats.filter((c) => Number(c.safari_count) > 0 && c.category_slug !== 'zanzibar');
             catEl.innerHTML = `<option value="all">${t('safarisPage.allCategories')}</option>` +
                 withTours.map(c => `<option value="${c.category_slug}">${c.category_name} (${c.safari_count||0})</option>`).join('');
         }
@@ -145,12 +145,24 @@ async function loadFilters() {
         const { data: dests } = await API.get('/destinations');
         const destEl = document.getElementById('destinationSelect');
         if (destEl && dests?.length) {
-            destEl.innerHTML = `<option value="all">${t('safarisPage.allDestinations')}</option>` +
-                dests.map(d => `<option value="${d.park_slug || d.slug}">${d.park_name || d.name}</option>`).join('');
+    destEl.innerHTML = `<option value="all">${t('safarisPage.allDestinations')}</option>` +
+                dests
+                    .filter((d) => {
+                        const slug = String(d.park_slug || d.slug || '').toLowerCase();
+                        const name = String(d.park_name || d.name || '').toLowerCase();
+                        return !slug.includes('zanzibar') && !name.includes('zanzibar');
+                    })
+                    .map(d => `<option value="${d.park_slug || d.slug}">${d.park_name || d.name}</option>`).join('');
         }
     } catch {}
     // Read URL params (search aligns with SearchAction ?search=)
     const params = new URLSearchParams(window.location.search);
+    const catParam = (params.get('category') || '').toLowerCase();
+    const destParam = (params.get('destination') || '').toLowerCase();
+    if (catParam === 'zanzibar' || destParam === 'zanzibar') {
+        window.location.replace('/zanzibar');
+        return;
+    }
     const searchVal = params.get('search') || params.get('q') || '';
     if (searchVal && document.getElementById('searchInput')) {
         document.getElementById('searchInput').value = searchVal;

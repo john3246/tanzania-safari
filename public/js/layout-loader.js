@@ -31,7 +31,7 @@ function ensureI18nLoaded() {
             return;
         }
         const s = document.createElement('script');
-        s.src = '/js/i18n.js?v=4';
+        s.src = '/js/i18n.js?v=5';
         s.onload = () => {
             if (window.TSM_i18n && window.TSM_i18n.ready) window.TSM_i18n.ready.then(resolve);
             else resolve();
@@ -123,7 +123,7 @@ async function loadSafariMegaMenuTours() {
     if (document.querySelector('link[href*="fluid-responsive.css"]')) return;
     const fluid = document.createElement('link');
     fluid.rel = 'stylesheet';
-    fluid.href = '/css/fluid-responsive.css?v=5';
+    fluid.href = '/css/fluid-responsive.css?v=7';
     const head = document.head || document.getElementsByTagName('head')[0];
     if (head) head.appendChild(fluid);
     else document.addEventListener('DOMContentLoaded', () => document.head.appendChild(fluid));
@@ -135,7 +135,7 @@ async function loadSafariMegaMenuTours() {
     if (document.querySelector('link[href*="/css/header.css"]')) return;
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '/css/header.css?v=4';
+    link.href = '/css/header.css?v=7';
     const head = document.head || document.getElementsByTagName('head')[0];
     if (head) head.appendChild(link);
     else document.addEventListener('DOMContentLoaded', () => document.head.appendChild(link));
@@ -145,7 +145,7 @@ async function loadSafariMegaMenuTours() {
 ensureI18nLoaded();
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const cb = '?v=24';
+    const cb = '?v=27';
     await ensureI18nLoaded();
 
     // Load shared SEO helpers early
@@ -370,6 +370,8 @@ function initHeader() {
 
     function openDrawer() {
         if (!mainNav) return;
+        if (menuOverlay) document.body.appendChild(menuOverlay);
+        document.body.appendChild(mainNav);
         mainNav.classList.add('active');
         menuOverlay?.classList.add('active');
         header?.classList.add('menu-open');
@@ -383,12 +385,43 @@ function initHeader() {
         else openDrawer();
     }
 
-    if (mobileToggle && mainNav && menuOverlay) {
+    if (mobileToggle && mainNav && menuOverlay && !mobileToggle.dataset.navBound) {
+        mobileToggle.dataset.navBound = '1';
         mobileToggle.setAttribute('aria-expanded', 'false');
         mobileToggle.setAttribute('aria-controls', 'mainNav');
+
+        const navHome = mainNav.parentElement;
+        const overlayHome = menuOverlay.parentElement;
+        const mobileMq = window.matchMedia('(max-width: 1024px)');
+
+        function placeNavForViewport() {
+            if (mobileMq.matches) {
+                if (mainNav.parentElement !== document.body) {
+                    document.body.appendChild(menuOverlay);
+                    document.body.appendChild(mainNav);
+                }
+            } else {
+                closeDrawer();
+                if (navHome && mainNav.parentElement !== navHome) {
+                    navHome.insertBefore(mainNav, navHome.firstChild);
+                }
+                if (overlayHome && menuOverlay.parentElement !== overlayHome) {
+                    overlayHome.appendChild(menuOverlay);
+                }
+                mainNav.querySelectorAll('.nav-dropdown').forEach((d) => {
+                    d.classList.remove('open');
+                    d.querySelector('.nav-dropdown-toggle')?.setAttribute('aria-expanded', 'false');
+                });
+            }
+        }
+        placeNavForViewport();
+        if (mobileMq.addEventListener) mobileMq.addEventListener('change', placeNavForViewport);
+        else mobileMq.addListener(placeNavForViewport);
+
         mobileToggle.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
+            placeNavForViewport();
             toggleDrawer();
         });
         menuOverlay.addEventListener('click', (e) => {
@@ -401,9 +434,10 @@ function initHeader() {
             closeDrawer();
         });
 
-        // Close when a nav link / CTA / mega tour link is tapped
-        mainNav.querySelectorAll('a.nav-link, a.nav-cta, a.nav-dropdown-item, a.nav-mega-heading, a.nav-mega-tour, a.nav-mega-all').forEach((link) => {
-            link.addEventListener('click', () => closeDrawer());
+        mainNav.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const link = e.target.closest('a.nav-link, a.nav-cta, a.nav-dropdown-item, a.nav-mega-heading, a.nav-mega-tour, a.nav-mega-all');
+            if (link) closeDrawer();
         });
 
         // Safaris accordion (mobile) / click toggle (desktop)
@@ -434,6 +468,7 @@ function initHeader() {
         const safarisDropdown = document.getElementById('safarisNavDropdown');
         if (safarisDropdown) {
             safarisDropdown.addEventListener('mouseenter', () => {
+                if (mobileMq.matches) return;
                 document.getElementById('header')?.classList.add('mega-open');
                 document.getElementById('siteHeader')?.classList.add('mega-open');
                 loadSafariMegaMenuTours();
@@ -458,7 +493,6 @@ function initHeader() {
             document.getElementById('siteHeader')?.classList.remove('mega-open');
         });
 
-        // Escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 document.querySelectorAll('.nav-dropdown.open').forEach((d) => {
@@ -466,17 +500,6 @@ function initHeader() {
                     d.querySelector('.nav-dropdown-toggle')?.setAttribute('aria-expanded', 'false');
                 });
                 if (mainNav.classList.contains('active')) closeDrawer();
-            }
-        });
-
-        // If resized to desktop, force-close drawer + dropdowns
-        window.addEventListener('resize', () => {
-            if (window.innerWidth > 1024) {
-                closeDrawer();
-                mainNav.querySelectorAll('.nav-dropdown').forEach((d) => {
-                    d.classList.remove('open');
-                    d.querySelector('.nav-dropdown-toggle')?.setAttribute('aria-expanded', 'false');
-                });
             }
         });
     }

@@ -85,6 +85,19 @@ function applyCategoryFilter(conditions, params, paramIndex, category) {
     return paramIndex;
 }
 
+/** Hide group tours and Zanzibar packages from general listings. */
+function applyListingExclusions(conditions, category) {
+    if (category !== 'group-safaris') {
+        conditions.push('(sp.is_group_tour IS NOT TRUE)');
+    }
+    if (category !== 'zanzibar') {
+        conditions.push(`(pc.category_slug IS DISTINCT FROM 'zanzibar')`);
+        conditions.push(
+            `(sp.package_slug NOT ILIKE '%zanzibar%' AND COALESCE(sp.package_name, '') NOT ILIKE '%zanzibar%')`
+        );
+    }
+}
+
 class PackageRepository {
     /**
      * Get all packages with filters and pagination
@@ -107,10 +120,7 @@ class PackageRepository {
         const offset = (parseInt(page) - 1) * limit;
 
         const conditions = ['sp.is_active = true'];
-        // Hide fixed-date group products from general browse; allow when Group category is requested.
-        if (category !== 'group-safaris') {
-            conditions.push('(sp.is_group_tour IS NOT TRUE)');
-        }
+        applyListingExclusions(conditions, category);
         const params = [];
         let paramIndex = 1;
 
@@ -191,9 +201,7 @@ class PackageRepository {
     async count(filters = {}) {
         const { category, destination, duration, difficulty, minPrice, maxPrice, search } = filters;
         const conditions = ['sp.is_active = true'];
-        if (category !== 'group-safaris') {
-            conditions.push('(sp.is_group_tour IS NOT TRUE)');
-        }
+        applyListingExclusions(conditions, category);
         const params = [];
         let paramIndex = 1;
 
@@ -272,6 +280,8 @@ class PackageRepository {
             LEFT JOIN package_categories pc ON sp.category_id = pc.category_id
             LEFT JOIN reviews r ON sp.package_id = r.package_id AND r.is_approved = true
             WHERE sp.is_active = true AND sp.is_featured = true AND (sp.is_group_tour IS NOT TRUE)
+              AND (pc.category_slug IS DISTINCT FROM 'zanzibar')
+              AND (sp.package_slug NOT ILIKE '%zanzibar%' AND COALESCE(sp.package_name, '') NOT ILIKE '%zanzibar%')
             GROUP BY sp.package_id, pc.category_name, pc.category_slug
             ORDER BY RANDOM()
             LIMIT $1

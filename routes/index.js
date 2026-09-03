@@ -350,6 +350,7 @@ router.get('/sitemap.xml', async (req, res) => {
       { path: '/kilimanjaro/routes', priority: '0.95', changefreq: 'weekly' },
       { path: '/migrations', priority: '0.98', changefreq: 'weekly' },
       { path: '/zanzibar', priority: '0.95', changefreq: 'weekly' },
+      { path: '/2027-safaris', priority: '0.97', changefreq: 'weekly' },
       { path: '/destinations', priority: '0.95', changefreq: 'weekly' },
       { path: '/destinations/serengeti-national-park', priority: '0.95', changefreq: 'weekly' },
       { path: '/destinations/ngorongoro-conservation-area', priority: '0.95', changefreq: 'weekly' },
@@ -497,6 +498,36 @@ router.get('/safaris', async (req, res) => {
   } catch (e) {
     console.error('safaris SEO:', e.message);
     sendFile(res, 'safaris.html');
+  }
+});
+
+router.get(['/tanzania-2027', '/safaris-2027'], (req, res) => {
+  res.redirect(301, '/2027-safaris');
+});
+
+router.get('/2027-safaris', (req, res) => {
+  try {
+    seo.sendSeoHtml(res, 'safaris-2027.html', {
+      title: '2027 Tanzania Safaris | 12-Day Nature & Cultural Safari',
+      description:
+        'Join our 12-day Discover Tanzania Nature & Cultural Safari, 2–13 September 2027: Western Kilimanjaro, Tarangire, Lake Eyasi, Serengeti, Mara River and Ngorongoro Crater. From $5,913 per person.',
+      canonical: seo.SITE.url + '/2027-safaris',
+      image: '/images/optimized/serengeti-national-park.webp',
+      keywords:
+        'tanzania safari 2027, september 2027 safari, serengeti migration 2027, ngorongoro safari 2027, hadzabe safari, mara river crossing 2027',
+      h1: 'Tanzania — nature, culture & the Great Migration',
+      hreflangPath: '/2027-safaris',
+      type: 'website',
+      jsonLd: [
+        seo.breadcrumbSchema([
+          { name: 'Home', url: '/' },
+          { name: '2027 Safaris', url: '/2027-safaris' }
+        ]),
+        seo.organizationSchema()
+      ]
+    });
+  } catch {
+    sendFile(res, 'safaris-2027.html');
   }
 });
 
@@ -697,7 +728,7 @@ router.get(['/kilimanjaro', '/migrations', '/zanzibar'], (req, res) => {
       pageKey: 'zanzibar',
       keywords: 'zanzibar safari package, bush to beach tanzania, safari and zanzibar, spice island holiday',
       image: '/images/zanzibar/zanzibar%20(1).jpeg',
-      h1: 'Zanzibar Beach Extensions',
+      h1: 'Zanzibar Safaris & Beach Holidays',
       eyebrow: 'Spice Island',
       crumb: 'Zanzibar'
     }

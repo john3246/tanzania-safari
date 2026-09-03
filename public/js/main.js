@@ -5,14 +5,6 @@ function t(key, vars) {
   return key;
 }
 
-// ── Mobile nav ─────────────────────────────────────────────
-const toggle = document.getElementById('mobileToggle');
-const nav = document.getElementById('mainNav');
-const overlay = document.getElementById('menuOverlay');
-function closeNav() { nav?.classList.remove('active'); overlay?.classList.remove('active'); }
-toggle?.addEventListener('click', () => { nav.classList.toggle('active'); overlay.classList.toggle('active'); });
-overlay?.addEventListener('click', closeNav);
-
 // ── Back to top ────────────────────────────────────────────
 document.getElementById('backToTop')?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
@@ -371,6 +363,14 @@ document.getElementById('newsletterForm')?.addEventListener('submit', async e =>
         e.target.reset();
     } catch {
         toast(t('toast.subscribeFail'), 'error');
+    }
+});
+
+document.querySelector('.search-filter-form')?.addEventListener('submit', (e) => {
+    const dest = e.target.querySelector('[name="destination"]')?.value;
+    if (dest === 'zanzibar') {
+        e.preventDefault();
+        window.location.href = '/zanzibar';
     }
 });
 

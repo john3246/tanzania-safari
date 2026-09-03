@@ -31,9 +31,9 @@ const HUBS = {
     titleKey: 'hub.zanTitle',
     eyebrowKey: 'hub.zanEyebrow',
     leadKey: 'hub.zanLead',
-    title: 'Zanzibar Beach Extensions',
-    eyebrow: 'Spice Island',
-    lead: 'Bush-to-beach combinations and Zanzibar stays — white-sand beaches after your northern circuit safari. See the <a href="/destinations/zanzibar">Zanzibar destination guide</a>.',
+    title: 'Zanzibar Safaris & Beach Holidays',
+    eyebrow: 'Spice Island · all Zanzibar packages',
+    lead: 'Every Zanzibar safari and bush-to-beach stay lives here — white-sand beaches, Stone Town and spice tours after (or instead of) the northern circuit. See the <a href="/destinations/zanzibar">Zanzibar destination guide</a>.',
     image: '/images/zanzibar/zanzibar%20(1).jpeg',
     path: '/zanzibar'
   }

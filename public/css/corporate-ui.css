@@ -1010,7 +1010,7 @@ h3 { font-size: clamp(1.1rem, 1rem + 0.4vw, 1.35rem); }
 /* Clearance under fixed header (top-bar + nav) */
 :root { --site-header-offset: 132px; }
 @media (max-width: 1024px) {
-  :root { --site-header-offset: 64px; }
+  :root { --site-header-offset: 142px; }
 }
 .blog-editorial {
   padding-top: calc(var(--site-header-offset) + 1.25rem) !important;
