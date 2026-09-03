@@ -218,12 +218,12 @@ async function handleNewsletterSubscribe(req, res) {
                         subject: 'Karibu! Welcome to Tanzania Safari Magic',
                         html: `
                           <div style="font-family:Segoe UI,Helvetica,Arial,sans-serif;max-width:640px;margin:0 auto;border:1px solid #e5ebe3;border-radius:16px;overflow:hidden">
-                            <div style="background:linear-gradient(135deg,#1E311B,#263E22);padding:28px;text-align:center;color:#fff">
+                            <div style="background:linear-gradient(135deg,#2C391C,#465B2D);padding:28px;text-align:center;color:#fff">
                               <img src="${site}/images/logo.png" width="56" height="56" style="border-radius:10px;background:#fff;padding:6px" alt="">
                               <h1 style="margin:12px 0 0;font-size:22px">Welcome to the journey</h1>
                               <p style="margin:8px 0 0;opacity:.9">Thank you for subscribing</p>
                             </div>
-                            <div style="height:4px;background:#FF6F00"></div>
+                            <div style="height:4px;background:#C8860A"></div>
                             <div style="padding:28px;color:#475569;font-size:15px;line-height:1.65">
                               <p>Dear <strong>${name}</strong>,</p>
                               <p>Thank you for joining <strong>Tanzania Safari Magic</strong>. You’re now on our list for wildlife tips, migration updates, destination guides, and occasional offers from Our Team in Arusha.</p>
@@ -234,8 +234,8 @@ async function handleNewsletterSubscribe(req, res) {
                                 <li>New safari packages and group departure dates</li>
                               </ul>
                               <p style="margin:24px 0">
-                                <a href="${site}/safaris" style="display:inline-block;background:#263E22;color:#fff;text-decoration:none;padding:12px 20px;border-radius:8px;font-weight:700;margin:4px">Browse safaris</a>
-                                <a href="${site}/booking" style="display:inline-block;background:#FF6F00;color:#fff;text-decoration:none;padding:12px 20px;border-radius:8px;font-weight:700;margin:4px">Request a free quote</a>
+                                <a href="${site}/safaris" style="display:inline-block;background:#465B2D;color:#fff;text-decoration:none;padding:12px 20px;border-radius:8px;font-weight:700;margin:4px">Browse safaris</a>
+                                <a href="${site}/booking" style="display:inline-block;background:#C8860A;color:#fff;text-decoration:none;padding:12px 20px;border-radius:8px;font-weight:700;margin:4px">Request a free quote</a>
                               </p>
                               <p>Questions? WhatsApp <a href="https://wa.me/255695108009">+255 695 108 009</a>.</p>
                               <p>Karibu — welcome to Tanzania.<br><strong>The Tanzania Safari Magic Team</strong></p>

@@ -1,1 +1,0 @@
-require("dotenv").config(); const { Client } = require("pg"); const client = new Client({ connectionString: process.env.DATABASE_URL }); client.connect().then(async () => { try { const res = await client.query("SELECT * FROM media_library LIMIT 1"); console.log("OK:", res.rows); } catch(e) { console.log("ERROR:", e.message); } await client.end(); });

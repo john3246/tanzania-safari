@@ -84,7 +84,7 @@ function renderAnalyticsCharts(data) {
           {
             label: 'Unique visitors',
             data: data.series?.visitors || [],
-            borderColor: '#1E311B',
+            borderColor: '#2C391C',
             backgroundColor: 'transparent',
             borderWidth: 2,
             borderDash: [5, 4],
@@ -114,7 +114,7 @@ function renderAnalyticsCharts(data) {
         labels: sources.map(s => s.source),
         datasets: [{
           data: sources.map(s => s.views),
-          backgroundColor: ['#059669', '#263E22', '#F59E0B', '#3B82F6', '#EF4444', '#8B5CF6', '#14B8A6', '#64748B'],
+          backgroundColor: ['#059669', '#465B2D', '#F59E0B', '#3B82F6', '#EF4444', '#8B5CF6', '#14B8A6', '#64748B'],
           borderWidth: 0,
           cutout: '68%'
         }]

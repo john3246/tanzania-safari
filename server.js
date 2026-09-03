@@ -340,7 +340,7 @@ if (process.env.NODE_ENV !== 'production') {
         subject: 'Test Email — Tanzania Safari Magic',
         html: `
           <div style="padding: 40px; font-family: Arial, sans-serif;">
-            <h1 style="color: #C25B2A;">Test Email</h1>
+            <h1 style="color: #C8860A;">Test Email</h1>
             <p>This is a test email from Tanzania Safari Magic.</p>
             <p>If you received this, the email system is working correctly!</p>
             <p>Timestamp: ${new Date().toISOString()}</p>
@@ -473,7 +473,7 @@ async function startServer() {
 
     // Auto-run DB migrations on startup (crucial for Render production DB)
     try {
-      const runMigrations = require('./run_migration');
+      const runMigrations = require('./instructions/run_migration');
       await runMigrations();
     } catch (migErr) {
       logger.warn({ event: 'migration_warning', error: migErr.message }, 'Migration skipped or failed');

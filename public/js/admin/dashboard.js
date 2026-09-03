@@ -26,7 +26,7 @@ async function renderRevenueChart(stats = {}) {
             datasets.push({
                 label: 'Unique visitors',
                 data: uniqueData,
-                borderColor: '#1E311B',
+                borderColor: '#2C391C',
                 backgroundColor: 'transparent',
                 borderWidth: 2,
                 borderDash: [5, 4],

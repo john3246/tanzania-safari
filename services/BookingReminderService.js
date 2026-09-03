@@ -40,17 +40,17 @@ function buildReminderHtml(booking, hoursOffset) {
   const site = process.env.SITE_URL || 'https://tanzaniasafarimagic.com';
   return `
   <div style="font-family:Segoe UI,Helvetica,Arial,sans-serif;max-width:640px;margin:0 auto;border:1px solid #e5ebe3;border-radius:16px;overflow:hidden">
-    <div style="background:#263E22;padding:24px;text-align:center;color:#fff">
+    <div style="background:#465B2D;padding:24px;text-align:center;color:#fff">
       <img src="${site}/images/logo.png" width="48" height="48" style="border-radius:8px;background:#fff;padding:4px" alt="">
       <h1 style="margin:10px 0 0;font-size:20px">Safari quote follow-up</h1>
     </div>
-    <div style="height:4px;background:#FF6F00"></div>
+    <div style="height:4px;background:#C8860A"></div>
     <div style="padding:28px;color:#475569;font-size:15px;line-height:1.6">
       <p>Hi ${name},</p>
       <p>This is a friendly reminder (${hoursOffset}h after your request) that we received your quote enquiry for <strong>${pkg}</strong>.</p>
       <p>Our Team in Arusha is preparing your itinerary. Reply to this email or WhatsApp us if you have preferred dates, lodge style, or budget notes.</p>
       <p style="margin-top:20px">
-        <a href="https://wa.me/255695108009" style="display:inline-block;background:#FF6F00;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:700">WhatsApp Our Team</a>
+        <a href="https://wa.me/255695108009" style="display:inline-block;background:#C8860A;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:700">WhatsApp Our Team</a>
       </p>
       <p style="font-size:13px;color:#94a3b8">Reminder ${hoursOffset} of 24 hours · Tanzania Safari Magic</p>
     </div>

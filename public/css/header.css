@@ -32,7 +32,7 @@
 }
 .header.header--zara .logo{
   display:flex;flex-direction:row;align-items:center;gap:.65rem;
-  color:var(--primary-dark,#1E311B);text-decoration:none;flex-shrink:0;max-width:none;
+  color:var(--primary-dark,#2C391C);text-decoration:none;flex-shrink:0;max-width:none;
 }
 .header.header--zara .logo-img{
   width:56px;height:56px;object-fit:contain;flex-shrink:0;
@@ -42,20 +42,20 @@
 .header.header--zara .logo-text{display:flex;flex-direction:column;line-height:1.15;min-width:0}
 .header.header--zara .logo-text .brand{
   font-size:1.05rem;font-weight:800;letter-spacing:1.2px;
-  font-family:var(--font-heading,'Poppins',sans-serif);
-  text-transform:uppercase;color:var(--primary-dark,#1E311B)!important;
+  font-family:var(--font-heading,'Fraunces', serif);
+  text-transform:uppercase;color:var(--primary-dark,#2C391C)!important;
   white-space:nowrap;text-shadow:none;
 }
 .header.header--zara .logo-text .sub{
   font-size:.55rem;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--primary,#263E22)!important;text-shadow:none;white-space:nowrap;
+  color:var(--primary,#465B2D)!important;text-shadow:none;white-space:nowrap;
 }
 
 .header-top-mid{min-width:0;flex:1;text-align:center}
 .header-tagline{
-  margin:0 0 .3rem;font-family:var(--font-heading,'Poppins',sans-serif);
+  margin:0 0 .3rem;font-family:var(--font-heading,'Fraunces', serif);
   font-size:clamp(.88rem,1.45vw,1.2rem);font-weight:700;line-height:1.25;
-  color:var(--primary,#263E22);
+  color:var(--primary,#465B2D);
 }
 .header.header--zara .header-trust{
   display:flex;justify-content:center;gap:.85rem;flex-wrap:wrap;
@@ -65,7 +65,7 @@
 
 .header-top-end{display:flex;flex-direction:column;align-items:flex-end;gap:.35rem;flex-shrink:0}
 .header-utility{
-  display:flex;align-items:stretch;background:var(--accent,#FF6F00);
+  display:flex;align-items:stretch;background:var(--accent,#C8860A);
   border-radius:2px;overflow:hidden;
 }
 .header-utility a,
@@ -79,22 +79,22 @@
 .header-utility a:last-child,
 .header-utility-chat{border-right:0;position:relative}
 .header-utility a:hover,
-.header-utility-chat:hover{background:var(--accent-dark,#C45500)}
+.header-utility-chat:hover{background:var(--accent-dark,#9A6808)}
 .header-utility i{font-size:.8rem}
 
 .header-phone-row{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;justify-content:flex-end}
-.header-phone{margin:0;font-size:.8rem;color:var(--primary,#263E22);font-weight:600}
-.header-phone a{color:var(--primary-dark,#1E311B);text-decoration:none;margin-left:.25rem}
+.header-phone{margin:0;font-size:.8rem;color:var(--primary,#465B2D);font-weight:600}
+.header-phone a{color:var(--primary-dark,#2C391C);text-decoration:none;margin-left:.25rem}
 .header-phone a:hover{text-decoration:underline}
 .header-phone strong{font-weight:800}
 .header-phone-sep{margin:0 .3rem;opacity:.5}
 .header-email{font-weight:600;font-size:.76rem}
 .header-top .lang-switcher-btn{
-  background:#f3f6f1!important;color:#1E311B!important;border-color:#cfd8cb!important;
+  background:#f3f6f1!important;color:#2C391C!important;border-color:#cfd8cb!important;
 }
 
 /* Full-width nav bar, left → right. Links inset so mega-menu has room. */
-.header-nav-bar{width:100%;background:var(--primary-dark,#1E311B);color:#fff;position:relative}
+.header-nav-bar{width:100%;background:var(--primary-dark,#2C391C);color:#fff;position:relative}
 .header-nav-inner{
   display:flex;align-items:center;justify-content:space-between;gap:1.25rem;
   min-height:50px;position:relative;
@@ -114,33 +114,33 @@
   border-bottom:none!important;padding-bottom:0!important;
 }
 .header.header--zara .nav-link:hover,
-.header.header--zara .nav-link.active{color:var(--accent,#FF6F00)}
+.header.header--zara .nav-link.active{color:var(--accent,#C8860A)}
 .header.header--zara .nav-dropdown-toggle.nav-link,
 .header.header--zara button.nav-dropdown-toggle{
   color:#fff!important;text-shadow:none;text-decoration:none;
 }
-.header.header--zara .nav-dropdown-toggle.nav-link:hover{color:var(--accent,#FF6F00)!important}
+.header.header--zara .nav-dropdown-toggle.nav-link:hover{color:var(--accent,#C8860A)!important}
 
 .header-nav-actions{display:flex;align-items:center;gap:.55rem;flex-shrink:0}
 .header-plan-btn{
   display:inline-flex;align-items:center;gap:.45rem;
-  background:var(--accent,#FF6F00);color:#fff;font-weight:800;font-size:.76rem;
+  background:var(--accent,#C8860A);color:#fff;font-weight:800;font-size:.76rem;
   text-transform:uppercase;letter-spacing:.4px;text-decoration:none;
   padding:.5rem 1rem;border-radius:999px;white-space:nowrap;min-height:40px;
-  box-shadow:0 2px 10px rgba(255,111,0,.35);
+  box-shadow:0 2px 10px rgba(200, 134, 10,.35);
 }
-.header-plan-btn:hover{background:var(--accent-dark,#C45500);color:#fff}
+.header-plan-btn:hover{background:var(--accent-dark,#9A6808);color:#fff}
 .header-search-btn{
   width:40px;height:40px;border:0;background:transparent;color:#fff;
   cursor:pointer;display:inline-flex;align-items:center;justify-content:center;
   font-size:1rem;border-radius:50%;
 }
 .header-search-btn:hover,
-.header-search-btn[aria-expanded="true"]{background:rgba(255,255,255,.12);color:var(--accent,#FF6F00)}
+.header-search-btn[aria-expanded="true"]{background:rgba(255,255,255,.12);color:var(--accent,#C8860A)}
 .header.header--zara .mobile-toggle{color:#fff}
 
 .header-search-panel{
-  background:var(--primary-dark,#1E311B);border-top:1px solid rgba(255,255,255,.12);padding:.7rem 0;
+  background:var(--primary-dark,#2C391C);border-top:1px solid rgba(255,255,255,.12);padding:.7rem 0;
 }
 .header-search-form{display:flex;gap:.6rem;align-items:center}
 .header-search-form input{
@@ -216,7 +216,7 @@
   .header.header--zara .header-trust{display:none!important}
   .header-tagline{
     margin:0;font-size:clamp(.82rem,3.4vw,1.05rem);line-height:1.25;
-    color:var(--primary,#263E22);
+    color:var(--primary,#465B2D);
   }
   .header.header--zara .logo{
     grid-column:1;grid-row:2;z-index:4;align-self:end;
@@ -228,7 +228,7 @@
   }
   .header.header--zara .logo-text{display:none}
   .header-nav-bar{
-    position:static;background:var(--primary-dark,#1E311B);width:100%;height:auto;
+    position:static;background:var(--primary-dark,#2C391C);width:100%;height:auto;
   }
   .header-nav-inner{
     display:flex;align-items:center;justify-content:flex-end;
@@ -241,14 +241,14 @@
   .header-nav-phone-q{font-size:.72rem;opacity:.9;font-weight:600}
   .header-nav-phone-link{color:#fff;text-decoration:none;font-size:.84rem;font-weight:700}
   .header-nav-phone-link strong{font-weight:800;letter-spacing:.01em}
-  .header-nav-phone-link:hover{color:var(--accent,#FF6F00)}
+  .header-nav-phone-link:hover{color:var(--accent,#C8860A)}
   .header-plan-btn{display:none}
   .header-search-btn{width:42px;height:42px;color:#fff!important}
   .header.header--zara .mobile-toggle{
     display:flex!important;align-items:center;justify-content:center;
     width:46px;height:46px;min-width:46px;min-height:46px;
-    background:var(--accent,#FF6F00)!important;color:#1E311B!important;
-    border-radius:8px;box-shadow:0 2px 8px rgba(255,111,0,.4);
+    background:var(--accent,#C8860A)!important;color:#2C391C!important;
+    border-radius:8px;box-shadow:0 2px 8px rgba(200, 134, 10,.4);
   }
   .header.header--zara .nav,
   #mainNav.nav{

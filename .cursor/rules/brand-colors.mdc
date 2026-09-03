@@ -7,8 +7,10 @@ alwaysApply: true
 
 Keep the existing palette from `public/css/variables.css`. Layout, spacing, and structure may change; **colors must not**.
 
-- Primary green: `--primary` `#263E22`, `--primary-dark` `#1E311B`, `--primary-light` `#365730`
-- Accent orange: `--accent` `#FF6F00`, `--accent-dark` `#C45500`, `--accent-light` `#FF8F00`
+- Primary green: `--primary` `#465B2D`, `--primary-dark` `#2C391C`, `--primary-light` `#576D3D`
+- Accent gold: `--accent` `#C8860A`, `--accent-dark` `#9A6808`, `--accent-light` `#E0A82E`
 - Earth / sand / text / background tokens already in `variables.css`
+
+Typography: headings `Fraunces`, body `Nunito Sans` (licensed stand-ins for Tanzania Specialist’s DK Liquid Embrace + Museo Sans).
 
 Do not introduce a new palette (no Zara yellow, navy, or other competitor colors). New UI must use `var(--primary)`, `var(--accent)`, and the other existing tokens. Do not restyle buttons, nav, CTAs, or headers with different brand colors.
