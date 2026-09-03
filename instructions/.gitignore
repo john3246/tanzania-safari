@@ -1,0 +1,12 @@
+.env
+.env.*
+!.env.example
+node_modules/
+logs/
+uploads/
+*.log
+database.sqlite
+password.js
+scratch/
+.DS_Store
+Thumbs.db

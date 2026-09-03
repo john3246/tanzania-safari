@@ -27,7 +27,7 @@
 .blog-crumb span { margin: 0 0.35rem; opacity: 0.6; }
 
 .blog-h1 {
-  font-family: var(--font-heading, Poppins, sans-serif);
+  font-family: var(--font-heading, Fraunces, serif);
   font-size: clamp(1.65rem, 1.2rem + 1.8vw, 2.5rem);
   line-height: 1.18;
   color: #111;
@@ -101,7 +101,7 @@
 
 .guide-toc {
   background: #f7f8f6;
-  border: 1px solid rgba(38,62,34,0.08);
+  border: 1px solid rgba(70, 91, 45,0.08);
   border-radius: 14px;
   padding: 1.15rem 1.35rem;
   margin: 1.5rem 0;
@@ -137,7 +137,7 @@
   background: transparent !important;
 }
 .guide-cta-box .btn-primary {
-  background: var(--accent, #FF6F00) !important;
+  background: var(--accent, #C8860A) !important;
   color: #fff !important;
   border: none !important;
 }
@@ -155,14 +155,14 @@
   text-decoration: none;
   color: inherit;
   background: #fff;
-  border: 1px solid rgba(38,62,34,0.1);
+  border: 1px solid rgba(70, 91, 45,0.1);
   border-radius: 14px;
   overflow: hidden;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 .guide-pkg-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 28px rgba(38,62,34,0.1);
+  box-shadow: 0 12px 28px rgba(70, 91, 45,0.1);
 }
 .guide-pkg-card img {
   width: 100%;
@@ -237,8 +237,8 @@
   background: #fff;
   border-radius: 18px;
   overflow: hidden;
-  border: 1px solid rgba(38,62,34,0.08);
-  box-shadow: 0 12px 40px rgba(38,62,34,0.07);
+  border: 1px solid rgba(70, 91, 45,0.08);
+  box-shadow: 0 12px 40px rgba(70, 91, 45,0.07);
   margin-bottom: 2rem;
   text-decoration: none;
   color: inherit;
@@ -396,7 +396,7 @@
   min-height: calc(1.35em * 3);
 }
 .blog-mag-link:hover .blog-mag-title {
-  color: var(--accent, #FF6F00);
+  color: var(--accent, #C8860A);
 }
 .blog-mag-more {
   display: inline-block;
@@ -501,7 +501,7 @@
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--accent, #FF6F00);
+  color: var(--accent, #C8860A);
 }
 .blog-ms-date {
   font-size: 0.82rem;
@@ -522,7 +522,7 @@
   transition: color 0.2s;
 }
 .blog-ms-link:hover .blog-ms-title {
-  color: var(--accent, #FF6F00);
+  color: var(--accent, #C8860A);
 }
 .blog-ms-excerpt {
   margin: 0;

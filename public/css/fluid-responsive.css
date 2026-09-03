@@ -195,7 +195,7 @@ table { max-width: 100%; }
     display: inline-flex !important;
     min-width: 44px;
     min-height: 44px;
-    color: var(--primary-dark, #1E311B) !important;
+    color: var(--primary-dark, #2C391C) !important;
     pointer-events: auto !important;
     position: relative;
     z-index: 30;

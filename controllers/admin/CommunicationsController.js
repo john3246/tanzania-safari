@@ -55,11 +55,11 @@ class CommunicationsController {
             const site = process.env.SITE_URL || 'https://tanzaniasafarimagic.com';
             const wrapped = `
               <div style="font-family:Segoe UI,Helvetica,Arial,sans-serif;max-width:640px;margin:0 auto;border:1px solid #e5ebe3;border-radius:16px;overflow:hidden">
-                <div style="background:#263E22;padding:24px;text-align:center;color:#fff">
+                <div style="background:#465B2D;padding:24px;text-align:center;color:#fff">
                   <img src="${site}/images/logo.png" width="48" height="48" style="border-radius:8px;background:#fff;padding:4px" alt="">
                   <h1 style="margin:10px 0 0;font-size:20px">Tanzania Safari Magic</h1>
                 </div>
-                <div style="height:4px;background:#FF6F00"></div>
+                <div style="height:4px;background:#C8860A"></div>
                 <div style="padding:28px;color:#475569;font-size:15px;line-height:1.6">${bodyHtml}</div>
                 <div style="background:#f0f3ef;padding:16px;text-align:center;font-size:12px;color:#64748b">Arusha, Tanzania · Quotes &amp; offline deposits</div>
               </div>`;

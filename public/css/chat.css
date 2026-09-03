@@ -4,13 +4,13 @@
   bottom: 2rem;
   right: 2rem;
   z-index: 1000;
-  font-family: var(--font-body, 'Roboto', sans-serif);
+  font-family: var(--font-body, 'Nunito Sans', sans-serif);
 }
 
 .chat-button {
   width: 64px;
   height: 64px;
-  background: var(--primary, #263E22);
+  background: var(--primary, #465B2D);
   color: #fff;
   border-radius: 50%;
   display: flex;
@@ -56,7 +56,7 @@
 }
 
 .chat-header {
-  background: var(--primary, #263E22);
+  background: var(--primary, #465B2D);
   color: #fff;
   padding: 1.25rem 1.5rem;
   display: flex;
@@ -84,7 +84,7 @@
 
 .chat-title {
   font-weight: 600;
-  font-family: var(--font-heading, 'Poppins', sans-serif);
+  font-family: var(--font-heading, 'Fraunces', serif);
   font-size: 1.05rem;
   margin: 0;
   line-height: 1.2;
@@ -200,7 +200,7 @@
   border: none;
   border-radius: 8px;
   padding: 0.85rem 1rem;
-  background: var(--primary, #263E22);
+  background: var(--primary, #465B2D);
   color: #fff;
   font-weight: 600;
   cursor: pointer;
@@ -236,16 +236,16 @@
 }
 
 .chat-input:focus {
-  border-color: var(--primary, #263E22);
+  border-color: var(--primary, #465B2D);
   background: #fff;
-  box-shadow: 0 0 0 3px var(--primary-pale, rgba(38,62,34,0.1));
+  box-shadow: 0 0 0 3px var(--primary-pale, rgba(70, 91, 45,0.1));
 }
 
 .chat-send {
   width: 46px;
   height: 46px;
   border-radius: 50%;
-  background: var(--primary, #263E22);
+  background: var(--primary, #465B2D);
   color: #fff;
   border: none;
   cursor: pointer;
@@ -257,7 +257,7 @@
 }
 
 .chat-send:hover {
-  background: var(--primary-light, #365730);
+  background: var(--primary-light, #576D3D);
 }
 
 .chat-tooltip {
@@ -265,7 +265,7 @@
   bottom: 10px;
   right: 75px;
   background: #fff;
-  color: var(--primary, #263E22);
+  color: var(--primary, #465B2D);
   padding: 12px 20px;
   border-radius: 24px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.12);

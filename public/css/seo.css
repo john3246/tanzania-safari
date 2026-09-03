@@ -21,7 +21,7 @@
 .seo-faq-item summary::after {
   content: '+';
   font-size: 1.25rem;
-  color: var(--primary, #263E22);
+  color: var(--primary, #465B2D);
   flex-shrink: 0;
 }
 .seo-faq-item[open] summary::after { content: '−'; }
@@ -87,9 +87,9 @@
 .ssr-card-link { display: block; text-decoration: none; color: inherit; }
 .ssr-card img { width: 100%; aspect-ratio: 16/10; object-fit: cover; display: block; }
 .ssr-card-body { padding: 1rem 1.1rem 1.15rem; }
-.ssr-card-body h3 { margin: 0 0 0.35rem; font-family: var(--font-heading, Poppins, sans-serif); font-size: 1.05rem; color: var(--earth-dark, #1a1a1a); }
+.ssr-card-body h3 { margin: 0 0 0.35rem; font-family: var(--font-heading, Fraunces, serif); font-size: 1.05rem; color: var(--earth-dark, #1a1a1a); }
 .ssr-card-body p { margin: 0 0 0.4rem; font-size: 0.9rem; color: var(--text-secondary, #555); line-height: 1.5; }
-.ssr-meta { font-size: 0.8rem !important; font-weight: 600; color: var(--primary, #263E22) !important; }
+.ssr-meta { font-size: 0.8rem !important; font-weight: 600; color: var(--primary, #465B2D) !important; }
 .ssr-price { font-weight: 700; color: var(--earth-dark, #1a1a1a) !important; }
 .ssr-price span { font-weight: 500; font-size: 0.8rem; color: var(--text-muted, #888); }
 .ssr-empty { grid-column: 1 / -1; text-align: center; color: var(--text-muted, #888); padding: 1.5rem; }

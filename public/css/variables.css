@@ -1,21 +1,21 @@
 :root {
-  /* ✨ Primary: Logo Green*/
-  --primary:       #263E22;
-  --primary-dark:  #1E311B;
-  --primary-light: #365730;
-  --primary-pale:  rgba(38, 62, 34, 0.10);
+  /* Primary: Tanzania Specialist olive green */
+  --primary:       #465B2D;
+  --primary-dark:  #2C391C;
+  --primary-light: #576D3D;
+  --primary-pale:  rgba(70, 91, 45, 0.10);
 
-  /* ✨ Secondary: Logo Green*/
-  --secondary:       #263E22;
-  --secondary-dark:  #1E311B;
-  --secondary-light: #365730;
-  --secondary-pale:  rgba(38, 62, 34, 0.10);
+  /* Secondary: same olive */
+  --secondary:       #465B2D;
+  --secondary-dark:  #2C391C;
+  --secondary-light: #576D3D;
+  --secondary-pale:  rgba(70, 91, 45, 0.10);
 
-  /*Accent: Warm Orange*/
-  --accent:       #FF6F00;
-  --accent-dark:  #C45500;
-  --accent-light: #FF8F00;
-  --accent-pale:  rgba(255, 111, 0, 0.10);
+  /* Accent: Safari Gold */
+  --accent:       #C8860A;
+  --accent-dark:  #9A6808;
+  --accent-light: #E0A82E;
+  --accent-pale:  rgba(200, 134, 10, 0.10);
 
   /* ── Neutral: Safari Brown / Earth*/
   --earth-dark:   #3D2B1F;
@@ -64,8 +64,8 @@
   --info-bg:      #E3F2FD;
 
   /* ── Typography */
-  --font-heading: 'Poppins', sans-serif;
-  --font-body:    'Roboto', sans-serif;
+  --font-heading: 'Fraunces', serif;
+  --font-body:    'Nunito Sans', sans-serif;
 
   /* ── Spacing Scale */
   --space-1:  0.25rem;   /*  4px */

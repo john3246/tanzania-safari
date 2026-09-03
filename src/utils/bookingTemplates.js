@@ -6,7 +6,7 @@ const getHeader = () => `
 `;
 
 const getFooter = () => `
-  <div style="background-color: #FBF6EE; padding: 20px; text-align: center; border-top: 2px solid #FF6F00; margin-top: 30px;">
+  <div style="background-color: #FBF6EE; padding: 20px; text-align: center; border-top: 2px solid #C8860A; margin-top: 30px;">
     <p style="color: #666; margin: 0; font-family: sans-serif; font-size: 14px;">Tanzania Safari Magic &copy; ${new Date().getFullYear()}</p>
     <p style="color: #666; margin: 5px 0 0 0; font-family: sans-serif; font-size: 12px;">Quotes &amp; offline deposits · Arusha, Tanzania</p>
   </div>
@@ -22,7 +22,7 @@ function getClientBookingEmailHTML(booking) {
           <p style="color: #333; line-height: 1.6;">Hi ${name},</p>
           <p style="color: #333; line-height: 1.6;">Thank you for contacting Tanzania Safari Magic. This is a confirmation that we received your <strong>quote request</strong> — no payment was taken online. Our Team is reviewing your details:</p>
           
-          <div style="background-color: #FBF6EE; border-left: 4px solid #FF6F00; padding: 15px; margin: 25px 0;">
+          <div style="background-color: #FBF6EE; border-left: 4px solid #C8860A; padding: 15px; margin: 25px 0;">
             <p style="margin: 5px 0;"><strong>Package:</strong> ${booking.package_name || booking.package_id || 'Custom/General'}</p>
             <p style="margin: 5px 0;"><strong>Travel Date:</strong> ${booking.start_date || booking.travel_date || 'TBD'}</p>
             <p style="margin: 5px 0;"><strong>Travelers:</strong> ${booking.number_of_adults || 0} Adults, ${booking.number_of_children || 0} Children</p>
@@ -30,7 +30,7 @@ function getClientBookingEmailHTML(booking) {
           
           <p style="color: #333; line-height: 1.6;">A safari specialist will contact you at <strong>${booking.email}</strong>${booking.phone ? ` or <strong>${booking.phone}</strong>` : ''} with a tailored itinerary. After you accept it, we will send deposit instructions (typically ~20%, arranged offline).</p>
           
-          <a href="https://tanzaniasafarimagic.com" style="display: inline-block; background-color: #FF6F00; color: #ffffff; text-decoration: none; padding: 12px 25px; border-radius: 4px; margin-top: 20px; font-weight: bold;">Visit Our Website</a>
+          <a href="https://tanzaniasafarimagic.com" style="display: inline-block; background-color: #C8860A; color: #ffffff; text-decoration: none; padding: 12px 25px; border-radius: 4px; margin-top: 20px; font-weight: bold;">Visit Our Website</a>
         </div>
         ${getFooter()}
       </div>
@@ -43,7 +43,7 @@ function getAdminBookingEmailHTML(booking) {
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0;">
         ${getHeader()}
         <div style="padding: 30px; background-color: #ffffff;">
-          <h2 style="color: #FF6F00; margin-top: 0;">New safari quote request</h2>
+          <h2 style="color: #C8860A; margin-top: 0;">New safari quote request</h2>
           <p style="color: #333; line-height: 1.6;">A new quote request was submitted (no online payment). Review and reply within 24 hours.</p>
           
           <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
@@ -101,7 +101,7 @@ function getClientGroupRequestEmailHTML({ full_name, email, departure, seatsRequ
           <h2 style="color: #0D47A1; margin-top: 0;">Group safari request received</h2>
           <p style="color: #333; line-height: 1.6;">Hi ${full_name || 'Traveler'},</p>
           <p style="color: #333; line-height: 1.6;">We received your request for <strong>${departure?.title || 'a group departure'}</strong> (${seatsRequested} traveler${seatsRequested > 1 ? 's' : ''}). No payment was taken online.</p>
-          <div style="background-color: #FBF6EE; border-left: 4px solid #FF6F00; padding: 15px; margin: 25px 0;">
+          <div style="background-color: #FBF6EE; border-left: 4px solid #C8860A; padding: 15px; margin: 25px 0;">
             <p style="margin: 5px 0;"><strong>Typical seat deposit:</strong> ${depositPercent}% ≈ $${Number(depositAmount || 0).toLocaleString()} USD</p>
             <p style="margin: 5px 0;"><strong>Due by:</strong> ${due} (after Our Team approves your request)</p>
             <p style="margin: 5px 0;">We will email or WhatsApp <strong>offline payment instructions</strong> (bank transfer / agreed method). Seats are held once payment is confirmed.</p>
@@ -118,7 +118,7 @@ function getAdminGroupRequestEmailHTML({ full_name, email, phone, departure, sea
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0;">
         ${getHeader()}
         <div style="padding: 30px; background-color: #ffffff;">
-          <h2 style="color: #FF6F00; margin-top: 0;">New group safari request</h2>
+          <h2 style="color: #C8860A; margin-top: 0;">New group safari request</h2>
           <p style="color: #333; line-height: 1.6;">Approve in admin, then send offline deposit instructions.</p>
           <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
             <tr><td style="padding: 10px; border: 1px solid #eee; background:#f9f9f9;font-weight:bold;width:35%">Guest</td><td style="padding:10px;border:1px solid #eee">${full_name}</td></tr>
@@ -148,13 +148,13 @@ function getClientBookingReminderHTML(booking, hoursOffset = 6) {
           <h2 style="color: #0D47A1; margin-top: 0;">Safari quote reminder (${hoursOffset}h)</h2>
           <p style="color: #333; line-height: 1.6;">Hi ${name},</p>
           <p style="color: #333; line-height: 1.6;">Just checking in — we received your quote request and Our Team is still preparing your itinerary. No payment is taken online.</p>
-          <div style="background-color: #FBF6EE; border-left: 4px solid #FF6F00; padding: 15px; margin: 25px 0;">
+          <div style="background-color: #FBF6EE; border-left: 4px solid #C8860A; padding: 15px; margin: 25px 0;">
             <p style="margin: 5px 0;"><strong>Package:</strong> ${pkg}</p>
             <p style="margin: 5px 0;"><strong>Travel Date:</strong> ${date}</p>
             <p style="margin: 5px 0;"><strong>Follow-up:</strong> Reminder at ${hoursOffset} hours (within 24h of your request)</p>
           </div>
           <p style="color: #333; line-height: 1.6;">Reply with any updates (dates, lodge style, budget) or WhatsApp <a href="https://wa.me/255695108009">+255 695 108 009</a>.</p>
-          <a href="https://wa.me/255695108009" style="display: inline-block; background-color: #FF6F00; color: #ffffff; text-decoration: none; padding: 12px 25px; border-radius: 4px; margin-top: 20px; font-weight: bold;">WhatsApp Us</a>
+          <a href="https://wa.me/255695108009" style="display: inline-block; background-color: #C8860A; color: #ffffff; text-decoration: none; padding: 12px 25px; border-radius: 4px; margin-top: 20px; font-weight: bold;">WhatsApp Us</a>
         </div>
         ${getFooter()}
       </div>

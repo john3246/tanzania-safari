@@ -170,23 +170,23 @@ async function sendEmailDirect(options) {
       const bodyContent = templateData?.response_notes || templateData?.enquiry_message || templateData?.message || subject || '';
       html = `
         <div style="font-family:'Segoe UI',Helvetica,Arial,sans-serif;max-width:640px;margin:0 auto;background:#fff;border:1px solid #d9e3d6;border-radius:18px;overflow:hidden">
-          <div style="background:linear-gradient(135deg,#1E311B,#263E22);padding:28px;text-align:center">
+          <div style="background:linear-gradient(135deg,#2C391C,#465B2D);padding:28px;text-align:center">
             <h2 style="color:#fff;margin:0;font-size:22px;font-weight:800">Tanzania Safari Magic</h2>
             <p style="color:rgba(255,255,255,0.9);margin:8px 0 0;font-size:14px">Private safaris from Arusha · Serengeti · Ngorongoro · Zanzibar</p>
           </div>
-          <div style="height:4px;background:#FF6F00"></div>
+          <div style="height:4px;background:#C8860A"></div>
           <div style="padding:28px;color:#3d4a3a;font-size:16px;line-height:1.65">
             <p style="margin:0 0 10px">Dear guest,</p>
-            <h3 style="color:#1E311B;margin:0 0 12px">${String(subject || '').replace(/</g,'&lt;')}</h3>
+            <h3 style="color:#2C391C;margin:0 0 12px">${String(subject || '').replace(/</g,'&lt;')}</h3>
             <div style="white-space:pre-wrap;margin-bottom:18px">${String(bodyContent).replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
             <p style="margin:0 0 8px">With warm regards from Arusha,</p>
             <p style="margin:0 0 4px"><strong>The Tanzania Safari Magic Team</strong></p>
             <p style="margin:0 0 16px;color:#64748b;font-size:13px">Private Safari Specialists · Licensed Local Operator</p>
-            <p style="margin:0 0 8px;font-size:13px"><a href="mailto:info@tanzaniasafarimagic.com" style="color:#C45500;font-weight:650">info@tanzaniasafarimagic.com</a> · <a href="https://wa.me/255695108009" style="color:#C45500;font-weight:650">+255 695 108 009</a></p>
-            <p style="margin-top:20px"><a href="https://tanzaniasafarimagic.com/booking" style="display:inline-block;background:#FF6F00;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:700">Get a free quote</a></p>
+            <p style="margin:0 0 8px;font-size:13px"><a href="mailto:info@tanzaniasafarimagic.com" style="color:#9A6808;font-weight:650">info@tanzaniasafarimagic.com</a> · <a href="https://wa.me/255695108009" style="color:#9A6808;font-weight:650">+255 695 108 009</a></p>
+            <p style="margin-top:20px"><a href="https://tanzaniasafarimagic.com/booking" style="display:inline-block;background:#C8860A;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:700">Get a free quote</a></p>
           </div>
           <div style="background:#f0f3ef;padding:20px;text-align:center;font-size:13px;color:#64748b">
-            <strong style="color:#1E311B">Tanzania Safari Magic</strong> — your hosts in Arusha<br>
+            <strong style="color:#2C391C">Tanzania Safari Magic</strong> — your hosts in Arusha<br>
             Office hours Mon–Sat 08:00–18:00 EAT · We reply within 24 hours<br>
             <span style="display:inline-block;margin-top:8px;font-size:12px">&copy; ${new Date().getFullYear()} Tanzania Safari Magic. All rights reserved.</span>
           </div>
@@ -273,18 +273,18 @@ async function sendEmailQueued(jobName, data) {
       const bodyContent = templateData?.response_notes || templateData?.enquiry_message || templateData?.message || subject || '';
       data.html = `
         <div style="font-family:'Segoe UI',Helvetica,Arial,sans-serif;max-width:640px;margin:0 auto;background:#fff;border:1px solid #d9e3d6;border-radius:18px;overflow:hidden">
-          <div style="background:linear-gradient(135deg,#1E311B,#263E22);padding:28px;text-align:center">
+          <div style="background:linear-gradient(135deg,#2C391C,#465B2D);padding:28px;text-align:center">
             <h2 style="color:#fff;margin:0;font-size:22px;font-weight:800">Tanzania Safari Magic</h2>
             <p style="color:rgba(255,255,255,0.9);margin:8px 0 0;font-size:14px">Private safaris from Arusha</p>
           </div>
-          <div style="height:4px;background:#FF6F00"></div>
+          <div style="height:4px;background:#C8860A"></div>
           <div style="padding:28px;color:#3d4a3a;font-size:16px;line-height:1.65">
             <p style="margin:0 0 10px">Dear guest,</p>
-            <h3 style="color:#1E311B;margin:0 0 12px">${String(subject || '').replace(/</g,'&lt;')}</h3>
+            <h3 style="color:#2C391C;margin:0 0 12px">${String(subject || '').replace(/</g,'&lt;')}</h3>
             <div style="white-space:pre-wrap;margin-bottom:18px">${String(bodyContent).replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
             <p style="margin:0 0 8px">With warm regards from Arusha,</p>
             <p style="margin:0"><strong>The Tanzania Safari Magic Team</strong></p>
-            <p style="margin:8px 0 0;font-size:13px"><a href="mailto:info@tanzaniasafarimagic.com" style="color:#C45500">info@tanzaniasafarimagic.com</a> · <a href="https://wa.me/255695108009" style="color:#C45500">+255 695 108 009</a></p>
+            <p style="margin:8px 0 0;font-size:13px"><a href="mailto:info@tanzaniasafarimagic.com" style="color:#9A6808">info@tanzaniasafarimagic.com</a> · <a href="https://wa.me/255695108009" style="color:#9A6808">+255 695 108 009</a></p>
           </div>
           <div style="background:#f0f3ef;padding:20px;text-align:center;font-size:13px;color:#64748b">
             &copy; ${new Date().getFullYear()} Tanzania Safari Magic. All rights reserved.

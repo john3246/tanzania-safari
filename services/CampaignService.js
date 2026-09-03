@@ -18,20 +18,20 @@ function wrapCampaignHtml({ title, intro, itemsHtml, ctaUrl, ctaLabel }) {
   const site = process.env.SITE_URL || 'https://tanzaniasafarimagic.com';
   return `
   <div style="font-family:Segoe UI,Helvetica,Arial,sans-serif;max-width:640px;margin:0 auto;border:1px solid #e5ebe3;border-radius:16px;overflow:hidden">
-    <div style="background:linear-gradient(135deg,#1E311B,#263E22);padding:28px;text-align:center;color:#fff">
+    <div style="background:linear-gradient(135deg,#2C391C,#465B2D);padding:28px;text-align:center;color:#fff">
       <img src="${site}/images/logo.png" alt="Tanzania Safari Magic" width="56" height="56" style="border-radius:10px;background:#fff;padding:6px">
       <h1 style="margin:12px 0 0;font-size:22px">${title || 'Tanzania Safari Magic'}</h1>
       <p style="margin:8px 0 0;opacity:.9;font-size:14px">Private safaris from Arusha</p>
     </div>
-    <div style="height:4px;background:#FF6F00"></div>
+    <div style="height:4px;background:#C8860A"></div>
     <div style="padding:28px;color:#475569;font-size:15px;line-height:1.6">
       ${intro ? `<p>${intro}</p>` : ''}
       ${itemsHtml || ''}
-      ${ctaUrl ? `<p style="margin-top:24px"><a href="${ctaUrl}" style="display:inline-block;background:#FF6F00;color:#fff;text-decoration:none;padding:14px 28px;border-radius:8px;font-weight:700">${ctaLabel || 'Explore'}</a></p>` : ''}
+      ${ctaUrl ? `<p style="margin-top:24px"><a href="${ctaUrl}" style="display:inline-block;background:#C8860A;color:#fff;text-decoration:none;padding:14px 28px;border-radius:8px;font-weight:700">${ctaLabel || 'Explore'}</a></p>` : ''}
     </div>
     <div style="background:#f0f3ef;padding:20px;text-align:center;font-size:13px;color:#64748b">
-      <p style="margin:0 0 8px"><strong style="color:#1E311B">Tanzania Safari Magic</strong> · Arusha, Tanzania</p>
-      <p style="margin:0 0 8px"><a href="mailto:info@tanzaniasafarimagic.com" style="color:#263E22;font-weight:700">Email</a> · <a href="https://wa.me/255695108009" style="color:#263E22;font-weight:700">WhatsApp</a></p>
+      <p style="margin:0 0 8px"><strong style="color:#2C391C">Tanzania Safari Magic</strong> · Arusha, Tanzania</p>
+      <p style="margin:0 0 8px"><a href="mailto:info@tanzaniasafarimagic.com" style="color:#465B2D;font-weight:700">Email</a> · <a href="https://wa.me/255695108009" style="color:#465B2D;font-weight:700">WhatsApp</a></p>
       <p style="margin:0;font-size:12px"><a href="{{unsubscribe_url}}" style="color:#64748b">Unsubscribe</a></p>
     </div>
   </div>`;

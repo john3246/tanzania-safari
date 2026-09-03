@@ -7,8 +7,8 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "build": "tailwindcss -i ./public/css/tailwind-input.css -o ./public/css/tailwind-output.css",
-    "seed:guide": "node seed_tanzania_safari_guide.js",
-    "seed:glado": "node seed_glado_tours.js",
+    "seed:guide": "node instructions/seed_tanzania_safari_guide.js",
+    "seed:glado": "node instructions/seed_glado_tours.js",
     "scrape:glado": "node scripts/scrape_glado_tours.js"
   },
   "engines": {
