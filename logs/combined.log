@@ -604,3 +604,693 @@
 {"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 14:51:21"}
 {"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 14:51:21"}
 {"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 14:51:21"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 15:26:24"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 15:26:24"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 15:26:24"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 15:26:29"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 15:26:29"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 15:26:30"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 16:32:37"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 16:32:37"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 16:32:37"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 16:32:40"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 16:32:40"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 16:32:41"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 16:32:41"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 16:32:41"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 16:32:41"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 16:34:32"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 16:34:32"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 16:34:32"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 16:34:36"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 16:34:36"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 16:34:36"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 16:38:51"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 16:38:51"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 16:38:51"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 16:38:53"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 16:38:53"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 16:38:54"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 16:38:54"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 16:38:54"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 16:38:54"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 16:43:04"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 16:43:04"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 16:43:04"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 16:43:06"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 16:43:06"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 16:43:06"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 16:43:08"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 16:43:08"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 16:43:09"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 16:43:09"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 16:43:09"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 16:43:09"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 16:54:39"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 16:54:39"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 16:54:39"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 16:54:41"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 16:54:41"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 16:54:42"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 16:54:42"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 16:54:42"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 16:54:42"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 16:56:37"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 16:56:37"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 16:56:37"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 16:56:39"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 16:56:39"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 16:56:40"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 16:56:40"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 16:56:40"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 16:56:40"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 17:03:31"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 17:03:31"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 17:03:31"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 17:03:34"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 17:03:34"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 17:03:35"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 17:03:35"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 17:03:35"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 17:03:35"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 17:04:46"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 17:04:47"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 17:04:47"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 17:04:49"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 17:04:49"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 17:04:50"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 17:04:50"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 17:04:50"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 17:04:50"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 17:05:56"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 17:05:56"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 17:05:56"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 17:05:58"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 17:05:58"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 17:05:59"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 17:05:59"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 17:05:59"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 17:05:59"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 19:00:22"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 19:00:23"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 19:00:23"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 19:00:25"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 19:00:25"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 19:00:26"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 19:00:26"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 19:00:26"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 19:00:26"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 19:00:34"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 19:00:35"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 19:00:35"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 19:00:37"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 19:00:37"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 19:00:38"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 19:00:38"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 19:00:38"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 19:00:38"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 19:01:08"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 19:01:08"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 19:01:08"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 19:01:11"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 19:01:11"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 19:01:12"}
+{"level":"info","message":{"event":"sigint_received"},"service":"tanzania-safari","timestamp":"2026-09-03 19:06:31"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 19:15:48"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 19:15:48"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 19:15:48"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 19:15:51"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 19:15:51"}
+{"level":"warn","message":{"error":"Cannot find module './run_migration'\nRequire stack:\n- D:\\projects\\tanzania-safari\\server.js\n- D:\\projects\\tanzania-safari\\[eval]","event":"migration_warning"},"service":"tanzania-safari","timestamp":"2026-09-03 19:15:51"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 19:15:51"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 19:15:51"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 19:15:51"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 19:15:51"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 19:16:48"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 19:16:50"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 19:16:50"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 19:16:53"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 19:18:36"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 19:44:58"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 19:45:03"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 19:45:03"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 19:45:05"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 19:45:05"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 19:45:07"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 19:45:07"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 19:45:07"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 19:45:07"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 19:48:51"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 19:48:52"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 19:48:52"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 19:48:54"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 19:48:54"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 19:48:55"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 19:48:55"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 19:48:55"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 19:48:55"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 20:12:59"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 20:13:05"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 20:13:05"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 20:13:07"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 20:13:07"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 20:13:09"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 20:13:09"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 20:13:09"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 20:13:09"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:01"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:02"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:02"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:06"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:06"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:06"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:06"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:06"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:06"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:09"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:09"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:09"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:10"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:11"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:11"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:14"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:14"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:14"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:14"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:14"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:14"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:27"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:27"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:27"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:29"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:29"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:30"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:30"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:30"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:30"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:49"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:49"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:49"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:51"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:51"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:52"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:52"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:52"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 21:57:52"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 22:03:28"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:03:29"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 22:03:29"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 22:03:32"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 22:03:32"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:03:32"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:03:32"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:03:32"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 22:03:32"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 22:03:36"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:03:36"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 22:03:36"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 22:03:39"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 22:03:39"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:03:40"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:03:40"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:03:40"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 22:03:40"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 22:03:48"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:03:48"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 22:03:48"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 22:03:50"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 22:03:50"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:03:51"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:03:51"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:03:51"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 22:03:51"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 22:07:57"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:07:58"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 22:07:58"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 22:08:00"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 22:08:00"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:08:00"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:08:00"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:08:00"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 22:08:00"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 22:08:19"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:08:19"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 22:08:19"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 22:08:22"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 22:08:22"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:08:22"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:08:22"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:08:22"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 22:08:22"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 22:10:15"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:10:15"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 22:10:15"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 22:10:18"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 22:10:18"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:10:19"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:10:19"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:10:19"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 22:10:19"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 22:11:55"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:11:55"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 22:11:55"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 22:11:58"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 22:11:58"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:11:59"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:11:59"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:11:59"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 22:11:59"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 22:12:11"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:12:12"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 22:12:12"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 22:12:15"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 22:12:15"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:12:16"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:12:16"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:12:16"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 22:12:16"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 22:14:02"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:14:02"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 22:14:02"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 22:14:05"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 22:14:05"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:14:06"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:14:06"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:14:06"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 22:14:06"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 22:14:48"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:14:48"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 22:14:48"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 22:14:51"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 22:14:51"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:14:51"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:14:51"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:14:51"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 22:14:51"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:14"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:15"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:15"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:17"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:18"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:18"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:21"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:21"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:21"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:24"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:24"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:25"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:25"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:25"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:25"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:27"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:28"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:28"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:32"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:32"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:32"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:35"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:35"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:35"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:35"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:35"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:35"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:40"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:41"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:41"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:42"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:42"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:42"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:45"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:45"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:45"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:48"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:48"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:48"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:49"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:50"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:50"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:53"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:53"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:54"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:54"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:54"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:57"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:57"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:57"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:57"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:57"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 22:51:57"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 22:52:48"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:52:48"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 22:52:48"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 22:52:51"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 22:52:51"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:52:51"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:52:51"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:52:51"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 22:52:51"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 22:54:07"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:54:08"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 22:54:08"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 22:54:10"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 22:54:10"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:54:11"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:54:11"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:54:11"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 22:54:11"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 22:55:19"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 22:55:21"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:55:21"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 22:59:10"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:59:10"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 22:59:10"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 22:59:13"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 22:59:13"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:59:14"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:59:14"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:59:14"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 22:59:14"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 22:59:29"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:59:29"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 22:59:29"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 22:59:32"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 22:59:32"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:59:33"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:59:33"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:59:33"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 22:59:33"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 22:59:55"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:59:56"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 22:59:56"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 22:59:58"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 22:59:58"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:59:59"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 22:59:59"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 22:59:59"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:00"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:11"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:11"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:11"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:15"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:15"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:15"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:18"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:18"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:19"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:19"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:19"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:19"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:31"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:32"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:32"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:33"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:33"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:33"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:36"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:36"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:38"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:38"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:38"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:38"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:40"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:41"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:41"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:44"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:44"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:45"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:45"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:45"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:45"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:48"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:48"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:48"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:50"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:50"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:52"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:52"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:52"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:55"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:56"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:56"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:59"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:00:59"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:00"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:02"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:02"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:03"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:04"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:04"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:06"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:06"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:07"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:07"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:07"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:07"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:16"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:17"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:17"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:19"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:19"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:20"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:20"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:20"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:20"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:52"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:53"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:53"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:55"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:55"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:56"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:56"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:56"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 23:01:56"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:02:31"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:02:31"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:02:31"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:02:33"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:02:34"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:02:34"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:02:36"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:02:36"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:02:36"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 23:02:39"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 23:02:39"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:02:40"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:02:40"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:02:40"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 23:02:40"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:02:54"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:02:55"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:02:55"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 23:02:59"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 23:02:59"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:03:00"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:03:00"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:03:00"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 23:03:00"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:03:27"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:03:27"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:03:27"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:03:28"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:03:29"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:03:29"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 23:03:31"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 23:03:31"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:03:32"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:03:32"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:03:32"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 23:03:32"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:04:53"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:04:53"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:04:53"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 23:04:56"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 23:04:56"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:04:57"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:04:57"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:04:57"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 23:04:57"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:05:00"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:05:00"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:05:00"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 23:05:03"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 23:05:03"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:05:03"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:05:03"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:05:03"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 23:05:03"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:05:05"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:05:49"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:05:49"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:05:49"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 23:05:52"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 23:05:52"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:05:52"}
+{"level":"info","message":{"event":"chat_connected","isAdmin":false,"socketId":"mm7zuAL4OW6Ov4esAAAB"},"service":"tanzania-safari","timestamp":"2026-09-03 23:11:21"}
+{"level":"error","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"join_chat_error"},"service":"tanzania-safari","timestamp":"2026-09-03 23:11:21"}
+{"level":"info","message":{"event":"chat_disconnected","socketId":"mm7zuAL4OW6Ov4esAAAB"},"service":"tanzania-safari","timestamp":"2026-09-03 23:12:08"}
+{"level":"info","message":{"event":"chat_connected","isAdmin":false,"socketId":"G-v7aUoqeMR3Qa24AAAD"},"service":"tanzania-safari","timestamp":"2026-09-03 23:12:32"}
+{"level":"error","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"join_chat_error"},"service":"tanzania-safari","timestamp":"2026-09-03 23:12:32"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:11"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:12"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:12"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:14"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:14"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:15"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:15"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:15"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:15"}
+{"level":"info","message":{"event":"chat_connected","isAdmin":false,"socketId":"xHTB8UgVNJUB5iDBAAAB"},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:15"}
+{"level":"error","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"join_chat_error"},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:15"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:17"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:18"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:18"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:20"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:20"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:21"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:21"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:21"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:21"}
+{"level":"info","message":{"event":"chat_connected","isAdmin":false,"socketId":"GCz3EnL-r_EuuczTAAAB"},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:22"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:23"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:23"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:23"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:26"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:27"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:27"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:30"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:30"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:31"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:31"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:31"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:31"}
+{"level":"info","message":{"event":"chat_connected","isAdmin":false,"socketId":"asIETh6no20rFNnCAAAB"},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:31"}
+{"level":"error","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"join_chat_error"},"service":"tanzania-safari","timestamp":"2026-09-03 23:13:31"}
+{"level":"info","message":{"event":"chat_disconnected","socketId":"asIETh6no20rFNnCAAAB"},"service":"tanzania-safari","timestamp":"2026-09-03 23:37:04"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:18"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:18"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:18"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:21"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:21"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:22"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:22"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:22"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:22"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:23"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:24"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:24"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:26"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:26"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:27"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:27"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:27"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:27"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:30"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:30"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:31"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:34"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:34"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:35"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:37"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:37"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:39"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:40"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:40"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:42"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:42"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:43"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:43"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:43"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:43"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:55"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:55"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:55"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:58"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:58"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:59"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:59"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:59"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 23:39:59"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:01"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:02"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:02"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:04"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:04"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:05"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:05"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:05"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:05"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:13"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:14"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:14"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:16"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:17"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:17"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:20"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:20"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:20"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:20"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:20"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:20"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:25"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:26"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:26"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:28"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:29"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:29"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:33"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:33"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:33"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:36"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:36"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:36"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:36"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:36"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:36"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:46"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:47"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:47"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:50"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:51"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:51"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:53"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:54"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:54"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:58"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:59"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:40:59"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 23:41:01"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 23:41:01"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:41:02"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:41:02"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:41:02"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 23:41:02"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:41:05"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:41:05"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:41:05"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 23:41:07"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 23:41:07"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:41:08"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:41:08"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:41:08"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 23:41:08"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:42:44"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:42:45"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:42:45"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:42:47"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:42:48"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:42:48"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 23:42:51"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 23:42:51"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:42:52"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:42:52"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:42:52"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 23:42:52"}
+{"level":"info","message":{"event":"redis_disabled"},"service":"tanzania-safari","timestamp":"2026-09-03 23:43:30"}
+{"level":"info","message":{"event":"server_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:43:30"}
+{"level":"warn","message":{"error":"SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string","event":"smtp_db_load_failed"},"service":"tanzania-safari","timestamp":"2026-09-03 23:43:30"}
+{"level":"info","message":{"event":"smtp_verified","host":"mail.privateemail.com","port":587},"service":"tanzania-safari","timestamp":"2026-09-03 23:43:33"}
+{"level":"info","message":{"event":"smtp_startup_ok"},"service":"tanzania-safari","timestamp":"2026-09-03 23:43:33"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:43:34"}
+{"level":"warn","message":{"event":"env_validation_warning","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:43:34"}
+{"level":"info","message":{"event":"worker_starting"},"service":"tanzania-safari","timestamp":"2026-09-03 23:43:34"}
+{"level":"info","message":{"environment":"development","event":"server_started","port":3000,"smtp":"connected"},"service":"tanzania-safari","timestamp":"2026-09-03 23:43:34"}
