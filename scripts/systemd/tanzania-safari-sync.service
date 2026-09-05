@@ -1,0 +1,10 @@
+[Unit]
+Description=Deploy tanzania-safari from GitHub main
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/var/www/tanzania_safari/scripts/deploy.sh
+WorkingDirectory=/var/www/tanzania_safari
+Nice=10
