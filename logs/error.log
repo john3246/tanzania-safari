@@ -223,3 +223,4 @@
 {"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:41:08"}
 {"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:42:52"}
 {"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-03 23:43:34"}
+{"level":"error","message":{"event":"env_validation_failed","missing":["EMAIL_HOST","EMAIL_PORT","EMAIL_USER","EMAIL_PASS","EMAIL_FROM"]},"service":"tanzania-safari","timestamp":"2026-09-05 15:15:18"}
