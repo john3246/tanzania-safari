@@ -59,28 +59,33 @@ function buildReminderHtml(booking, hoursOffset) {
 
 async function fetchEligibleBookings() {
   const since = new Date(Date.now() - WINDOW_MS - INTERVAL_MS);
-  try {
-    const result = await db.query(
-      `SELECT booking_id, email, customer_name, full_name, package_name, package_id,
-              start_date, travel_date, number_of_adults, number_of_children,
-              phone, created_at, booking_status, status
-       FROM bookings
-       WHERE created_at >= $1
-         AND email IS NOT NULL AND TRIM(email) <> ''
-       ORDER BY created_at ASC
-       LIMIT 200`,
-      [since]
-    );
-    return result.rows;
-  } catch (e) {
-    const result = await db.query(
-      `SELECT * FROM bookings
-       WHERE created_at >= $1 AND email IS NOT NULL
-       ORDER BY created_at ASC LIMIT 200`,
-      [since]
-    );
-    return result.rows;
-  }
+  const result = await db.query(
+    `SELECT b.booking_id,
+            u.email,
+            COALESCE(NULLIF(TRIM(CONCAT(u.first_name, ' ', u.last_name)), ''), 'Traveler') AS customer_name,
+            COALESCE(NULLIF(TRIM(CONCAT(u.first_name, ' ', u.last_name)), ''), 'Traveler') AS full_name,
+            sp.package_name,
+            b.package_id,
+            b.start_date,
+            b.start_date AS travel_date,
+            b.number_of_adults,
+            b.number_of_children,
+            u.phone,
+            b.created_at,
+            bs.status_name AS booking_status,
+            bs.status_code AS status
+     FROM bookings b
+     JOIN users u ON u.user_id = b.user_id
+     LEFT JOIN safari_packages sp ON sp.package_id = b.package_id
+     LEFT JOIN booking_statuses bs ON bs.status_id = b.status_id
+     WHERE b.created_at >= $1
+       AND u.email IS NOT NULL
+       AND TRIM(u.email) <> ''
+     ORDER BY b.created_at ASC
+     LIMIT 200`,
+    [since]
+  );
+  return result.rows;
 }
 
 function statusSkipsReminders(booking) {

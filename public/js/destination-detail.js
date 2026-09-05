@@ -238,196 +238,172 @@ function renderDestinationDetails(destination) {
     const pkgBadge = pkgCount > 0
         ? t('destDetail.packagesCount', { n: pkgCount })
         : t('destDetail.customSafaris');
+
+    const galleryImages = [];
+    if (Array.isArray(destination.gallery_urls)) galleryImages.push(...destination.gallery_urls);
+    if (Array.isArray(destination.image_urls)) {
+        destination.image_urls.forEach(u => { if (u && !galleryImages.includes(u)) galleryImages.push(u); });
+    }
+    if (destination.featured_image_url && !galleryImages.includes(destination.featured_image_url)) galleryImages.unshift(destination.featured_image_url);
+    if (destination.image_url && !galleryImages.includes(destination.image_url)) galleryImages.unshift(destination.image_url);
+    if (isSerengeti) {
+        ['/images/optimized/serengeti-national-park.webp', '/images/optimized/serengeti5.webp', '/images/optimized/zebra%20serengeti.webp', '/images/optimized/8-day-northern-serengeti-mara-river-crossing.webp'].forEach(u => { if (!galleryImages.includes(u)) galleryImages.push(u); });
+    }
+    if (isKilimanjaro) {
+        ['/images/optimized/mount-kilimanjaro-national-park.webp', '/images/optimized/6-day-machame-route-kilimanjaro.webp'].forEach(u => { if (!galleryImages.includes(u)) galleryImages.push(u); });
+    }
+    if (!galleryImages.length) galleryImages.push(heroImg);
+    const momentImgs = galleryImages.slice(0, 6);
+    const mosaicImgs = [galleryImages[0] || heroImg, galleryImages[1] || '/images/optimized/balloon.webp', galleryImages[2] || '/images/optimized/mbugani.webp'];
+    const descLead = String(description || '').replace(/\s+/g, ' ').trim().slice(0, 280);
+    const planHref = `/booking?interest=${encodeURIComponent(name)}`;
+    const waHref = `https://wa.me/255695108009?text=${encodeURIComponent("Hi Tanzania Safari Magic team, I'm interested in booking a custom safari package to " + name + "...")}`;
     
     const html = `
-        <section class="corp-page-hero">
-            <div class="hero-slideshow">
-                <div class="hero-slide active" style="background-image: url('${heroImg}');"></div>
-                <div class="hero-slide" style="background-image: url('/images/optimized/balloon.webp');"></div>
-                <div class="hero-slide" style="background-image: url('/images/optimized/mbugani.webp');"></div>
-            </div>
-            <div class="corp-page-hero-inner">
-                <div class="container">
-                    <div class="corp-breadcrumb">
-                        <a href="/">${escapeHtml(t('destDetail.home'))}</a><span>/</span><a href="/destinations">${escapeHtml(t('destDetail.destinations'))}</a><span>/</span><span>${escapeHtml(name)}</span>
-                    </div>
-                    <span class="corp-eyebrow">${escapeHtml(eyebrow)}</span>
-                    <h1 class="page-hero-title" style="color:#fff;margin:0">${escapeHtml(heroTitle)}</h1>
-                    <div style="display:flex;flex-wrap:wrap;gap:0.6rem;margin-top:1rem">
-                        <span class="badge" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;padding:0.4rem 0.85rem;border-radius:999px;font-size:0.8rem;font-weight:600"><i class="fas fa-map-marker-alt"></i> ${escapeHtml(t('destDetail.eastAfrica'))}</span>
-                        ${isUnesco ? `<span class="badge" style="background:var(--accent);color:#fff;padding:0.4rem 0.85rem;border-radius:999px;font-size:0.8rem;font-weight:600"><i class="fas fa-award"></i> ${escapeHtml(t('destDetail.unescoSite'))}</span>` : ''}
-                        <span class="badge" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;padding:0.4rem 0.85rem;border-radius:999px;font-size:0.8rem;font-weight:600"><i class="fas fa-binoculars"></i> ${escapeHtml(pkgBadge)}</span>
-                    </div>
+        <section class="y27-hero">
+            <div class="y27-hero-bg" style="background-image:url('${heroImg}')"></div>
+            <div class="container y27-hero-inner">
+                <nav class="corp-breadcrumb" aria-label="Breadcrumb">
+                    <a href="/">${escapeHtml(t('destDetail.home'))}</a><span>/</span><a href="/destinations">${escapeHtml(t('destDetail.destinations'))}</a><span>/</span><span>${escapeHtml(name)}</span>
+                </nav>
+                <p class="y27-eyebrow">${escapeHtml(eyebrow)}</p>
+                <h1>${escapeHtml(heroTitle)}</h1>
+                <p class="y27-hero-lead">${escapeHtml(descLead)}${description && description.length > 280 ? '…' : ''}</p>
+                <div class="y27-chips">
+                    <span class="y27-chip"><i class="fas fa-map-marker-alt"></i> ${escapeHtml(t('destDetail.eastAfrica'))}</span>
+                    ${isUnesco ? `<span class="y27-chip"><i class="fas fa-award"></i> ${escapeHtml(t('destDetail.unescoSite'))}</span>` : ''}
+                    <span class="y27-chip"><i class="fas fa-binoculars"></i> ${escapeHtml(pkgBadge)}</span>
+                    <span class="y27-chip"><i class="fas fa-clock"></i> ${escapeHtml(getRecommendedStay(name))} ${escapeHtml(t('destDetail.days'))}</span>
+                </div>
+                <div class="y27-hero-actions">
+                    <a class="btn btn-primary" href="${planHref}" style="min-height:48px"><i class="fas fa-calendar-alt"></i> ${escapeHtml(t('destDetail.planVisit'))}</a>
+                    <a class="btn btn-secondary" href="${waHref}" target="_blank" rel="noopener" style="min-height:48px"><i class="fab fa-whatsapp"></i> ${escapeHtml(t('destDetail.whatsappTeam'))}</a>
                 </div>
             </div>
         </section>
 
-        <section class="corp-section">
+        <section class="y27-status">
+            <div class="container y27-status-inner">
+                <div>
+                    <h2>${escapeHtml(name)}</h2>
+                    <p>${escapeHtml(getBestTimeText(bestMonths))} · ${escapeHtml(getClimate(name))}</p>
+                </div>
+                <a class="btn btn-secondary" href="#overview" style="min-height:48px">${escapeHtml(t('destDetail.planVisit'))} ↓</a>
+            </div>
+        </section>
+
+        <section class="y27-section" id="moments">
             <div class="container">
-                <div class="corp-detail-grid${isGuideDest ? ' dest-layout-ngoro' : ''}">
-                    <div class="dest-main-col">
-                        ${!(isGuideDest && guide) ? `
-                        <div class="corp-panel content-section" style="margin-bottom:1.25rem">
-                            <h2>${escapeHtml(t('destDetail.about', { name }))}</h2>
-                            <p style="font-size:1.05rem;line-height:1.8;color:var(--text-secondary);margin:0">${escapeHtml(description)}</p>
-                        </div>` : ''}
-
-                        <div class="corp-panel content-section" style="margin-bottom:1.25rem">
-                            <h2>${escapeHtml(t('destDetail.photoGallery'))}</h2>
-                            ${(() => {
-                                const images = [];
-                                if (Array.isArray(destination.gallery_urls)) images.push(...destination.gallery_urls);
-                                if (Array.isArray(destination.image_urls)) {
-                                    destination.image_urls.forEach(u => { if (u && !images.includes(u)) images.push(u); });
-                                }
-                                if (destination.featured_image_url && !images.includes(destination.featured_image_url)) images.unshift(destination.featured_image_url);
-                                if (destination.image_url && !images.includes(destination.image_url)) images.unshift(destination.image_url);
-                                if (isSerengeti) {
-                                    const extras = [
-                                        '/images/optimized/serengeti-national-park.webp',
-                                        '/images/optimized/serengeti5.webp',
-                                        '/images/optimized/zebra%20serengeti.webp',
-                                        '/images/optimized/8-day-northern-serengeti-mara-river-crossing.webp',
-                                        '/images/destinations/serengeti-national-park/serengeti.jpg',
-                                        '/images/destinations/serengeti-national-park/serengeti2.jpeg',
-                                        'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Wildebeest_Migration_Masai_Mara.jpg/1280px-Wildebeest_Migration_Masai_Mara.jpg'
-                                    ];
-                                    extras.forEach(u => { if (u && !images.includes(u)) images.push(u); });
-                                }
-                                if (isKilimanjaro) {
-                                    const extras = [
-                                        '/images/optimized/mount-kilimanjaro-national-park.webp',
-                                        '/images/optimized/6-day-machame-route-kilimanjaro.webp',
-                                        'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Kilimanjaro_from_Amboseli.jpg/1280px-Kilimanjaro_from_Amboseli.jpg',
-                                        'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Mount_Kilimanjaro.jpg/1280px-Mount_Kilimanjaro.jpg'
-                                    ];
-                                    extras.forEach(u => { if (u && !images.includes(u)) images.push(u); });
-                                }
-                                if (!images.length && slug) images.push(`/images/destinations/${slug}/main.jpg`, `/images/optimized/${slug}.webp`);
-                                if (!images.length) images.push(heroImg);
-                                if (images.length > 0) {
-                                    return `
-                                        <div class="gallery corp-gallery">
-                                            <div class="gallery-main" onclick="openLightbox('${imgSrc(images[0])}')">
-                                                <img src="${imgSrc(images[0])}" alt="${escapeHtml(t('destDetail.galleryAlt', { name }))}" width="1200" height="675" loading="eager" decoding="async">
-                                            </div>
-                                            ${images.length > 1 ? `
-                                            <div class="gallery-thumbs">
-                                                ${images.slice(1, 5).map((url, i) => `
-                                                    <div class="gallery-thumb" onclick="document.querySelector('.gallery-main img').src='${imgSrc(url)}'; document.querySelector('.gallery-main').setAttribute('onclick', 'openLightbox(\\'${imgSrc(url)}\\')')">
-                                                        <img src="${imgSrc(url)}" alt="${escapeHtml(t('destDetail.galleryN', { name, n: i + 1 }))}" width="400" height="300" loading="lazy" decoding="async">
-                                                    </div>
-                                                `).join('')}
-                                            </div>` : ''}
-                                        </div>`;
-                                }
-                                return `<p style="color:var(--text-muted)">${escapeHtml(t('destDetail.photosSoon'))}</p>`;
-                            })()}
-                        </div>
-
-                        <div id="lightbox" class="lightbox" onclick="closeLightbox()">
-                            <button class="lightbox-close" type="button">&times;</button>
-                            <img id="lightboxImg" src="" alt="${escapeHtml(t('destDetail.enlargedView'))}">
-                        </div>
-
-                        <div class="corp-panel content-section" style="margin-bottom:1.25rem">
-                            <h2>${escapeHtml(t('destDetail.quickFacts'))}</h2>
-                            <div class="corp-facts">
-                                ${facts.map(fact => `
-                                    <div class="corp-fact">
-                                        <i class="fas ${fact.icon}"></i>
-                                        <div>
-                                            <h4 style="margin:0 0 0.25rem;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted)">${escapeHtml(fact.label)}</h4>
-                                            <p style="margin:0;font-weight:700;color:var(--earth-dark)">${escapeHtml(fact.value)}</p>
-                                        </div>
-                                    </div>
-                                `).join('')}
+                <span class="y27-kicker">${escapeHtml(t('destDetail.photoGallery'))}</span>
+                <h2 class="y27-h">${escapeHtml(t('destDetail.photoGallery'))}</h2>
+                <div class="y27-moments">
+                    ${momentImgs.map((url, i) => `
+                        <article class="y27-moment">
+                            <img src="${imgSrc(url)}" alt="${escapeHtml(t('destDetail.galleryN', { name, n: i + 1 }))}" width="800" height="500" loading="${i === 0 ? 'eager' : 'lazy'}" decoding="async" onclick="openLightbox('${imgSrc(url)}')">
+                            <div class="y27-moment-body">
+                                <div class="y27-num">${String(i + 1).padStart(2, '0')}</div>
+                                <h3>${escapeHtml(name)}</h3>
+                                <span class="y27-pin"><i class="fas fa-map-marker-alt"></i> ${escapeHtml(t('destDetail.tanzania'))}</span>
                             </div>
-                        </div>
-
-                        ${!(isGuideDest && guide) ? `
-                        <div class="corp-panel content-section" style="margin-bottom:1.25rem">
-                            <h2>${escapeHtml(t('destDetail.bestTime'))}</h2>
-                            <div class="months-grid">
-                                ${months.map((month, index) => `
-                                    <div class="month ${bestMonths[index]}">${escapeHtml(month)}</div>
-                                `).join('')}
-                            </div>
-                            <div class="legend">
-                                <div class="legend-item"><div class="legend-color excellent"></div><span>${escapeHtml(t('destDetail.excellent'))}</span></div>
-                                <div class="legend-item"><div class="legend-color good"></div><span>${escapeHtml(t('destDetail.good'))}</span></div>
-                                <div class="legend-item"><div class="legend-color poor"></div><span>${escapeHtml(t('destDetail.poor'))}</span></div>
-                            </div>
-                        </div>` : ''}
-
-                        ${isGuideDest && guide ? `
-                        <div class="dest-guide-panel blog-prose content-section" id="destinationGuidePanel" style="margin-bottom:1.25rem">
-                            ${guide.contentHtml()}
-                        </div>` : ''}
-
-                        <div class="corp-panel content-section" id="safariPackagesSection">
-                            <h2 id="packages-heading">${escapeHtml(t('destDetail.packagesFeaturing', { name }))}</h2>
-                            <div class="packages-grid" id="packagesGrid">
-                                <div class="loading-card">${escapeHtml(t('destDetail.loadingPackages'))}</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <aside class="corp-dest-sidebar">
-                        <div class="corp-book-card desktop-only">
-                            <h3 style="margin:0 0 1rem;font-size:1.15rem"><i class="fas fa-info-circle" style="color:var(--primary)"></i> ${escapeHtml(t('destDetail.atAGlance'))}</h3>
-                            <div class="corp-meta-list">
-                                <div class="corp-meta-row"><span><i class="fas fa-map-pin"></i> ${escapeHtml(t('destDetail.location'))}</span><strong>${escapeHtml(t('destDetail.tanzania'))}</strong></div>
-                                <div class="corp-meta-row"><span><i class="fas fa-calendar"></i> ${escapeHtml(t('destDetail.bestTime'))}</span><strong>${escapeHtml(getBestTimeText(bestMonths))}</strong></div>
-                                <div class="corp-meta-row"><span><i class="fas fa-clock"></i> ${escapeHtml(t('destDetail.stay'))}</span><strong>${escapeHtml(getRecommendedStay(name))} ${escapeHtml(t('destDetail.days'))}</strong></div>
-                                <div class="corp-meta-row"><span><i class="fas fa-temperature-high"></i> ${escapeHtml(t('destDetail.climate'))}</span><strong>${escapeHtml(getClimate(name))}</strong></div>
-                            </div>
-                            <button class="btn btn-primary btn-block" style="margin-bottom:0.75rem;min-height:48px" onclick="bookDestination('${escapeHtml(name)}')">
-                                <i class="fas fa-calendar-alt"></i> ${escapeHtml(t('destDetail.planVisit'))}
-                            </button>
-                            <a class="btn btn-outline btn-block" style="min-height:48px" target="_blank" rel="noopener"
-                               href="https://wa.me/255695108009?text=${encodeURIComponent("Hi Tanzania Safari Magic team, I'm interested in booking a custom safari package to " + name + "...")}">
-                                <i class="fab fa-whatsapp" style="color:#25D366"></i> ${escapeHtml(t('destDetail.whatsappTeam'))}
-                            </a>
-                            <div class="seo-trust-strip" style="justify-content:flex-start;margin-top:1rem">
-                                <div class="seo-trust-item"><i class="fab fa-tripadvisor" style="color:#00af87"></i> ${escapeHtml(t('destDetail.tripadvisor'))}</div>
-                                <div class="seo-trust-item"><i class="fas fa-certificate" style="color:#f59e0b"></i> ${escapeHtml(t('destDetail.tato'))}</div>
-                                <div class="seo-trust-item"><i class="fas fa-shield-alt" style="color:var(--primary)"></i> ${escapeHtml(t('destDetail.licensed'))}</div>
-                            </div>
-                        </div>
-                        ${isGuideDest ? `<div id="guideSideTocMount"></div>
-                        <div class="corp-panel" style="margin-bottom:1rem">
-                            <h3 style="margin:0 0 0.75rem;font-size:1rem">${escapeHtml(t('destDetail.planThisTrip'))}</h3>
-                            <ul style="margin:0;padding-left:1.1rem;line-height:1.85;font-size:0.92rem">
-                              <li><a href="/safaris">${escapeHtml(t('destDetail.allSafariPackages'))}</a></li>
-                              <li><a href="/kilimanjaro">${escapeHtml(t('destDetail.kiliClimbPackages'))}</a></li>
-                              <li><a href="/blog/great-wildebeest-migration">${escapeHtml(t('destDetail.migrationGuide'))}</a></li>
-                              <li><a href="/blog/tanzania-safari-cost">${escapeHtml(t('destDetail.costGuide'))}</a></li>
-                              <li><a href="/blog/tanzania-safari">${escapeHtml(t('destDetail.ultimateGuide'))}</a></li>
-                              ${isKilimanjaro
-                                ? `<li><a href="/destinations/serengeti-national-park">${escapeHtml(t('destDetail.addSerengeti'))}</a></li><li><a href="/destinations/ngorongoro-conservation-area">${escapeHtml(t('destDetail.addNgorongoro'))}</a></li><li><a href="/zanzibar">${escapeHtml(t('destDetail.zanzibarAfter'))}</a></li>`
-                                : (isSerengeti
-                                  ? `<li><a href="/destinations/ngorongoro-conservation-area">${escapeHtml(t('destDetail.combineNgorongoro'))}</a></li><li><a href="/destinations/mount-kilimanjaro-national-park">${escapeHtml(t('destDetail.climbKilimanjaro'))}</a></li>`
-                                  : `<li><a href="/destinations/serengeti-national-park">${escapeHtml(t('destDetail.combineSerengeti'))}</a></li><li><a href="/destinations/mount-kilimanjaro-national-park">${escapeHtml(t('destDetail.climbKilimanjaro'))}</a></li>`)}
-                              <li><a href="/booking?interest=${encodeURIComponent(name)}">${escapeHtml(t('destDetail.inquireQuote'))}</a></li>
-                              <li><a href="/contact">${escapeHtml(t('destDetail.contactUsNow'))}</a></li>
-                            </ul>
-                        </div>` : ''}
-                        <div class="corp-panel">
-                            <h3 style="margin:0 0 1rem;font-size:1.1rem"><i class="fas fa-lightbulb" style="color:var(--accent)"></i> ${escapeHtml(t('destDetail.travelTips'))}</h3>
-                            <ul id="travelTipsList" style="margin:0;padding-left:1.1rem;color:var(--text-secondary);line-height:1.7">${getTravelTips(name)}</ul>
-                        </div>
-                    </aside>
+                        </article>
+                    `).join('')}
                 </div>
             </div>
         </section>
 
-        <div class="mobile-sticky-booking" id="mobileStickyBooking">
-            <div>
-                <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase">${escapeHtml(t('destDetail.planVisitShort'))}</div>
-                <div class="price" style="font-size:1.05rem;font-weight:700">${escapeHtml(name)}</div>
+        <section class="y27-section alt" id="overview">
+            <div class="container y27-story-grid">
+                <div>
+                    <span class="y27-kicker">${escapeHtml(t('destDetail.about', { name }))}</span>
+                    ${!(isGuideDest && guide) ? `<h2 class="y27-h">${escapeHtml(t('destDetail.about', { name }))}</h2><p class="y27-intro">${escapeHtml(description)}</p>` : `<h2 class="y27-h">${escapeHtml(heroTitle)}</h2>`}
+                    ${!(isGuideDest && guide) ? `
+                    <h3 style="margin:0 0 0.75rem">${escapeHtml(t('destDetail.bestTime'))}</h3>
+                    <div class="months-grid">
+                        ${months.map((month, index) => `<div class="month ${bestMonths[index]}">${escapeHtml(month)}</div>`).join('')}
+                    </div>
+                    <div class="legend">
+                        <div class="legend-item"><div class="legend-color excellent"></div><span>${escapeHtml(t('destDetail.excellent'))}</span></div>
+                        <div class="legend-item"><div class="legend-color good"></div><span>${escapeHtml(t('destDetail.good'))}</span></div>
+                        <div class="legend-item"><div class="legend-color poor"></div><span>${escapeHtml(t('destDetail.poor'))}</span></div>
+                    </div>` : ''}
+                </div>
+                <aside class="y27-facts">
+                    <h3>${escapeHtml(t('destDetail.atAGlance'))}</h3>
+                    <div class="y27-fact"><span>${escapeHtml(t('destDetail.location'))}</span><strong>${escapeHtml(t('destDetail.tanzania'))}</strong></div>
+                    <div class="y27-fact"><span>${escapeHtml(t('destDetail.bestTime'))}</span><strong>${escapeHtml(getBestTimeText(bestMonths))}</strong></div>
+                    <div class="y27-fact"><span>${escapeHtml(t('destDetail.stay'))}</span><strong>${escapeHtml(getRecommendedStay(name))} ${escapeHtml(t('destDetail.days'))}</strong></div>
+                    <div class="y27-fact"><span>${escapeHtml(t('destDetail.climate'))}</span><strong>${escapeHtml(getClimate(name))}</strong></div>
+                    ${facts.map(fact => `<div class="y27-fact"><span>${escapeHtml(fact.label)}</span><strong>${escapeHtml(fact.value)}</strong></div>`).join('')}
+                    <a class="btn btn-secondary" href="${planHref}" style="min-height:48px">${escapeHtml(t('destDetail.planVisit'))}</a>
+                </aside>
             </div>
-            <a href="/booking?interest=${encodeURIComponent(name)}" class="btn btn-primary" style="min-height:48px">${escapeHtml(t('destDetail.inquire'))}</a>
+        </section>
+
+        <section class="y27-section">
+            <div class="container y27-why-grid">
+                <div>
+                    <span class="y27-kicker">${escapeHtml(t('destDetail.travelTips'))}</span>
+                    <h2 class="y27-h">${escapeHtml(t('destDetail.travelTips'))}</h2>
+                    <ul class="y27-why-list" id="travelTipsList">${getTravelTips(name)}</ul>
+                    ${isGuideDest ? `
+                    <div id="guideSideTocMount"></div>
+                    <ul style="margin:1.25rem 0 0;padding-left:1.1rem;line-height:1.85;font-size:0.95rem">
+                      <li><a href="/safaris">${escapeHtml(t('destDetail.allSafariPackages'))}</a></li>
+                      <li><a href="/kilimanjaro">${escapeHtml(t('destDetail.kiliClimbPackages'))}</a></li>
+                      <li><a href="/booking?interest=${encodeURIComponent(name)}">${escapeHtml(t('destDetail.inquireQuote'))}</a></li>
+                    </ul>` : ''}
+                </div>
+                <div class="y27-mosaic" aria-hidden="true">
+                    <img src="${imgSrc(mosaicImgs[0])}" alt="" width="700" height="500" loading="lazy">
+                    <img src="${imgSrc(mosaicImgs[1])}" alt="" width="400" height="250" loading="lazy">
+                    <img src="${imgSrc(mosaicImgs[2])}" alt="" width="400" height="250" loading="lazy">
+                </div>
+            </div>
+        </section>
+
+        ${isGuideDest && guide ? `
+        <section class="y27-section alt">
+            <div class="container">
+                <div class="dest-guide-panel blog-prose content-section" id="destinationGuidePanel">
+                    ${guide.contentHtml()}
+                </div>
+            </div>
+        </section>` : ''}
+
+        <section class="y27-section" id="safariPackagesSection">
+            <div class="container">
+                <span class="y27-kicker">${escapeHtml(t('destDetail.packagesFeaturing', { name }))}</span>
+                <h2 class="y27-h" id="packages-heading">${escapeHtml(t('destDetail.packagesFeaturing', { name }))}</h2>
+                <div class="packages-grid y27-related-grid" id="packagesGrid">
+                    <div class="loading-card">${escapeHtml(t('destDetail.loadingPackages'))}</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="y27-section alt">
+            <div class="container">
+                <div class="y27-cta">
+                    <div>
+                        <h2>${escapeHtml(t('destDetail.planVisit'))} ${escapeHtml(name)}</h2>
+                        <p>${escapeHtml(t('destDetail.customSafarisDesc') || 'Tell us your dates and party size. Our team in Arusha replies, usually in under 60 seconds on WhatsApp.')}</p>
+                    </div>
+                    <div class="y27-cta-actions">
+                        <a class="btn btn-primary" href="${planHref}" style="min-height:48px">${escapeHtml(t('destDetail.inquire'))}</a>
+                        <a class="btn btn-outline" href="${waHref}" target="_blank" rel="noopener" style="min-height:48px;border-color:rgba(255,255,255,0.85);color:#fff">WhatsApp</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div id="relatedDestinationsMount"></div>
+
+        <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+            <button class="lightbox-close" type="button">&times;</button>
+            <img id="lightboxImg" src="" alt="${escapeHtml(t('destDetail.enlargedView'))}">
+        </div>
+
+        <div class="y27-sticky" id="mobileStickyBooking">
+            <a href="${planHref}">${escapeHtml(t('destDetail.inquire'))} · ${escapeHtml(name)}</a>
         </div>
     `;
     
@@ -956,31 +932,17 @@ async function loadSafariPackagesForDestination(destinationName, slug) {
                     const avgRating = parseFloat(pkg.avg_rating || 0).toFixed(1);
                     const pkgImg = imgSrc(pkg.featured_image_url || pkg.image_urls?.[0], '/images/optimized/balloon.webp');
                     return `
-                        <div class="package-card" onclick="window.location.href='/safaris/${pkg.package_slug}'">
-                            <div class="package-card-image">
-                                <img src="${pkgImg}" alt="${escapeHtml(pkg.package_name)}" loading="lazy" decoding="async">
-                                <div class="package-card-badge">${escapeHtml(pkg.category_name || t('destDetail.safariPackage'))}</div>
-                            </div>
-                            <div class="package-card-header">
+                        <a class="y27-related-card" href="/safaris/${pkg.package_slug}">
+                            <img src="${pkgImg}" alt="${escapeHtml(pkg.package_name)}" loading="lazy" decoding="async" onerror="this.src='/images/optimized/balloon.webp'">
+                            <div class="y27-related-body">
                                 <h3>${escapeHtml(pkg.package_name)}</h3>
-                                <p>${escapeHtml(t('destDetail.daysAdventure', { n: pkg.duration_days }))}</p>
+                                <p style="margin:0 0 0.5rem;color:var(--text-secondary);font-size:0.9rem">${escapeHtml(t('destDetail.daysAdventure', { n: pkg.duration_days }))}</p>
+                                <div style="display:flex;justify-content:space-between;gap:0.75rem;font-size:0.9rem;font-weight:700">
+                                    <span>$${parseInt(pkg.base_price_usd || 0).toLocaleString()}</span>
+                                    <span style="color:var(--text-muted);font-weight:600"><i class="fas fa-star" style="color:var(--accent)"></i> ${escapeHtml(avgRating)}</span>
+                                </div>
                             </div>
-                            <div class="package-card-body">
-                                <div class="package-duration">
-                                    <i class="fas fa-clock"></i>
-                                    <span>${escapeHtml(t('destDetail.daysN', { n: pkg.duration_days }))}</span>
-                                </div>
-                                <div class="package-price">
-                                    $${parseInt(pkg.base_price_usd || 0).toLocaleString()}
-                                    <span style="font-size: 0.8rem;">${escapeHtml(t('destDetail.perPerson'))}</span>
-                                </div>
-                                <div class="package-rating">
-                                    <i class="fas fa-star" style="color: #ffc107;"></i>
-                                    <span>${escapeHtml(t('destDetail.reviewsCount', { rating: avgRating, n: pkg.review_count || 0 }))}</span>
-                                </div>
-                                <button class="btn-view-package">${escapeHtml(t('destDetail.viewDetails'))}</button>
-                            </div>
-                        </div>
+                        </a>
                     `;
                 }).join('');
             } else {
@@ -1015,45 +977,30 @@ async function loadSafariPackagesForDestination(destinationName, slug) {
 
 async function loadRelatedDestinations(currentId, currentSlug) {
     document.querySelectorAll('.related-destinations').forEach(el => el.remove());
-
-    const relatedGrid = document.getElementById('relatedGrid');
-    if (!relatedGrid) {
-        // related section is injected after main content; continue without relatedGrid
-    }
+    const mount = document.getElementById('relatedDestinationsMount');
     
     try {
         const result = await API.getDestinations();
         if (result && result.success && result.data) {
-            const related = result.data.filter(dest => (dest.park_slug || dest.slug) !== currentSlug).slice(0, 3);
+            const related = result.data.filter(dest => (dest.park_slug || dest.slug) !== currentSlug).slice(0, 6);
             
             if (related.length > 0) {
                 const html = `
-                    <section class="related-destinations">
+                    <section class="y27-section related-destinations">
                         <div class="container">
-                            <div class="section-header">
-                                <span class="section-subtitle">${escapeHtml(t('destDetail.youMightLike'))}</span>
-                                <h2 class="section-title">${escapeHtml(t('destDetail.otherDestinations'))}</h2>
-                            </div>
-                            <div class="related-grid">
+                            <span class="y27-kicker">${escapeHtml(t('destDetail.youMightLike'))}</span>
+                            <h2 class="y27-h">${escapeHtml(t('destDetail.otherDestinations'))}</h2>
+                            <div class="y27-related-grid">
                                 ${related.map(dest => {
                                     const rName = dest.park_name || dest.name || t('destDetail.destinations');
                                     const rSlug = dest.park_slug || dest.slug || '';
-                                    let iconClass = 'fa-tree';
-                                    if (rName.toLowerCase().includes('serengeti')) iconClass = 'fa-paw';
-                                    else if (rName.toLowerCase().includes('kilimanjaro')) iconClass = 'fa-mountain';
-                                    else if (rName.toLowerCase().includes('zanzibar')) iconClass = 'fa-umbrella-beach';
-                                    
+                                    const rImg = imgSrc(dest.featured_image_url || dest.image_url || dest.gallery_urls?.[0], '/images/optimized/serengeti-national-park.webp');
                                     return `
-                                        <a class="related-card" href="/destinations/${rSlug}" style="text-decoration:none;color:inherit">
-                                            <div class="related-card-image">
-                                                <i class="fas ${iconClass}"></i>
-                                            </div>
-                                            <div class="related-card-content">
+                                        <a class="y27-related-card" href="/destinations/${rSlug}">
+                                            <img src="${rImg}" alt="${escapeHtml(rName)}" loading="lazy" onerror="this.src='/images/optimized/balloon.webp'">
+                                            <div class="y27-related-body">
                                                 <h3>${escapeHtml(rName)}</h3>
-                                                <p>${escapeHtml(dest.park_description || dest.description || dest.short_description || t('destDetail.discoverAmazing'))}</p>
-                                                <div class="related-stats">
-                                                    <span><i class="fas fa-binoculars"></i> ${escapeHtml(t('destDetail.safarisCount', { n: dest.safari_count || dest.tour_count || 0 }))}</span>
-                                                </div>
+                                                <p style="margin:0;color:var(--text-secondary);font-size:0.9rem;line-height:1.5">${escapeHtml((dest.park_description || dest.description || dest.short_description || t('destDetail.discoverAmazing')).slice(0, 140))}</p>
                                             </div>
                                         </a>
                                     `;
@@ -1062,11 +1009,11 @@ async function loadRelatedDestinations(currentId, currentSlug) {
                         </div>
                     </section>
                 `;
-                
-                // Insert after main content
-                const mainContent = document.getElementById('destinationDetailContent');
-                if (mainContent) {
-                    mainContent.insertAdjacentHTML('afterend', html);
+                if (mount) {
+                    mount.innerHTML = html;
+                } else {
+                    const mainContent = document.getElementById('destinationDetailContent');
+                    if (mainContent) mainContent.insertAdjacentHTML('beforeend', html);
                 }
             }
         }
@@ -1362,5 +1309,17 @@ function getTravelTips(name) {
             { icon: 'fa-umbrella', text: t('destDetail.tipDefault4') }
         ];
     }
-    return tips.map(tip => '<li><i class="fas ' + tip.icon + '"></i> ' + tip.text + '</li>').join('');
+    return tips.map(tip => '<li><i class="fas fa-check-circle"></i> ' + tip.text + '</li>').join('');
 }
+
+window.openLightbox = function(url) {
+    const box = document.getElementById('lightbox');
+    const img = document.getElementById('lightboxImg');
+    if (!box || !img) return;
+    img.src = url;
+    box.classList.add('active');
+};
+window.closeLightbox = function() {
+    const box = document.getElementById('lightbox');
+    if (box) box.classList.remove('active');
+};

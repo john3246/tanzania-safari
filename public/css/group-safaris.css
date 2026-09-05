@@ -2,16 +2,13 @@
 
 .group-hero {
   position: relative;
-  min-height: 80vh;
-  min-height: 80svh;
+  min-height: 92vh;
+  min-height: 92svh;
   display: flex;
   align-items: flex-end;
   color: #fff;
   overflow: hidden;
   background: #0f1a0e;
-}
-@media (max-width: 768px) {
-  .group-hero { min-height: 70vh; min-height: 70svh; }
 }
 .group-hero-bg {
   position: absolute;
@@ -24,13 +21,13 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(15,26,14,0.15) 0%, rgba(15,26,14,0.78) 100%);
+  background: linear-gradient(180deg, rgba(15,26,14,0.06) 0%, rgba(15,26,14,0.18) 45%, rgba(15,26,14,0.48) 100%);
 }
 .group-hero-inner {
   position: relative;
   z-index: 2;
-  padding: calc(var(--site-header-offset, 92px) + 3rem) 0 3rem;
-  max-width: 720px;
+  padding: calc(var(--site-header-offset, 132px) + 2.5rem) 0 3.25rem;
+  max-width: 820px;
 }
 .group-hero h1 {
   margin: 0.4rem 0 0.75rem;

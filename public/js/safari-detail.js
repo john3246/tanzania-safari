@@ -84,20 +84,21 @@ function initMobileMenu() {
 
 function buildGallery(mediaItems) {
     if (!mediaItems || mediaItems.length === 0) {
-        return '<div class="gallery-main"><img src="/images/optimized/balloon.webp" alt="Gallery"></div>';
+        return '<article class="y27-moment"><img src="/images/optimized/balloon.webp" alt="Gallery"><div class="y27-moment-body"><h3>' + escapeHtml(t('safariDetail.safariImage')) + '</h3></div></article>';
     }
-    const mainImg = mediaItems[0];
-    const mainImgUrl = typeof mainImg === 'string' ? mainImg : mainImg.file_url;
-    let html = `<div class="gallery-main" onclick="openLightbox('${mainImgUrl}')"><img src="${mainImgUrl}" alt="${mainImg.alt_text || t('safariDetail.safariImage')}" loading="lazy" decoding="async" onerror="this.src='/images/optimized/balloon.webp'"></div>`;
-    if (mediaItems.length > 1) {
-        html += '<div class="gallery-thumbs">';
-        for (let i = 1; i < Math.min(mediaItems.length, 5); i++) {
-            const thumbUrl = typeof mediaItems[i] === 'string' ? mediaItems[i] : mediaItems[i].file_url;
-            html += `<div class="gallery-thumb" onclick="setGalleryMain('${thumbUrl}')"><img src="${thumbUrl}" alt="${t('safariDetail.thumbnail', { n: i })}" loading="lazy" decoding="async" onerror="this.src='/images/optimized/balloon.webp'"></div>`;
-        }
-        html += '</div>';
-    }
-    return html;
+    const items = mediaItems.slice(0, 6);
+    return items.map((item, i) => {
+        const url = typeof item === 'string' ? item : (item.file_url || item);
+        const alt = (typeof item === 'object' && item.alt_text) ? item.alt_text : t('safariDetail.safariImage');
+        const n = String(i + 1).padStart(2, '0');
+        return `<article class="y27-moment">
+            <img src="${escapeHtml(url)}" alt="${escapeHtml(alt)}" width="800" height="500" loading="${i === 0 ? 'eager' : 'lazy'}" decoding="async" onclick="openLightbox('${escapeHtml(url)}')" onerror="this.src='/images/optimized/balloon.webp'">
+            <div class="y27-moment-body">
+                <div class="y27-num">${n}</div>
+                <h3>${escapeHtml(alt)}</h3>
+            </div>
+        </article>`;
+    }).join('');
 }
 
 window.setGalleryMain = function(url) {
@@ -150,15 +151,21 @@ async function loadSafariDetails(slug) {
 }
 
 function renderSafariDetails(safari) {
+    const heroImgUrl = imgSrc(safari.featured_image_url || safari.image_urls?.[0], '/images/optimized/balloon.webp');
+    const heroBg = document.getElementById('heroBg');
+    if (heroBg) heroBg.style.backgroundImage = `url('${heroImgUrl}')`;
     const heroImg = document.getElementById('heroImg');
-    if(heroImg) heroImg.src = imgSrc(safari.featured_image_url || safari.image_urls?.[0], '/images/optimized/balloon.webp');
+    if (heroImg) heroImg.src = heroImgUrl;
     
     const heroTitle = document.getElementById('heroTitle');
-    if(heroTitle) heroTitle.textContent = safari.package_name;
+    if (heroTitle) heroTitle.textContent = safari.package_name;
+
+    const heroLead = document.getElementById('heroLead');
+    if (heroLead) heroLead.textContent = safari.short_description || safari.detailed_description || '';
 
     const hub = hubMeta(safari.category_slug);
     const breadcrumbName = document.getElementById('breadcrumbName');
-    if(breadcrumbName) breadcrumbName.textContent = safari.package_name;
+    if (breadcrumbName) breadcrumbName.textContent = safari.package_name;
     const breadcrumbHub = document.getElementById('breadcrumbHub');
     if (breadcrumbHub) {
         breadcrumbHub.href = hub.path;
@@ -168,36 +175,59 @@ function renderSafariDetails(safari) {
     if (eyebrow) eyebrow.textContent = hub.eyebrow;
     
     const heroBadge = document.getElementById('heroBadge');
-    if(heroBadge) {
+    if (heroBadge) {
         let badges = [];
-        if(safari.is_featured) badges.push('<span class="badge" style="background:var(--accent);color:#fff"><i class="fas fa-star"></i> ' + escapeHtml(t('safariDetail.featured')) + '</span>');
+        if (safari.is_featured) badges.push('<span class="y27-chip"><i class="fas fa-star"></i> ' + escapeHtml(t('safariDetail.featured')) + '</span>');
         badges.push(
-            '<a href="' + escapeHtml(hub.path) + '" class="badge" style="background:var(--primary);color:#fff;text-decoration:none"><i class="fas fa-tag"></i> ' +
+            '<a href="' + escapeHtml(hub.path) + '" class="y27-chip" style="text-decoration:none"><i class="fas fa-tag"></i> ' +
             escapeHtml(safari.category_name || hub.label) + '</a>'
         );
         heroBadge.innerHTML = badges.join(' ');
     }
+
+    const chips = document.getElementById('heroChips');
+    if (chips) {
+        const days = safari.duration_days || '';
+        const nights = safari.duration_nights || (safari.duration_days ? safari.duration_days - 1 : '');
+        const price = Number(safari.base_price_usd || safari.price || 0);
+        const parts = [];
+        if (days) parts.push(`<span class="y27-chip"><i class="fas fa-clock"></i> ${escapeHtml(String(days))} days · ${escapeHtml(String(nights))} nights</span>`);
+        if (price > 0) parts.push(`<span class="y27-chip"><i class="fas fa-dollar-sign"></i> From $${Math.round(price).toLocaleString()} pp</span>`);
+        if (safari.difficulty_level) parts.push(`<span class="y27-chip"><i class="fas fa-hiking"></i> ${escapeHtml(safari.difficulty_level)}</span>`);
+        const destNames = (safari.destinations || []).map(d => d.park_name || d.name).filter(Boolean);
+        if (destNames.length) parts.push(`<span class="y27-chip"><i class="fas fa-map-marker-alt"></i> ${escapeHtml(destNames.slice(0, 3).join(', '))}</span>`);
+        chips.innerHTML = parts.join('');
+    }
+
+    const statusBar = document.getElementById('safariStatusBar');
+    if (statusBar) {
+        statusBar.style.display = '';
+        const st = document.getElementById('statusTitle');
+        const sl = document.getElementById('statusLead');
+        if (st) st.textContent = safari.package_name;
+        if (sl) sl.textContent = (safari.duration_days ? safari.duration_days + '-day itinerary · ' : '') + (hub.label || 'Private safari from Arusha');
+    }
     
     const packageDesc = document.getElementById('packageDescription');
-    if(packageDesc) packageDesc.innerHTML = '<h2 style="font-family:var(--font-heading);margin-bottom:1rem">' + escapeHtml(t('safariDetail.aboutThisSafari')) + '</h2><p style="color:var(--text-secondary);line-height:1.7">' + escapeHtml(safari.detailed_description || safari.short_description || '') + '</p>';
+    if (packageDesc) packageDesc.innerHTML = '<h2 class="y27-h">' + escapeHtml(t('safariDetail.aboutThisSafari')) + '</h2><p class="y27-intro">' + escapeHtml(safari.detailed_description || safari.short_description || '') + '</p>';
     
     const packageHighlights = document.getElementById('packageHighlights');
-    if(packageHighlights && safari.highlights) {
+    if (packageHighlights && safari.highlights) {
         let hl = Array.isArray(safari.highlights) ? safari.highlights : safari.highlights.split('\n');
-        packageHighlights.innerHTML = '<h3 style="font-family:var(--font-heading);margin:1.5rem 0 1rem 0;">' + escapeHtml(t('safariDetail.highlights')) + '</h3><ul style="list-style:none;padding:0">' + 
-            hl.map(h => '<li style="margin-bottom:0.5rem;color:var(--earth-dark)"><i class="fas fa-check-circle" style="color:var(--primary);margin-right:0.5rem"></i>' + escapeHtml(h) + '</li>').join('') + '</ul>';
+        packageHighlights.innerHTML = '<span class="y27-kicker">' + escapeHtml(t('safariDetail.highlights')) + '</span><ul class="y27-why-list">' + 
+            hl.filter(Boolean).map(h => '<li><i class="fas fa-check-circle"></i>' + escapeHtml(h) + '</li>').join('') + '</ul>';
     }
     
     const packageDest = document.getElementById('packageDestinations');
-    if(packageDest && safari.destinations && safari.destinations.length > 0) {
-        packageDest.innerHTML = '<h3 style="font-family:var(--font-heading);margin-bottom:1rem;margin-top:2rem;">' + escapeHtml(t('safariDetail.destinationsVisited')) + '</h3>' + 
+    if (packageDest && safari.destinations && safari.destinations.length > 0) {
+        packageDest.innerHTML = '<h3 style="font-family:var(--font-heading);margin:1.5rem 0 1rem;">' + escapeHtml(t('safariDetail.destinationsVisited')) + '</h3>' + 
             safari.destinations.map(d => {
                 const name = d.park_name || d.name || 'Destination';
                 const slug = d.park_slug || d.slug || '';
                 if (!slug) {
-                    return '<span class="badge" style="background:var(--bg-secondary);color:var(--primary);padding:0.5rem 1rem;border-radius:20px;margin-right:0.5rem;font-size:0.9rem;display:inline-block;margin-bottom:0.5rem"><i class="fas fa-map-marker-alt" style="margin-right:0.5rem"></i>' + escapeHtml(name) + '</span>';
+                    return '<span class="y27-chip" style="background:var(--bg-secondary);color:var(--primary);border-color:rgba(70,91,45,0.15);margin:0 0.4rem 0.4rem 0">' + escapeHtml(name) + '</span>';
                 }
-                return '<a href="/destinations/' + escapeHtml(slug) + '" class="badge" style="background:var(--bg-secondary);color:var(--primary);padding:0.5rem 1rem;border-radius:20px;margin-right:0.5rem;font-size:0.9rem;display:inline-block;margin-bottom:0.5rem;text-decoration:none;transition:var(--transition)"><i class="fas fa-map-marker-alt" style="margin-right:0.5rem"></i>' + escapeHtml(name) + '</a>';
+                return '<a href="/destinations/' + escapeHtml(slug) + '" class="y27-chip" style="background:var(--bg-secondary);color:var(--primary);border-color:rgba(70,91,45,0.15);text-decoration:none;margin:0 0.4rem 0.4rem 0">' + escapeHtml(name) + '</a>';
             }).join('');
     } else if (packageDest) {
         packageDest.innerHTML = '';
@@ -206,24 +236,24 @@ function renderSafariDetails(safari) {
     renderInternalLinkBlock(safari);
     
     const galleryEl = document.getElementById('gallery');
-    if(galleryEl) {
+    if (galleryEl) {
         const imgs = safari.image_urls && safari.image_urls.length > 0 ? safari.image_urls : [safari.featured_image_url || '/images/optimized/balloon.webp'];
         galleryEl.innerHTML = buildGallery(imgs);
     }
     
     const itineraryList = document.getElementById('itineraryList');
-    if(itineraryList) itineraryList.innerHTML = renderItinerary(safari.itinerary);
+    if (itineraryList) itineraryList.innerHTML = renderItinerary(safari.itinerary);
     
     const includesList = document.getElementById('includesList');
-    if(includesList) includesList.innerHTML = (safari.included_features || safari.inclusions || []).map(i => '<li style="margin-bottom:0.75rem;display:flex;align-items:center;gap:0.75rem;color:var(--text-secondary)"><i class="fas fa-check" style="color:var(--success)"></i> ' + escapeHtml(i) + '</li>').join('');
+    if (includesList) includesList.innerHTML = (safari.included_features || safari.inclusions || []).map(i => '<li><i class="fas fa-check"></i> ' + escapeHtml(i) + '</li>').join('');
     
     const excludesList = document.getElementById('excludesList');
-    if(excludesList) excludesList.innerHTML = (safari.excluded_features || safari.exclusions || []).map(i => '<li style="margin-bottom:0.75rem;display:flex;align-items:center;gap:0.75rem;color:var(--text-secondary)"><i class="fas fa-times" style="color:var(--error)"></i> ' + escapeHtml(i) + '</li>').join('');
+    if (excludesList) excludesList.innerHTML = (safari.excluded_features || safari.exclusions || []).map(i => '<li><i class="fas fa-times"></i> ' + escapeHtml(i) + '</li>').join('');
     
     const reviewsList = document.getElementById('reviewsList');
-    if(reviewsList) {
-        if(safari.reviews && safari.reviews.length > 0) {
-            reviewsList.innerHTML = safari.reviews.map(r => '<div style="background:#fff;border:1px solid var(--border-light);padding:1.5rem;border-radius:12px;margin-bottom:1rem"><div style="color:var(--warning);margin-bottom:0.5rem">' + Array(5).fill().map((_,i)=>'<i class="fas fa-star' + (i<r.rating?'':'-o') + '"></i>').join('') + '</div><h4 style="margin:0 0 0.5rem 0;color:var(--earth-dark)">' + escapeHtml(r.review_title || t('safariDetail.greatSafari')) + '</h4><p style="color:var(--text-secondary);font-size:0.95rem">' + escapeHtml(r.comment) + '</p><div style="font-size:0.85rem;color:var(--text-muted);margin-top:1rem">' + escapeHtml(r.first_name) + ' - ' + new Date(r.created_at).toLocaleDateString() + '</div></div>').join('');
+    if (reviewsList) {
+        if (safari.reviews && safari.reviews.length > 0) {
+            reviewsList.innerHTML = safari.reviews.map(r => '<div class="y27-review"><div style="color:var(--accent);margin-bottom:0.5rem">' + Array(5).fill().map((_,i)=>'<i class="fas fa-star' + (i<r.rating?'':'-o') + '"></i>').join('') + '</div><h4 style="margin:0 0 0.5rem 0;color:var(--earth-dark)">' + escapeHtml(r.review_title || t('safariDetail.greatSafari')) + '</h4><p style="color:var(--text-secondary);font-size:0.95rem">' + escapeHtml(r.comment) + '</p><div style="font-size:0.85rem;color:var(--text-muted);margin-top:1rem">' + escapeHtml(r.first_name) + ' - ' + new Date(r.created_at).toLocaleDateString() + '</div></div>').join('');
         } else {
             reviewsList.innerHTML = '<p style="color:var(--text-muted)">' + escapeHtml(t('safariDetail.noReviews')) + '</p>';
         }
@@ -350,12 +380,14 @@ function applySafariSeo(safari) {
         ]));
     }
 
-    const wa = document.getElementById('waQuoteBtn');
-    if (wa) {
-        const msg = encodeURIComponent(`Hi Tanzania Safari Magic team, I'm interested in booking "${name}". Please send me a free quote.`);
-        wa.href = `https://wa.me/255695108009?text=${msg}`;
-        wa.innerHTML = '<i class="fab fa-whatsapp" style="color:#25D366"></i> WhatsApp Our Team';
-    }
+    const waMsg = encodeURIComponent(`Hi Tanzania Safari Magic team, I'm interested in booking "${name}". Please send me a free quote.`);
+    const waHref = `https://wa.me/255695108009?text=${waMsg}`;
+    ['waQuoteBtn', 'heroWaBtn', 'ctaWaBtn'].forEach((id) => {
+        const wa = document.getElementById(id);
+        if (wa) {
+            wa.href = waHref;
+        }
+    });
 }
 
 function renderSafariFaq(safari) {
@@ -618,15 +650,17 @@ function renderItinerary(items) {
         meals_included: item.meals_included
     }));
     normalized.sort((a, b) => a.day - b.day);
-    let html = '<div class="itinerary-timeline">';
+    let html = '';
     normalized.forEach(item => {
+        const num = String(item.day).padStart(2, '0');
         html += `
-        <div class="itinerary-item">
-            <div class="itinerary-day">${escapeHtml(t('safariDetail.dayN', { n: item.day }))}</div>
-            <div class="itinerary-title">${escapeHtml(item.title)}</div>
-            <div class="itinerary-desc">${escapeHtml(item.description).replace(/\n/g, '<br>')}</div>
-            <div class="itinerary-meta">
-        `;
+        <article class="y27-day">
+            <div class="y27-day-num">${escapeHtml(num)}</div>
+            <div>
+                <div class="y27-day-label">${escapeHtml(t('safariDetail.dayN', { n: item.day }))}</div>
+                <h3>${escapeHtml(item.title)}</h3>
+                <p>${escapeHtml(item.description).replace(/\n/g, '<br>')}</p>
+                <div class="y27-day-meta">`;
         if (item.accommodation) {
             html += `<span><i class="fas fa-bed"></i> ${escapeHtml(item.accommodation)}</span>`;
         }
@@ -637,9 +671,8 @@ function renderItinerary(items) {
         if (window.TSM_ACCOM && typeof window.TSM_ACCOM.cardsHtml === 'function') {
             html += window.TSM_ACCOM.cardsHtml(item);
         }
-        html += `</div>`;
+        html += `</div></article>`;
     });
-    html += '</div>';
     return html;
 }
 
@@ -667,16 +700,14 @@ async function loadRelatedSafaris(categorySlug, currentPackageId) {
                 const img = pkg.featured_image_url || pkg.image_url || (pkg.image_urls && pkg.image_urls[0]) || '/images/optimized/balloon.webp';
                 const href = pkg.is_group_tour ? `/group-safaris` : `/safaris/${pkg.package_slug}`;
                 return `
-                    <a href="${escapeHtml(href)}" class="related-card" style="display:block;text-decoration:none;color:inherit;border:1px solid var(--border-light);border-radius:8px;overflow:hidden;background:#fff">
-                        <div class="related-card-image" style="height:140px;overflow:hidden">
-                            <img src="${escapeHtml(img)}" alt="${escapeHtml(pkg.package_name || '')}" style="width:100%;height:100%;object-fit:cover" loading="lazy" onerror="this.src='/images/optimized/balloon.webp'">
-                        </div>
-                        <div class="related-card-content" style="padding:0.85rem 1rem 1rem">
-                            <h3 style="font-size:1rem;margin:0 0 0.4rem;font-family:var(--font-heading);color:var(--earth-dark)">${escapeHtml(pkg.package_name)}</h3>
-                            <p style="font-size:0.85rem;color:var(--text-secondary);margin:0 0 0.65rem;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${escapeHtml((pkg.short_description || t('safariDetail.relatedDesc')).slice(0, 120))}</p>
-                            <div class="related-card-meta" style="display:flex;justify-content:space-between;font-size:0.85rem">
-                                <span class="related-price" style="font-weight:700;color:var(--primary)">From $${parseInt(pkg.base_price_usd || 0).toLocaleString()}</span>
-                                <span class="related-duration" style="color:var(--text-muted)"><i class="fas fa-clock"></i> ${pkg.duration_days || ''} days</span>
+                    <a href="${escapeHtml(href)}" class="y27-related-card">
+                        <img src="${escapeHtml(img)}" alt="${escapeHtml(pkg.package_name || '')}" loading="lazy" onerror="this.src='/images/optimized/balloon.webp'">
+                        <div class="y27-related-body">
+                            <h3>${escapeHtml(pkg.package_name)}</h3>
+                            <p style="font-size:0.85rem;color:var(--text-secondary);margin:0 0 0.65rem;line-height:1.45">${escapeHtml((pkg.short_description || t('safariDetail.relatedDesc')).slice(0, 120))}</p>
+                            <div style="display:flex;justify-content:space-between;font-size:0.85rem">
+                                <span style="font-weight:700;color:var(--primary)">From $${parseInt(pkg.base_price_usd || 0).toLocaleString()}</span>
+                                <span style="color:var(--text-muted)"><i class="fas fa-clock"></i> ${pkg.duration_days || ''} days</span>
                             </div>
                         </div>
                     </a>`;
@@ -819,13 +850,26 @@ async function loadSafarisForDropdown() {
 }
 
 function renderCard(pkg) {
-    const formattedPrice = '$' + Number(pkg.base_price_usd).toLocaleString();
-    document.getElementById('cardPrice').textContent = formattedPrice;
+    const formattedPrice = '$' + Number(pkg.base_price_usd || 0).toLocaleString();
+    const priceEl = document.getElementById('cardPrice');
+    if (priceEl) priceEl.textContent = formattedPrice;
+    const ctaPrice = document.getElementById('ctaPrice');
+    if (ctaPrice) ctaPrice.innerHTML = formattedPrice + '<small>per person</small>';
+    const ctaTitle = document.getElementById('ctaTitle');
+    if (ctaTitle) ctaTitle.textContent = pkg.package_name || 'Ready to book this safari?';
     
     const mobilePriceEl = document.getElementById('mobilePrice');
     if (mobilePriceEl) mobilePriceEl.textContent = formattedPrice;
-    const mobileBookBtn = document.getElementById('mobileBookBtn');
-    if (mobileBookBtn) mobileBookBtn.href = `/booking?package=${pkg.package_slug}`;
+    const bookHref = `/booking?package=${encodeURIComponent(pkg.package_slug || '')}`;
+    ['bookBtn', 'heroBookBtn', 'ctaBookBtn', 'mobileBookBtn'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.href = bookHref;
+    });
+    const sticky = document.getElementById('mobileStickyBooking');
+    if (sticky && sticky.tagName === 'DIV') {
+        const a = sticky.querySelector('a') || document.getElementById('mobileBookBtn');
+        if (a) a.href = bookHref;
+    }
     if (typeof window.TSM_promoteMobileChrome === 'function') window.TSM_promoteMobileChrome();
 
     const meta = [
@@ -834,13 +878,12 @@ function renderCard(pkg) {
         { icon: 'fa-users', label: t('safariDetail.groupSize'), value: t('safariDetail.peopleRange', { min: pkg.minimum_pax || 1, max: pkg.maximum_pax || 12 }) },
         { icon: 'fa-star', label: t('detail.rating'), value: t('safariDetail.reviewsLabel', { rating: parseFloat(pkg.avg_rating || 0).toFixed(1), n: pkg.review_count || 0 }) },
     ];
-    document.getElementById('cardMeta').innerHTML = meta.map(m => `
-    <div class="detail-meta-row">
-      <span class="detail-meta-label"><i class="fas ${m.icon}"></i>${m.label}</span>
-      <span class="detail-meta-value">${m.value}</span>
+    const cardMeta = document.getElementById('cardMeta');
+    if (cardMeta) cardMeta.innerHTML = meta.map(m => `
+    <div class="y27-fact">
+      <span><i class="fas ${m.icon}"></i> ${m.label}</span>
+      <strong>${m.value}</strong>
     </div>`).join('');
-    const bookBtn = document.getElementById('bookBtn');
-    if (bookBtn) bookBtn.href = `/booking?package=${pkg.package_slug}`;
 }
 
 async function submitReview(event) {
@@ -962,15 +1005,14 @@ function escapeHtml(str) {
 
 window.openBookingModal = openBookingModal;
 window.submitReview = submitReview;
-
-// Tab interaction
-document.addEventListener('click', e => {
-    if (e.target.classList.contains('tab-btn')) {
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
-        e.target.classList.add('active');
-        const tabId = 'tab-' + e.target.dataset.tab;
-        const panel = document.getElementById(tabId);
-        if (panel) panel.classList.add('active');
-    }
-});
+window.openLightbox = function(url) {
+    const box = document.getElementById('lightbox');
+    const img = document.getElementById('lightboxImg');
+    if (!box || !img) return;
+    img.src = url;
+    box.classList.add('active');
+};
+window.closeLightbox = function() {
+    const box = document.getElementById('lightbox');
+    if (box) box.classList.remove('active');
+};
