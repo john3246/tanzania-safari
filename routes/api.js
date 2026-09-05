@@ -4,6 +4,9 @@ const safariController = require('../controllers/safariController');
 const { verifyUser } = require('../middleware/auth.middleware');
 const { validate } = require('../middleware/validate.middleware');
 const { contactSchema, newsletterSchema } = require('../validators/api.validators');
+const fs = require('fs');
+const path = require('path');
+const { tagFromExperienceFile } = require('../utils/experienceTags');
 
 // ── Sub-Routes ────────────────────────────────────────────────
 router.use('/packages',     require('./api/package.routes'));
@@ -13,6 +16,148 @@ router.use('/bookings',     require('./api/booking.routes'));
 router.use('/group-departures', require('./api/group-departures.routes'));
 router.use('/analytics', require('./api/analytics.routes'));
 router.use('/payments', require('./api/payments.routes'));
+
+function isExperiencePhotosDir(name) {
+    const n = String(name || '').toLowerCase().replace(/\s+/g, ' ').trim();
+    return (n.includes('experin') || n.includes('experienc')) && n.includes('photo');
+}
+
+function isOnGroundDir(name) {
+    const n = String(name || '').toLowerCase().replace(/\s+/g, ' ').trim();
+    return (n.includes('experin') || n.includes('experienc')) && n.includes('on ground');
+}
+
+function findNamedFolder(root, matchFn, depth = 0) {
+    if (depth > 3) return null;
+    let entries;
+    try {
+        entries = fs.readdirSync(root, { withFileTypes: true });
+    } catch {
+        return null;
+    }
+    for (const ent of entries) {
+        if (!ent.isDirectory() || ent.name.startsWith('.')) continue;
+        if (ent.name === 'node_modules' || ent.name === '.git') continue;
+        const full = path.join(root, ent.name);
+        if (matchFn(ent.name)) return full;
+        const nested = findNamedFolder(full, matchFn, depth + 1);
+        if (nested) return nested;
+    }
+    return null;
+}
+
+function webpDimensions(buf) {
+    if (buf.toString('ascii', 0, 4) !== 'RIFF' || buf.toString('ascii', 8, 12) !== 'WEBP') return null;
+    const t = buf.toString('ascii', 12, 16);
+    if (t === 'VP8X') return [1 + buf.readUIntLE(24, 3), 1 + buf.readUIntLE(27, 3)];
+    if (t === 'VP8 ') return [buf.readUInt16LE(26) & 0x3fff, buf.readUInt16LE(28) & 0x3fff];
+    if (t === 'VP8L') {
+        const b = buf.readUInt32LE(21);
+        return [(b & 0x3fff) + 1, ((b >> 14) & 0x3fff) + 1];
+    }
+    return null;
+}
+
+function jpegDimensions(buf) {
+    let i = 2;
+    while (i < buf.length - 8) {
+        if (buf[i] !== 0xff) { i += 1; continue; }
+        const marker = buf[i + 1];
+        if (marker === 0xc0 || marker === 0xc1 || marker === 0xc2) {
+            return [buf.readUInt16BE(i + 7), buf.readUInt16BE(i + 5)];
+        }
+        i += 2 + buf.readUInt16BE(i + 2);
+    }
+    return null;
+}
+
+function imageDimensions(absPath) {
+    try {
+        const buf = fs.readFileSync(absPath);
+        const ext = path.extname(absPath).toLowerCase();
+        if (ext === '.webp') return webpDimensions(buf);
+        if (ext === '.jpg' || ext === '.jpeg') return jpegDimensions(buf);
+    } catch {}
+    return null;
+}
+
+function isBannerFriendly(absPath) {
+    try {
+        const size = fs.statSync(absPath).size;
+        if (size < 90 * 1024) return false;
+        const dim = imageDimensions(absPath);
+        if (!dim || !dim[1]) return size >= 140 * 1024;
+        return dim[0] / dim[1] >= 1.28;
+    } catch {
+        return true;
+    }
+}
+
+function findExperienceFolder(root) {
+    return findNamedFolder(root, isExperiencePhotosDir);
+}
+
+function slidesFromFolder(dir) {
+    const IMAGE_EXT = /\.(jpe?g|png|webp|avif|gif)$/i;
+    const publicRoot = path.join(__dirname, '../public');
+    const uploadsRoot = path.join(__dirname, '../uploads');
+    return fs.readdirSync(dir)
+        .filter((name) => IMAGE_EXT.test(name) && !name.startsWith('.'))
+        .sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }))
+        .map((name) => {
+            const full = path.join(dir, name);
+            let src;
+            if (full.startsWith(publicRoot)) {
+                const rel = path.relative(publicRoot, full).split(path.sep).join('/');
+                src = '/' + rel.split('/').map(encodeURIComponent).join('/');
+            } else if (full.startsWith(uploadsRoot)) {
+                const rel = path.relative(uploadsRoot, full).split(path.sep).join('/');
+                src = '/uploads/' + rel.split('/').map(encodeURIComponent).join('/');
+            } else {
+                src = '/images/' + encodeURIComponent(path.basename(dir)) + '/' + encodeURIComponent(name);
+            }
+            return { src, tag: tagFromExperienceFile(name) };
+        });
+}
+
+router.get('/experiences-on-ground', (req, res) => {
+    const imagesRoot = path.join(__dirname, '../public/images');
+    const roots = [
+        path.join(imagesRoot, 'experinces on ground'),
+        path.join(imagesRoot, 'experiences on ground'),
+        path.join(imagesRoot, 'experinces-on-ground'),
+        path.join(imagesRoot, 'experiences-on-ground'),
+        findNamedFolder(imagesRoot, isOnGroundDir),
+        findNamedFolder(path.join(__dirname, '../uploads'), isOnGroundDir)
+    ].filter(Boolean);
+
+    const IMAGE_CHECK = /\.(jpe?g|png|webp|avif|gif)$/i;
+    for (const dir of roots) {
+        if (!fs.existsSync(dir)) continue;
+        try {
+            const slides = slidesFromFolder(dir)
+                .filter((s) => IMAGE_CHECK.test(s.src))
+                .map((s) => {
+                    const file = decodeURIComponent((s.src || '').split('/').pop() || '');
+                    const abs = path.join(dir, file);
+                    let bytes = 0;
+                    try { bytes = fs.statSync(abs).size; } catch {}
+                    return { ...s, _bytes: bytes, _abs: abs };
+                })
+                .filter((s) => isBannerFriendly(s._abs))
+                .sort((a, b) => b._bytes - a._bytes)
+                .map(({ src, tag }) => ({ src, tag }));
+            if (slides.length) return res.json({ success: true, slides });
+        } catch {}
+    }
+    try {
+        const jsonPath = path.join(__dirname, '../public/data/experiences-on-ground.json');
+        const data = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+        return res.json({ success: true, slides: Array.isArray(data) ? data : data.slides || [] });
+    } catch {
+        return res.json({ success: true, slides: [] });
+    }
+});
 
 // ── Stats ─────────────────────────────────────────────────────
 router.get('/stats', safariController.getGlobalStats || (async (req, res) => {

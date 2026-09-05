@@ -37,7 +37,7 @@
 
 <div class="guide-cta-box">
   <h2>Get a route recommendation</h2>
-  <p>Tell us your dates and hiking background. We usually reply within 2 hours with a Machame / Lemosho / Marangu fit and a live 2026 quote.</p>
+  <p>Tell us your dates and hiking background. We usually reply in under 60 seconds with a Machame / Lemosho / Marangu fit and a live 2026 quote.</p>
   <div class="guide-cta-actions">
     <a class="btn btn-primary" href="/booking" style="min-height:48px">Free climb quote</a>
     <a class="btn btn-outline" href="${TEAM.whatsapp}" target="_blank" rel="noopener" style="min-height:48px"><i class="fab fa-whatsapp"></i> WhatsApp Our Team</a>
@@ -90,7 +90,7 @@
 
 <div class="guide-cta-box">
   <h2>Match your 2026 climb</h2>
-  <p>WhatsApp +255 695 108 009 · We usually reply within 2 hours.</p>
+  <p>WhatsApp +255 695 108 009 · We usually reply in under 60 seconds.</p>
   <div class="guide-cta-actions">
     <a class="btn btn-primary" href="/booking" style="min-height:48px">Request climb quote</a>
     <a class="btn btn-outline" href="${TEAM.whatsapp}" target="_blank" rel="noopener" style="min-height:48px"><i class="fab fa-whatsapp"></i> WhatsApp Our Team</a>
@@ -102,7 +102,7 @@
   const FAQS = [
     { q: 'Which Kilimanjaro route is best for 7 days?', a: 'Machame in 7 days or Lemosho in 7–8 days are the usual 2026 picks for camping. Marangu uses huts and is often 5–6 days, which is shorter for acclimatisation.' },
     { q: 'Machame vs Lemosho — which should I book?', a: 'Book Lemosho if you can take the extra day and want a quieter start. Book 7-day Machame if you want the classic southern-circuit camping trail. Both beat a rushed 5-day itinerary for most climbers.' },
-    { q: 'How do I get a Kilimanjaro route quote from Arusha?', a: 'WhatsApp Tanzania Safari Magic at +255 695 108 009 with your dates and fitness notes, or use the booking form. We usually reply within 2 hours during East Africa daytime.' }
+    { q: 'How do I get a Kilimanjaro route quote from Arusha?', a: 'WhatsApp Tanzania Safari Magic at +255 695 108 009 with your dates and fitness notes, or use the booking form. We usually reply in under 60 seconds during East Africa daytime.' }
   ];
 
   global.KilimanjaroRouteComparisonGuide = { TEAM, META, FAQS, contentHtml, AUTHOR: { ...TEAM, name: META.author_name, displayName: 'Our Team' } };

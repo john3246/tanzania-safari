@@ -378,7 +378,7 @@ const PAGE_SEO = {
     en: {
       title: 'Book a Tanzania Safari 2026 | Free Quote — WhatsApp Us',
       description:
-        'Request a free Tanzania safari quote from Arusha. We usually reply within 2 hours on WhatsApp +255 695 108 009 — no payment to enquire.',
+        'Request a free Tanzania safari quote from Arusha. We usually reply in under 60 seconds on WhatsApp +255 695 108 009 — no payment to enquire.',
       keywords: 'book tanzania safari, safari quote arusha, inquire tanzania tour, private safari booking'
     },
     it: {
@@ -416,7 +416,7 @@ const PAGE_SEO = {
     en: {
       title: 'Contact Tanzania Safari Magic | WhatsApp +255 695 108 009',
       description:
-        'WhatsApp +255 695 108 009 — we usually reply within 2 hours. Free custom safari quote from Arusha. Email info@tanzaniasafarimagic.com.',
+        'WhatsApp +255 695 108 009 — we usually reply in under 60 seconds. Free custom safari quote from Arusha. Email info@tanzaniasafarimagic.com.',
       keywords: 'contact tanzania safari, arusha safari operator, whatsapp safari tanzania'
     },
     it: {

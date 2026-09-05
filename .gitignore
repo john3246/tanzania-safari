@@ -1,6 +1,9 @@
 .env
 .env.*
 !.env.example
+render.dump
+.render_db_url
+*.dump
 node_modules/
 logs/
 uploads/

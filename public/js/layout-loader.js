@@ -31,7 +31,7 @@ function ensureI18nLoaded() {
             return;
         }
         const s = document.createElement('script');
-        s.src = '/js/i18n.js?v=8';
+        s.src = '/js/i18n.js?v=9';
         s.onload = () => {
             if (window.TSM_i18n && window.TSM_i18n.ready) window.TSM_i18n.ready.then(resolve);
             else resolve();
@@ -680,11 +680,7 @@ function initFooter() {
             let currentSlide = 0;
             setInterval(() => {
                 currentSlide = (currentSlide + 1) % slides.length;
-                heroBg.style.opacity = '0.3';
-                setTimeout(() => {
-                    heroBg.src = slides[currentSlide];
-                    heroBg.style.opacity = '1';
-                }, 500);
+                heroBg.src = slides[currentSlide];
             }, 6000);
         }
     }

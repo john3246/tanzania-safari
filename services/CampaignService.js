@@ -122,25 +122,18 @@ async function getCampaignAudience() {
     console.warn('customers audience:', e.message);
   }
 
-  // Bookings
+  // Bookings — email lives on users, not bookings
   try {
     const books = await db.query(`
-      SELECT DISTINCT LOWER(email) AS email,
-             COALESCE(customer_name, full_name) AS full_name
-      FROM bookings
-      WHERE email IS NOT NULL AND TRIM(email) <> ''
+      SELECT DISTINCT LOWER(u.email) AS email,
+             COALESCE(NULLIF(TRIM(CONCAT(u.first_name, ' ', u.last_name)), ''), 'Traveler') AS full_name
+      FROM bookings b
+      JOIN users u ON u.user_id = b.user_id
+      WHERE u.email IS NOT NULL AND TRIM(u.email) <> ''
     `);
     for (const r of books.rows) add(r.email, r.full_name, 'booking');
   } catch (e) {
-    // column names may vary
-    try {
-      const books = await db.query(`
-        SELECT DISTINCT LOWER(email) AS email FROM bookings WHERE email IS NOT NULL AND email <> ''
-      `);
-      for (const r of books.rows) add(r.email, null, 'booking');
-    } catch (e2) {
-      console.warn('bookings audience:', e2.message);
-    }
+    console.warn('bookings audience:', e.message);
   }
 
   return Array.from(map.values());
@@ -298,7 +291,9 @@ async function buildContentCampaign(type, refId) {
 
   if (type === 'destination') {
     const r = await db.query(
-      `SELECT park_id, park_name, park_slug, short_description, featured_image_url
+      `SELECT park_id, park_name, park_slug,
+              park_description AS short_description,
+              COALESCE(image_urls[1], '/images/destinations/' || park_slug || '/main.jpg') AS featured_image_url
        FROM national_parks WHERE park_id::text = $1 OR park_slug = $1 LIMIT 1`,
       [String(refId)]
     );

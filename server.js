@@ -14,6 +14,11 @@ const apiRoutes   = require('./routes/api');
 const adminRoutes = require('./routes/admin');
 const imageRoutes = require('./routes/images');
 const { ensureGtagInHtml } = require('./utils/gtag');
+try {
+  require('./utils/syncHomeAssets').syncHomeAssets();
+} catch (e) {
+  console.warn('Home asset sync skipped:', e.message);
+}
 
 // Email system initialization
 const emailService = require('./services/email');
@@ -114,12 +119,6 @@ app.use(helmet({
                 "https://cdn.jsdelivr.net",
                 "https://tanzaniasafarimagic.com",
                 "https://www.tanzaniasafarimagic.com",
-                "https://tanzania-safari.onrender.com",
-                "http://localhost:3000",
-                "http://localhost:5173",
-                "ws://localhost:3000",
-                "wss://localhost:3000",
-                "wss://tanzania-safari.onrender.com",
                 "wss://tanzaniasafarimagic.com",
                 "wss://www.tanzaniasafarimagic.com",
                 "https://www.googletagmanager.com",
@@ -148,22 +147,23 @@ app.use(helmet({
 }));
 
 // Dynamic CORS configuration supporting multiple environments
-const allowedOrigins = process.env.ALLOWED_ORIGIN 
-    ? process.env.ALLOWED_ORIGIN.split(',') 
+const allowedOrigins = (process.env.ALLOWED_ORIGIN
+    ? process.env.ALLOWED_ORIGIN.split(',')
     : [
-        //'http://localhost:3000',
-        //'http://localhost:5173',
         'https://tanzaniasafarimagic.com',
         'https://www.tanzaniasafarimagic.com'
-      ];
+      ]
+).map((s) => s.trim()).filter(Boolean);
 
 app.use(cors({
     origin: function(origin, callback) {
-        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
+        if (!origin) return callback(null, true);
+        const normalized = origin.replace(/\/$/, '');
+        const host = normalized.replace(/^https?:\/\//i, '').split(':')[0].toLowerCase();
+        if (allowedOrigins.indexOf(normalized) !== -1 || host === 'tanzaniasafarimagic.com' || host === 'www.tanzaniasafarimagic.com') {
+            return callback(null, true);
         }
+        callback(new Error('Not allowed by CORS'));
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -177,7 +177,7 @@ app.use('/api/bookings', rateLimit({ windowMs: 60 * 60 * 1000, max: 30 }));
 app.use('/api/contact', rateLimit({ windowMs: 60 * 60 * 1000, max: 20 }));
 
 // ── Logging ───────────────────────────────────────────────────
-app.use(morgan('dev'));
+app.use(morgan(process.env.NODE_ENV === 'production' ? 'tiny' : 'dev'));
 
 // ── Body parsing ──────────────────────────────────────────────
 app.use(express.json({ limit: '10mb' }));
@@ -500,13 +500,15 @@ async function startServer() {
       logger.warn({ event: 'booking_reminder_start_failed', error: remErr.message }, 'Booking reminder job not started');
     }
 
-    server.listen(PORT, () => {
+    const HOST = process.env.HOST || '127.0.0.1';
+    server.listen(PORT, HOST, () => {
       logger.info({
         event: 'server_started',
         port: PORT,
+        host: HOST,
         environment: process.env.NODE_ENV || 'development',
         smtp: smtpConnected ? 'connected' : 'disconnected'
-      }, `Server running in ${process.env.NODE_ENV || 'development'} mode at http://localhost:${PORT}`);
+      }, `Server running in ${process.env.NODE_ENV || 'development'} mode at http://${HOST}:${PORT}`);
       
       console.log(`\nServer running in ${process.env.NODE_ENV || 'development'} mode at http://localhost:${PORT}`);
       console.log(`Admin Panel: http://localhost:${PORT}/admin/login`);

@@ -170,7 +170,7 @@ async function loadHomepage() {
             if (!slug || slug === 'all') {
                 const { data } = await API.get('/packages?limit=24&sort=random');
                 featuredPackages = shuffleList(data || []);
-                renderSafaris(featuredPackages, 4);
+                renderSafaris(featuredPackages, 6);
                 return;
             }
             const { data } = await API.get(`/packages?category=${encodeURIComponent(slug)}&limit=12&sort=random`);
@@ -248,7 +248,7 @@ async function loadHomepage() {
     try {
         const { data } = await API.get('/packages?limit=24&sort=random');
         featuredPackages = shuffleList(data || []);
-        renderSafaris(featuredPackages, 4);
+        renderSafaris(featuredPackages, 6);
         // Populate quick-book dropdown
         const sel = document.getElementById('quickBookPackage');
         if (sel && featuredPackages.length) {
@@ -314,7 +314,7 @@ function shuffleList(list) {
     return a;
 }
 
-function renderSafaris(packages, limit = 4) {
+function renderSafaris(packages, limit = 6) {
     const grid = document.getElementById('safarisGrid');
     if (!grid) return;
     if (!packages?.length) {
@@ -366,13 +366,172 @@ document.getElementById('newsletterForm')?.addEventListener('submit', async e =>
     }
 });
 
-document.querySelector('.search-filter-form')?.addEventListener('submit', (e) => {
-    const dest = e.target.querySelector('[name="destination"]')?.value;
-    if (dest === 'zanzibar') {
-        e.preventDefault();
-        window.location.href = '/zanzibar';
+const TOUR_LABEL_BY_KEY = {
+    'balloon': 'Hot Air Balloon',
+    'boat zanzibar': 'Dhow Cruise',
+    'chui hunting': 'Private Game Drive',
+    'chui juu yamti': 'Big Cat Safari',
+    'chui resting': 'Afternoon Game Drive',
+    'chui stuning': 'Luxury Game Drive',
+    'chui': 'Wilderness Safari',
+    'climbing mountain': 'Kilimanjaro Trek',
+    'faru attack': 'Crater Floor Drive',
+    'faru': 'Conservation Safari',
+    'flamingo': 'Lake Manyara',
+    'kiboko': 'Hippo Pool Stop',
+    'kifaru': 'Black Rhino Safari',
+    'kundi simba': 'Pride Country Drive',
+    'leopard wayowing': 'Evening Game Drive',
+    'lion hunt': 'Predator Safari',
+    'lion son': 'Family Safari',
+    'mbugani': 'Ngorongoro Safari',
+    'nyumbu 2': 'Calving Season',
+    'nyumbu': 'Herd Migration',
+    'on top on mount lion': 'Kopje Picnic',
+    'punda mlia': 'Plains Game Drive',
+    'scaterd nyumbu': 'Great Migration',
+    'serengeti chui': 'Serengeti Wilderness',
+    'simba on grass': 'Dawn Game Drive',
+    'starting crossing the river': 'River Crossing',
+    'swalaa': 'Savannah Drive',
+    'tembo 2': 'Wildlife Safari',
+    'tembo mkubwa': 'Elephant Country',
+    'tembo sere': 'Serengeti Game Drive',
+    'tembo': 'Waterhole Stop',
+    'tour car': '4x4 Game Drive',
+    'tumbili': 'Bush Walk',
+    'twiga crossing road': 'Safari Transfer',
+    'twiga eating': 'Tarangire Safari',
+    'twiga': 'Acacia Country',
+    'wamasai': 'Cultural Visit',
+    'zanzibar sunset': 'Island Sunset',
+    'zebra 2': 'Open Plains',
+    'zebra serengeti': 'Grassland Drive',
+    'ziwa': 'Lakeside Safari'
+};
+
+const TOUR_FALLBACKS = [
+    'Game Drive',
+    'Wildlife Safari',
+    'Cultural Visit',
+    'Bush Breakfast',
+    'Walking Safari',
+    'Scenic Transfer',
+    'Island Excursion',
+    'Mountain Trek'
+];
+
+function momentsFileKey(src) {
+    try {
+        return decodeURIComponent((src || '').split('/').pop() || '')
+            .replace(/\.[^.]+$/, '')
+            .replace(/[-_]+/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim()
+            .toLowerCase();
+    } catch {
+        return '';
     }
-});
+}
+
+function tagFromImageSrc(src) {
+    const key = momentsFileKey(src);
+    if (TOUR_LABEL_BY_KEY[key]) return TOUR_LABEL_BY_KEY[key];
+    let hash = 0;
+    for (let i = 0; i < key.length; i += 1) hash = (hash + key.charCodeAt(i) * (i + 1)) % TOUR_FALLBACKS.length;
+    return TOUR_FALLBACKS[hash] || 'Game Drive';
+}
+
+const FALLBACK_MOMENTS = [
+    { src: '/images/experinces%20on%20ground/chui%20juu%20yamti.webp', tag: 'Big Cat Safari' },
+    { src: '/images/experinces%20on%20ground/climbing%20mountain.webp', tag: 'Kilimanjaro Trek' },
+    { src: '/images/experinces%20on%20ground/wamasai.webp', tag: 'Cultural Visit' },
+    { src: '/images/experinces%20on%20ground/simba%20on%20grass.webp', tag: 'Dawn Game Drive' },
+    { src: '/images/experinces%20on%20ground/lion%20hunt.webp', tag: 'Predator Safari' },
+    { src: '/images/experinces%20on%20ground/boat%20zanzibar.webp', tag: 'Dhow Cruise' },
+    { src: '/images/experinces%20on%20ground/starting%20crossing%20the%20river.webp', tag: 'River Crossing' },
+    { src: '/images/experinces%20on%20ground/faru%20attack.webp', tag: 'Crater Floor Drive' }
+];
+
+function escapeMomentsText(value) {
+    return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+}
+
+async function loadMomentsSlides() {
+    const tryUrls = [
+        '/api/experiences-on-ground',
+        '/data/experiences-on-ground.json',
+        '/images/experinces%20on%20ground/manifest.json'
+    ];
+    for (const url of tryUrls) {
+        try {
+            const res = await fetch(url, { cache: 'no-cache' });
+            if (!res.ok) continue;
+            const data = await res.json();
+            const list = Array.isArray(data) ? data : (data.slides || data.data);
+            if (Array.isArray(list) && list.length) {
+                return list.map((s) => {
+                    const src = s.src || s.url || s.image || '';
+                    return { src, tag: tagFromImageSrc(src) };
+                }).filter((s) => s.src);
+            }
+        } catch {}
+    }
+    return FALLBACK_MOMENTS;
+}
+
+function initMomentsSlider(slides) {
+    const root = document.getElementById('homeMoments');
+    const track = document.getElementById('momentsSlides');
+    const tagLabel = document.getElementById('momentsTag');
+    if (!root || !track) return;
+    if (!slides?.length) {
+        root.hidden = true;
+        return;
+    }
+    root.hidden = false;
+
+    track.innerHTML = slides.map((s, i) => `
+      <div class="moments-slide${i === 0 ? ' active' : ''}" data-index="${i}">
+        <img src="${escapeMomentsText(s.src)}" alt="${escapeMomentsText(s.tag)}" loading="${i === 0 ? 'eager' : 'lazy'}" decoding="async">
+      </div>`).join('');
+
+    if (tagLabel) tagLabel.textContent = slides[0].tag;
+
+    let index = 0;
+    let timer = null;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const show = (n) => {
+        index = (n + slides.length) % slides.length;
+        track.querySelectorAll('.moments-slide').forEach((el, i) => el.classList.toggle('active', i === index));
+        if (tagLabel) tagLabel.textContent = slides[index].tag;
+    };
+    const start = () => {
+        stop();
+        if (reduceMotion || slides.length < 2) return;
+        timer = window.setInterval(() => show(index + 1), 5200);
+    };
+    const stop = () => {
+        if (timer) {
+            window.clearInterval(timer);
+            timer = null;
+        }
+    };
+
+    document.getElementById('momentsPrev')?.addEventListener('click', () => { show(index - 1); start(); });
+    document.getElementById('momentsNext')?.addEventListener('click', () => { show(index + 1); start(); });
+    root.addEventListener('mouseenter', stop);
+    root.addEventListener('mouseleave', start);
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) stop();
+        else start();
+    });
+    start();
+}
 
 // ── Init ───────────────────────────────────────────────────
 (async () => {
@@ -380,6 +539,18 @@ document.querySelector('.search-filter-form')?.addEventListener('submit', (e) =>
     if (window.TSM_i18n && window.TSM_i18n.ready) await window.TSM_i18n.ready;
   } catch (_) {}
   loadHomepage();
+  loadMomentsSlides().then(initMomentsSlider).catch(() => initMomentsSlider(FALLBACK_MOMENTS));
+  fetch('/data/dar-es-salaam.json', { cache: 'no-cache' })
+    .then((r) => (r.ok ? r.json() : null))
+    .then((d) => {
+      const el = document.getElementById('home-faq');
+      if (el && d && d.src) {
+        el.style.backgroundImage = "url('" + d.src + "')";
+        el.style.backgroundSize = 'cover';
+        el.style.backgroundPosition = 'center';
+      }
+    })
+    .catch(() => {});
 })();
 
 // -- Reveal Animations --

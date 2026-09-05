@@ -3,7 +3,41 @@
  * Fetches from DB safely and returns HTML fragments + schema-ready items
  * so Googlebot sees real links/copy before client JS hydrates.
  */
+const fs = require('fs');
+const path = require('path');
 const { escapeHtml, absoluteUrl, truncate, stripHtml, SITE } = require('./seoRender');
+
+const memo = new Map();
+function memoize(key, ttlMs, fn) {
+  const hit = memo.get(key);
+  if (hit && hit.value !== undefined && Date.now() - hit.ts < ttlMs) {
+    return Promise.resolve(hit.value);
+  }
+  if (hit && hit.pending) return hit.pending;
+  const pending = Promise.resolve()
+    .then(fn)
+    .then((value) => {
+      memo.set(key, { ts: Date.now(), value });
+      return value;
+    })
+    .catch((err) => {
+      memo.delete(key);
+      throw err;
+    });
+  memo.set(key, { ts: 0, pending });
+  return pending;
+}
+
+let layoutCache;
+function loadLayoutPartials() {
+  if (!layoutCache) {
+    layoutCache = {
+      header: fs.readFileSync(path.join(__dirname, '../public/includes/header.html'), 'utf8'),
+      footer: fs.readFileSync(path.join(__dirname, '../public/includes/footer.html'), 'utf8')
+    };
+  }
+  return layoutCache;
+}
 
 function safeImg(url, fallback = '/images/optimized/balloon.webp') {
   if (!url) return fallback;
@@ -28,7 +62,7 @@ async function withDb(fn, fallback) {
 }
 
 async function fetchFeaturedPackages(limit = 6) {
-  return withDb(async (db) => {
+  return memoize(`featured:${limit}`, 60000, () => withDb(async (db) => {
     const r = await db.query(
       `SELECT sp.package_id, sp.package_name, sp.package_slug, sp.short_description,
               sp.featured_image_url, sp.duration_days, sp.base_price_usd,
@@ -38,12 +72,12 @@ async function fetchFeaturedPackages(limit = 6) {
        LEFT JOIN reviews r ON r.package_id = sp.package_id AND r.is_approved = true
        WHERE sp.is_active = true
        GROUP BY sp.package_id
-       ORDER BY RANDOM()
+       ORDER BY sp.is_featured DESC NULLS LAST, sp.package_id DESC
        LIMIT $1`,
       [limit]
     );
     return r.rows || [];
-  }, []);
+  }, []));
 }
 
 async function fetchPackages(limit = 24) {
@@ -66,16 +100,18 @@ async function fetchPackages(limit = 24) {
 }
 
 async function fetchDestinations(limit = 24) {
-  return withDb(async (db) => {
+  return memoize(`destinations:${limit}`, 60000, () => withDb(async (db) => {
     const r = await db.query(
-      `SELECT park_id, park_name, park_slug, short_description, featured_image_url
+      `SELECT park_id, park_name, park_slug,
+              park_description AS short_description,
+              COALESCE(image_urls[1], '/images/destinations/' || park_slug || '/main.jpg') AS featured_image_url
        FROM national_parks
        ORDER BY park_name ASC
        LIMIT $1`,
       [limit]
     );
     return r.rows || [];
-  }, []);
+  }, []));
 }
 
 async function fetchPackageBySlug(slug) {
@@ -85,7 +121,7 @@ async function fetchPackageBySlug(slug) {
       r = await db.query(
         `SELECT sp.package_id, sp.package_name, sp.package_slug, sp.short_description, sp.detailed_description,
                 sp.featured_image_url, sp.duration_days, sp.base_price_usd, sp.meta_title, sp.meta_description,
-                sp.difficulty_level, sp.max_group_size, sp.included_features, sp.excluded_features,
+                sp.difficulty_level, sp.maximum_pax AS max_group_size, sp.included_features, sp.excluded_features,
                 COALESCE(AVG(rev.rating), 0) AS avg_rating,
                 COUNT(DISTINCT rev.review_id) AS review_count
          FROM safari_packages sp
@@ -99,7 +135,7 @@ async function fetchPackageBySlug(slug) {
       r = await db.query(
         `SELECT sp.package_id, sp.package_name, sp.package_slug, sp.short_description, sp.detailed_description,
                 sp.featured_image_url, sp.duration_days, sp.base_price_usd, sp.meta_title, sp.meta_description,
-                sp.difficulty_level, sp.max_group_size,
+                sp.difficulty_level, sp.maximum_pax AS max_group_size,
                 COALESCE(AVG(rev.rating), 0) AS avg_rating,
                 COUNT(DISTINCT rev.review_id) AS review_count
          FROM safari_packages sp
@@ -137,8 +173,12 @@ async function fetchPackageBySlug(slug) {
 async function fetchDestinationBySlug(slug) {
   return withDb(async (db) => {
     const r = await db.query(
-      `SELECT park_id, park_name, park_slug, short_description, detailed_description,
-              featured_image_url, meta_title, meta_description
+      `SELECT park_id, park_name, park_slug,
+              park_description AS short_description,
+              park_description AS detailed_description,
+              COALESCE(image_urls[1], '/images/destinations/' || park_slug || '/main.jpg') AS featured_image_url,
+              park_name AS meta_title,
+              park_description AS meta_description
        FROM national_parks
        WHERE park_slug = $1
        LIMIT 1`,
@@ -285,13 +325,14 @@ function destinationDetailSsrHtml(dest) {
   const img = safeImg(dest.featured_image_url, '/images/optimized/balloon.webp');
   // Keep id=destinationDetailContent so client JS can hydrate over this block
   return `<main id="destinationDetailContent" class="ssr-detail" data-ssr="1">
-  <header class="corp-page-hero" style="min-height:280px;position:relative;margin-bottom:1.5rem">
-    <div class="hero-slideshow"><div class="hero-slide active" style="background-image:url('${escapeHtml(img)}')" role="img" aria-label="${escapeHtml(altFor(name, 'Tanzania destination'))}"></div></div>
-    <div class="corp-page-hero-inner"><div class="container">
+  <header class="y27-hero" style="position:relative">
+    <div class="y27-hero-bg" style="background-image:url('${escapeHtml(img)}')" role="img" aria-label="${escapeHtml(altFor(name, 'Tanzania destination'))}"></div>
+    <div class="container y27-hero-inner">
       <div class="corp-breadcrumb"><a href="/">Home</a><span>/</span><a href="/destinations">Destinations</a><span>/</span><span>${escapeHtml(name)}</span></div>
-      <h1 class="page-hero-title" style="color:#fff;margin:0">${escapeHtml(name)}</h1>
-      <p style="max-width:40rem;margin:0.75rem 0 0;color:rgba(255,255,255,0.92)">${escapeHtml(truncate(desc, 180))}</p>
-    </div></div>
+      <p class="y27-eyebrow">Tanzania destination</p>
+      <h1>${escapeHtml(name)}</h1>
+      <p class="y27-hero-lead">${escapeHtml(truncate(desc, 180))}</p>
+    </div>
   </header>
   <div class="container" style="padding-bottom:2rem">
     <div class="corp-panel">
@@ -325,7 +366,7 @@ function toDestinationListItems(destinations) {
 }
 
 async function fetchReviewStats() {
-  return withDb(async (db) => {
+  return memoize('reviewStats', 120000, () => withDb(async (db) => {
     const r = await db.query(
       `SELECT COUNT(*)::int AS "reviewCount",
               ROUND(AVG(rating)::numeric, 1) AS "ratingValue"
@@ -337,13 +378,14 @@ async function fetchReviewStats() {
       reviewCount: Number(row.reviewCount || 0),
       ratingValue: Number(row.ratingValue || 0)
     };
-  }, { reviewCount: 0, ratingValue: 0 });
+  }, { reviewCount: 0, ratingValue: 0 }));
 }
 
 async function fetchApprovedReviews(limit = 6) {
-  return withDb(async (db) => {
+  return memoize(`reviews:${limit}`, 120000, () => withDb(async (db) => {
     const r = await db.query(
-      `SELECT first_name, last_name, rating, comment, review_comment, country
+      `SELECT first_name, last_name, rating, comment, review_comment,
+              NULL::varchar AS country
        FROM reviews
        WHERE is_approved = true
          AND rating BETWEEN 1 AND 5
@@ -353,7 +395,7 @@ async function fetchApprovedReviews(limit = 6) {
       [limit]
     );
     return r.rows || [];
-  }, []);
+  }, []));
 }
 
 module.exports = {
@@ -370,6 +412,7 @@ module.exports = {
   partnersListHtml,
   safariDetailSsrHtml,
   destinationDetailSsrHtml,
+  loadLayoutPartials,
   toTripListItems,
   toDestinationListItems,
   altFor,

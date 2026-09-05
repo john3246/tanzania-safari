@@ -243,50 +243,49 @@ a, button, [role="button"], input, select, textarea, label, summary, .btn {
   .header.header--zara .header-utility-chat { padding: 0.5rem 0.65rem; font-size: 0.72rem; }
 }
 
-/* ── Heroes: fluid, not viewport-eating on phones ──────────── */
+/* ── Heroes: match 2027 safari size and layout ──────────── */
 .hero {
-  min-height: 100svh;
-  min-height: 100dvh;
+  min-height: 92vh !important;
+  min-height: 92svh !important;
   height: auto !important;
-  padding: calc(var(--site-header-offset, 92px) + 2rem) 1rem 3rem;
+  padding: 0 !important;
+  align-items: center;
+  justify-content: center;
 }
 .page-hero {
   height: auto !important;
-  min-height: clamp(280px, 55vh, 560px) !important;
+  min-height: 92vh !important;
+  min-height: 92svh !important;
 }
 .corp-page-hero,
 body > .corp-page-hero,
 #destinationDetailContent > .corp-page-hero,
+#destinationDetailContent > .y27-hero,
 #mainContent > .corp-page-hero,
 .safari-detail-hero,
-.group-hero {
-  min-height: 80vh !important;
-  min-height: 80svh !important;
+.group-hero,
+.y27-hero,
+.blog-mag-hero,
+.vtz-hero,
+.hero {
+  min-height: 92vh !important;
+  min-height: 92svh !important;
+  padding-top: 0 !important;
 }
-@media (min-width: 900px) {
-  .corp-page-hero,
-  body > .corp-page-hero,
-  #destinationDetailContent > .corp-page-hero,
-  .safari-detail-hero,
-  .group-hero {
-    min-height: 80vh !important;
-    min-height: 80svh !important;
-  }
+.corp-page-hero-inner,
+.y27-hero-inner,
+.group-hero-inner,
+.blog-mag-hero-inner,
+.vtz-hero-inner {
+  padding: calc(var(--site-header-offset, 132px) + 2.5rem) 0 3.25rem !important;
 }
 @media (max-width: 768px) {
-  .corp-page-hero,
-  body > .corp-page-hero,
-  #destinationDetailContent > .corp-page-hero,
-  #mainContent > .corp-page-hero,
-  .safari-detail-hero,
-  .page-hero,
-  .group-hero {
-    min-height: 70vh !important;
-    min-height: 70svh !important;
-    padding-top: calc(var(--site-header-offset, 86px) + 1rem) !important;
-  }
-  .corp-page-hero-inner {
-    padding: 1.25rem 0 1.75rem !important;
+  .corp-page-hero-inner,
+  .y27-hero-inner,
+  .group-hero-inner,
+  .blog-mag-hero-inner,
+  .vtz-hero-inner {
+    padding: calc(var(--site-header-offset, 142px) + 1.75rem) 0 2.5rem !important;
   }
   .hero-title, .page-hero-title, .page-title {
     font-size: clamp(1.45rem, 7vw, 2.25rem) !important;

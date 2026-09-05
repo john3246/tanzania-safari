@@ -17,276 +17,216 @@
 <meta name="description" id="metaDesc" content="Private Tanzania safari itinerary with expert local guides from Arusha. Inquire for Serengeti migration, Ngorongoro, and Zanzibar combo packages.">
 <meta name="robots" content="index, follow">
 <link rel="stylesheet" href="/css/seo.css">
-<link rel="stylesheet" href="/css/corporate-ui.css">
+<link rel="stylesheet" href="/css/corporate-ui.css?v=5">
 <script src="/js/seo.js" defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;500;600;700;800&family=Nunito+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="/css/variables.css">
-<link rel="stylesheet" href="/css/main.css?v=10">
+<link rel="stylesheet" href="/css/main.css?v=11">
 <link rel="stylesheet" href="/css/header.css?v=9">
-<link rel="stylesheet" href="/css/fluid-responsive.css?v=13">
+<link rel="stylesheet" href="/css/fluid-responsive.css?v=14">
+<link rel="stylesheet" href="/css/safaris-2027.css?v=3">
 <style>
-.detail-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(min(100%, 260px), 320px); gap: 2rem; align-items: start; margin-top: 2rem; width: 100%; }
-@media(max-width:1024px) { .detail-layout { grid-template-columns: minmax(0, 1fr); } }
-.layout-main { min-width: 0; max-width: 100%; }
-.layout-sidebar { min-width: 0; max-width: 100%; }
-
-.gallery { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.5rem; margin-bottom: 2rem; width: 100%; min-width: 0; }
-.gallery-main { width: 100%; aspect-ratio: 16 / 10; height: auto; border-radius: 12px; overflow: hidden; position: relative; cursor: pointer; border: 1px solid var(--border-light); }
-.gallery-main img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
-.gallery-thumbs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.5rem; width: 100%; }
-@media (max-width: 640px) {
-  .gallery-main { aspect-ratio: 4 / 3; }
-  .gallery-thumb { height: 56px; }
-}
-.gallery-thumb { height: 90px; border-radius: 4px; overflow: hidden; cursor: pointer; transition: all 0.2s ease; opacity: 0.7; border: 1px solid var(--border-light); }
-.gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
-.gallery-thumb:hover { opacity: 1; }
-.gallery-thumb.active { opacity: 1; outline: 2px solid var(--primary); outline-offset: -2px; }
-
-.detail-card { background: #fff; border-radius: 4px; padding: 1.5rem; border: 1px solid var(--border-light); box-shadow: 0 2px 4px rgba(0,0,0,0.02); position: sticky; top: 100px; z-index: 10; }
-.price-display { padding-bottom: 1rem; border-bottom: 1px solid var(--border-light); margin-bottom: 1rem; }
-.price-from { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 1px; }
-.price-amount { font-size: 2.25rem; font-weight: 700; color: var(--earth-dark); font-family: var(--font-heading); line-height: 1.2; margin: 0.25rem 0; }
-.price-per { font-size: 0.85rem; color: var(--text-muted); }
-.detail-meta { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem; }
-.detail-meta-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.9rem; border-bottom: 1px dashed var(--border-light); padding-bottom: 0.5rem; }
-.detail-meta-row:last-child { border-bottom: none; padding-bottom: 0; }
-.detail-meta-label { color: var(--text-secondary); display: flex; align-items: center; gap: 0.5rem; }
-.detail-meta-label i { color: var(--primary); width: 16px; text-align: center; }
-.detail-meta-value { font-weight: 600; color: var(--earth-dark); }
-
-.tab-nav { display: flex; border-bottom: 1px solid var(--border-light); margin-bottom: 2rem; gap: 2rem; overflow-x: auto; }
-.tab-btn { padding: 1rem 0; font-weight: 600; font-size: 0.9rem; color: var(--text-muted); border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; text-transform: uppercase; letter-spacing: 0.5px; transition: 0.2s; white-space: nowrap; }
-.tab-btn:hover { color: var(--earth-dark); }
-.tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); color: var(--earth-dark); }
-.tab-panel { display: none; animation: fadeIn 0.3s ease; }
-.tab-panel.active { display: block; }
-
-.itinerary-timeline { position: relative; padding-left: 1.5rem; margin-top: 1rem; border-left: 2px solid var(--border-light); }
-.itinerary-item { position: relative; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-light); }
-.itinerary-item:last-child { border-bottom: none; }
-.itinerary-item::before { content: ''; position: absolute; left: -1.95rem; top: 0.25rem; width: 12px; height: 12px; background: var(--primary); border: 2px solid #fff; border-radius: 50%; box-shadow: 0 0 0 1px var(--border-light); }
-.itinerary-day { font-size: 0.75rem; font-weight: 600; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.25rem; }
-.itinerary-title { font-size: 1.1rem; font-weight: 600; color: var(--earth-dark); margin-bottom: 0.75rem; }
-.itinerary-desc { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1rem; }
-.itinerary-meta { display: flex; gap: 1.5rem; font-size: 0.85rem; color: var(--text-muted); }
-.itinerary-meta span i { color: var(--primary); margin-right: 4px; }
-
-.inc-exc { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
-@media(max-width:768px) { .inc-exc { grid-template-columns: 1fr; } }
-.review-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
-@media(max-width:640px) {
-  .review-form-grid { grid-template-columns: 1fr; }
-  .review-card-header { flex-direction: column; gap: 0.75rem; align-items: stretch; }
-}
-.inc-list li, .exc-list li { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.5rem 0; font-size: 0.95rem; color: var(--text-secondary); border-bottom: 1px solid var(--border-light); }
-.inc-list li:last-child, .exc-list li:last-child { border-bottom: none; }
-.inc-list li i { color: var(--success); flex-shrink: 0; margin-top: 3px; }
-.exc-list li i { color: var(--error); flex-shrink: 0; margin-top: 3px; }
-
-.review-card { background: #fff; border: 1px solid var(--border-light); border-radius: 4px; padding: 1.5rem; margin-bottom: 1rem; }
-.review-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
-
-.lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; }
-.lightbox.active { display: flex; }
-.lightbox img { max-width: min(100%, 92vw); max-height: 86vh; width: auto; height: auto; object-fit: contain; margin: auto; }
-.lightbox-close { position: fixed; top: 1rem; right: 1rem; background: none; border: none; color: #fff; font-size: 2rem; cursor: pointer; }
-
-.page-hero { height: auto; min-height: 80vh; min-height: 80svh; }
-.page-hero-title { font-size: clamp(1.45rem, 5.5vw, 3.5rem); font-family: var(--font-heading); font-weight: 700; color: var(--earth-dark); overflow-wrap: anywhere; }
-.page-hero-breadcrumb { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
-
-.trust-badges { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-light); font-size: 0.85rem; color: var(--text-secondary); }
-.trust-badge-item { display: flex; align-items: center; gap: 0.5rem; }
-.trust-badge-item i { color: var(--primary); width: 16px; text-align: center; }
-
-.mobile-sticky-booking { display: none; }
-@media(max-width: 768px) {
-  .mobile-sticky-booking { display: flex; position: fixed; bottom: 0; left: 0; right: 0; background: #fff; padding: 0.85rem 1rem; padding-bottom: max(0.85rem, env(safe-area-inset-bottom)); box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 10240; align-items: center; justify-content: space-between; gap: 0.75rem; border-top: 1px solid var(--border-light); pointer-events: auto; }
-  .mobile-sticky-booking .price { font-size: 1.15rem; font-weight: 700; color: var(--earth-dark); }
-  .mobile-sticky-booking > div { min-width: 0; flex: 1; pointer-events: none; }
-  .detail-card .btn-primary { display: none; }
-}
+.y27-facts .trust-badges { border-top-color: rgba(255,255,255,0.14); color: rgba(255,255,255,0.85); }
+.y27-facts .trust-badge-item i { color: var(--accent-light, #E0A82E); }
 </style>
 </head>
 <body class="has-mobile-book-bar">
-<!-- Header -->
 <div id="header"></div>
 
-<section id="detailHero" class="corp-page-hero">
-  <div class="hero-slideshow">
-    <div class="hero-slide active" style="background-image: url('/images/optimized/serengeti-national-park.webp');"></div>
-    <div class="hero-slide" style="background-image: url('/images/optimized/balloon.webp');"></div>
-    <div class="hero-slide" style="background-image: url('/images/optimized/tarangire-national-park.webp');"></div>
+<section id="detailHero" class="y27-hero">
+  <div class="y27-hero-bg" id="heroBg" style="background-image:url('/images/optimized/serengeti-national-park.webp')"></div>
+  <div class="container y27-hero-inner">
+    <nav class="corp-breadcrumb" id="packageBreadcrumb" aria-label="Breadcrumb">
+      <a href="/" data-i18n="common.home">Home</a><span>/</span><a href="/safaris" id="breadcrumbHub" data-i18n="common.safaris">Safaris</a><span>/</span><span id="breadcrumbName">...</span>
+    </nav>
+    <p class="y27-eyebrow" id="heroEyebrow" data-i18n="detail.privateFromArusha">Private Safari from Arusha</p>
+    <div id="heroBadge"></div>
+    <h1 id="heroTitle">Loading...</h1>
+    <p class="y27-hero-lead" id="heroLead"></p>
+    <div class="y27-chips" id="heroChips"></div>
+    <div class="y27-hero-actions">
+      <a id="heroBookBtn" class="btn btn-primary" href="/booking" style="min-height:48px"><i class="fas fa-calendar-check"></i> <span data-i18n="detail.bookNow">Book Now</span></a>
+      <a id="heroWaBtn" class="btn btn-secondary" href="https://wa.me/255695108009" target="_blank" rel="noopener" style="min-height:48px"><i class="fab fa-whatsapp"></i> <span data-i18n="detail.whatsapp">WhatsApp Our Team</span></a>
+    </div>
   </div>
-  <div class="corp-page-hero-inner">
+</section>
+
+<section class="y27-status" id="safariStatusBar" style="display:none">
+  <div class="container y27-status-inner">
+    <div>
+      <h2 id="statusTitle">Private safari from Arusha</h2>
+      <p id="statusLead"></p>
+    </div>
+    <a class="btn btn-secondary" href="#itinerary" style="min-height:48px">See the itinerary ↓</a>
+  </div>
+</section>
+
+<div id="loadingState" style="text-align:center;padding:4rem"><i class="fas fa-spinner fa-spin fa-2x" style="color:var(--primary)"></i></div>
+
+<div id="detailContent" style="display:none">
+  <section class="y27-section" id="moments">
     <div class="container">
-      <div class="corp-breadcrumb" id="packageBreadcrumb">
-        <a href="/" data-i18n="common.home">Home</a><span>/</span><a href="/safaris" id="breadcrumbHub" data-i18n="common.safaris">Safaris</a><span>/</span><span id="breadcrumbName">...</span>
-      </div>
-      <span class="corp-eyebrow" id="heroEyebrow" data-i18n="detail.privateFromArusha">Private Safari from Arusha</span>
-      <div id="heroBadge" style="margin-bottom:0.75rem"></div>
-      <h1 class="page-hero-title" id="heroTitle" style="color:#fff;margin:0;">Loading...</h1>
+      <span class="y27-kicker" data-i18n="detail.gallery">Gallery</span>
+      <h2 class="y27-h" data-i18n="detail.whatYouWillSee">What you will live on this safari</h2>
+      <div class="y27-moments" id="gallery"></div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="corp-section">
-  <div class="container">
-    <div id="loadingState" style="text-align:center;padding:4rem"><i class="fas fa-spinner fa-spin fa-2x" style="color:var(--primary)"></i></div>
-    <div id="detailContent" style="display:none">
-      <div class="corp-detail-grid detail-layout">
-        <!-- Main content -->
-        <div class="layout-main">
-          <div class="corp-panel" style="margin-bottom:1.25rem">
-            <div class="gallery corp-gallery" id="gallery"></div>
-          </div>
-          <div class="corp-panel">
-          
-          <!-- Tab Navigation -->
-          <div class="tab-nav corp-tabs">
-            <button class="tab-btn corp-tab active" data-tab="overview" data-i18n="detail.overview">Overview</button>
-            <button class="tab-btn corp-tab" data-tab="itinerary" data-i18n="detail.itinerary">Itinerary</button>
-            <button class="tab-btn corp-tab" data-tab="includes" data-i18n="detail.inclusions">Inclusions</button>
-            <button class="tab-btn corp-tab" data-tab="reviews" data-i18n="detail.reviews">Reviews</button>
-          </div>
-          
-          <!-- Tab Panels -->
-          <div class="tab-panel active" id="tab-overview">
-            <div id="packageDescription" style="font-size: 1rem; line-height: 1.8; color: var(--text-secondary); margin-bottom: 2rem;"></div>
-            <div id="packageHighlights" style="margin-bottom: 2rem;"></div>
-            <div id="packageDestinations"></div>
-          </div>
-          
-          <div class="tab-panel" id="tab-itinerary">
-            <div id="itineraryList"></div>
-          </div>
-          
-          <div class="tab-panel" id="tab-includes">
-            <div class="inc-exc">
-              <div>
-                <h3 style="font-size:1.1rem; color:var(--earth-dark); border-bottom:2px solid var(--success); padding-bottom:0.5rem; margin-bottom:1rem; text-transform:uppercase; letter-spacing:1px; font-weight:600;" data-i18n="detail.included">Included</h3>
-                <ul class="inc-list" id="includesList"></ul>
-              </div>
-              <div>
-                <h3 style="font-size:1.1rem; color:var(--earth-dark); border-bottom:2px solid var(--error); padding-bottom:0.5rem; margin-bottom:1rem; text-transform:uppercase; letter-spacing:1px; font-weight:600;" data-i18n="detail.excluded">Excluded</h3>
-                <ul class="exc-list" id="excludesList"></ul>
-              </div>
-            </div>
-          </div>
-          
-          <div class="tab-panel" id="tab-reviews">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-light);">
-              <h3 style="font-size:1.25rem; font-weight:600; margin:0; color:var(--earth-dark);" data-i18n="detail.guestReviews">Guest Reviews</h3>
-              <button onclick="document.getElementById('reviewFormContainer').style.display='block'" class="btn btn-outline btn-sm" style="border-radius:4px;"><i class="fas fa-pen"></i> <span data-i18n="detail.writeReview">Write a Review</span></button>
-            </div>
-            
-            <div id="reviewFormContainer" style="display: none; background: #f9fafb; padding: 1.5rem; border: 1px solid var(--border-light); margin-bottom: 2rem;">
-              <h4 style="margin-bottom: 1rem; font-weight: 600; color: var(--earth-dark);" data-i18n="detail.shareExperience">Share Your Experience</h4>
-              <form id="submitReviewForm" onsubmit="submitReview(event)">
-                <div class="review-form-grid">
-                  <div>
-                    <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-muted);" data-i18n="detail.yourName">Your Name</label>
-                    <input type="text" id="reviewAuthor" required style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-light); background: #fff;">
-                  </div>
-                  <div>
-                    <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-muted);" data-i18n="detail.rating">Rating</label>
-                    <select id="reviewRating" required style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-light); background: #fff;">
-                      <option value="5" data-i18n-value="detail.excellent">5 - Excellent</option>
-                      <option value="4" data-i18n-value="detail.veryGood">4 - Very Good</option>
-                      <option value="3" data-i18n-value="detail.average">3 - Average</option>
-                      <option value="2" data-i18n-value="detail.poor">2 - Poor</option>
-                      <option value="1" data-i18n-value="detail.terrible">1 - Terrible</option>
-                    </select>
-                  </div>
-                </div>
-                <div style="margin-bottom: 1rem;">
-                  <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-muted);" data-i18n="detail.yourReview">Your Review</label>
-                  <textarea id="reviewContent" required rows="4" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-light); background: #fff; resize: vertical;"></textarea>
-                </div>
-                <div style="display: flex; gap: 1rem;">
-                  <button type="submit" class="btn btn-primary" style="border-radius:4px;" data-i18n="detail.submitReview">Submit Review</button>
-                  <button type="button" onclick="document.getElementById('reviewFormContainer').style.display='none'" class="btn btn-ghost" data-i18n="detail.cancel">Cancel</button>
-                </div>
-              </form>
-            </div>
-
-            <div id="reviewsList"></div>
-          </div>
-
-          <div id="safariSeoGuides" class="seo-guides-block" style="margin:2rem 0;padding:1.25rem 1.35rem;background:#f7f8f6;border-radius:12px;border:1px solid rgba(70, 91, 45,0.1)">
-            <h2 style="font-size:1.15rem;margin:0 0 0.65rem;font-family:var(--font-heading)">Explore Related Destinations & Guides</h2>
-            <p style="margin:0 0 0.85rem;color:var(--text-secondary);font-size:0.92rem;line-height:1.55">Internal destination pages and planning guides to help you choose the right itinerary:</p>
-            <ul id="safariInternalLinks" style="margin:0;padding-left:1.15rem;line-height:1.85;font-size:0.92rem"></ul>
-          </div>
-
-          <div id="relatedSafarisSection" style="margin:2.5rem 0 1rem">
-            <h2 style="font-size:1.25rem;margin:0 0 1rem;font-family:var(--font-heading)" data-i18n="detail.relatedSafaris">Related Safari Packages</h2>
-            <div id="relatedGrid" class="safari-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));gap:1.25rem"></div>
-          </div>
-
-          <div id="safariFaqSection" class="seo-faq-wrap" aria-label="Frequently asked questions"></div>
-          </div>
+  <section class="y27-section alt" id="overview">
+    <div class="container y27-story-grid">
+      <div>
+        <span class="y27-kicker" data-i18n="detail.overview">Overview</span>
+        <div id="packageDescription"></div>
+        <div id="packageHighlights"></div>
+        <div id="packageDestinations"></div>
+      </div>
+      <aside class="y27-facts" id="factsCard">
+        <h3 data-i18n="detail.tripFacts">Trip facts</h3>
+        <div class="price-display">
+          <div class="price-from" data-i18n="detail.from">From</div>
+          <div class="price-amount" id="cardPrice">$0</div>
+          <div class="price-per" data-i18n="detail.perPerson">per person</div>
         </div>
-        <!-- Booking card -->
-        <div class="layout-sidebar">
-          <div class="detail-card corp-book-card desktop-only">
-          <div class="price-display">
-            <div class="price-from corp-price-label" data-i18n="detail.from">From</div>
-            <div class="price-amount corp-price" id="cardPrice">$0</div>
-            <div class="price-per" data-i18n="detail.perPerson">per person</div>
-          </div>
-          <div class="detail-meta corp-meta-list" id="cardMeta"></div>
-          <a id="bookBtn" href="/booking" class="btn btn-primary btn-block btn-lg" style="margin-bottom:.75rem"><i class="fas fa-calendar-check"></i> <span data-i18n="detail.bookNow">Book Now</span></a>
-          <a id="waQuoteBtn" href="https://wa.me/255695108009?text=Hi%20Tanzania%20Safari%20Magic%20team%2C%20I%27m%20interested%20in%20booking%20a%20custom%20safari." class="btn btn-outline btn-block" target="_blank" rel="noopener" style="margin-bottom:.35rem"><i class="fab fa-whatsapp" style="color:#25D366"></i> <span data-i18n="detail.whatsapp">WhatsApp Our Team</span></a>
-          <p style="font-size:0.8rem;color:var(--text-muted);margin:0 0 .75rem;text-align:center">We usually reply within 2 hours.</p>
-          <a href="/contact" class="btn btn-ghost btn-block"><i class="fas fa-comments"></i> <span data-i18n="detail.askQuestion">Ask a Question</span></a>
-          <div class="seo-trust-strip" style="justify-content:flex-start;margin-top:1rem">
-            <a class="seo-trust-item" href="https://www.tripadvisor.com/Attraction_Review-g297913-d28075837-Reviews-Tanzania_Safari_Magic-Arusha_Arusha_Region.html" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none"><i class="fab fa-tripadvisor" style="color:#00af87"></i> TripAdvisor</a>
-            <a class="seo-trust-item" href="https://www.tato.or.tz/" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none"><i class="fas fa-certificate" style="color:#f59e0b"></i> TATO</a>
-            <a class="seo-trust-item" href="https://wttc.org/initiatives/safe-travels" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none"><i class="fas fa-shield-alt" style="color:var(--primary)"></i> Safe Travels</a>
-          </div>
-          <div class="trust-badges">
-            <div class="trust-badge-item"><i class="fas fa-lock"></i> <span data-i18n="detail.secureBooking">Secure SSL Booking</span></div>
-            <div class="trust-badge-item"><i class="fas fa-calendar-check"></i> <span data-i18n="detail.freeCancellation">Free Cancellation Available</span></div>
-            <div class="trust-badge-item"><i class="fas fa-star"></i> <span data-i18n="detail.expertSupport">24/7 Expert Support</span></div>
-          </div>
+        <div id="cardMeta"></div>
+        <a id="bookBtn" href="/booking" class="btn btn-secondary" style="min-height:48px"><i class="fas fa-calendar-check"></i> <span data-i18n="detail.bookNow">Book Now</span></a>
+        <a id="waQuoteBtn" href="https://wa.me/255695108009" class="btn btn-outline" target="_blank" rel="noopener" style="min-height:48px;margin-top:0.65rem;width:100%;justify-content:center;border-color:rgba(255,255,255,0.85);color:#fff"><i class="fab fa-whatsapp"></i> <span data-i18n="detail.whatsapp">WhatsApp Our Team</span></a>
+        <p style="font-size:0.8rem;color:rgba(255,255,255,0.75);margin:0.75rem 0 0;text-align:center" data-i18n="detail.whatsappReply">We usually reply in under 60 seconds on WhatsApp.</p>
+        <div class="trust-badges">
+          <div class="trust-badge-item"><i class="fas fa-lock"></i> <span data-i18n="detail.secureBooking">Secure SSL Booking</span></div>
+          <div class="trust-badge-item"><i class="fas fa-calendar-check"></i> <span data-i18n="detail.freeCancellation">Free Cancellation Available</span></div>
+          <div class="trust-badge-item"><i class="fas fa-star"></i> <span data-i18n="detail.expertSupport">24/7 Expert Support</span></div>
         </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="y27-section" id="includes">
+    <div class="container">
+      <span class="y27-kicker" data-i18n="detail.practical">Practical details</span>
+      <h2 class="y27-h" data-i18n="detail.inclusions">What is included?</h2>
+      <div class="y27-inc">
+        <div class="y27-inc-card yes">
+          <h3 data-i18n="detail.included">Included</h3>
+          <ul class="inc-list" id="includesList"></ul>
+        </div>
+        <div class="y27-inc-card no">
+          <h3 data-i18n="detail.excluded">Excluded</h3>
+          <ul class="exc-list" id="excludesList"></ul>
         </div>
       </div>
     </div>
-    <div id="notFound" style="display:none;text-align:center;padding:4rem">
-      <i class="fas fa-exclamation-triangle fa-3x" style="color:var(--primary);margin-bottom:1rem"></i>
-      <h2>Safari Not Found</h2>
-      <p>The safari you're looking for doesn't exist or has been removed.</p>
-      <a href="/safaris" class="btn btn-primary" style="margin-top:1rem">Browse All Safaris</a>
-    </div>
-  </div>
-</section>
+  </section>
 
-<!-- Lightbox -->
+  <section class="y27-section alt" id="itinerary">
+    <div class="container">
+      <span class="y27-kicker" data-i18n="detail.dayByDay">Day by day</span>
+      <h2 class="y27-h" data-i18n="detail.itinerary">The itinerary</h2>
+      <div class="y27-days" id="itineraryList"></div>
+    </div>
+  </section>
+
+  <section class="y27-section">
+    <div class="container">
+      <div class="y27-cta">
+        <div>
+          <h2 id="ctaTitle">Ready to book this safari?</h2>
+          <p id="ctaLead">Holding a place does not commit you until we confirm details together.</p>
+        </div>
+        <div>
+          <div class="y27-cta-price" id="ctaPrice">$0<small>per person</small></div>
+          <div class="y27-cta-actions" style="margin-top:0.85rem">
+            <a id="ctaBookBtn" class="btn btn-primary" href="/booking" style="min-height:48px" data-i18n="detail.bookNow">Book Now</a>
+            <a id="ctaWaBtn" class="btn btn-outline" href="https://wa.me/255695108009" target="_blank" rel="noopener" style="min-height:48px;border-color:rgba(255,255,255,0.85);color:#fff">WhatsApp</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="y27-section alt" id="reviews">
+    <div class="container">
+      <span class="y27-kicker" data-i18n="detail.reviews">Reviews</span>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem">
+        <h2 class="y27-h" style="margin:0" data-i18n="detail.guestReviews">Guest Reviews</h2>
+        <button type="button" onclick="document.getElementById('reviewFormContainer').style.display='block'" class="btn btn-outline btn-sm"><i class="fas fa-pen"></i> <span data-i18n="detail.writeReview">Write a Review</span></button>
+      </div>
+      <div id="reviewFormContainer" style="display:none;background:#fff;padding:1.5rem;border:1px solid rgba(70,91,45,0.1);border-radius:16px;margin-bottom:1.5rem">
+        <h4 style="margin-bottom:1rem;font-weight:600;color:var(--earth-dark)" data-i18n="detail.shareExperience">Share Your Experience</h4>
+        <form id="submitReviewForm" onsubmit="submitReview(event)">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+            <div>
+              <label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.5rem" data-i18n="detail.yourName">Your Name</label>
+              <input type="text" id="reviewAuthor" required style="width:100%;padding:0.5rem;border:1px solid var(--border-light);min-height:48px">
+            </div>
+            <div>
+              <label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.5rem" data-i18n="detail.rating">Rating</label>
+              <select id="reviewRating" required style="width:100%;padding:0.5rem;border:1px solid var(--border-light);min-height:48px">
+                <option value="5">5 - Excellent</option>
+                <option value="4">4 - Very Good</option>
+                <option value="3">3 - Average</option>
+                <option value="2">2 - Poor</option>
+                <option value="1">1 - Terrible</option>
+              </select>
+            </div>
+          </div>
+          <div style="margin-bottom:1rem">
+            <label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.5rem" data-i18n="detail.yourReview">Your Review</label>
+            <textarea id="reviewContent" required rows="4" style="width:100%;padding:0.5rem;border:1px solid var(--border-light);resize:vertical"></textarea>
+          </div>
+          <div style="display:flex;gap:1rem;flex-wrap:wrap">
+            <button type="submit" class="btn btn-primary" data-i18n="detail.submitReview">Submit Review</button>
+            <button type="button" onclick="document.getElementById('reviewFormContainer').style.display='none'" class="btn btn-ghost" data-i18n="detail.cancel">Cancel</button>
+          </div>
+        </form>
+      </div>
+      <div id="reviewsList"></div>
+    </div>
+  </section>
+
+  <section class="y27-section" id="guides">
+    <div class="container">
+      <div id="safariSeoGuides" class="seo-guides-block">
+        <span class="y27-kicker">Plan further</span>
+        <h2 class="y27-h" data-i18n="detail.relatedGuides">Explore related destinations &amp; guides</h2>
+        <ul id="safariInternalLinks" style="margin:0;padding-left:1.15rem;line-height:1.85;font-size:0.95rem"></ul>
+      </div>
+      <div id="relatedSafarisSection" style="margin-top:2.5rem">
+        <span class="y27-kicker" data-i18n="detail.relatedSafaris">Related</span>
+        <h2 class="y27-h" data-i18n="detail.relatedSafaris">Related Safari Packages</h2>
+        <div id="relatedGrid" class="y27-related-grid"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="y27-section alt" id="faq">
+    <div class="container y27-faq">
+      <div id="safariFaqSection" class="seo-faq-wrap" aria-label="Frequently asked questions"></div>
+    </div>
+  </section>
+</div>
+
+<div id="notFound" style="display:none;text-align:center;padding:4rem">
+  <i class="fas fa-exclamation-triangle fa-3x" style="color:var(--primary);margin-bottom:1rem"></i>
+  <h2>Safari Not Found</h2>
+  <p>The safari you're looking for doesn't exist or has been removed.</p>
+  <a href="/safaris" class="btn btn-primary" style="margin-top:1rem">Browse All Safaris</a>
+</div>
+
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
-  <button class="lightbox-close" onclick="closeLightbox()"><i class="fas fa-times"></i></button>
+  <button class="lightbox-close" type="button" onclick="closeLightbox()"><i class="fas fa-times"></i></button>
   <img id="lightboxImg" src="" alt="">
 </div>
 
-<!-- Mobile Sticky Booking CTA — on body so phone overlays cannot trap the tap -->
-<div class="mobile-sticky-booking" id="mobileStickyBooking">
-  <div>
-    <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;" data-i18n="detail.from">From</div>
-    <div class="price" id="mobilePrice">$0</div>
-  </div>
-  <a href="/booking" id="mobileBookBtn" class="btn btn-primary" style="min-height:48px;min-width:7.5rem;pointer-events:auto;z-index:2;position:relative" data-i18n="detail.bookNow">Book Now</a>
+<div class="y27-sticky" id="mobileStickyBooking">
+  <a href="/booking" id="mobileBookBtn">Reserve this safari · <span id="mobilePrice">$0</span></a>
 </div>
 
-<!-- Footer -->
 <div id="footer"></div>
-
-<script src="/js/layout-loader.js?v=31"></script>
+<script src="/js/layout-loader.js?v=32"></script>
 <script src="/js/api.js?v=2"></script>
 <script src="/js/accommodation.js?v=2"></script>
-<script src="/js/safari-detail.js?v=8"></script>
+<script src="/js/safari-detail.js?v=9"></script>
 </body>
 </html>

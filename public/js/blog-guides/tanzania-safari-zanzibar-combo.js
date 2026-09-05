@@ -37,7 +37,7 @@
 
 <div class="guide-cta-box">
   <h2>Build a safari + Zanzibar itinerary</h2>
-  <p>Share your month and nights. We usually reply within 2 hours with a sample calendar and a live quote.</p>
+  <p>Share your month and nights. We usually reply in under 60 seconds with a sample calendar and a live quote.</p>
   <div class="guide-cta-actions">
     <a class="btn btn-primary" href="/booking" style="min-height:48px">Free combo quote</a>
     <a class="btn btn-outline" href="${TEAM.whatsapp}" target="_blank" rel="noopener" style="min-height:48px"><i class="fab fa-whatsapp"></i> WhatsApp Our Team</a>
@@ -98,7 +98,7 @@
 
 <div class="guide-cta-box">
   <h2>WhatsApp a bush-to-beach sketch</h2>
-  <p>We usually reply within 2 hours · +255 695 108 009</p>
+  <p>We usually reply in under 60 seconds · +255 695 108 009</p>
   <div class="guide-cta-actions">
     <a class="btn btn-primary" href="/booking" style="min-height:48px">Request free quote</a>
     <a class="btn btn-outline" href="${TEAM.whatsapp}" target="_blank" rel="noopener" style="min-height:48px"><i class="fab fa-whatsapp"></i> WhatsApp Our Team</a>

@@ -40,7 +40,7 @@
 <meta name="twitter:description" content="Private Serengeti, Ngorongoro & Migration safaris from Arusha. Free quote.">
 <meta name="twitter:image" content="https://tanzaniasafarimagic.com/images/optimized/serengeti-national-park.webp">
 <link rel="stylesheet" href="/css/seo.css">
-<link rel="stylesheet" href="/css/corporate-ui.css">
+<link rel="stylesheet" href="/css/corporate-ui.css?v=5">
 <script type="application/ld+json" id="localbusiness-jsonld">
 {
   "@context": "https://schema.org",
@@ -85,15 +85,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;500;600;700;800&family=Nunito+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="/css/variables.css">
-<link rel="stylesheet" href="/css/main.css?v=10">
+<link rel="stylesheet" href="/css/main.css?v=14">
 <link rel="stylesheet" href="/css/header.css?v=9">
-<link rel="stylesheet" href="/css/fluid-responsive.css?v=13">
-<link rel="stylesheet" href="/css/group-safaris.css?v=4">
+<link rel="stylesheet" href="/css/fluid-responsive.css?v=16">
+<link rel="stylesheet" href="/css/group-safaris.css?v=5">
 <style>
-.hero{min-height:80vh;min-height:80svh}
-.hero-bg{background:#b8b8b800}
-.hero-bg img{opacity:1;object-fit:cover}
+.hero{min-height:92vh;min-height:92svh;align-items:center;justify-content:center}
+.hero-bg{background:#0f1a0e}
+.hero-bg img{opacity:1;object-fit:cover;filter:none}
 .hero-video{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+.hero-overlay{background:linear-gradient(180deg, rgba(15,26,14,0.06) 0%, rgba(15,26,14,0.18) 45%, rgba(15,26,14,0.48) 100%)}
+.hero-content{text-align:center;max-width:820px;margin:0 auto}
+.hero-trust-row{justify-content:center !important;margin-top:2rem !important}
 .categories-section{padding:5rem 0;background:linear-gradient(180deg,#f7f8f6 0%,#fff 100%)}
 .group-home-showcase{display:flex;flex-direction:column;gap:2rem}
 .group-home-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:1.25rem}
@@ -117,12 +120,155 @@
 .group-home-card-price small{display:block;font-size:0.72rem;font-weight:600;color:var(--text-muted)}
 .group-home-empty{padding:2rem;text-align:center;background:#fff;border-radius:16px;border:1px dashed rgba(70, 91, 45,0.2)}
 .why-section{padding:5rem 0}
-.cta-band{padding:5rem 0;background:var(--primary)}
-.cta-band h2{color:#fff;margin-bottom:.75rem}
-.cta-band p{color:rgba(255,255,255,.85);margin-bottom:2rem}
+.cta-band{padding:2.25rem 0;background:var(--primary)}
+.cta-band h2{color:#fff;margin-bottom:.5rem;font-size:clamp(1.35rem,2.2vw,1.85rem)}
+.cta-band p{color:rgba(255,255,255,.85);margin-bottom:1.15rem}
+
+/* Homepage: tight headers, horizontal use of space */
+.home-page .section{padding:2.15rem 0}
+.home-split-head{
+  display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;
+  gap:0.85rem 1.5rem;margin:0 0 1.15rem;text-align:left;max-width:none;
+}
+.home-split-head .section-eyebrow{margin-bottom:0.3rem}
+.home-split-head .section-title{
+  margin:0;font-size:clamp(1.35rem,1.8vw,1.75rem);font-weight:700;line-height:1.2;
+}
+.home-split-head .section-desc{
+  margin:0;max-width:28rem;text-align:left;font-size:0.92rem;line-height:1.5;color:var(--text-secondary);
+}
+.home-split-head .home-split-copy{flex:1 1 16rem;min-width:min(100%,16rem)}
+.home-split-head .home-split-actions{display:flex;flex-wrap:wrap;gap:0.55rem;align-items:center}
+
+/* Why Book With Us — Zara-style intro + 4-up cards */
+.why-book-section{padding:2rem 0 1.5rem;background:#fff;border-bottom:1px solid #eee}
+.why-book-intro{
+  display:grid;grid-template-columns:minmax(0,0.9fr) minmax(0,1.2fr);
+  gap:1.25rem 2.5rem;align-items:start;margin-bottom:1.35rem;
+}
+.why-book-intro h2{
+  margin:0;font-size:clamp(1.55rem,2.4vw,2.15rem);color:var(--earth-dark);line-height:1.15;
+}
+.why-book-intro p{margin:0;font-size:0.98rem;line-height:1.65;color:var(--text-secondary)}
+.why-book-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0.85rem}
+.why-book-card{
+  background:#fff;border:1px solid rgba(70,91,45,0.12);border-radius:12px;
+  padding:1.05rem 1.1rem 1.15rem;box-shadow:0 8px 22px rgba(70,91,45,0.05);
+  min-height:100%;
+}
+.why-book-card .why-book-icon{
+  width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:var(--primary-pale);color:var(--primary);font-size:1.05rem;margin-bottom:0.7rem;
+}
+.why-book-card h3{margin:0 0 0.35rem;font-size:1.02rem;color:var(--earth-dark)}
+.why-book-card p{margin:0;font-size:0.86rem;line-height:1.5;color:var(--text-secondary)}
+@media(max-width:900px){
+  .why-book-intro{grid-template-columns:1fr;gap:0.65rem}
+  .why-book-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:560px){.why-book-grid{grid-template-columns:1fr}}
+
+/* Moments banner — Zara charity-style overlay + experience slider */
+.moments-section{
+  position:relative;min-height:min(52vh,420px);height:clamp(320px,42vw,420px);
+  overflow:hidden;color:#fff;background:#0f1a0e;
+}
+.moments-section[hidden]{display:none!important}
+.moments-slides{position:absolute;inset:0}
+.moments-slide{
+  position:absolute;inset:0;opacity:0;transition:opacity .9s ease;
+  background:#0f1a0e;
+}
+.moments-slide.active{opacity:1;z-index:1}
+.moments-slide img{width:100%;height:100%;object-fit:cover;object-position:center center;display:block}
+.moments-section::after{
+  content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(90deg,rgba(15,26,14,.82) 0%,rgba(15,26,14,.45) 42%,rgba(15,26,14,.18) 100%);
+}
+.moments-inner{
+  position:relative;z-index:3;height:100%;display:flex;flex-direction:column;justify-content:flex-end;
+  padding:2rem 0 1.15rem;
+}
+.moments-kicker{
+  display:inline-block;font-size:0.72rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:0.45rem;
+}
+.moments-inner h2{
+  margin:0 0 0.5rem;color:#fff;font-size:clamp(1.55rem,3vw,2.35rem);line-height:1.15;max-width:18ch;
+}
+.moments-inner .moments-desc{margin:0;max-width:34rem;color:rgba(255,255,255,.92);font-size:0.95rem;line-height:1.55}
+.moments-tag{
+  display:inline-flex;align-items:center;margin-top:0.85rem;padding:0.35rem 0.8rem;
+  background:var(--accent);color:#1a1408;font-size:0.75rem;font-weight:800;
+  letter-spacing:.06em;text-transform:uppercase;border-radius:4px;
+}
+.moments-nav{
+  position:absolute;z-index:4;top:50%;transform:translateY(-50%);
+  width:40px;height:40px;border:0;border-radius:50%;cursor:pointer;
+  background:rgba(255,255,255,.16);color:#fff;backdrop-filter:blur(6px);
+}
+.moments-nav:hover{background:var(--primary)}
+.moments-nav.prev{left:max(0.75rem,env(safe-area-inset-left))}
+.moments-nav.next{right:max(0.75rem,env(safe-area-inset-right))}
+.moments-tags{display:none}
+@media (prefers-reduced-motion:reduce){
+  .moments-slide{transition:none}
+}
+
+/* Compact destination cards on home */
+.home-dest-section{padding:2rem 0 !important;background:#fcfcfc;border-top:1px solid #f0f0f0;border-bottom:1px solid #f0f0f0}
+.home-dest-section .dest-grid{gap:1rem}
+.home-page .corp-dest-img{height:168px}
+.home-page .corp-dest-content{padding:0.85rem 1rem 1rem}
+.home-page .corp-dest-title{font-size:1.05rem;margin-bottom:0.65rem}
+.home-page .corp-dest-footer{padding-top:0.65rem}
+.home-page .safari-grid{gap:1.1rem}
+.home-page .filter-bar{margin-bottom:1rem}
+.home-page .section,
+.home-page .group-entry-section,
+.home-page #homePartners{padding:2.15rem 0 !important}
+.home-page .hero{
+  align-items:center !important;
+  justify-content:center !important;
+}
+.home-page .hero-content{
+  text-align:center !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  width:100%;
+}
+.home-page .hero-subtitle{margin-left:auto;margin-right:auto}
+.home-page .hero-actions{justify-content:center !important;margin-inline:auto}
+.home-page .hero-trust-row{justify-content:center !important}
+.home-climb-section .home-split-head .section-title{color:#fff}
+.home-climb-section .home-split-head .section-desc{color:rgba(255,255,255,.92);max-width:32rem}
+
+.home-faq-dar{
+  position:relative;
+  background:#0f1a0e url('/images/optimized/dar-es-salaam.webp') center/cover no-repeat;
+  padding:2.15rem 0 !important;
+}
+.home-faq-dar::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:rgba(15,26,14,.58);
+}
+.home-faq-dar > .container{position:relative;z-index:1}
+.home-faq-dar .section-title{color:#fff}
+.home-faq-dar .section-desc{color:rgba(255,255,255,.92)}
+.home-faq-dar .section-eyebrow{color:var(--accent);background:rgba(200,134,10,.16)}
+@media(min-width:1100px){
+  .home-dest-section .dest-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+  .home-page .safari-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  .home-page .seo-faq-list{display:grid!important;grid-template-columns:1fr 1fr;gap:.35rem 1.5rem}
+}
+@media(max-width:640px){
+  .moments-section{height:clamp(300px,78vw,380px)}
+  .moments-inner{padding:1.35rem 0 0.85rem}
+  .moments-nav{width:34px;height:34px}
+}
 </style>
 </head>
-<body>
+<body class="home-page">
 
 <!-- Header -->
 <div id="header"></div>
@@ -145,7 +291,7 @@
               <a href="/safaris" class="btn btn-primary" data-i18n="home.explorePackages">Explore Safari Packages</a>
               <a href="https://wa.me/255695108009?text=Hi%20Tanzania%20Safari%20Magic%2C%20I%27m%20interested%20in%20booking%20a%20custom%20safari." class="btn btn-secondary" target="_blank" rel="noopener" data-i18n="home.whatsappQuote">WhatsApp Free Quote</a>
             </div>
-            <p style="margin-top:0.85rem;font-size:0.85rem;color:rgba(255,255,255,0.88)">We usually reply within 2 hours on WhatsApp.</p>
+            <p style="margin-top:0.85rem;font-size:0.85rem;color:rgba(255,255,255,0.88)" data-i18n="home.whatsappReply">We usually reply in under 60 seconds on WhatsApp.</p>
 
             <div class="hero-trust-row" style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 3rem; opacity: 0.9; margin-top: 5rem;">
                 <a href="https://www.tripadvisor.com/Attraction_Review-g297913-d28075837-Reviews-Tanzania_Safari_Magic-Arusha_Arusha_Region.html" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; gap: 0.5rem; color: #fff; text-decoration: none;">
@@ -178,43 +324,64 @@
       </div>
     </section>
 
-<!-- Search Filter -->
-<section class="search-filter-section" style="background: var(--bg-card); padding: 1.5rem 0; box-shadow: var(--shadow-sm); position: relative; z-index: 10; margin-top: -3rem; border-radius: var(--radius-lg); margin-left: 1rem; margin-right: 1rem;">
+<!-- Why Book With Us -->
+<section class="why-book-section" aria-labelledby="why-book-title">
   <div class="container">
-    <form class="search-filter-form" style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: center;" action="/safaris" method="GET">
-      <div class="form-group" style="flex: 1; min-width: 200px; margin: 0;">
-        <select class="form-control" name="destination" style="background: var(--bg-secondary); border: none; padding: 0.875rem 1.25rem; border-radius: var(--radius-md);">
-          <option value="" data-i18n="home.anyDestination">Any Destination</option>
-          <option value="serengeti-national-park">Serengeti</option>
-          <option value="ngorongoro-conservation-area">Ngorongoro</option>
-          <option value="tarangire-national-park">Tarangire</option>
-          <option value="zanzibar">Zanzibar</option>
-        </select>
-      </div>
-      <div class="form-group" style="flex: 1; min-width: 200px; margin: 0;">
-        <select class="form-control" name="duration" style="background: var(--bg-secondary); border: none; padding: 0.875rem 1.25rem; border-radius: var(--radius-md);">
-          <option value="" data-i18n="home.anyDuration">Any Duration</option>
-          <option value="1-3" data-i18n="safarisPage.days1to3">1–3 Days</option>
-          <option value="4-6" data-i18n="safarisPage.days4to6">4–6 Days</option>
-          <option value="7-9" data-i18n="safarisPage.days7to9">7–9 Days</option>
-          <option value="10+" data-i18n="safarisPage.days10plus">10+ Days</option>
-        </select>
-      </div>
-      <button type="submit" class="btn btn-primary" style="padding: 0.875rem 2rem; min-width: 150px;"><i class="fas fa-search"></i> <span data-i18n="common.search">Search</span></button>
-    </form>
+    <div class="why-book-intro">
+      <h2 id="why-book-title" data-i18n="home.whyBookTitle">Why Book With Us</h2>
+      <p data-i18n="home.whyBookLead">Travel with an Arusha-based team who live these parks. Private guides, well-kept 4x4s, and itineraries shaped around how you want to see Tanzania — from a Serengeti dawn to a quiet crater floor.</p>
+    </div>
+    <div class="why-book-grid">
+      <article class="why-book-card">
+        <div class="why-book-icon" aria-hidden="true"><i class="fas fa-users"></i></div>
+        <h3 data-i18n="home.expertGuides">Expert Local Guides</h3>
+        <p data-i18n="home.expertGuidesDesc">Certified professionals with deep knowledge of Tanzanian wildlife and habitats.</p>
+      </article>
+      <article class="why-book-card">
+        <div class="why-book-icon" aria-hidden="true"><i class="fas fa-shield-alt"></i></div>
+        <h3 data-i18n="home.safetyFirst">Safety First</h3>
+        <p data-i18n="home.safetyFirstDesc">Well-maintained 4x4 vehicles and comprehensive emergency protocols for your peace of mind.</p>
+      </article>
+      <article class="why-book-card">
+        <div class="why-book-icon" aria-hidden="true"><i class="fas fa-leaf"></i></div>
+        <h3 data-i18n="home.ecoResponsible">Eco-Responsible</h3>
+        <p data-i18n="home.ecoResponsibleDesc">We support conservation efforts and local communities through responsible travel practices.</p>
+      </article>
+      <article class="why-book-card">
+        <div class="why-book-icon" aria-hidden="true"><i class="fas fa-headset"></i></div>
+        <h3 data-i18n="home.support247">24/7 Support</h3>
+        <p data-i18n="home.support247Desc">Round-the-clock assistance from booking through your entire safari journey.</p>
+      </article>
+    </div>
   </div>
 </section>
 
-
+<!-- The Moments That Last Forever -->
+<section class="moments-section" id="homeMoments" hidden aria-labelledby="moments-title">
+  <div class="moments-slides" id="momentsSlides"></div>
+  <button type="button" class="moments-nav prev" id="momentsPrev" aria-label="Previous experience"><i class="fas fa-chevron-left"></i></button>
+  <button type="button" class="moments-nav next" id="momentsNext" aria-label="Next experience"><i class="fas fa-chevron-right"></i></button>
+  <div class="container moments-inner">
+    <span class="moments-kicker" data-i18n="home.momentsEyebrow">Tour Experiences</span>
+    <h2 id="moments-title" data-i18n="home.momentsTitle">The Moments That Last Forever</h2>
+    <p class="moments-desc" data-i18n="home.momentsDesc">These are the days on the ground — the sightings, the silence, the people — that guests carry home long after the dust has settled.</p>
+    <span class="moments-tag" id="momentsTag"></span>
+    <div class="moments-tags" id="momentsTags" hidden></div>
+  </div>
+</section>
 
 <!-- Destinations -->
-<section class="section" style="background-color: #fcfcfc; border-top: 1px solid #f0f0f0; border-bottom: 1px solid #f0f0f0; padding-top: 6rem; padding-bottom: 6rem;">
+<section class="section home-dest-section">
   <div class="container">
-    <div class="section-header" style="max-width: 700px; margin: 0 auto 4rem;">
-      <span class="section-eyebrow" style="background: transparent; border: 1px solid #dcdcdc; color: #555; border-radius: 4px; padding: 0.4rem 1.2rem; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase;" data-i18n="home.locations">Locations</span>
-      <h2 class="section-title" style="font-weight: 800; color: #111; margin: 1.25rem 0; font-family: var(--font-heading);" data-i18n="home.iconicDestinations">Iconic Destinations</h2>
-      <div style="width: 60px; height: 3px; background: var(--primary); margin: 0 auto 1.5rem;"></div>
-      <p class="section-desc" style="color: #666; font-size: 1.1rem; line-height: 1.8;" data-i18n="home.destinationsDesc">Experience the finest wilderness reserves with our tailored safari itineraries designed for uncompromising comfort and adventure.</p>
+    <div class="home-split-head">
+      <div>
+        <span class="section-eyebrow" data-i18n="home.locations">Locations</span>
+        <h2 class="section-title" data-i18n="home.iconicDestinations">Iconic Destinations</h2>
+      </div>
+      <p class="section-desc" data-i18n="home.destinationsDesc">Experience the finest wilderness reserves with our tailored safari itineraries designed for uncompromising comfort and adventure.</p>
+      <div class="home-split-actions">
+        <a href="/destinations" class="btn btn-primary" data-i18n="home.exploreAllRegions">Explore All Regions</a>
+      </div>
     </div>
     <div class="dest-grid" id="destinationsGrid">
       <div class="skeleton-card"><div class="skeleton skeleton-img" style="aspect-ratio:4/3"></div><div style="padding: 1.5rem"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
@@ -222,19 +389,21 @@
       <div class="skeleton-card"><div class="skeleton skeleton-img" style="aspect-ratio:4/3"></div><div style="padding: 1.5rem"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
       <div class="skeleton-card"><div class="skeleton skeleton-img" style="aspect-ratio:4/3"></div><div style="padding: 1.5rem"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
     </div>
-    <div class="text-center" style="margin-top: 3.5rem;">
-      <a href="/destinations" class="btn btn-primary" style="padding: 1rem 2.5rem; border-radius: 4px; font-weight: 600; letter-spacing: 1.5px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" data-i18n="home.exploreAllRegions">Explore All Regions</a>
-    </div>
   </div>
 </section>
 
 <!-- Featured Safaris -->
 <section class="section bg-sand">
   <div class="container">
-    <div class="section-header">
-      <span class="section-eyebrow"><i class="fas fa-star"></i> <span data-i18n="home.topRated">Top Rated</span></span>
-      <h2 class="section-title" data-i18n-html="home.popularPackagesHtml">Popular <span>Safari Packages</span></h2>
+    <div class="home-split-head">
+      <div>
+        <span class="section-eyebrow"><i class="fas fa-star"></i> <span data-i18n="home.topRated">Top Rated</span></span>
+        <h2 class="section-title" data-i18n-html="home.popularPackagesHtml">Popular <span>Safari Packages</span></h2>
+      </div>
       <p class="section-desc" data-i18n="home.popularDesc">Handpicked experiences designed for every type of traveler — from thrilling game drives to serene cultural encounters.</p>
+      <div class="home-split-actions">
+        <a href="/safaris" class="btn btn-outline" id="viewAllSafaris"><i class="fas fa-binoculars"></i> <span data-i18n="home.viewAllSafaris">View All Safaris</span></a>
+      </div>
     </div>
     <div class="filter-bar" id="categoryFilters">
       <button type="button" class="filter-btn active" data-filter="all" data-i18n="home.allSafaris">All Safaris</button>
@@ -244,24 +413,21 @@
       <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line medium"></div><div class="skeleton skeleton-line short"></div></div></div>
       <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line medium"></div><div class="skeleton skeleton-line short"></div></div></div>
     </div>
-    <div class="text-center" style="margin-top:2.5rem">
-      <a href="/safaris" class="btn btn-outline" id="viewAllSafaris"><i class="fas fa-binoculars"></i> <span data-i18n="home.viewAllSafaris">View All Safaris</span></a>
-    </div>
   </div>
 </section>
 
 <!-- Mountain Climbing + Kilimanjaro Routes -->
 <style>
-  .home-climb-section{padding:5rem 0;background:var(--primary-dark,#2C391C);color:#fff}
-  .home-climb-head{max-width:46rem;margin:0 auto 2.75rem;text-align:center}
+  .home-climb-section{padding:2.15rem 0;background:var(--primary-dark,#2C391C);color:#fff}
+  .home-climb-head{margin:0 0 1.15rem;text-align:left}
   .home-climb-head .section-eyebrow{color:var(--accent,#C8860A);background:var(--accent-pale,rgba(200, 134, 10,0.10))}
   .home-climb-head .section-title{color:#fff}
   .home-climb-head .section-title span{color:var(--accent,#C8860A)}
   .home-climb-head .section-desc{color:rgba(255,255,255,0.92)}
   .home-climb-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:1.25rem}
   .home-climb-feature,.home-climb-mini,.home-route-teaser{position:relative;overflow:hidden;display:flex;align-items:flex-end;text-decoration:none;color:#fff}
-  .home-climb-feature{border-radius:18px;min-height:340px}
-  .home-climb-mini{border-radius:18px;min-height:160px}
+  .home-climb-feature{border-radius:14px;min-height:260px}
+  .home-climb-mini{border-radius:14px;min-height:124px}
   .home-climb-feature img,.home-climb-mini img,.home-route-teaser img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
   .home-climb-feature:hover img,.home-climb-mini:hover img,.home-route-teaser:hover img{transform:scale(1.06)}
   .home-climb-feature::after,.home-climb-mini::after,.home-route-teaser::after{
@@ -280,7 +446,7 @@
   .home-climb-mini h4,.home-route-teaser h4{font-size:1.1rem}
   .home-climb-mini span,.home-route-teaser span{font-size:0.82rem;color:rgba(255,255,255,0.95)!important}
   .home-climb-feature .btn-white{background:#fff;color:var(--primary-dark,#2C391C);font-weight:700}
-  .home-climb-actions{display:flex;flex-wrap:wrap;gap:0.6rem;justify-content:center;margin-top:2.25rem}
+  .home-climb-actions{display:flex;flex-wrap:wrap;gap:0.6rem;justify-content:flex-start;margin-top:1.15rem}
   .home-climb-section .btn-outline.btn-outline-light{
     background:transparent!important;color:#fff!important;
     border:2px solid rgba(255,255,255,0.88)!important;
@@ -289,12 +455,12 @@
     background:#fff!important;color:var(--primary-dark,#2C391C)!important;border-color:#fff!important;
   }
 
-  .home-routes-section{padding:5rem 0;background:#f7f8f6}
-  .home-routes-head{max-width:44rem;margin:0 auto 2.5rem;text-align:center}
-  .home-routes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem}
-  .home-route-teaser{border-radius:14px;min-height:170px}
+  .home-routes-section{padding:2.15rem 0;background:#f7f8f6}
+  .home-routes-head{margin:0 0 1.15rem;text-align:left}
+  .home-routes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.85rem}
+  .home-route-teaser{border-radius:12px;min-height:140px}
   .home-route-teaser .hrt-overlay{padding:1rem 1.1rem;background:transparent}
-  .home-routes-actions{text-align:center;margin-top:2.25rem}
+  .home-routes-actions{text-align:left;margin-top:1.15rem}
   @media (max-width:860px){
     .home-climb-grid{grid-template-columns:1fr}
     .home-climb-side{grid-template-rows:none;grid-template-columns:1fr 1fr}
@@ -307,9 +473,11 @@
 </style>
 <section class="home-climb-section">
   <div class="container">
-    <div class="home-climb-head">
-      <span class="section-eyebrow"><i class="fas fa-mountain"></i> <span data-i18n="homeClimb.eyebrow">Mountain Climbing</span></span>
-      <h2 class="section-title" data-i18n-html="homeClimb.titleHtml">Climb the Roof of <span>Africa</span></h2>
+    <div class="home-split-head home-climb-head">
+      <div>
+        <span class="section-eyebrow"><i class="fas fa-mountain"></i> <span data-i18n="homeClimb.eyebrow">Mountain Climbing</span></span>
+        <h2 class="section-title" data-i18n-html="homeClimb.titleHtml">Climb the Roof of <span>Africa</span></h2>
+      </div>
       <p class="section-desc" data-i18n="homeClimb.desc">Trek to Uhuru Peak on Mount Kilimanjaro (5,895 m) or acclimatize on Mount Meru — guided from Arusha with expert crews and proven summit success.</p>
     </div>
     <div class="home-climb-grid">
@@ -349,10 +517,15 @@
 
 <section class="home-routes-section">
   <div class="container">
-    <div class="home-routes-head">
-      <span class="section-eyebrow"><i class="fas fa-route"></i> <span data-i18n="homeRoutes.eyebrow">Kilimanjaro Routes</span></span>
-      <h2 class="section-title" data-i18n-html="homeRoutes.titleHtml">Choose Your Path to <span>Uhuru Peak</span></h2>
+    <div class="home-split-head home-routes-head">
+      <div>
+        <span class="section-eyebrow"><i class="fas fa-route"></i> <span data-i18n="homeRoutes.eyebrow">Kilimanjaro Routes</span></span>
+        <h2 class="section-title" data-i18n-html="homeRoutes.titleHtml">Choose Your Path to <span>Uhuru Peak</span></h2>
+      </div>
       <p class="section-desc" data-i18n="homeRoutes.desc">Every route to the summit has its own character — pick by scenery, days and success rate, or ask us which one fits you best.</p>
+      <div class="home-split-actions">
+        <a href="/kilimanjaro/routes" class="btn btn-primary" style="min-height:48px" data-i18n="homeRoutes.exploreAll">Explore all routes</a>
+      </div>
     </div>
     <div class="home-routes-grid">
       <a href="/kilimanjaro/routes/machame-route" class="home-route-teaser">
@@ -380,51 +553,6 @@
         <div class="hrt-overlay"><h4 data-i18n="homeRoutes.umbwe">Umbwe</h4><span data-i18n="homeRoutes.umbweMeta">5–6 days · Steep &amp; direct</span></div>
       </a>
     </div>
-    <div class="home-routes-actions">
-      <a href="/kilimanjaro/routes" class="btn btn-primary" style="min-height:48px" data-i18n="homeRoutes.exploreAll">Explore all routes</a>
-    </div>
-  </div>
-</section>
-
-<!-- Why Choose Us -->
-<section class="section why-section" style="background-image: url('/images/optimized/balloon.webp'); background-size: cover; background-position: center; position: relative; padding: 5rem 0;">
-  <div style="position: absolute; inset: 0; background: rgba(0,0,0,0);"></div>
-  <div class="container home-glass-panel" style="position: relative; z-index: 2; background: rgba(255,255,255,0.92); backdrop-filter: blur(10px); border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); display: flex; flex-direction: column; align-items: center; text-align: center; margin-top: 2rem; margin-bottom: 2rem;">
-    <div class="section-header" style="max-width: 800px; margin: 0 auto 3rem auto;">
-      <span class="section-eyebrow"><i class="fas fa-award"></i> <span data-i18n="home.whyChoose">Why Choose Us</span></span>
-      <h2 class="section-title" data-i18n-html="home.trustedPartnerHtml">Your Trusted <span>Safari Partner</span></h2>
-      <p class="section-desc" data-i18n="home.whyDesc">Over a decade of crafting extraordinary safari experiences with unmatched expertise, safety, and passion.</p>
-    </div>
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon"><i class="fas fa-users"></i></div>
-        <div class="feature-card-body">
-          <h3 data-i18n="home.expertGuides">Expert Local Guides</h3>
-          <p data-i18n="home.expertGuidesDesc">Certified professionals with deep knowledge of Tanzanian wildlife and habitats.</p>
-        </div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
-        <div class="feature-card-body">
-          <h3 data-i18n="home.safetyFirst">Safety First</h3>
-          <p data-i18n="home.safetyFirstDesc">Well-maintained 4x4 vehicles and comprehensive emergency protocols for your peace of mind.</p>
-        </div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon"><i class="fas fa-leaf"></i></div>
-        <div class="feature-card-body">
-          <h3 data-i18n="home.ecoResponsible">Eco-Responsible</h3>
-          <p data-i18n="home.ecoResponsibleDesc">We support conservation efforts and local communities through responsible travel practices.</p>
-        </div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon"><i class="fas fa-headset"></i></div>
-        <div class="feature-card-body">
-          <h3 data-i18n="home.support247">24/7 Support</h3>
-          <p data-i18n="home.support247Desc">Round-the-clock assistance from booking through your entire safari journey.</p>
-        </div>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -449,12 +577,13 @@
 </section>
 
 <!-- Testimonials -->
-<section class="section" id="homeTestimonials" style="background-image: url('/images/optimized/boat%20zanzibar.webp'); background-size: cover; background-position: center; position: relative; padding: 5rem 0;">
-  <div style="position: absolute; inset: 0; background: rgba(0,0,0,0);"></div>
-  <div class="container home-glass-panel" style="position: relative; z-index: 2; background: rgba(255,255,255,0.92); backdrop-filter: blur(10px); border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); display: flex; flex-direction: column; align-items: center; text-align: center; margin-top: 2rem; margin-bottom: 2rem;">
-    <div class="section-header" style="max-width: 800px; margin: 0 auto 3rem auto;">
-      <span class="section-eyebrow"><i class="fas fa-quote-left"></i> <span data-i18n="home.travelerStories">Traveler Stories</span></span>
-      <h2 class="section-title" data-i18n-html="home.guestsSayHtml">What Our <span>Guests Say</span></h2>
+<section class="section" id="homeTestimonials" style="background-image: url('/images/optimized/boat%20zanzibar.webp'); background-size: cover; background-position: center; position: relative;">
+  <div class="container home-glass-panel" style="position: relative; z-index: 2; background: rgba(255,255,255,0.92); backdrop-filter: blur(10px); border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.15);">
+    <div class="home-split-head">
+      <div>
+        <span class="section-eyebrow"><i class="fas fa-quote-left"></i> <span data-i18n="home.travelerStories">Traveler Stories</span></span>
+        <h2 class="section-title" data-i18n-html="home.guestsSayHtml">What Our <span>Guests Say</span></h2>
+      </div>
       <p class="section-desc" data-i18n="home.testimonialsDesc">Real experiences from adventurers who explored Tanzania with us.</p>
     </div>
     <div class="testimonials-grid" id="testimonialsGrid">
@@ -468,9 +597,11 @@
 <!-- Our Partners -->
 <section class="section" id="homePartners" aria-labelledby="home-partners-title">
   <div class="container">
-    <div class="section-header">
-      <span class="section-eyebrow"><i class="fas fa-handshake"></i> <span data-i18n="home.partnersEyebrow">Our Partners</span></span>
-      <h2 class="section-title" id="home-partners-title" data-i18n-html="home.partnersTitleHtml">Our <span>Partners</span></h2>
+    <div class="home-split-head">
+      <div>
+        <span class="section-eyebrow"><i class="fas fa-handshake"></i> <span data-i18n="home.partnersEyebrow">Our Partners</span></span>
+        <h2 class="section-title" id="home-partners-title" data-i18n-html="home.partnersTitleHtml">Our <span>Partners</span></h2>
+      </div>
       <p class="section-desc" data-i18n="home.partnersDesc">Trusted operators we work with so your Tanzania safari runs smoothly from Arusha to the parks.</p>
     </div>
     <div class="partners-grid" id="partnersGrid"></div>
@@ -478,11 +609,13 @@
 </section>
 
 <!-- FAQ (matches SSR FAQPage JSON-LD for rich-result eligibility) -->
-<section class="corp-section" id="home-faq" aria-labelledby="home-faq-title">
-  <div class="container" style="max-width:860px">
-    <div class="section-header" style="text-align:center;margin-bottom:2rem">
-      <span class="section-eyebrow">Planning Tanzania</span>
-      <h2 class="section-title" id="home-faq-title">Tanzania Safari FAQs</h2>
+<section class="corp-section home-faq-dar" id="home-faq" aria-labelledby="home-faq-title">
+  <div class="container" style="max-width:1100px">
+    <div class="home-split-head">
+      <div>
+        <span class="section-eyebrow">Planning Tanzania</span>
+        <h2 class="section-title" id="home-faq-title">Tanzania Safari FAQs</h2>
+      </div>
       <p class="section-desc">Straight answers from Our Team in Arusha before you book.</p>
     </div>
     <div class="seo-faq-list">
@@ -546,8 +679,8 @@
 
 <!-- Footer -->
 <div id="footer"></div>
-<script src="/js/layout-loader.js?v=31"></script>
+<script src="/js/layout-loader.js?v=32"></script>
 <script src="/js/api.js?v=2"></script>
-<script src="/js/main.js?v=13"></script>
+<script src="/js/main.js?v=26"></script>
 </body>
 </html>

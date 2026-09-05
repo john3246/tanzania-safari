@@ -38,7 +38,7 @@
 
 <div class="guide-cta-box">
   <h2>Get a 2026 Serengeti Quote</h2>
-  <p>Tell Our Team your month, group size, and lodge style. We usually reply within 2 hours on WhatsApp with a transparent inclusion list.</p>
+  <p>Tell Our Team your month, group size, and lodge style. We usually reply in under 60 seconds on WhatsApp with a transparent inclusion list.</p>
   <div class="guide-cta-actions">
     <a class="btn btn-primary" href="/booking" style="min-height:48px">Free cost quote</a>
     <a class="btn btn-outline" href="${TEAM.whatsapp}" target="_blank" rel="noopener" style="min-height:48px"><i class="fab fa-whatsapp"></i> WhatsApp Our Team</a>
@@ -120,7 +120,7 @@
 
 <div class="guide-cta-box">
   <h2>Talk to Our Team in Arusha</h2>
-  <p>WhatsApp +255 695 108 009 · We usually reply within 2 hours during East Africa daytime.</p>
+  <p>WhatsApp +255 695 108 009 · We usually reply in under 60 seconds during East Africa daytime.</p>
   <div class="guide-cta-actions">
     <a class="btn btn-primary" href="/booking" style="min-height:48px">Request free quote</a>
     <a class="btn btn-outline" href="${TEAM.whatsapp}" target="_blank" rel="noopener" style="min-height:48px"><i class="fab fa-whatsapp"></i> WhatsApp Our Team</a>
